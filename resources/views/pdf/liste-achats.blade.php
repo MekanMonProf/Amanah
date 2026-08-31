@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        @page { margin: 25px 30px; }
+        body { font-family: DejaVu Sans, sans-serif; font-size: 10px; color: #1f2937; }
+        .en-tete { border-bottom: 2px solid #047857; padding-bottom: 8px; margin-bottom: 14px; }
+        .en-tete .nom-projet { font-size: 16px; font-weight: bold; color: #047857; }
+        .en-tete .sous-titre { font-size: 10px; color: #6b7280; }
+        h1 { font-size: 13px; margin: 0 0 2px 0; }
+        .meta { font-size: 9px; color: #6b7280; margin-bottom: 14px; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background-color: #f3f4f6; text-align: left; padding: 5px 6px; border-bottom: 1px solid #d1d5db; font-size: 9px; }
+        td { padding: 4px 6px; border-bottom: 1px solid #f3f4f6; font-size: 9.5px; }
+        .text-right { text-align: right; }
+        .pied-page { margin-top: 20px; padding-top: 8px; border-top: 1px solid #e5e7eb; font-size: 8px; color: #9ca3af; }
+    </style>
+</head>
+<body>
+    <div class="en-tete">
+        <div class="nom-projet">AMANAH</div>
+        <div class="sous-titre">Plateforme de Gestion des Investissements — AND DOX S.A.</div>
+    </div>
+
+    <h1>Historique des achats — {{ $compte->numero_compte }}</h1>
+    <div class="meta">
+        {{ $compte->investisseur->nom }} {{ $compte->investisseur->prenom }} ({{ $compte->investisseur->identifiant_externe }}) ·
+        {{ $achats->count() }} achat(s) — édité le {{ $dateGeneration->translatedFormat('d F Y à H:i') }}
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>N° achat</th><th>Date</th><th>Type</th>
+                <th class="text-right">Actions</th><th class="text-right">Prix unit.</th>
+                <th class="text-right">Montant</th><th>Paiement</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($achats as $a)
+                <tr>
+                    <td>{{ $a->numero_achat }}</td>
+                    <td>{{ $a->date_achat->format('d/m/Y') }}</td>
+                    <td>{{ ucfirst($a->type_achat) }}</td>
+                    <td class="text-right">{{ number_format($a->nombre_actions, 0, ',', ' ') }}</td>
+                    <td class="text-right">{{ number_format($a->prix_unitaire, 0, ',', ' ') }}</td>
+                    <td class="text-right">{{ number_format($a->montant, 0, ',', ' ') }}</td>
+                    <td>{{ $a->mode_paiement }}</td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+
+    <div class="pied-page">Document généré automatiquement par la plateforme AMANAH le {{ $dateGeneration->format('d/m/Y à H:i') }}.</div>
+</body>
+</html>

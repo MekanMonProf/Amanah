@@ -26,6 +26,8 @@ use App\Http\Controllers\ReleveController;
 use App\Http\Controllers\AttestationController;
 use App\Http\Controllers\AttestationSuccessionController;
 use App\Http\Controllers\ExportController;
+use App\Http\Controllers\ModeleImportController;
+use App\Livewire\Import\ImportIndex;
 
 Route::view('/', 'welcome');
 
@@ -102,6 +104,10 @@ Route::middleware(['auth', 'doit.changer.mdp', 'deux.fa'])->group(function () {
         Route::get('/audit', JournalAudit::class)->name('audit.index');
         Route::get('/audit/export/csv', [ExportController::class, 'auditCsv'])->name('export.audit.csv');
         Route::get('/audit/export/pdf', [ExportController::class, 'auditPdf'])->name('export.audit.pdf');
+
+        // Reprise de l'existant depuis un fichier Excel/CSV — création en masse, donc réservée
+        Route::get('/import', ImportIndex::class)->name('import.index');
+        Route::get('/import/modele/{type}', [ModeleImportController::class, 'telecharger'])->name('import.modele');
 
         // Succession (décès, héritiers, répartition) — action sensible, réservée
         Route::get('/investisseurs/{investisseur}/deces/declarer', DeclarerDeces::class)->name('deces.declarer');

@@ -140,5 +140,6 @@ return [
         'nouveauGestionnaireId' => 'nouveau gestionnaire',
         'motifTransfert' => 'motif',
         'nouveauGestionnairePourReassignation' => 'nouveau gestionnaire',
+        'fichier' => 'fichier',
     ],
 ];

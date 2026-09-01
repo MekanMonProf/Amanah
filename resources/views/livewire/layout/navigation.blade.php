@@ -51,6 +51,9 @@ new class extends Component
                             <x-nav-link :href="route('audit.index')" :active="request()->routeIs('audit.*')" wire:navigate>
                                 Journal d'audit
                             </x-nav-link>
+                            <x-nav-link :href="route('import.index')" :active="request()->routeIs('import.*')" wire:navigate>
+                                Import
+                            </x-nav-link>
                         @endif
                     @endif
                 </div>
@@ -121,6 +124,9 @@ new class extends Component
                     </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('audit.index')" :active="request()->routeIs('audit.*')" wire:navigate>
                         Journal d'audit
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('import.index')" :active="request()->routeIs('import.*')" wire:navigate>
+                        Import
                     </x-responsive-nav-link>
                 @endif
             @endif

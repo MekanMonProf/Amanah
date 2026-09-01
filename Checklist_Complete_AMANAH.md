@@ -97,17 +97,17 @@
 ## 12. Sécurité fine (le plus important à valider rigoureusement)
 
 Avec un compte **`lecture`** :
-- [ ] Voit les listes/fiches, mais **aucun bouton d'action** nulle part
-- [ ] Accès direct par URL à une page de création/modification → **403**
-- [ ] Menu : seuls Dashboard et Investisseurs visibles
+- [x] Voit les listes/fiches, mais **aucun bouton d'action** nulle part
+- [x] Accès direct par URL à une page de création/modification → **403**
+- [x] Menu : seuls Dashboard et Investisseurs visibles
 
 Avec un compte **`gestionnaire`** :
-- [ ] Peut créer/modifier investisseurs, achats, paiements, radiations
-- [ ] **Ne peut pas** accéder à `/dividendes/calculer`, `/gestionnaires`, `/audit`, ajustements, **ni déclarer un décès/gérer une succession** (403)
+- [x] Peut créer/modifier investisseurs, achats, paiements, radiations
+- [x] **Ne peut pas** accéder à `/dividendes/calculer`, `/gestionnaires`, `/audit`, ajustements, **ni déclarer un décès/gérer une succession** (403)
 
 Avec un compte **`investisseur`** :
-- [ ] Ne voit que `/mon-compte`, jamais les pages de gestion (même en tapant l'URL)
-- [ ] Ne voit que ses propres données (essayez de changer l'URL vers un autre id — doit échouer)
+- [x] Ne voit que `/mon-compte`, jamais les pages de gestion (même en tapant l'URL)
+- [x] Ne voit que ses propres données (essayez de changer l'URL vers un autre id — doit échouer)
 
 ## 13. Affichage mobile
 

@@ -34,7 +34,7 @@
 - [x] Liste : recherche, tri par colonne, filtre statut/gestionnaire, pagination
 - [x] Création rapide : identifiant auto-généré, email inclus
 - [x] Fiche détail : toutes les infos KYC s'affichent (pièce d'identité, convention, entreprise si "morale", bénéficiaire)
-- [ ] "Modifier le dossier" : tous les champs se sauvegardent, upload pièce d'identité fonctionne
+- [x] "Modifier le dossier" : tous les champs se sauvegardent, upload pièce d'identité fonctionne
 - [x] Bascule réinvestissement automatique Oui/Non par compte, dans "Modifier le dossier"
 - [x] "Créer un accès portail" → email reçu → connexion investisseur fonctionne
 - [x] "Réinitialiser le mot de passe" (gestionnaire ou investisseur) → nouvel email reçu

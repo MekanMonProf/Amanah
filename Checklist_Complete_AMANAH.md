@@ -44,8 +44,8 @@
 - [x] Création d'un achat Commercial → compte créé automatiquement si inexistant
 - [x] Création d'un achat Waqf → idem
 - [x] Mode de paiement (liste), facture jointe, visible ensuite dans l'historique
-- [ ] Historique : tri, recherche, filtre type, export CSV et PDF (respectent les filtres)
-- [ ] Attestation PDF téléchargeable depuis une ligne d'achat
+- [x] Historique : tri, recherche, filtre type, export CSV et PDF (respectent les filtres)
+- [x] Attestation PDF téléchargeable depuis une ligne d'achat
 
 ## 5. Dividendes
 

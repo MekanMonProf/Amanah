@@ -24,6 +24,44 @@
         </div>
     @endif
 
+    @if (session('erreur_desactivation'))
+        <div class="bg-red-50 border border-red-200 text-red-700 rounded-lg p-3 mb-4 text-sm">
+            {{ session('erreur_desactivation') }}
+        </div>
+    @endif
+
+    @if ($gestionnaireADesactiverId)
+        <div class="bg-white border rounded-lg p-5 mb-6 shadow-sm">
+            <p class="text-sm font-medium text-gray-700 mb-3">Réassigner tout le portefeuille puis désactiver</p>
+            <form wire:submit="reassignerPortefeuilleEtDesactiver" class="flex flex-col sm:flex-row gap-2 sm:items-end">
+                <div class="flex-1">
+                    <label class="text-xs text-gray-500">Nouveau gestionnaire pour tous ses investisseurs</label>
+                    <select wire:model="nouveauGestionnairePourReassignation" class="w-full border rounded px-3 py-2 text-sm">
+                        <option value="">— Choisir —</option>
+                        @foreach ($gestionnaires as $g)
+                            @if ($g->id !== $gestionnaireADesactiverId && $g->actif)
+                                <option value="{{ $g->id }}">{{ $g->user->nom }} {{ $g->user->prenom }}</option>
+                            @endif
+                        @endforeach
+                    </select>
+                    @error('nouveauGestionnairePourReassignation') <span class="text-red-600 text-xs">{{ $message }}</span> @enderror
+                </div>
+                <div class="flex-1">
+                    <label class="text-xs text-gray-500">Motif (optionnel)</label>
+                    <input type="text" wire:model="motifReassignationMasse" class="w-full border rounded px-3 py-2 text-sm">
+                </div>
+                <div class="flex gap-2">
+                    <button type="submit" class="bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm whitespace-nowrap">
+                        Réassigner et désactiver
+                    </button>
+                    <button type="button" wire:click="annulerReassignationMasse" class="text-sm text-gray-500 hover:underline">
+                        Annuler
+                    </button>
+                </div>
+            </form>
+        </div>
+    @endif
+
     @if ($gestionnaireEnEditionId)
         <div class="bg-white border rounded-lg p-5 mb-6 shadow-sm">
             <p class="text-sm font-medium text-gray-700 mb-3">Modifier le profil du gestionnaire</p>

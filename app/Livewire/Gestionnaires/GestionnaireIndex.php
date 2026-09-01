@@ -37,6 +37,10 @@ class GestionnaireIndex extends Component
 
     public ?int $gestionnaireEnEditionId = null;
 
+    public ?int $gestionnaireADesactiverId = null;
+    public ?int $nouveauGestionnairePourReassignation = null;
+    public string $motifReassignationMasse = '';
+
     public function ouvrirFormulaire(): void
     {
         $this->mot_de_passe = str()->random(10);
@@ -136,10 +140,35 @@ class GestionnaireIndex extends Component
         $this->dispatch('gestionnaire-cree');
     }
 
+    /**
+     * Un gestionnaire ne peut pas être désactivé tant qu'il a des investisseurs actifs
+     * assignés — sinon son portefeuille se retrouve sans personne pour le gérer (le
+     * gestionnaire désactivé ne peut plus se connecter). Pratique courante dans les
+     * institutions financières : la désactivation d'un chargé de compte est bloquée
+     * tant que son portefeuille n'a pas été réassigné.
+     */
     public function basculerActif(int $gestionnaireId): void
     {
         $gestionnaire = Gestionnaire::findOrFail($gestionnaireId);
         $nouveauStatut = ! $gestionnaire->actif;
+
+        if (! $nouveauStatut) {
+            $nbInvestisseursActifs = \App\Models\Investisseur::where('gestionnaire_id', $gestionnaire->id)
+                ->where('statut', 'actif')
+                ->count();
+
+            if ($nbInvestisseursActifs > 0) {
+                session()->flash('erreur_desactivation', sprintf(
+                    'Impossible de désactiver %s %s : %d investisseur(s) actif(s) encore assigné(s). Réassignez-les tous d\'un coup ci-dessous, ou un par un avec le bouton "Changer →" sur chaque fiche investisseur.',
+                    $gestionnaire->user->nom,
+                    $gestionnaire->user->prenom,
+                    $nbInvestisseursActifs
+                ));
+                $this->gestionnaireADesactiverId = $gestionnaireId;
+                return;
+            }
+        }
+
         $gestionnaire->update(['actif' => $nouveauStatut]);
         $gestionnaire->user->update(['actif' => $nouveauStatut]);
 
@@ -149,6 +178,78 @@ class GestionnaireIndex extends Component
             entiteId: $gestionnaire->id,
             apres: ['email' => $gestionnaire->user->email, 'actif' => $nouveauStatut],
         );
+
+        $this->gestionnaireADesactiverId = null;
+    }
+
+    public function annulerReassignationMasse(): void
+    {
+        $this->gestionnaireADesactiverId = null;
+        $this->reset(['nouveauGestionnairePourReassignation', 'motifReassignationMasse']);
+    }
+
+    /**
+     * Réassigne en une seule action tous les investisseurs actifs du gestionnaire à
+     * désactiver vers un autre gestionnaire, puis termine la désactivation. Chaque
+     * transfert passe par Investisseur::transfererVers() pour garder une trace
+     * individuelle dans historique_affectations (même mécanisme que le transfert
+     * unitaire depuis la fiche investisseur).
+     */
+    public function reassignerPortefeuilleEtDesactiver(): void
+    {
+        $ancienGestionnaire = Gestionnaire::with('user')->findOrFail($this->gestionnaireADesactiverId);
+
+        $this->validate([
+            'nouveauGestionnairePourReassignation' => 'required|exists:gestionnaires,id',
+        ]);
+
+        if ($this->nouveauGestionnairePourReassignation === $ancienGestionnaire->id) {
+            $this->addError('nouveauGestionnairePourReassignation', 'Choisissez un gestionnaire différent de celui à désactiver.');
+            return;
+        }
+
+        $nouveauGestionnaire = Gestionnaire::with('user')->findOrFail($this->nouveauGestionnairePourReassignation);
+
+        $investisseurs = \App\Models\Investisseur::where('gestionnaire_id', $ancienGestionnaire->id)
+            ->where('statut', 'actif')
+            ->get();
+
+        foreach ($investisseurs as $investisseur) {
+            $investisseur->transfererVers($nouveauGestionnaire, $this->motifReassignationMasse ?: "Réassignation en masse — désactivation de {$ancienGestionnaire->user->nom} {$ancienGestionnaire->user->prenom}", \Illuminate\Support\Facades\Auth::id());
+        }
+
+        \App\Models\AuditLog::enregistrer(
+            action: 'reassignation_masse',
+            entite: 'gestionnaire',
+            entiteId: $ancienGestionnaire->id,
+            avant: ['gestionnaire' => "{$ancienGestionnaire->user->nom} {$ancienGestionnaire->user->prenom}"],
+            apres: [
+                'gestionnaire' => "{$nouveauGestionnaire->user->nom} {$nouveauGestionnaire->user->prenom}",
+                'nombre_investisseurs' => $investisseurs->count(),
+                'motif' => $this->motifReassignationMasse ?: null,
+            ],
+        );
+
+        $ancienGestionnaire->update(['actif' => false]);
+        $ancienGestionnaire->user->update(['actif' => false]);
+
+        \App\Models\AuditLog::enregistrer(
+            action: 'desactivation',
+            entite: 'gestionnaire',
+            entiteId: $ancienGestionnaire->id,
+            apres: ['email' => $ancienGestionnaire->user->email, 'actif' => false],
+        );
+
+        $this->gestionnaireADesactiverId = null;
+        $this->reset(['nouveauGestionnairePourReassignation', 'motifReassignationMasse']);
+        session()->flash('succes_modification', sprintf(
+            '%d investisseur(s) réassigné(s) à %s %s. %s %s a été désactivé.',
+            $investisseurs->count(),
+            $nouveauGestionnaire->user->nom,
+            $nouveauGestionnaire->user->prenom,
+            $ancienGestionnaire->user->nom,
+            $ancienGestionnaire->user->prenom,
+        ));
     }
 
     /**

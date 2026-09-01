@@ -139,5 +139,6 @@ return [
         'confirmation' => 'confirmation',
         'nouveauGestionnaireId' => 'nouveau gestionnaire',
         'motifTransfert' => 'motif',
+        'nouveauGestionnairePourReassignation' => 'nouveau gestionnaire',
     ],
 ];

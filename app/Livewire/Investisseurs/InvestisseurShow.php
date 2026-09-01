@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Investisseurs;
 
+use App\Models\Gestionnaire;
 use App\Models\Investisseur;
 use App\Models\User;
 use App\Support\RestreintAuPortefeuilleGestionnaire;
@@ -18,6 +19,10 @@ class InvestisseurShow extends Component
     public Investisseur $investisseur;
 
     public ?string $dernierMotDePasseGenere = null;
+
+    public bool $afficherFormulaireTransfert = false;
+    public ?int $nouveauGestionnaireId = null;
+    public string $motifTransfert = '';
 
     public function mount(Investisseur $investisseur): void
     {
@@ -42,6 +47,16 @@ class InvestisseurShow extends Component
     protected function interdireSiDecede(): void
     {
         abort_if($this->investisseur->estDecede(), 403, 'Ce compte est gelé — l\'investisseur est déclaré décédé.');
+    }
+
+    /**
+     * Transfert de portefeuille et désactivation d'un dossier investisseur sont des
+     * décisions administratives, réservées à la Direction/Administrateur — comme la
+     * déclaration de décès ou la gestion de succession sur cette même page.
+     */
+    protected function interdireSiPasDirectionAdministrateur(): void
+    {
+        abort_if(! in_array(Auth::user()->role, ['direction', 'administrateur'], true), 403, 'Action réservée à la Direction/Administrateur.');
     }
 
     public function creerAcces(): void
@@ -126,6 +141,74 @@ class InvestisseurShow extends Component
         );
     }
 
+    /**
+     * Change le gestionnaire assigné à l'investisseur — trace l'ancien et le nouveau
+     * dans historique_affectations via Investisseur::transfererVers().
+     */
+    public function transfererGestionnaire(): void
+    {
+        $this->interdireSiPasDirectionAdministrateur();
+        $this->interdireSiDecede();
+
+        $this->validate([
+            'nouveauGestionnaireId' => 'required|exists:gestionnaires,id',
+            'motifTransfert' => 'nullable|string|max:255',
+        ]);
+
+        $nouveauGestionnaire = Gestionnaire::findOrFail($this->nouveauGestionnaireId);
+        $ancienGestionnaire = $this->investisseur->gestionnaire;
+
+        if ($ancienGestionnaire && $ancienGestionnaire->id === $nouveauGestionnaire->id) {
+            $this->addError('nouveauGestionnaireId', 'Cet investisseur est déjà assigné à ce gestionnaire.');
+            return;
+        }
+
+        $this->investisseur->transfererVers($nouveauGestionnaire, $this->motifTransfert ?: null, Auth::id());
+
+        \App\Models\AuditLog::enregistrer(
+            action: 'transfert_gestionnaire',
+            entite: 'investisseur',
+            entiteId: $this->investisseur->id,
+            avant: ['gestionnaire' => $ancienGestionnaire ? "{$ancienGestionnaire->user->nom} {$ancienGestionnaire->user->prenom}" : null],
+            apres: ['gestionnaire' => "{$nouveauGestionnaire->user->nom} {$nouveauGestionnaire->user->prenom}", 'motif' => $this->motifTransfert ?: null],
+        );
+
+        $this->investisseur->refresh();
+        $this->reset(['afficherFormulaireTransfert', 'nouveauGestionnaireId', 'motifTransfert']);
+        session()->flash('succes', 'Gestionnaire réassigné avec succès.');
+    }
+
+    /**
+     * Désactive ou réactive le dossier investisseur. La désactivation coupe aussi
+     * l'accès portail (comme pour un gestionnaire désactivé — voir EnsureCompteActif) :
+     * sans ça, un investisseur "désactivé" pourrait quand même continuer à se connecter
+     * à /mon-compte.
+     */
+    public function basculerActifInvestisseur(): void
+    {
+        $this->interdireSiPasDirectionAdministrateur();
+        $this->interdireSiDecede();
+
+        $nouveauStatut = $this->investisseur->statut === 'actif' ? 'inactif' : 'actif';
+        $ancienStatut = $this->investisseur->statut;
+
+        $this->investisseur->update(['statut' => $nouveauStatut]);
+
+        if ($this->investisseur->user_id) {
+            $this->investisseur->user->update(['actif' => $nouveauStatut === 'actif']);
+        }
+
+        \App\Models\AuditLog::enregistrer(
+            action: $nouveauStatut === 'actif' ? 'reactivation' : 'desactivation',
+            entite: 'investisseur',
+            entiteId: $this->investisseur->id,
+            avant: ['statut' => $ancienStatut],
+            apres: ['statut' => $nouveauStatut],
+        );
+
+        $this->investisseur->refresh();
+    }
+
     public function render()
     {
         $comptes = $this->investisseur->comptes()->with(['achats', 'ecritures'])->get();
@@ -142,6 +225,12 @@ class InvestisseurShow extends Component
 
         return view('livewire.investisseurs.investisseur-show', [
             'comptesEnrichis' => $comptesEnrichis,
+            'gestionnaires' => in_array(Auth::user()->role, ['direction', 'administrateur'], true)
+                ? Gestionnaire::with('user')->where('actif', true)->get()
+                : collect(),
+            'historiqueAffectations' => in_array(Auth::user()->role, ['direction', 'administrateur'], true)
+                ? $this->investisseur->historiqueAffectations()->with(['ancienGestionnaire.user', 'nouveauGestionnaire.user', 'effectuePar'])->latest('id')->get()
+                : collect(),
         ]);
     }
 }

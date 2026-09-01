@@ -18,6 +18,46 @@
         </div>
     @endif
 
+    @if (session('succes_modification'))
+        <div class="bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-lg p-3 mb-4 text-sm">
+            {{ session('succes_modification') }}
+        </div>
+    @endif
+
+    @if ($gestionnaireEnEditionId)
+        <div class="bg-white border rounded-lg p-5 mb-6 shadow-sm">
+            <p class="text-sm font-medium text-gray-700 mb-3">Modifier le profil du gestionnaire</p>
+            <form wire:submit="enregistrerModification" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="text-sm text-gray-600">Nom</label>
+                    <input type="text" wire:model="nom" class="w-full border rounded px-3 py-2">
+                    @error('nom') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+                </div>
+                <div>
+                    <label class="text-sm text-gray-600">Prénom</label>
+                    <input type="text" wire:model="prenom" class="w-full border rounded px-3 py-2">
+                </div>
+                <div>
+                    <label class="text-sm text-gray-600">Email (identifiant de connexion)</label>
+                    <input type="email" wire:model="email" class="w-full border rounded px-3 py-2">
+                    @error('email') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+                </div>
+                <div>
+                    <label class="text-sm text-gray-600">Téléphone</label>
+                    <input type="text" wire:model="telephone" class="w-full border rounded px-3 py-2">
+                </div>
+                <div class="sm:col-span-2 flex gap-2">
+                    <button type="submit" class="bg-emerald-700 text-white px-4 py-2 rounded-lg w-full sm:w-auto">
+                        Enregistrer les modifications
+                    </button>
+                    <button type="button" wire:click="annulerModification" class="text-sm text-gray-500 hover:underline">
+                        Annuler
+                    </button>
+                </div>
+            </form>
+        </div>
+    @endif
+
     @if ($afficherFormulaire)
         <div class="bg-white border rounded-lg p-5 mb-6 shadow-sm">
             <form wire:submit="creer" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -82,6 +122,9 @@
                         </span>
                     </td>
                     <td class="p-3 text-right whitespace-nowrap">
+                        <button wire:click="modifier({{ $g->id }})" class="text-sm text-gray-600 hover:underline mr-3">
+                            Modifier
+                        </button>
                         <button wire:click="reinitialiserMotDePasse({{ $g->id }})" wire:confirm="Générer un nouveau mot de passe temporaire pour {{ $g->user->email }} ?"
                                 class="text-sm text-blue-600 hover:underline mr-3">
                             Réinitialiser le mot de passe

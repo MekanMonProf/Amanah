@@ -137,5 +137,7 @@ return [
         'nombreActions' => 'nombre d\'actions',
         'partPourcentage' => 'part',
         'confirmation' => 'confirmation',
+        'nouveauGestionnaireId' => 'nouveau gestionnaire',
+        'motifTransfert' => 'motif',
     ],
 ];

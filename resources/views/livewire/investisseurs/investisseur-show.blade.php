@@ -52,6 +52,10 @@
                class="inline-block mb-6 ml-2 text-sm text-gray-700 border border-gray-300 rounded-lg px-4 py-2 hover:bg-gray-50">
                 Déclarer un décès
             </a>
+            <button wire:click="basculerActifInvestisseur" wire:confirm="{{ $investisseur->statut === 'actif' ? 'Désactiver ce dossier ? L\'accès portail sera coupé s\'il en a un.' : 'Réactiver ce dossier ?' }}"
+                    class="inline-block mb-6 ml-2 text-sm text-gray-700 border border-gray-300 rounded-lg px-4 py-2 hover:bg-gray-50">
+                {{ $investisseur->statut === 'actif' ? 'Désactiver' : 'Réactiver' }}
+            </button>
         @endif
     @endif
 
@@ -127,7 +131,14 @@
         </div>
         <div class="bg-white border rounded-lg p-4">
             <div class="text-xs text-gray-500 uppercase">Gestionnaire</div>
-            <div class="mt-1">{{ $investisseur->gestionnaire?->user?->nom ?? '— Non assigné' }}</div>
+            <div class="mt-1 flex items-center justify-between gap-2">
+                <span>{{ $investisseur->gestionnaire?->user?->nom ?? '— Non assigné' }}</span>
+                @if (in_array(auth()->user()->role, ['direction', 'administrateur']) && ! $investisseur->estDecede())
+                    <button wire:click="$toggle('afficherFormulaireTransfert')" class="text-xs text-emerald-700 hover:underline whitespace-nowrap">
+                        Changer →
+                    </button>
+                @endif
+            </div>
         </div>
         <div class="bg-white border rounded-lg p-4">
             <div class="text-xs text-gray-500 uppercase">Localisation</div>
@@ -142,6 +153,48 @@
             <div class="mt-1">{{ $investisseur->lieu_naissance ?: '—' }}</div>
         </div>
     </div>
+
+    @if ($afficherFormulaireTransfert)
+        <div class="bg-white border rounded-lg p-4 mb-4">
+            <p class="text-sm font-medium text-gray-700 mb-2">Réassigner à un autre gestionnaire</p>
+            <form wire:submit="transfererGestionnaire" class="flex flex-col sm:flex-row gap-2 sm:items-end">
+                <div class="flex-1">
+                    <label class="text-xs text-gray-500">Nouveau gestionnaire</label>
+                    <select wire:model="nouveauGestionnaireId" class="w-full border rounded px-3 py-2 text-sm">
+                        <option value="">— Choisir —</option>
+                        @foreach ($gestionnaires as $g)
+                            <option value="{{ $g->id }}">{{ $g->user->nom }} {{ $g->user->prenom }}</option>
+                        @endforeach
+                    </select>
+                    @error('nouveauGestionnaireId') <span class="text-red-600 text-xs">{{ $message }}</span> @enderror
+                </div>
+                <div class="flex-1">
+                    <label class="text-xs text-gray-500">Motif (optionnel)</label>
+                    <input type="text" wire:model="motifTransfert" class="w-full border rounded px-3 py-2 text-sm">
+                </div>
+                <div class="flex gap-2">
+                    <button type="submit" class="bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm whitespace-nowrap">Transférer</button>
+                    <button type="button" wire:click="$set('afficherFormulaireTransfert', false)" class="text-sm text-gray-500 hover:underline">Annuler</button>
+                </div>
+            </form>
+
+            @if ($historiqueAffectations->isNotEmpty())
+                <div class="mt-4 pt-4 border-t">
+                    <p class="text-xs text-gray-500 uppercase mb-2">Historique des affectations</p>
+                    <ul class="text-sm text-gray-600 space-y-1">
+                        @foreach ($historiqueAffectations as $h)
+                            <li>
+                                {{ $h->date_transfert->format('d/m/Y') }} —
+                                {{ $h->ancienGestionnaire?->user?->nom ?? 'Non assigné' }} → {{ $h->nouveauGestionnaire->user->nom }}
+                                @if ($h->motif) <span class="text-gray-400">({{ $h->motif }})</span> @endif
+                                @if ($h->effectuePar) <span class="text-gray-400">— par {{ $h->effectuePar->nom }}</span> @endif
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+        </div>
+    @endif
 
     @if ($investisseur->type_identification || $investisseur->numero_identification || $investisseur->piece_identite_path)
         <div class="bg-white border rounded-lg p-4 mb-4">

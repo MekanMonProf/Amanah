@@ -19,4 +19,19 @@ class HistoriqueAffectation extends Model
     {
         return $this->belongsTo(Investisseur::class);
     }
+
+    public function ancienGestionnaire()
+    {
+        return $this->belongsTo(Gestionnaire::class, 'ancien_gestionnaire_id');
+    }
+
+    public function nouveauGestionnaire()
+    {
+        return $this->belongsTo(Gestionnaire::class, 'nouveau_gestionnaire_id');
+    }
+
+    public function effectuePar()
+    {
+        return $this->belongsTo(User::class, 'effectue_par');
+    }
 }

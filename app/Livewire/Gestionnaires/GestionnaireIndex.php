@@ -35,10 +35,70 @@ class GestionnaireIndex extends Component
     public ?string $dernierMotDePasseGenere = null;
     public ?string $emailConcerneParReinit = null;
 
+    public ?int $gestionnaireEnEditionId = null;
+
     public function ouvrirFormulaire(): void
     {
         $this->mot_de_passe = str()->random(10);
         $this->afficherFormulaire = true;
+        $this->gestionnaireEnEditionId = null;
+    }
+
+    /**
+     * Ouvre le formulaire de création, pré-rempli avec les infos actuelles du gestionnaire —
+     * réutilise les mêmes champs (nom/prenom/email/telephone) pour profiter des messages
+     * de validation français déjà mappés pour ces noms de propriétés.
+     */
+    public function modifier(int $gestionnaireId): void
+    {
+        $gestionnaire = Gestionnaire::with('user')->findOrFail($gestionnaireId);
+
+        $this->gestionnaireEnEditionId = $gestionnaireId;
+        $this->nom = $gestionnaire->user->nom;
+        $this->prenom = $gestionnaire->user->prenom ?? '';
+        $this->email = $gestionnaire->user->email;
+        $this->telephone = $gestionnaire->user->telephone ?? '';
+        $this->afficherFormulaire = false;
+        $this->resetErrorBag();
+    }
+
+    public function annulerModification(): void
+    {
+        $this->gestionnaireEnEditionId = null;
+        $this->reset(['nom', 'prenom', 'email', 'telephone']);
+    }
+
+    public function enregistrerModification(): void
+    {
+        $gestionnaire = Gestionnaire::with('user')->findOrFail($this->gestionnaireEnEditionId);
+
+        $this->validate([
+            'nom' => 'required|string|max:150',
+            'prenom' => 'nullable|string|max:150',
+            'email' => 'required|email|max:190|unique:users,email,' . $gestionnaire->user_id,
+            'telephone' => 'nullable|string|max:30',
+        ]);
+
+        $avant = $gestionnaire->user->only(['nom', 'prenom', 'email', 'telephone']);
+
+        $gestionnaire->user->update([
+            'nom' => $this->nom,
+            'prenom' => $this->prenom ?: null,
+            'email' => $this->email,
+            'telephone' => $this->telephone ?: null,
+        ]);
+
+        \App\Models\AuditLog::enregistrer(
+            action: 'modification',
+            entite: 'gestionnaire',
+            entiteId: $gestionnaire->id,
+            avant: $avant,
+            apres: $gestionnaire->user->only(['nom', 'prenom', 'email', 'telephone']),
+        );
+
+        $this->gestionnaireEnEditionId = null;
+        $this->reset(['nom', 'prenom', 'email', 'telephone']);
+        session()->flash('succes_modification', 'Profil du gestionnaire mis à jour.');
     }
 
     public function creer(): void

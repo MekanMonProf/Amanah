@@ -10,7 +10,8 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Un compte désactivé (gestionnaire ou investisseur) ne doit plus pouvoir travailler,
  * y compris s'il était déjà connecté au moment de la désactivation — le blocage à la
- * connexion seul (LoginForm) ne suffit pas pour une session en cours.
+ * connexion seule (resources/views/livewire/pages/auth/login.blade.php) ne suffit pas
+ * pour une session déjà en cours.
  */
 class EnsureCompteActif
 {
@@ -24,7 +25,7 @@ class EnsureCompteActif
             $request->session()->regenerateToken();
 
             return redirect()->route('login')->withErrors([
-                'email' => 'Ce compte a été désactivé. Contactez un administrateur.',
+                'identifiant' => 'Ce compte a été désactivé. Contactez un administrateur.',
             ]);
         }
 

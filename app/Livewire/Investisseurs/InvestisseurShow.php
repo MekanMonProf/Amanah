@@ -97,7 +97,9 @@ class InvestisseurShow extends Component
 
         $user = User::create([
             'nom' => $this->investisseur->nom,
-            'prenom' => $this->investisseur->prenom,
+            // users.prenom est NOT NULL en base, contrairement à investisseurs.prenom —
+            // un investisseur "morale" (entreprise) n'a souvent pas de prénom renseigné.
+            'prenom' => $this->investisseur->prenom ?? '',
             // Le téléphone n'est stocké ici que lorsqu'il sert réellement d'identifiant
             // de connexion (pas d'email) — sinon deux comptes email pourraient partager
             // le même téléphone de famille et se heurter à la contrainte d'unicité.

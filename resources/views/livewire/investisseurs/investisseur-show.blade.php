@@ -90,8 +90,13 @@
 
     @if ($dernierMotDePasseGenere)
         <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6 text-sm text-amber-800">
-            ✓ Identifiants de connexion envoyés par email à {{ $investisseur->email }}.
-            <span class="text-xs text-amber-600">(mot de passe généré : <span class="font-mono">{{ $dernierMotDePasseGenere }}</span>, au cas où l'email n'arrive pas)</span>
+            @if ($investisseur->user?->email)
+                ✓ Identifiants de connexion envoyés par email à {{ $investisseur->user->email }}.
+                <span class="text-xs text-amber-600">(mot de passe généré : <span class="font-mono">{{ $dernierMotDePasseGenere }}</span>, au cas où l'email n'arrive pas)</span>
+            @else
+                ✓ Accès créé — connexion par téléphone ({{ $investisseur->user?->telephone }}). Pas d'email sur ce dossier, transmettez le mot de passe directement à l'investisseur :
+                <span class="text-sm font-mono font-semibold">{{ $dernierMotDePasseGenere }}</span>
+            @endif
         </div>
     @endif
 
@@ -99,9 +104,9 @@
         <div class="mb-6">
             @if ($investisseur->user_id)
                 <span class="inline-block text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg px-4 py-2">
-                    ✓ Accès portail activé ({{ $investisseur->email }})
+                    ✓ Accès portail activé ({{ $investisseur->user->email ?? $investisseur->user->telephone }})
                 </span>
-                <button wire:click="reinitialiserMotDePasse" wire:confirm="Générer un nouveau mot de passe temporaire pour {{ $investisseur->email }} ?"
+                <button wire:click="reinitialiserMotDePasse" wire:confirm="Générer un nouveau mot de passe temporaire pour {{ $investisseur->user->email ?? $investisseur->user->telephone }} ?"
                         class="ml-2 text-sm text-blue-600 border border-blue-300 rounded-lg px-4 py-2 hover:bg-blue-50">
                     Réinitialiser le mot de passe
                 </button>

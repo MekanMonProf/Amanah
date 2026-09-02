@@ -59,6 +59,13 @@ class InvestisseurShow extends Component
         abort_if(! in_array(Auth::user()->role, ['direction', 'administrateur'], true), 403, 'Action réservée à la Direction/Administrateur.');
     }
 
+    /**
+     * La plupart des investisseurs n'ont pas d'email (téléphone quasi universel, email
+     * minoritaire) — l'accès portail utilise l'email s'il existe (comportement inchangé),
+     * sinon le téléphone comme identifiant de connexion. Le mot de passe reste affiché à
+     * l'écran dans les deux cas ; sans email il n'y a simplement personne à qui l'envoyer,
+     * le gestionnaire le transmet directement.
+     */
     public function creerAcces(): void
     {
         $this->interdireSiLectureSeule();
@@ -68,13 +75,21 @@ class InvestisseurShow extends Component
             return;
         }
 
-        if (! $this->investisseur->email) {
-            session()->flash('erreur_acces', 'Un email doit être renseigné sur le dossier avant de créer un accès (voir "Modifier le dossier").');
+        $aUnEmail = (bool) $this->investisseur->email;
+        $aUnTelephone = (bool) $this->investisseur->telephone;
+
+        if (! $aUnEmail && ! $aUnTelephone) {
+            session()->flash('erreur_acces', 'Un email ou un numéro de téléphone doit être renseigné sur le dossier avant de créer un accès (voir "Modifier le dossier").');
             return;
         }
 
-        if (User::where('email', $this->investisseur->email)->exists()) {
+        if ($aUnEmail && User::where('email', $this->investisseur->email)->exists()) {
             session()->flash('erreur_acces', 'Cet email est déjà utilisé par un autre compte utilisateur.');
+            return;
+        }
+
+        if (! $aUnEmail && User::where('telephone', $this->investisseur->telephone)->exists()) {
+            session()->flash('erreur_acces', 'Ce numéro de téléphone est déjà utilisé par un autre compte utilisateur.');
             return;
         }
 
@@ -83,8 +98,11 @@ class InvestisseurShow extends Component
         $user = User::create([
             'nom' => $this->investisseur->nom,
             'prenom' => $this->investisseur->prenom,
-            'email' => $this->investisseur->email,
-            'telephone' => $this->investisseur->telephone,
+            // Le téléphone n'est stocké ici que lorsqu'il sert réellement d'identifiant
+            // de connexion (pas d'email) — sinon deux comptes email pourraient partager
+            // le même téléphone de famille et se heurter à la contrainte d'unicité.
+            'email' => $aUnEmail ? $this->investisseur->email : null,
+            'telephone' => $aUnEmail ? null : $this->investisseur->telephone,
             'password' => Hash::make($motDePasse),
             'role' => 'investisseur',
             'actif' => true,
@@ -95,15 +113,21 @@ class InvestisseurShow extends Component
 
         $this->dernierMotDePasseGenere = $motDePasse;
 
-        \Illuminate\Support\Facades\Mail::to($this->investisseur->email)->send(
-            new \App\Mail\MotDePasseTemporaireMail($this->investisseur->nom . ' ' . $this->investisseur->prenom, $this->investisseur->email, $motDePasse, estNouveauCompte: true)
-        );
+        if ($aUnEmail) {
+            \Illuminate\Support\Facades\Mail::to($this->investisseur->email)->send(
+                new \App\Mail\MotDePasseTemporaireMail($this->investisseur->nom . ' ' . $this->investisseur->prenom, $this->investisseur->email, $motDePasse, estNouveauCompte: true)
+            );
+        }
 
         \App\Models\AuditLog::enregistrer(
             action: 'creation_acces_portail',
             entite: 'investisseur',
             entiteId: $this->investisseur->id,
-            apres: ['email' => $this->investisseur->email],
+            apres: [
+                'identifiant_connexion' => $aUnEmail ? 'email' : 'telephone',
+                'email' => $this->investisseur->email,
+                'telephone' => $this->investisseur->telephone,
+            ],
         );
     }
 
@@ -129,15 +153,17 @@ class InvestisseurShow extends Component
 
         $this->dernierMotDePasseGenere = $nouveauMotDePasse;
 
-        \Illuminate\Support\Facades\Mail::to($this->investisseur->email)->send(
-            new \App\Mail\MotDePasseTemporaireMail($this->investisseur->nom . ' ' . $this->investisseur->prenom, $this->investisseur->email, $nouveauMotDePasse, estNouveauCompte: false)
-        );
+        if ($this->investisseur->user->email) {
+            \Illuminate\Support\Facades\Mail::to($this->investisseur->user->email)->send(
+                new \App\Mail\MotDePasseTemporaireMail($this->investisseur->nom . ' ' . $this->investisseur->prenom, $this->investisseur->user->email, $nouveauMotDePasse, estNouveauCompte: false)
+            );
+        }
 
         \App\Models\AuditLog::enregistrer(
             action: 'reinitialisation_mdp',
             entite: 'investisseur',
             entiteId: $this->investisseur->id,
-            apres: ['email' => $this->investisseur->email],
+            apres: ['email' => $this->investisseur->user->email, 'telephone' => $this->investisseur->user->telephone],
         );
     }
 

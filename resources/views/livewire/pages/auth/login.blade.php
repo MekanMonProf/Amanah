@@ -10,24 +10,30 @@ use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 
 new #[Layout('layouts.guest')] class extends Component {
-    public string $email = '';
+    public string $identifiant = '';
     public string $password = '';
     public bool $remember = false;
 
     public function login(): void
     {
         $this->validate([
-            'email' => ['required', 'string', 'email'],
+            'identifiant' => ['required', 'string'],
             'password' => ['required', 'string'],
         ]);
 
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
+        // Un investisseur peut se connecter par email OU par téléphone (la plupart n'ont
+        // pas d'email) — on détecte le format saisi pour interroger la bonne colonne.
+        // 'actif' => true bloque un compte désactivé dès la connexion, pas seulement sur
+        // la requête suivante (voir EnsureCompteActif pour une session déjà ouverte).
+        $champ = filter_var($this->identifiant, FILTER_VALIDATE_EMAIL) ? 'email' : 'telephone';
+
+        if (! Auth::attempt([$champ => $this->identifiant, 'password' => $this->password, 'actif' => true], $this->remember)) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'email' => 'Ces identifiants ne correspondent à aucun compte.',
+                'identifiant' => 'Ces identifiants ne correspondent à aucun compte.',
             ]);
         }
 
@@ -48,13 +54,13 @@ new #[Layout('layouts.guest')] class extends Component {
         $seconds = RateLimiter::availableIn($this->throttleKey());
 
         throw ValidationException::withMessages([
-            'email' => "Trop de tentatives de connexion. Merci de réessayer dans {$seconds} secondes.",
+            'identifiant' => "Trop de tentatives de connexion. Merci de réessayer dans {$seconds} secondes.",
         ]);
     }
 
     protected function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->email).'|'.request()->ip());
+        return Str::transliterate(Str::lower($this->identifiant).'|'.request()->ip());
     }
 }; ?>
 
@@ -63,9 +69,9 @@ new #[Layout('layouts.guest')] class extends Component {
 
     <form wire:submit="login">
         <div>
-            <x-input-label for="email" value="Email" />
-            <x-text-input wire:model="email" id="email" class="block mt-1 w-full" type="email" name="email" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+            <x-input-label for="identifiant" value="Email ou téléphone" />
+            <x-text-input wire:model="identifiant" id="identifiant" class="block mt-1 w-full" type="text" name="identifiant" required autofocus autocomplete="username" />
+            <x-input-error :messages="$errors->get('identifiant')" class="mt-2" />
         </div>
 
         <div class="mt-4">

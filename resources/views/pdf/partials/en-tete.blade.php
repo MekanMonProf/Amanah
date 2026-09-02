@@ -5,7 +5,10 @@
     du support des images distantes.
 --}}
 @php
-    $cheminLogo = public_path('images/logo.jpeg');
+    // DomPDF a besoin de l'extension GD pour traiter un PNG avec canal alpha (absente sur
+    // cet environnement) — on utilise ici une version aplatie sur fond blanc du même logo
+    // (logo.png), visuellement identique sur une page PDF qui est de toute façon blanche.
+    $cheminLogo = public_path('images/logo-pdf.jpg');
     $logoDataUri = file_exists($cheminLogo)
         ? 'data:image/jpeg;base64,' . base64_encode(file_get_contents($cheminLogo))
         : null;

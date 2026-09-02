@@ -1,1 +1,1 @@
-<img src="{{ asset('images/logo.jpeg') }}" alt="AMANAH" {{ $attributes->class(['w-auto object-contain']) }}>
+<img src="{{ asset('images/logo.png') }}" alt="AMANAH" {{ $attributes->class(['w-auto object-contain']) }}>

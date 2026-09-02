@@ -20,7 +20,11 @@ class ModeleImportController extends Controller
     {
         abort_unless(array_key_exists($type, ImportateurDonnees::TYPES), 404);
 
-        $entetes = array_keys(ImportateurDonnees::schema($type));
+        // Les libellés (pas les noms techniques de colonne) : un client qui ouvre le
+        // modèle doit voir "Date de naissance", pas "date_naissance". L'import les
+        // reconnaît de toute façon (voir ImportateurDonnees::alias()), donc rien ne
+        // change côté lecture.
+        $entetes = array_map(fn ($colonne) => $colonne['libelle'], ImportateurDonnees::schema($type));
         $nom = 'modele_import_' . $type . '.csv';
 
         return response()->streamDownload(function () use ($entetes) {

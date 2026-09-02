@@ -165,6 +165,9 @@ class ImportateurDonnees
             'e_mail' => 'email',
             'courriel' => 'email',
             'adresse_email' => 'email',
+            // Libellé exact du modèle téléchargeable (ModeleImportController) : doit
+            // rester reconnu si le fichier est réimporté sans modifier les en-têtes.
+            'email_identifiant_de_connexion' => 'email',
         ];
 
         $particuliers = match ($type) {
@@ -198,10 +201,14 @@ class ImportateurDonnees
                 'denomination_sociale' => 'raison_sociale',
                 'representant_legal' => 'representant_legal_nom',
                 'telephone_representant' => 'representant_legal_telephone',
+                'telephone_du_representant' => 'representant_legal_telephone',
                 'beneficiaire' => 'beneficiaire_nom',
+                'beneficiaire_designe' => 'beneficiaire_nom',
                 'lien_beneficiaire' => 'beneficiaire_lien',
                 'lien_de_parente' => 'beneficiaire_lien',
+                'lien_du_beneficiaire' => 'beneficiaire_lien',
                 'telephone_beneficiaire' => 'beneficiaire_telephone',
+                'telephone_du_beneficiaire' => 'beneficiaire_telephone',
                 'date_convention' => 'date_signature_convention',
                 'date_signature' => 'date_signature_convention',
                 'date_de_signature_de_la_convention' => 'date_signature_convention',

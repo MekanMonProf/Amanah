@@ -164,20 +164,20 @@ Avec un compte **`investisseur`** :
 
 *À tester avec un extrait de vos vrais fichiers, pas seulement le modèle. **Faites une sauvegarde avant le premier import réel** (`php artisan backup:run`).*
 
-- [ ] Page accessible depuis le menu **Import** ; un gestionnaire ou un compte "lecture" reçoit bien un refus
-- [ ] "Télécharger le modèle CSV" : le fichier s'ouvre dans Excel en colonnes, accents corrects
-- [ ] Dépôt d'un **.xlsx** et d'un **.csv** : les deux sont lus (dates et montants repris correctement)
-- [ ] Un fichier avec vos propres intitulés de colonnes ("Nb actions", "Date de naissance"…) est reconnu ; ce qui ne l'est pas est listé en jaune
-- [ ] Tableau de contrôle : les lignes fausses apparaissent en rouge avec une explication compréhensible
-- [ ] Rien n'est enregistré tant que le bouton "Importer" n'a pas été cliqué (vérifier en quittant la page)
-- [ ] **Ordre** gestionnaires → investisseurs → achats → écritures : un achat dont l'investisseur n'existe pas encore est refusé avec le bon message
-- [ ] Import des **gestionnaires** : mots de passe temporaires affichés, changement forcé à la 1ère connexion (aucun email envoyé par l'import)
-- [ ] Import des **investisseurs** : identifiant repris de l'ancien fichier, ou généré (A0001…) si la colonne est vide ; rattachement au bon gestionnaire
-- [ ] Import des **achats** : compte créé automatiquement, date d'ouverture recalée sur le plus ancien achat, nombre d'actions correct sur la fiche
-- [ ] Après l'import des achats : **Dividendes → Calculer et distribuer** rattrape bien les mois passés
-- [ ] Import des **écritures** : solde final identique à l'ancien fichier ; un montant de "paiement" saisi en positif est bien converti en débit (annoncé dans le tableau)
-- [ ] **Réimport du même fichier** : tout ressort en "doublon", aucune ligne dupliquée en base
-- [ ] Chaque import apparaît dans `/audit` (action "import", avec nom du fichier et nombre de lignes)
+- [x] Page accessible depuis le menu **Import** ; un gestionnaire ou un compte "lecture" reçoit bien un refus
+- [x] "Télécharger le modèle CSV" : le fichier s'ouvre dans Excel en colonnes, accents corrects
+- [x] Dépôt d'un **.xlsx** et d'un **.csv** : les deux sont lus (dates et montants repris correctement)
+- [x] Un fichier avec vos propres intitulés de colonnes ("Nb actions", "Date de naissance"…) est reconnu ; ce qui ne l'est pas est listé en jaune
+- [x] Tableau de contrôle : les lignes fausses apparaissent en rouge avec une explication compréhensible
+- [x] Rien n'est enregistré tant que le bouton "Importer" n'a pas été cliqué (vérifier en quittant la page)
+- [x] **Ordre** gestionnaires → investisseurs → achats → écritures : un achat dont l'investisseur n'existe pas encore est refusé avec le bon message
+- [x] Import des **gestionnaires** : mots de passe temporaires affichés, changement forcé à la 1ère connexion (aucun email envoyé par l'import)
+- [x] Import des **investisseurs** : identifiant repris de l'ancien fichier, ou généré (A0001…) si la colonne est vide ; rattachement au bon gestionnaire
+- [x] Import des **achats** : compte créé automatiquement, date d'ouverture recalée sur le plus ancien achat, nombre d'actions correct sur la fiche
+- [x] Après l'import des achats : **Dividendes → Calculer et distribuer** rattrape bien les mois passés
+- [x] Import des **écritures** : solde final identique à l'ancien fichier ; un montant de "paiement" saisi en positif est bien converti en débit (annoncé dans le tableau)
+- [x] **Réimport du même fichier** : tout ressort en "doublon", aucune ligne dupliquée en base
+- [x] Chaque import apparaît dans `/audit` (action "import", avec nom du fichier et nombre de lignes)
 
 ---
 

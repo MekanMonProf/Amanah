@@ -19,8 +19,7 @@
 </head>
 <body>
     <div class="en-tete">
-        <div class="nom-projet">AMANAH</div>
-        <div class="sous-titre">Plateforme de Gestion des Investissements — AND DOX S.A.</div>
+        @include('pdf.partials.en-tete')
     </div>
 
     <h1>Export global — Toutes les radiations</h1>

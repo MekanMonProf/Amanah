@@ -33,8 +33,7 @@
 <body>
 
     <div class="en-tete">
-        <div class="nom-projet">AMANAH</div>
-        <div class="sous-titre">Plateforme de Gestion des Investissements — AND DOX S.A.</div>
+        @include('pdf.partials.en-tete')
     </div>
 
     <h1 style="font-size: 15px; margin-bottom: 6px;">Relevé de compte</h1>

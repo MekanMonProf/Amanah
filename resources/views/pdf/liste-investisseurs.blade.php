@@ -21,10 +21,7 @@
 </head>
 <body>
     <div class="en-tete">
-        <div>
-            <div class="nom-projet">AMANAH</div>
-            <div class="sous-titre">Plateforme de Gestion des Investissements — AND DOX S.A.</div>
-        </div>
+        @include('pdf.partials.en-tete')
     </div>
 
     <h1>Liste des investisseurs</h1>

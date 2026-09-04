@@ -81,6 +81,13 @@
             <option value="inactif">Inactif</option>
         </select>
 
+        <select wire:model.live="filtreAcces" class="border rounded px-3 py-2 w-full sm:w-auto">
+            <option value="">Tous les accès</option>
+            <option value="email">Connexion par email</option>
+            <option value="telephone">Connexion par téléphone</option>
+            <option value="aucun">Pas d'accès portail</option>
+        </select>
+
         @if ($gestionnaires->isNotEmpty())
             <select wire:model.live="filtreGestionnaireId" class="border rounded px-3 py-2 w-full sm:w-auto">
                 <option value="">Tous les gestionnaires</option>
@@ -90,7 +97,7 @@
             </select>
         @endif
 
-        @if ($recherche || $filtreStatut || $filtreGestionnaireId)
+        @if ($recherche || $filtreStatut || $filtreGestionnaireId || $filtreAcces)
             <button wire:click="reinitialiserFiltres" class="text-xs text-gray-500 hover:underline">
                 Réinitialiser
             </button>
@@ -115,6 +122,15 @@
                     {{ $inv->gestionnaire?->user?->nom ?? 'Sans gestionnaire' }}
                     @if ($inv->pays) · {{ $inv->pays }} @endif
                 </div>
+                <div class="mt-1">
+                    @if ($inv->user?->email)
+                        <span class="text-xs text-gray-500">📧 Email</span>
+                    @elseif ($inv->user?->telephone)
+                        <span class="text-xs text-gray-500">📱 Téléphone</span>
+                    @else
+                        <span class="text-xs text-gray-400">— Pas d'accès</span>
+                    @endif
+                </div>
             </a>
         @empty
             <div class="bg-white border rounded-lg p-6 text-center text-gray-400">Aucun investisseur ne correspond aux critères.</div>
@@ -138,6 +154,7 @@
                 <th class="p-3 cursor-pointer select-none" wire:click="trierPar('statut')">
                     Statut {!! $tri === 'statut' ? ($direction === 'asc' ? '↑' : '↓') : '' !!}
                 </th>
+                <th class="p-3">Accès</th>
                 <th class="p-3"></th>
             </tr>
         </thead>
@@ -155,6 +172,15 @@
                             {{ $inv->statut }}
                         </span>
                     </td>
+                    <td class="p-3 text-sm text-gray-600 whitespace-nowrap">
+                        @if ($inv->user?->email)
+                            📧 Email
+                        @elseif ($inv->user?->telephone)
+                            📱 Téléphone
+                        @else
+                            <span class="text-gray-400">—</span>
+                        @endif
+                    </td>
                     <td class="p-3 text-right">
                         <a href="{{ route('investisseurs.show', $inv) }}" class="text-emerald-700 text-sm hover:underline">
                             Voir le dossier →
@@ -162,7 +188,7 @@
                     </td>
                 </tr>
             @empty
-                <tr><td colspan="6" class="p-6 text-center text-gray-400">Aucun investisseur ne correspond aux critères.</td></tr>
+                <tr><td colspan="7" class="p-6 text-center text-gray-400">Aucun investisseur ne correspond aux critères.</td></tr>
             @endforelse
         </tbody>
     </table>

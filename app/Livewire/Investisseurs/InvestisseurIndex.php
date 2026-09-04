@@ -18,6 +18,7 @@ class InvestisseurIndex extends Component
     public string $recherche = '';
     public ?int $filtreGestionnaireId = null;
     public string $filtreStatut = '';
+    public string $filtreAcces = '';
     public bool $afficherFormulaire = false;
 
     public string $tri = 'nom';
@@ -71,10 +72,11 @@ class InvestisseurIndex extends Component
     public function updatingRecherche(): void { $this->resetPage(); }
     public function updatingFiltreGestionnaireId(): void { $this->resetPage(); }
     public function updatingFiltreStatut(): void { $this->resetPage(); }
+    public function updatingFiltreAcces(): void { $this->resetPage(); }
 
     public function reinitialiserFiltres(): void
     {
-        $this->reset(['recherche', 'filtreStatut']);
+        $this->reset(['recherche', 'filtreStatut', 'filtreAcces']);
         if (Auth::user()->role !== 'gestionnaire') {
             $this->reset('filtreGestionnaireId');
         }
@@ -145,7 +147,7 @@ class InvestisseurIndex extends Component
      */
     protected function requeteFiltree()
     {
-        $query = Investisseur::query()->with('gestionnaire.user');
+        $query = Investisseur::query()->with('gestionnaire.user', 'user');
 
         if ($this->recherche) {
             $query->where(function ($q) {
@@ -167,6 +169,17 @@ class InvestisseurIndex extends Component
 
         if ($this->filtreStatut) {
             $query->where('statut', $this->filtreStatut);
+        }
+
+        // Mode de connexion : la plupart des investisseurs n'ont pas d'email (voir
+        // InvestisseurShow::creerAcces()) — email et téléphone ne servent jamais tous
+        // les deux d'identifiant sur un même compte, ce qui permet de les distinguer.
+        if ($this->filtreAcces === 'email') {
+            $query->whereHas('user', fn ($q) => $q->whereNotNull('email'));
+        } elseif ($this->filtreAcces === 'telephone') {
+            $query->whereHas('user', fn ($q) => $q->whereNull('email')->whereNotNull('telephone'));
+        } elseif ($this->filtreAcces === 'aucun') {
+            $query->whereNull('user_id');
         }
 
         return $query;

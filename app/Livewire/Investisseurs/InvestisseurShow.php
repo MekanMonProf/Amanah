@@ -76,9 +76,11 @@ class InvestisseurShow extends Component
         }
 
         $aUnEmail = (bool) $this->investisseur->email;
-        $aUnTelephone = (bool) $this->investisseur->telephone;
+        // Normalisé même si InvestisseurEdit l'a déjà fait à la saisie : couvre aussi les
+        // dossiers plus anciens jamais repassés par le formulaire depuis (voir App\Support\Telephone).
+        $telephoneNormalise = \App\Support\Telephone::normaliser($this->investisseur->telephone);
 
-        if (! $aUnEmail && ! $aUnTelephone) {
+        if (! $aUnEmail && $telephoneNormalise === null) {
             session()->flash('erreur_acces', 'Un email ou un numéro de téléphone doit être renseigné sur le dossier avant de créer un accès (voir "Modifier le dossier").');
             return;
         }
@@ -88,7 +90,7 @@ class InvestisseurShow extends Component
             return;
         }
 
-        if (! $aUnEmail && User::where('telephone', $this->investisseur->telephone)->exists()) {
+        if (! $aUnEmail && User::where('telephone', $telephoneNormalise)->exists()) {
             session()->flash('erreur_acces', 'Ce numéro de téléphone est déjà utilisé par un autre compte utilisateur.');
             return;
         }
@@ -104,7 +106,7 @@ class InvestisseurShow extends Component
             // de connexion (pas d'email) — sinon deux comptes email pourraient partager
             // le même téléphone de famille et se heurter à la contrainte d'unicité.
             'email' => $aUnEmail ? $this->investisseur->email : null,
-            'telephone' => $aUnEmail ? null : $this->investisseur->telephone,
+            'telephone' => $aUnEmail ? null : $telephoneNormalise,
             'password' => Hash::make($motDePasse),
             'role' => 'investisseur',
             'actif' => true,

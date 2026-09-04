@@ -89,7 +89,7 @@ class GestionnaireIndex extends Component
             'nom' => $this->nom,
             'prenom' => $this->prenom ?: null,
             'email' => $this->email,
-            'telephone' => $this->telephone ?: null,
+            'telephone' => \App\Support\Telephone::normaliser($this->telephone),
         ]);
 
         \App\Models\AuditLog::enregistrer(
@@ -113,7 +113,7 @@ class GestionnaireIndex extends Component
             'nom' => $this->nom,
             'prenom' => $this->prenom,
             'email' => $this->email,
-            'telephone' => $this->telephone ?: null,
+            'telephone' => \App\Support\Telephone::normaliser($this->telephone),
             'password' => Hash::make($this->mot_de_passe),
             'role' => 'gestionnaire',
             'actif' => true,

@@ -161,7 +161,7 @@ class InvestisseurEdit extends Component
             'nom' => $this->nom,
             'prenom' => $this->prenom ?: null,
             'email' => $this->email ?: null,
-            'telephone' => $this->telephone ?: null,
+            'telephone' => \App\Support\Telephone::normaliser($this->telephone),
             'adresse' => $this->adresse ?: null,
             'ville' => $this->ville ?: null,
             'pays' => $this->pays ?: null,
@@ -178,10 +178,10 @@ class InvestisseurEdit extends Component
             'rccm' => $this->rccm ?: null,
             'ninea' => $this->ninea ?: null,
             'representant_legal_nom' => $this->representant_legal_nom ?: null,
-            'representant_legal_telephone' => $this->representant_legal_telephone ?: null,
+            'representant_legal_telephone' => \App\Support\Telephone::normaliser($this->representant_legal_telephone),
             'beneficiaire_nom' => $this->beneficiaire_nom ?: null,
             'beneficiaire_lien' => $this->beneficiaire_lien ?: null,
-            'beneficiaire_telephone' => $this->beneficiaire_telephone ?: null,
+            'beneficiaire_telephone' => \App\Support\Telephone::normaliser($this->beneficiaire_telephone),
             'notes_internes' => $this->notes_internes ?: null,
         ];
 

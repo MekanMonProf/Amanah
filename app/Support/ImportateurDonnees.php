@@ -469,6 +469,9 @@ class ImportateurDonnees
 
         $email = strtolower($d['email']);
         $d['email'] = $email;
+        // Voir App\Support\Telephone : "+221771234500", "00221771234500" et "771234500"
+        // doivent être reconnus comme le même numéro, pas trois lignes différentes.
+        $d['telephone'] = (string) (Telephone::normaliser($d['telephone']) ?? '');
 
         if (isset($reference['emails'][$email])) {
             return $this->enDoublon($ligne, 'Un compte utilisateur existe déjà avec cet email.');
@@ -506,6 +509,11 @@ class ImportateurDonnees
         if ($erreurs) {
             return $this->enErreur($ligne, $erreurs);
         }
+
+        // Voir App\Support\Telephone : uniformise "+221...", "00221..." et le format
+        // local, et laisse les numéros étrangers (France, USA...) tels quels sans
+        // deviner un indicatif incertain.
+        $d['telephone'] = (string) (Telephone::normaliser($d['telephone']) ?? '');
 
         $messages = [];
 

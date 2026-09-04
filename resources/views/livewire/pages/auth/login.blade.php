@@ -25,11 +25,17 @@ new #[Layout('layouts.guest')] class extends Component {
 
         // Un investisseur peut se connecter par email OU par téléphone (la plupart n'ont
         // pas d'email) — on détecte le format saisi pour interroger la bonne colonne.
+        // Le téléphone est normalisé avant comparaison : peu importe que la personne
+        // tape « 771234567 », « 00221771234567 » ou « +221771234567 », c'est le même
+        // numéro (voir App\Support\Telephone — c'est aussi la forme enregistrée par
+        // InvestisseurShow::creerAcces()).
         // 'actif' => true bloque un compte désactivé dès la connexion, pas seulement sur
         // la requête suivante (voir EnsureCompteActif pour une session déjà ouverte).
-        $champ = filter_var($this->identifiant, FILTER_VALIDATE_EMAIL) ? 'email' : 'telephone';
+        $estEmail = filter_var($this->identifiant, FILTER_VALIDATE_EMAIL);
+        $champ = $estEmail ? 'email' : 'telephone';
+        $valeur = $estEmail ? $this->identifiant : \App\Support\Telephone::normaliser($this->identifiant);
 
-        if (! Auth::attempt([$champ => $this->identifiant, 'password' => $this->password, 'actif' => true], $this->remember)) {
+        if ($valeur === null || ! Auth::attempt([$champ => $valeur, 'password' => $this->password, 'actif' => true], $this->remember)) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([

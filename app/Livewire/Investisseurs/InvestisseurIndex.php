@@ -123,7 +123,7 @@ class InvestisseurIndex extends Component
             'identifiant_externe' => $identifiant,
             'nom' => $this->nom,
             'prenom' => $this->prenom,
-            'telephone' => $this->telephone,
+            'telephone' => \App\Support\Telephone::normaliser($this->telephone),
             'email' => $this->email ?: null,
             'pays' => $this->pays,
             'gestionnaire_id' => $gestionnaireId,

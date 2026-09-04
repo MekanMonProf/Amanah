@@ -469,8 +469,14 @@ class ImportateurDonnees
 
         $email = strtolower($d['email']);
         $d['email'] = $email;
+
         // Voir App\Support\Telephone : "+221771234500", "00221771234500" et "771234500"
         // doivent être reconnus comme le même numéro, pas trois lignes différentes.
+        // Un numéro étranger dont l'indicatif n'est pas reconnaissable n'est jamais
+        // accepté en silence — le fichier doit préciser l'indicatif (ex: +33...).
+        if (Telephone::estAmbigu($d['telephone'])) {
+            return $this->enErreur($ligne, "Téléphone « {$d['telephone']} » : numéro étranger, précisez l'indicatif pays devant (ex : +33 pour la France, +221 pour le Sénégal).");
+        }
         $d['telephone'] = (string) (Telephone::normaliser($d['telephone']) ?? '');
 
         if (isset($reference['emails'][$email])) {
@@ -511,8 +517,11 @@ class ImportateurDonnees
         }
 
         // Voir App\Support\Telephone : uniformise "+221...", "00221..." et le format
-        // local, et laisse les numéros étrangers (France, USA...) tels quels sans
-        // deviner un indicatif incertain.
+        // local. Un numéro étranger dont l'indicatif n'est pas reconnaissable n'est
+        // jamais accepté en silence — le fichier doit préciser l'indicatif (ex: +33...).
+        if (Telephone::estAmbigu($d['telephone'])) {
+            return $this->enErreur($ligne, "Téléphone « {$d['telephone']} » : numéro étranger, précisez l'indicatif pays devant (ex : +33 pour la France, +221 pour le Sénégal).");
+        }
         $d['telephone'] = (string) (Telephone::normaliser($d['telephone']) ?? '');
 
         $messages = [];

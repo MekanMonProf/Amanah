@@ -83,6 +83,11 @@ class GestionnaireIndex extends Component
             'telephone' => 'nullable|string|max:30',
         ]);
 
+        if (\App\Support\Telephone::estAmbigu($this->telephone)) {
+            $this->addError('telephone', 'Ce numéro semble étranger : précisez l\'indicatif pays devant (ex : +33 pour la France, +221 pour le Sénégal).');
+            return;
+        }
+
         $avant = $gestionnaire->user->only(['nom', 'prenom', 'email', 'telephone']);
 
         $gestionnaire->user->update([
@@ -108,6 +113,11 @@ class GestionnaireIndex extends Component
     public function creer(): void
     {
         $this->validate();
+
+        if (\App\Support\Telephone::estAmbigu($this->telephone)) {
+            $this->addError('telephone', 'Ce numéro semble étranger : précisez l\'indicatif pays devant (ex : +33 pour la France, +221 pour le Sénégal).');
+            return;
+        }
 
         $user = User::create([
             'nom' => $this->nom,

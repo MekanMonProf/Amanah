@@ -18,10 +18,12 @@ namespace App\Support;
  * l'indicatif collé mais sans « + » ni « 00» (ex: « 33612345678 »,
  * « 393336487419 »). On reconnaît un indicatif au début du numéro seulement
  * s'il figure dans INDICATIFS_CONNUS ET que la longueur du reste correspond à
- * un numéro national plausible pour ce pays — sans ces deux conditions, un
- * numéro local sans indicatif (ex: un français en 0612345678) ressemblerait à
- * trop d'autres formats pour deviner le pays sans risque de se tromper ; il
- * est alors nettoyé (espaces, tirets) mais laissé tel quel.
+ * un numéro national plausible pour ce pays — sans ces deux conditions,
+ * impossible de deviner le pays sans risque de se tromper (un numéro local
+ * français en 0612345678 ressemble à trop d'autres formats nationaux). Dans
+ * ce cas, normaliser() renvoie le numéro nettoyé mais sans indicatif : c'est
+ * à l'appelant de refuser cette valeur ambiguë via estAmbigu() et de demander
+ * explicitement l'indicatif à l'utilisateur plutôt que de l'accepter en silence.
  */
 class Telephone
 {
@@ -126,5 +128,18 @@ class Telephone
         $b = static::normaliser($b);
 
         return $a !== null && $a === $b;
+    }
+
+    /**
+     * True si la valeur ressemble a un numero etranger dont l'indicatif n'a pas pu
+     * etre reconnu (normaliser() renvoie alors des chiffres bruts, sans "+") — plutot
+     * que d'accepter ce numero ambigu en silence, l'appelant doit demander
+     * explicitement l'indicatif pays a l'utilisateur (ex: "+33 pour la France").
+     */
+    public static function estAmbigu(?string $valeur): bool
+    {
+        $normalise = static::normaliser($valeur);
+
+        return $normalise !== null && ! str_starts_with($normalise, '+');
     }
 }

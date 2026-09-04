@@ -156,6 +156,16 @@ class InvestisseurEdit extends Component
     {
         $this->validate();
 
+        // Un numéro étranger dont l'indicatif n'est pas reconnaissable (ex: un
+        // français en 0612345678) ne doit jamais être accepté en silence — voir
+        // App\Support\Telephone. Ce champ sert d'identifiant de connexion, la
+        // vérification est donc plus stricte ici que sur les contacts secondaires
+        // (bénéficiaire, représentant légal) ci-dessous.
+        if (\App\Support\Telephone::estAmbigu($this->telephone)) {
+            $this->addError('telephone', 'Ce numéro semble étranger : précisez l\'indicatif pays devant (ex : +33 pour la France, +221 pour le Sénégal).');
+            return;
+        }
+
         $donnees = [
             'type_personne' => $this->type_personne,
             'nom' => $this->nom,

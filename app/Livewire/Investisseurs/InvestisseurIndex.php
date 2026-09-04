@@ -108,6 +108,15 @@ class InvestisseurIndex extends Component
 
         $this->validate();
 
+        // Un numéro étranger dont l'indicatif n'est pas reconnaissable (ex: un
+        // français en 0612345678) ne doit jamais être accepté en silence : mieux
+        // vaut demander l'indicatif explicitement (ex: +33...) que de risquer de
+        // confondre deux personnes plus tard (voir App\Support\Telephone).
+        if (\App\Support\Telephone::estAmbigu($this->telephone)) {
+            $this->addError('telephone', 'Ce numéro semble étranger : précisez l\'indicatif pays devant (ex : +33 pour la France, +221 pour le Sénégal).');
+            return;
+        }
+
         do {
             $identifiant = $this->genererProchainIdentifiant();
         } while (Investisseur::where('identifiant_externe', $identifiant)->exists());

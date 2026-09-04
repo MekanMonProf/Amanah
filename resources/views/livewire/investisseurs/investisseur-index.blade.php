@@ -39,7 +39,8 @@
                 </div>
                 <div>
                     <label class="text-sm text-gray-600">Téléphone</label>
-                    <input type="text" wire:model="telephone" class="w-full border rounded px-3 py-2">
+                    <input type="text" wire:model="telephone" placeholder="771234567 ou +33... si étranger" class="w-full border rounded px-3 py-2">
+                    @error('telephone') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                 </div>
                 <div>
                     <label class="text-sm text-gray-600">Email</label>

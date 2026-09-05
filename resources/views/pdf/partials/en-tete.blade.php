@@ -24,8 +24,8 @@
 <table style="width: 100%; border-collapse: collapse;">
     <tr>
         @if ($logoAndDox)
-            <td style="width: 44px; vertical-align: middle; padding: 0;">
-                <img src="{{ $logoAndDox }}" style="height: 40px; width: auto;">
+            <td style="width: 68px; vertical-align: middle; padding: 0;">
+                <img src="{{ $logoAndDox }}" style="height: 46px; width: auto;">
             </td>
         @endif
         <td style="vertical-align: middle; padding: 0 0 0 {{ $logoAndDox ? '10px' : '0' }};">
@@ -34,8 +34,8 @@
         </td>
         @if ($logoWaqf)
             <td style="width: 50px; vertical-align: middle; padding: 0; text-align: right;">
-                {{-- Un peu plus haut que le logo AND DOX : le Waqf est quasi carre, il
-                     parait sinon nettement plus petit a hauteur egale. --}}
+                {{-- Plus haut que le logo AND DOX, qui est large la ou celui-ci est quasi
+                     carre : c'est la surface, pas la hauteur, qui equilibre les deux. --}}
                 <img src="{{ $logoWaqf }}" style="height: 54px; width: auto;">
             </td>
         @endif

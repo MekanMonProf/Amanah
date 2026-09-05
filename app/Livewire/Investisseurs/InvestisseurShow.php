@@ -257,6 +257,16 @@ class InvestisseurShow extends Component
 
         return view('livewire.investisseurs.investisseur-show', [
             'comptesEnrichis' => $comptesEnrichis,
+            // Les actions offertes à la mémoire d'un défunt sont portées au compte du Waqf
+            // caritatif : sans ce rappel, elles seraient invisibles sur la fiche du donateur.
+            'offrandes' => \App\Models\AchatAction::where('offert_par_investisseur_id', $this->investisseur->id)
+                ->latest('date_achat')->get(),
+            // Et symétriquement, les offrandes reçues quand cette fiche est celle d'un défunt.
+            'offrandesRecues' => $this->investisseur->estDecede()
+                ? \App\Models\AchatAction::with('offertPar')
+                    ->where('en_memoire_investisseur_id', $this->investisseur->id)
+                    ->latest('date_achat')->get()
+                : collect(),
             'gestionnaires' => in_array(Auth::user()->role, ['direction', 'administrateur'], true)
                 ? Gestionnaire::with('user')->where('actif', true)->get()
                 : collect(),

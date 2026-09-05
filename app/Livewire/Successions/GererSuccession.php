@@ -146,17 +146,7 @@ class GererSuccession extends Component
 
     protected function compteWaqfCaritatif(): CompteInvestissement
     {
-        $investisseurCaritatif = Investisseur::firstOrCreate(
-            ['nom' => 'Waqf Dolel Xamxam', 'type_personne' => 'morale'],
-            [
-                'identifiant_externe' => Investisseur::prochainIdentifiant(),
-                'raison_sociale' => 'Waqf Dolel Xamxam',
-                'statut' => 'actif',
-                'notes_internes' => 'Compte institutionnel recevant automatiquement le capital Waqf des successions, conformément au principe d\'inaliénabilité du Waqf.',
-            ]
-        );
-
-        return $investisseurCaritatif->compteOuCree('waqf');
+        return Investisseur::waqfCaritatif()->compteOuCree('waqf');
     }
 
     protected function creerDossierMandataire(Heritier $mandataire): void

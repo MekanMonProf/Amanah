@@ -263,6 +263,57 @@
         </div>
     @endif
 
+    @if ($offrandes->isNotEmpty())
+        <div class="bg-purple-50 border border-purple-200 rounded-lg p-4 mb-4">
+            <h2 class="text-sm font-semibold text-purple-900 mb-1">Actions Waqf offertes à la mémoire d'un défunt</h2>
+            <p class="text-xs text-purple-700 mb-3">
+                Payées par cet investisseur, versées au Waqf caritatif « {{ \App\Models\Investisseur::NOM_WAQF_CARITATIF }} » — elles ne figurent donc pas dans ses comptes ci-dessous.
+            </p>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="text-xs text-purple-800 border-b border-purple-200">
+                        <tr>
+                            <th class="text-left py-1">Date</th>
+                            <th class="text-left py-1">À la mémoire de</th>
+                            <th class="text-right py-1">Actions</th>
+                            <th class="text-right py-1">Montant</th>
+                            <th class="text-right py-1">Attestation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($offrandes as $offrande)
+                            <tr class="border-b border-purple-100 last:border-0">
+                                <td class="py-1.5">{{ $offrande->date_achat->format('d/m/Y') }}</td>
+                                <td class="py-1.5 font-medium text-gray-800">{{ $offrande->en_memoire_de }}</td>
+                                <td class="py-1.5 text-right">{{ number_format($offrande->nombre_actions, 0, ',', ' ') }}</td>
+                                <td class="py-1.5 text-right">{{ number_format($offrande->montant, 0, ',', ' ') }} CFA</td>
+                                <td class="py-1.5 text-right">
+                                    <a href="{{ route('achats.attestation', $offrande) }}" class="text-purple-700 hover:underline">PDF</a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    @endif
+
+    @if ($offrandesRecues->isNotEmpty())
+        <div class="bg-purple-50 border border-purple-200 rounded-lg p-4 mb-4">
+            <h2 class="text-sm font-semibold text-purple-900 mb-1">Actions Waqf offertes à sa mémoire</h2>
+            <p class="text-xs text-purple-700 mb-3">Offrandes versées au Waqf caritatif en son nom.</p>
+            <ul class="text-sm space-y-1">
+                @foreach ($offrandesRecues as $offrande)
+                    <li class="text-gray-800">
+                        {{ $offrande->date_achat->format('d/m/Y') }} —
+                        {{ number_format($offrande->nombre_actions, 0, ',', ' ') }} action(s)
+                        offerte(s) par <strong>{{ $offrande->offertPar?->nom }} {{ $offrande->offertPar?->prenom }}</strong>
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-3">
         <h2 class="text-lg font-semibold text-gray-800">Comptes d'investissement</h2>
         @if (auth()->user()->role !== 'lecture' && ! $investisseur->estDecede())

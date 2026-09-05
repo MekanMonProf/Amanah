@@ -63,7 +63,14 @@
                     <tr>
                         <td class="py-1 font-mono text-xs">{{ $achat->numero_achat }}</td>
                         <td class="py-1">{{ $achat->date_achat->format('d/m/Y') }}</td>
-                        <td class="py-1">{{ ucfirst($achat->type_achat) }}</td>
+                        <td class="py-1">
+                            {{ ucfirst($achat->type_achat) }}
+                            @if ($achat->estEnMemoire())
+                                <span class="block text-xs text-purple-700">
+                                    À la mémoire de {{ $achat->en_memoire_de }}@if ($achat->offertPar) — offert par {{ $achat->offertPar->nom }} {{ $achat->offertPar->prenom }}@endif
+                                </span>
+                            @endif
+                        </td>
                         <td class="py-1 text-right">{{ number_format($achat->nombre_actions, 0, ',', ' ') }}</td>
                         <td class="py-1 text-right">{{ number_format($achat->montant, 0, ',', ' ') }}</td>
                         <td class="py-1 text-xs text-gray-500">{{ $achat->mode_paiement ?: '—' }}</td>

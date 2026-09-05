@@ -19,9 +19,71 @@
                 </label>
             </div>
             <p class="text-xs text-gray-400 mt-1">
-                Si l'investisseur n'a pas encore de compte {{ $categorie }}, il sera créé automatiquement.
+                @if ($enMemoire)
+                    Les actions seront versées au compte institutionnel « {{ \App\Models\Investisseur::NOM_WAQF_CARITATIF }} ».
+                @else
+                    Si l'investisseur n'a pas encore de compte {{ $categorie }}, il sera créé automatiquement.
+                @endif
             </p>
         </div>
+
+        @if ($categorie === 'waqf')
+            <div class="border rounded-lg p-4 {{ $enMemoire ? 'border-purple-300 bg-purple-50' : 'bg-gray-50' }}">
+                <label class="flex items-start gap-3 cursor-pointer">
+                    <input type="checkbox" wire:model.live="enMemoire" class="mt-1 rounded border-gray-300 text-purple-600">
+                    <span>
+                        <span class="text-sm font-medium text-gray-800">Offrir ces actions à la mémoire d'un défunt</span>
+                        <span class="block text-xs text-gray-500 mt-0.5">
+                            {{ $investisseur->nom }} {{ $investisseur->prenom }} paie l'achat, mais les actions ne sont pas
+                            portées à son compte : elles sont versées au Waqf caritatif « {{ \App\Models\Investisseur::NOM_WAQF_CARITATIF }} ».
+                        </span>
+                    </span>
+                </label>
+                @error('enMemoire') <p class="text-red-600 text-sm mt-2">{{ $message }}</p> @enderror
+
+                @if ($enMemoire)
+                    <div class="mt-4 space-y-3 border-t border-purple-200 pt-4">
+                        <div>
+                            <label class="text-sm text-gray-600">Défunt honoré</label>
+                            <div class="flex gap-3 mt-1">
+                                <label class="flex-1 flex items-center justify-center gap-2 border rounded-lg px-3 py-2 cursor-pointer bg-white {{ $defuntSource === 'interne' ? 'border-purple-500' : '' }}">
+                                    <input type="radio" wire:model.live="defuntSource" value="interne" class="hidden">
+                                    <span class="text-sm">Investisseur de la plateforme</span>
+                                </label>
+                                <label class="flex-1 flex items-center justify-center gap-2 border rounded-lg px-3 py-2 cursor-pointer bg-white {{ $defuntSource === 'externe' ? 'border-purple-500' : '' }}">
+                                    <input type="radio" wire:model.live="defuntSource" value="externe" class="hidden">
+                                    <span class="text-sm">Personne extérieure</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        @if ($defuntSource === 'interne')
+                            <div>
+                                <select wire:model="defuntInvestisseurId" class="w-full border rounded px-3 py-2 bg-white">
+                                    <option value="">— Sélectionner un investisseur déclaré décédé —</option>
+                                    @foreach ($this->defuntsDisponibles as $defunt)
+                                        <option value="{{ $defunt->id }}">
+                                            {{ $defunt->nom }} {{ $defunt->prenom }} ({{ $defunt->identifiant_externe }}){{ $defunt->date_deces ? ' — décédé(e) le ' . $defunt->date_deces->format('d/m/Y') : '' }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('defuntInvestisseurId') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+                                @if ($this->defuntsDisponibles->isEmpty())
+                                    <p class="text-xs text-amber-700 mt-1">
+                                        Aucun investisseur n'est déclaré décédé — choisissez « Personne extérieure ».
+                                    </p>
+                                @endif
+                            </div>
+                        @else
+                            <div>
+                                <input type="text" wire:model="defuntNom" maxlength="150" placeholder="Nom et prénom du défunt" class="w-full border rounded px-3 py-2 bg-white">
+                                @error('defuntNom') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+                            </div>
+                        @endif
+                    </div>
+                @endif
+            </div>
+        @endif
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>

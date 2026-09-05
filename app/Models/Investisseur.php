@@ -141,4 +141,24 @@ class Investisseur extends Model
 
         return $identifiant;
     }
+
+    public const NOM_WAQF_CARITATIF = 'Waqf Dolel Xamxam';
+
+    /**
+     * Le compte institutionnel de l'œuvre caritative. Il reçoit deux flux : le capital Waqf
+     * des successions (inaliénabilité du Waqf) et les achats offerts à la mémoire d'un défunt.
+     * Créé à la volée pour ne pas dépendre d'un seeder.
+     */
+    public static function waqfCaritatif(): self
+    {
+        return static::firstOrCreate(
+            ['nom' => self::NOM_WAQF_CARITATIF, 'type_personne' => 'morale'],
+            [
+                'identifiant_externe' => static::prochainIdentifiant(),
+                'raison_sociale' => self::NOM_WAQF_CARITATIF,
+                'statut' => 'actif',
+                'notes_internes' => 'Compte institutionnel recevant automatiquement le capital Waqf des successions, conformément au principe d\'inaliénabilité du Waqf.',
+            ]
+        );
+    }
 }

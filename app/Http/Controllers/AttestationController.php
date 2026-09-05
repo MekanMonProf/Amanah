@@ -27,8 +27,18 @@ class AttestationController extends Controller
 
     public function achat(AchatAction $achat)
     {
-        $achat->load('compte.investisseur');
-        $this->verifierAcces($achat->compte);
+        $achat->load('compte.investisseur', 'offertPar');
+
+        // Un achat offert à la mémoire d'un défunt est porté au compte du Waqf caritatif :
+        // c'est le donateur, et non le titulaire du compte, qui a droit à l'attestation.
+        if ($achat->estEnMemoire()) {
+            $user = Auth::user();
+            if ($user->role === 'investisseur' && $achat->offert_par_investisseur_id !== optional($user->investisseurLie)->id) {
+                abort(403);
+            }
+        } else {
+            $this->verifierAcces($achat->compte);
+        }
 
         $pdf = Pdf::loadView('pdf.attestation-achat', [
             'achat' => $achat,

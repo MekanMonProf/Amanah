@@ -23,18 +23,45 @@
         @include('pdf.partials.en-tete')
     </div>
 
-    <h1>Attestation d'achat d'actions</h1>
+    <h1>{{ $achat->estEnMemoire() ? 'Attestation d\'offrande Waqf' : 'Attestation d\'achat d\'actions' }}</h1>
 
-    <p class="texte">
-        AND DOX S.A. atteste que <strong>{{ $investisseur->nom }} {{ $investisseur->prenom }}</strong>
-        (identifiant {{ $investisseur->identifiant_externe }}) a acquis
-        <strong>{{ number_format($achat->nombre_actions, 0, ',', ' ') }} action(s)</strong>
-        de catégorie <strong>{{ ucfirst($compte->categorie) }}</strong>,
-        au prix unitaire de {{ number_format($achat->prix_unitaire, 0, ',', ' ') }} CFA par action,
-        le {{ $achat->date_achat->translatedFormat('d F Y') }}.
-    </p>
+    @if ($achat->estEnMemoire())
+        <p class="texte">
+            AND DOX S.A. atteste que <strong>{{ $achat->offertPar->nom }} {{ $achat->offertPar->prenom }}</strong>
+            (identifiant {{ $achat->offertPar->identifiant_externe }}) a offert
+            <strong>{{ number_format($achat->nombre_actions, 0, ',', ' ') }} action(s)</strong> Waqf,
+            au prix unitaire de {{ number_format($achat->prix_unitaire, 0, ',', ' ') }} CFA par action,
+            le {{ $achat->date_achat->translatedFormat('d F Y') }},
+            <strong>à la mémoire de {{ $achat->en_memoire_de }}</strong>.
+        </p>
+        <p class="texte">
+            Conformément au principe d'inaliénabilité du Waqf, ces actions sont versées au compte
+            institutionnel <strong>{{ $investisseur->nom }}</strong> ({{ $compte->numero_compte }}).
+            Elles n'ouvrent au donateur aucun droit patrimonial : ni restitution du capital,
+            ni versement de dividendes.
+        </p>
+    @else
+        <p class="texte">
+            AND DOX S.A. atteste que <strong>{{ $investisseur->nom }} {{ $investisseur->prenom }}</strong>
+            (identifiant {{ $investisseur->identifiant_externe }}) a acquis
+            <strong>{{ number_format($achat->nombre_actions, 0, ',', ' ') }} action(s)</strong>
+            de catégorie <strong>{{ ucfirst($compte->categorie) }}</strong>,
+            au prix unitaire de {{ number_format($achat->prix_unitaire, 0, ',', ' ') }} CFA par action,
+            le {{ $achat->date_achat->translatedFormat('d F Y') }}.
+        </p>
+    @endif
 
     <table class="details">
+        @if ($achat->estEnMemoire())
+        <tr>
+            <td class="label">À la mémoire de</td>
+            <td><strong>{{ $achat->en_memoire_de }}</strong></td>
+        </tr>
+        <tr>
+            <td class="label">Offert par</td>
+            <td>{{ $achat->offertPar->nom }} {{ $achat->offertPar->prenom }} ({{ $achat->offertPar->identifiant_externe }})</td>
+        </tr>
+        @endif
         <tr>
             <td class="label">N° d'achat</td>
             <td>{{ $achat->numero_achat }}</td>

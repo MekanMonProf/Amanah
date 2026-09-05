@@ -33,8 +33,10 @@
             <div class="sous-titre">Plateforme de Gestion des Investissements — AND DOX S.A.</div>
         </td>
         @if ($logoWaqf)
-            <td style="width: 40px; vertical-align: middle; padding: 0; text-align: right;">
-                <img src="{{ $logoWaqf }}" style="height: 40px; width: auto;">
+            <td style="width: 50px; vertical-align: middle; padding: 0; text-align: right;">
+                {{-- Un peu plus haut que le logo AND DOX : le Waqf est quasi carre, il
+                     parait sinon nettement plus petit a hauteur egale. --}}
+                <img src="{{ $logoWaqf }}" style="height: 54px; width: auto;">
             </td>
         @endif
     </tr>

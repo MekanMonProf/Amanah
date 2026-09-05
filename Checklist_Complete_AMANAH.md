@@ -21,13 +21,13 @@
 - [x] **Nouveau compte créé** (gestionnaire ou investisseur) → email reçu avec identifiants → première connexion force le changement de mot de passe
 - [x] `/register` (inscription libre) désactivée — confirmé fermée (404)
 
-## 2. 2FA — *mis en pause, à reprendre plus tard*
+## 2. 2FA
 
-- [ ] Activation sur `/profile` : QR code lisible, code de confirmation accepté
-- [ ] Codes de récupération notés
-- [ ] Déconnexion/reconnexion → écran de vérification du code avant le dashboard
-- [ ] Un code de récupération fonctionne une fois, puis n'est plus accepté
-- [ ] Désactivation du 2FA (avec mot de passe) fonctionne
+- [x] Activation sur `/profile` : QR code lisible, code de confirmation accepté
+- [x] Codes de récupération notés
+- [x] Déconnexion/reconnexion → écran de vérification du code avant le dashboard
+- [x] Un code de récupération fonctionne une fois, puis n'est plus accepté
+- [x] Désactivation du 2FA (avec mot de passe) fonctionne
 
 ## 3. Investisseurs
 

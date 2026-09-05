@@ -40,7 +40,10 @@ class GererDeuxFa extends Component
 
     public function confirmerActivation(): void
     {
-        $this->validate();
+        // Uniquement le champ concerné : un validate() sans argument validerait aussi
+        // motDePasseDesactivation, qui appartient au formulaire de désactivation et est
+        // forcément vide ici — l'activation échouait alors sur un champ non affiché.
+        $this->validate(['codeConfirmation' => ['required', 'digits:6']]);
 
         $google2fa = new Google2FA();
 

@@ -50,15 +50,15 @@ class AchatCreate extends Component
     public ?float $montantCalcule = null;
 
     /**
-     * Offrande Waqf : le donateur paie, mais les actions vont au compte institutionnel
+     * Present Waqf : le donateur paie, mais les actions vont au compte institutionnel
      * « Waqf Dolel Xamxam », jamais à son propre compte. Elle honore soit un défunt,
      * soit une personne vivante à qui l'on fait cadeau — dans les deux cas la personne
      * honorée n'est qu'une mention, sans droit patrimonial.
      */
-    public bool $enMemoire = false;
+    public bool $faireUnPresent = false;
 
     /** 'memoire' = hommage à un défunt, 'honneur' = cadeau à une personne vivante. */
-    public string $typeOffrande = 'memoire';
+    public string $typePresent = 'memoire';
 
     /** 'interne' = personne déjà enregistrée comme investisseur, 'externe' = personne extérieure. */
     public string $defuntSource = 'interne';
@@ -83,10 +83,10 @@ class AchatCreate extends Component
     {
         $this->appliquerPrixParDefaut();
 
-        // L'offrande à la mémoire d'un défunt n'a de sens qu'en Waqf : le capital y est
+        // Un présent n'a de sens qu'en Waqf : le capital y est
         // inaliénable et sans versement de dividendes, donc réellement donné.
         if ($this->categorie !== 'waqf') {
-            $this->enMemoire = false;
+            $this->faireUnPresent = false;
         }
     }
 
@@ -97,7 +97,7 @@ class AchatCreate extends Component
      */
     public function getDefuntsDisponiblesProperty()
     {
-        $requete = $this->typeOffrande === 'memoire'
+        $requete = $this->typePresent === 'memoire'
             ? Investisseur::where('statut', 'decede')
             : Investisseur::where('statut', '!=', 'decede')->where('id', '!=', $this->investisseur->id);
 
@@ -106,7 +106,7 @@ class AchatCreate extends Component
     }
 
     /** Changer de motif invalide la personne déjà choisie : elle n'est plus éligible. */
-    public function updatedTypeOffrande(): void
+    public function updatedTypePresent(): void
     {
         $this->defuntInvestisseurId = null;
     }
@@ -125,7 +125,7 @@ class AchatCreate extends Component
     }
 
     /**
-     * Revalide côté serveur tout ce qui touche à l'offrande : les propriétés Livewire sont
+     * Revalide côté serveur tout ce qui touche au présent : les propriétés Livewire sont
      * modifiables par le client, on ne se fie donc pas à l'affichage conditionnel de la vue.
      * Retourne le défunt quand c'est un investisseur de la plateforme, null s'il est extérieur.
      */
@@ -133,17 +133,20 @@ class AchatCreate extends Component
     {
         if ($this->categorie !== "waqf") {
             throw ValidationException::withMessages([
-                "enMemoire" => "Une offrande n'est possible qu'en catégorie Waqf.",
+                "faireUnPresent" => "Un présent n'est possible qu'en catégorie Waqf.",
             ]);
         }
 
         $this->validate([
-            "typeOffrande" => ["required", "in:memoire,honneur"],
+            "typePresent" => ["required", "in:memoire,honneur"],
             "defuntSource" => ["required", "in:interne,externe"],
             "lienAvecDonateur" => ["nullable", "string", "max:100"],
-        ], attributes: ["lienAvecDonateur" => "lien avec le donateur"]);
+        ], attributes: [
+            "typePresent" => "motif du présent",
+            "lienAvecDonateur" => "lien avec le donateur",
+        ]);
 
-        $hommage = $this->typeOffrande === "memoire";
+        $hommage = $this->typePresent === "memoire";
 
         if ($this->defuntSource === "externe") {
             $this->validate([
@@ -173,7 +176,7 @@ class AchatCreate extends Component
         // On ne s'offre pas un cadeau à soi-même : la mention n'aurait aucun sens.
         if ((int) $this->defuntInvestisseurId === $this->investisseur->id) {
             throw ValidationException::withMessages([
-                "defuntInvestisseurId" => "Le donateur ne peut pas être le bénéficiaire de sa propre offrande.",
+                "defuntInvestisseurId" => "Le donateur ne peut pas être le bénéficiaire de son propre présent.",
             ]);
         }
 
@@ -191,9 +194,9 @@ class AchatCreate extends Component
     {
         $this->validate();
 
-        $defunt = $this->enMemoire ? $this->validerDefunt() : null;
+        $defunt = $this->faireUnPresent ? $this->validerDefunt() : null;
 
-        if ($this->enMemoire) {
+        if ($this->faireUnPresent) {
             // Les actions sont versées au Waqf caritatif, pas au donateur. La date d'ouverture
             // du compte institutionnel n'est pas réalignée : elle ne dépend pas d'un don reçu.
             $compte = Investisseur::waqfCaritatif()->compteOuCree('waqf');
@@ -227,15 +230,15 @@ class AchatCreate extends Component
             'photo_facture_path' => $cheminFacture,
             'observations' => $this->observations ?: null,
             'saisi_par' => Auth::id(),
-            'offert_par_investisseur_id' => $this->enMemoire ? $this->investisseur->id : null,
-            'type_offrande' => $this->enMemoire ? $this->typeOffrande : null,
-            'offrande_pour' => $this->enMemoire ? $this->nomDuDefunt($defunt) : null,
-            'lien_avec_donateur' => $this->enMemoire ? (trim($this->lienAvecDonateur) ?: null) : null,
-            'offrande_pour_investisseur_id' => $defunt?->id,
+            'offert_par_investisseur_id' => $this->faireUnPresent ? $this->investisseur->id : null,
+            'type_present' => $this->faireUnPresent ? $this->typePresent : null,
+            'present_pour' => $this->faireUnPresent ? $this->nomDuDefunt($defunt) : null,
+            'lien_avec_donateur' => $this->faireUnPresent ? (trim($this->lienAvecDonateur) ?: null) : null,
+            'present_pour_investisseur_id' => $defunt?->id,
         ]);
 
-        if ($this->enMemoire) {
-            session()->flash('succes', "Achat {$achat->numero_achat} enregistré : {$this->nombre_actions} action(s) offerte(s) {$achat->formuleOffrande()} {$achat->offrande_pour}, versées au {$compte->numero_compte} (" . Investisseur::NOM_WAQF_CARITATIF . ').');
+        if ($this->faireUnPresent) {
+            session()->flash('succes', "Achat {$achat->numero_achat} enregistré : {$this->nombre_actions} action(s) offerte(s) {$achat->formulePresent()} {$achat->present_pour}, versées au {$compte->numero_compte} (" . Investisseur::NOM_WAQF_CARITATIF . ').');
         } else {
             session()->flash('succes', "Achat {$achat->numero_achat} enregistré : {$this->nombre_actions} action(s) pour le compte {$compte->numero_compte}.");
         }
@@ -247,9 +250,9 @@ class AchatCreate extends Component
             apres: array_filter([
                 'numero_achat' => $achat->numero_achat, 'compte' => $compte->numero_compte,
                 'nombre_actions' => $achat->nombre_actions, 'montant' => (float) $achat->montant,
-                'offert_par' => $this->enMemoire ? $this->investisseur->identifiant_externe : null,
-                'type_offrande' => $achat->type_offrande,
-                'offrande_pour' => $achat->offrande_pour,
+                'offert_par' => $this->faireUnPresent ? $this->investisseur->identifiant_externe : null,
+                'type_present' => $achat->type_present,
+                'present_pour' => $achat->present_pour,
             ], fn ($valeur) => $valeur !== null),
         );
 

@@ -19,7 +19,7 @@
                 </label>
             </div>
             <p class="text-xs text-gray-400 mt-1">
-                @if ($enMemoire)
+                @if ($faireUnPresent)
                     Les actions seront versées au compte institutionnel « {{ \App\Models\Investisseur::NOM_WAQF_CARITATIF }} ».
                 @else
                     Si l'investisseur n'a pas encore de compte {{ $categorie }}, il sera créé automatiquement.
@@ -28,11 +28,11 @@
         </div>
 
         @if ($categorie === 'waqf')
-            <div class="border rounded-lg p-4 {{ $enMemoire ? 'border-purple-300 bg-purple-50' : 'bg-gray-50' }}">
+            <div class="border rounded-lg p-4 {{ $faireUnPresent ? 'border-purple-300 bg-purple-50' : 'bg-gray-50' }}">
                 <label class="flex items-start gap-3 cursor-pointer">
-                    <input type="checkbox" wire:model.live="enMemoire" class="mt-1 rounded border-gray-300 text-purple-600">
+                    <input type="checkbox" wire:model.live="faireUnPresent" class="mt-1 rounded border-gray-300 text-purple-600">
                     <span>
-                        <span class="text-sm font-medium text-gray-800">Offrir ces actions (hommage ou cadeau)</span>
+                        <span class="text-sm font-medium text-gray-800">Offrir ces actions en présent (hommage ou cadeau)</span>
                         <span class="block text-xs text-gray-500 mt-0.5">
                             {{ $investisseur->nom }} {{ $investisseur->prenom }} paie l'achat, mais les actions ne sont pas
                             portées à son compte : elles sont comptabilisées au Waqf caritatif
@@ -41,26 +41,26 @@
                         </span>
                     </span>
                 </label>
-                @error('enMemoire') <p class="text-red-600 text-sm mt-2">{{ $message }}</p> @enderror
+                @error('faireUnPresent') <p class="text-red-600 text-sm mt-2">{{ $message }}</p> @enderror
 
-                @if ($enMemoire)
+                @if ($faireUnPresent)
                     <div class="mt-4 space-y-3 border-t border-purple-200 pt-4">
                         <div>
-                            <label class="text-sm text-gray-600">Motif de l'offrande</label>
+                            <label class="text-sm text-gray-600">Motif du présent</label>
                             <div class="flex gap-3 mt-1">
-                                <label class="flex-1 flex items-center justify-center gap-2 border rounded-lg px-3 py-2 cursor-pointer bg-white {{ $typeOffrande === 'memoire' ? 'border-purple-500' : '' }}">
-                                    <input type="radio" wire:model.live="typeOffrande" value="memoire" class="hidden">
+                                <label class="flex-1 flex items-center justify-center gap-2 border rounded-lg px-3 py-2 cursor-pointer bg-white {{ $typePresent === 'memoire' ? 'border-purple-500' : '' }}">
+                                    <input type="radio" wire:model.live="typePresent" value="memoire" class="hidden">
                                     <span class="text-sm">À la mémoire d'un défunt</span>
                                 </label>
-                                <label class="flex-1 flex items-center justify-center gap-2 border rounded-lg px-3 py-2 cursor-pointer bg-white {{ $typeOffrande === 'honneur' ? 'border-purple-500' : '' }}">
-                                    <input type="radio" wire:model.live="typeOffrande" value="honneur" class="hidden">
+                                <label class="flex-1 flex items-center justify-center gap-2 border rounded-lg px-3 py-2 cursor-pointer bg-white {{ $typePresent === 'honneur' ? 'border-purple-500' : '' }}">
+                                    <input type="radio" wire:model.live="typePresent" value="honneur" class="hidden">
                                     <span class="text-sm">Cadeau à une personne vivante</span>
                                 </label>
                             </div>
                         </div>
 
                         <div>
-                            <label class="text-sm text-gray-600">{{ $typeOffrande === 'memoire' ? 'Défunt honoré' : 'Bénéficiaire du cadeau' }}</label>
+                            <label class="text-sm text-gray-600">{{ $typePresent === 'memoire' ? 'Défunt honoré' : 'Bénéficiaire du cadeau' }}</label>
                             <div class="flex gap-3 mt-1">
                                 <label class="flex-1 flex items-center justify-center gap-2 border rounded-lg px-3 py-2 cursor-pointer bg-white {{ $defuntSource === 'interne' ? 'border-purple-500' : '' }}">
                                     <input type="radio" wire:model.live="defuntSource" value="interne" class="hidden">
@@ -76,7 +76,7 @@
                         @if ($defuntSource === 'interne')
                             <div>
                                 <select wire:model="defuntInvestisseurId" class="w-full border rounded px-3 py-2 bg-white">
-                                    <option value="">— Sélectionner {{ $typeOffrande === 'memoire' ? 'un investisseur déclaré décédé' : 'un investisseur' }} —</option>
+                                    <option value="">— Sélectionner {{ $typePresent === 'memoire' ? 'un investisseur déclaré décédé' : 'un investisseur' }} —</option>
                                     @foreach ($this->defuntsDisponibles as $defunt)
                                         <option value="{{ $defunt->id }}">
                                             {{ $defunt->nom }} {{ $defunt->prenom }} ({{ $defunt->identifiant_externe }}){{ $defunt->date_deces ? ' — décédé(e) le ' . $defunt->date_deces->format('d/m/Y') : '' }}
@@ -86,13 +86,13 @@
                                 @error('defuntInvestisseurId') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                                 @if ($this->defuntsDisponibles->isEmpty())
                                     <p class="text-xs text-amber-700 mt-1">
-                                        {{ $typeOffrande === "memoire" ? "Aucun investisseur n'est déclaré décédé" : "Aucun autre investisseur disponible" }} — choisissez « Personne extérieure ».
+                                        {{ $typePresent === "memoire" ? "Aucun investisseur n'est déclaré décédé" : "Aucun autre investisseur disponible" }} — choisissez « Personne extérieure ».
                                     </p>
                                 @endif
                             </div>
                         @else
                             <div>
-                                <input type="text" wire:model="defuntNom" maxlength="150" placeholder="{{ $typeOffrande === 'memoire' ? 'Nom et prénom du défunt' : 'Nom et prénom du bénéficiaire' }}" class="w-full border rounded px-3 py-2 bg-white">
+                                <input type="text" wire:model="defuntNom" maxlength="150" placeholder="{{ $typePresent === 'memoire' ? 'Nom et prénom du défunt' : 'Nom et prénom du bénéficiaire' }}" class="w-full border rounded px-3 py-2 bg-white">
                                 @error('defuntNom') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                             </div>
                         @endif
@@ -122,7 +122,7 @@
                             </datalist>
                             @error('lienAvecDonateur') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                             <p class="text-xs text-gray-500 mt-1">
-                                {{ $typeOffrande === 'memoire' ? 'Comment le défunt était lié au donateur.' : 'Comment le bénéficiaire est lié au donateur.' }} Laissez vide s'il n'y a pas de lien de parenté.
+                                {{ $typePresent === 'memoire' ? 'Comment le défunt était lié au donateur.' : 'Comment le bénéficiaire est lié au donateur.' }} Laissez vide s'il n'y a pas de lien de parenté.
                             </p>
                         </div>
                     </div>

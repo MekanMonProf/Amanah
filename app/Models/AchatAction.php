@@ -15,7 +15,7 @@ class AchatAction extends Model
         'compte_id', 'numero_achat', 'date_achat', 'type_achat', 'nombre_actions',
         'prix_unitaire', 'montant', 'mode_paiement', 'reference_facture',
         'photo_facture_path', 'observations', 'saisi_par',
-        'offert_par_investisseur_id', 'type_offrande', 'offrande_pour', 'lien_avec_donateur', 'offrande_pour_investisseur_id',
+        'offert_par_investisseur_id', 'type_present', 'present_pour', 'lien_avec_donateur', 'present_pour_investisseur_id',
     ];
 
     protected $casts = ['date_achat' => 'date'];
@@ -36,15 +36,15 @@ class AchatAction extends Model
 
     /**
      * La personne honorée, quand il s'agit d'un investisseur de la plateforme.
-     * Nul pour une personne extérieure : seul offrande_pour est alors renseigné.
+     * Nul pour une personne extérieure : seul present_pour est alors renseigné.
      */
-    public function offrandePourInvestisseur()
+    public function presentPourInvestisseur()
     {
-        return $this->belongsTo(Investisseur::class, 'offrande_pour_investisseur_id');
+        return $this->belongsTo(Investisseur::class, 'present_pour_investisseur_id');
     }
 
-    /** L'achat est une offrande : payé par un donateur, comptabilisé au Waqf caritatif. */
-    public function estOffrande(): bool
+    /** L'achat est une present : payé par un donateur, comptabilisé au Waqf caritatif. */
+    public function estUnPresent(): bool
     {
         return $this->offert_par_investisseur_id !== null;
     }
@@ -52,14 +52,14 @@ class AchatAction extends Model
     /** Hommage à un défunt (par opposition à un cadeau fait à une personne vivante). */
     public function estEnMemoire(): bool
     {
-        return $this->estOffrande() && $this->type_offrande === 'memoire';
+        return $this->estUnPresent() && $this->type_present === 'memoire';
     }
 
     /**
      * « à la mémoire de » pour un défunt, « au profit de » pour un cadeau à un vivant :
      * la formule sert aussi bien aux attestations qu'aux écrans.
      */
-    public function formuleOffrande(): string
+    public function formulePresent(): string
     {
         return $this->estEnMemoire() ? 'à la mémoire de' : 'au profit de';
     }
@@ -68,8 +68,8 @@ class AchatAction extends Model
      * La même formule en début de phrase. Passe par Str::ucfirst et non ucfirst() :
      * ce dernier travaille octet par octet et mutile le « à » accentué en UTF-8.
      */
-    public function formuleOffrandeMajuscule(): string
+    public function formulePresentMajuscule(): string
     {
-        return \Illuminate\Support\Str::ucfirst($this->formuleOffrande());
+        return \Illuminate\Support\Str::ucfirst($this->formulePresent());
     }
 }

@@ -29,9 +29,9 @@ class AttestationController extends Controller
     {
         $achat->load('compte.investisseur', 'offertPar');
 
-        // Une offrande (hommage à un défunt ou cadeau à un vivant) est portée au compte du Waqf :
+        // Une present (hommage à un défunt ou cadeau à un vivant) est portée au compte du Waqf :
         // c'est le donateur, et non le titulaire du compte, qui a droit à l'attestation.
-        if ($achat->estOffrande()) {
+        if ($achat->estUnPresent()) {
             $user = Auth::user();
             if ($user->role === 'investisseur' && $achat->offert_par_investisseur_id !== optional($user->investisseurLie)->id) {
                 abort(403);

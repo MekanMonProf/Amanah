@@ -263,9 +263,9 @@
         </div>
     @endif
 
-    @if ($offrandes->isNotEmpty())
+    @if ($presents->isNotEmpty())
         <div class="bg-purple-50 border border-purple-200 rounded-lg p-4 mb-4">
-            <h2 class="text-sm font-semibold text-purple-900 mb-1">Actions Waqf offertes par cet investisseur</h2>
+            <h2 class="text-sm font-semibold text-purple-900 mb-1">Présents Waqf offerts par cet investisseur</h2>
             <p class="text-xs text-purple-700 mb-3">
                 Payées par cet investisseur, versées au Waqf caritatif « {{ \App\Models\Investisseur::NOM_WAQF_CARITATIF }} » — elles ne figurent donc pas dans ses comptes ci-dessous.
             </p>
@@ -281,20 +281,20 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($offrandes as $offrande)
+                        @foreach ($presents as $present)
                             <tr class="border-b border-purple-100 last:border-0">
-                                <td class="py-1.5">{{ $offrande->date_achat->format('d/m/Y') }}</td>
+                                <td class="py-1.5">{{ $present->date_achat->format('d/m/Y') }}</td>
                                 <td class="py-1.5 font-medium text-gray-800">
-                                    <span class="block text-xs font-normal text-purple-700">{{ $offrande->formuleOffrandeMajuscule() }}</span>
-                                    {{ $offrande->offrande_pour }}
-                                    @if ($offrande->lien_avec_donateur)
-                                        <span class="text-xs font-normal text-purple-700">({{ $offrande->lien_avec_donateur }})</span>
+                                    <span class="block text-xs font-normal text-purple-700">{{ $present->formulePresentMajuscule() }}</span>
+                                    {{ $present->present_pour }}
+                                    @if ($present->lien_avec_donateur)
+                                        <span class="text-xs font-normal text-purple-700">({{ $present->lien_avec_donateur }})</span>
                                     @endif
                                 </td>
-                                <td class="py-1.5 text-right">{{ number_format($offrande->nombre_actions, 0, ',', ' ') }}</td>
-                                <td class="py-1.5 text-right">{{ number_format($offrande->montant, 0, ',', ' ') }} CFA</td>
+                                <td class="py-1.5 text-right">{{ number_format($present->nombre_actions, 0, ',', ' ') }}</td>
+                                <td class="py-1.5 text-right">{{ number_format($present->montant, 0, ',', ' ') }} CFA</td>
                                 <td class="py-1.5 text-right">
-                                    <a href="{{ route('achats.attestation', $offrande) }}" class="text-purple-700 hover:underline">PDF</a>
+                                    <a href="{{ route('achats.attestation', $present) }}" class="text-purple-700 hover:underline">PDF</a>
                                 </td>
                             </tr>
                         @endforeach
@@ -304,16 +304,16 @@
         </div>
     @endif
 
-    @if ($offrandesRecues->isNotEmpty())
+    @if ($presentsRecus->isNotEmpty())
         <div class="bg-purple-50 border border-purple-200 rounded-lg p-4 mb-4">
-            <h2 class="text-sm font-semibold text-purple-900 mb-1">Actions Waqf offertes en son honneur</h2>
+            <h2 class="text-sm font-semibold text-purple-900 mb-1">Présents Waqf reçus en son honneur</h2>
             <p class="text-xs text-purple-700 mb-3">Versées au Waqf caritatif en son nom : elles ne lui confèrent aucun droit patrimonial.</p>
             <ul class="text-sm space-y-1">
-                @foreach ($offrandesRecues as $offrande)
+                @foreach ($presentsRecus as $present)
                     <li class="text-gray-800">
-                        {{ $offrande->date_achat->format('d/m/Y') }} —
-                        {{ number_format($offrande->nombre_actions, 0, ',', ' ') }} action(s)
-                        offerte(s) par <strong>{{ $offrande->offertPar?->nom }} {{ $offrande->offertPar?->prenom }}</strong>@if ($offrande->lien_avec_donateur) <span class="text-gray-500">({{ mb_strtolower($offrande->lien_avec_donateur) }})</span>@endif
+                        {{ $present->date_achat->format('d/m/Y') }} —
+                        {{ number_format($present->nombre_actions, 0, ',', ' ') }} action(s)
+                        offerte(s) par <strong>{{ $present->offertPar?->nom }} {{ $present->offertPar?->prenom }}</strong>@if ($present->lien_avec_donateur) <span class="text-gray-500">({{ mb_strtolower($present->lien_avec_donateur) }})</span>@endif
                     </li>
                 @endforeach
             </ul>

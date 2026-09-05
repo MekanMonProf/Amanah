@@ -23,9 +23,9 @@
         @include('pdf.partials.en-tete')
     </div>
 
-    <h1>{{ $achat->estOffrande() ? 'Attestation d\'offrande Waqf' : 'Attestation d\'achat d\'actions' }}</h1>
+    <h1>{{ $achat->estUnPresent() ? 'Attestation de présent Waqf' : 'Attestation d\'achat d\'actions' }}</h1>
 
-    @if ($achat->estOffrande())
+    @if ($achat->estUnPresent())
         <p class="texte">
             AND DOX S.A. atteste que <strong>{{ $achat->offertPar->nom }} {{ $achat->offertPar->prenom }}</strong>
             (identifiant {{ $achat->offertPar->identifiant_externe }}) a offert
@@ -35,7 +35,7 @@
             {{-- Expression plutot qu'un @if : Blade ne reconnait pas une directive collee a un
                  mot : sa regex exige un caractere non-mot juste avant l'arobase, sinon la
                  directive est recopiee telle quelle et la vue ne compile plus. --}}
-            <strong>{{ $achat->formuleOffrande() }} {{ $achat->offrande_pour }}</strong>{{ $achat->lien_avec_donateur ? ', ' . mb_strtolower($achat->lien_avec_donateur) . ' du donateur' : '' }}.
+            <strong>{{ $achat->formulePresent() }} {{ $achat->present_pour }}</strong>{{ $achat->lien_avec_donateur ? ', ' . mb_strtolower($achat->lien_avec_donateur) . ' du donateur' : '' }}.
         </p>
         <p class="texte">
             Conformément au principe d'inaliénabilité du Waqf, ces actions sont versées au compte
@@ -55,10 +55,10 @@
     @endif
 
     <table class="details">
-        @if ($achat->estOffrande())
+        @if ($achat->estUnPresent())
         <tr>
             <td class="label">{{ $achat->estEnMemoire() ? 'À la mémoire de' : 'Au profit de' }}</td>
-            <td><strong>{{ $achat->offrande_pour }}</strong></td>
+            <td><strong>{{ $achat->present_pour }}</strong></td>
         </tr>
         @if ($achat->lien_avec_donateur)
         <tr>

@@ -46,7 +46,7 @@ class AchatsHistorique extends Component
     public function render()
     {
         // offertPar est chargé d'avance : sur le compte du Waqf caritatif, chaque ligne peut
-        // être une offrande et afficherait sinon une requête par achat.
+        // être une present et afficherait sinon une requête par achat.
         $query = $this->compte->achats()->with('offertPar');
 
         if ($this->recherche) {
@@ -54,7 +54,7 @@ class AchatsHistorique extends Component
                 $q->where('numero_achat', 'like', "%{$this->recherche}%")
                   ->orWhere('reference_facture', 'like', "%{$this->recherche}%")
                   ->orWhere('mode_paiement', 'like', "%{$this->recherche}%")
-                  ->orWhere('offrande_pour', 'like', "%{$this->recherche}%");
+                  ->orWhere('present_pour', 'like', "%{$this->recherche}%");
             });
         }
 

@@ -181,6 +181,26 @@ Avec un compte **`investisseur`** :
 
 ---
 
+## 21. Offrande Waqf à la mémoire d'un défunt
+
+- [x] Case « Offrir ces actions à la mémoire d'un défunt » visible en catégorie Waqf uniquement, et décochée automatiquement au retour en Commercial
+- [x] Défunt sélectionnable parmi les investisseurs déclarés décédés, ou saisi librement pour une personne extérieure
+- [x] Lien avec le donateur (facultatif, liste de suggestions non contraignante)
+- [x] Les actions vont au compte institutionnel « Waqf Dolel Xamxam », jamais au compte du donateur (vérifié : delta 0 action chez le donateur)
+- [x] Falsifications côté client refusées sans créer d'achat : offrande hors Waqf, défunt vivant, défunt inexistant, nom vide, lien > 100 caractères
+- [x] Achat ordinaire non régressé (compte du donateur crédité, champs d'offrande à NULL)
+- [x] Attestation « d'offrande Waqf » : nomme le défunt, le lien et le donateur, et mentionne l'absence de droit patrimonial
+- [x] Attestation accessible au donateur depuis le portail, bien que le compte crédité ne soit pas le sien
+- [x] Offrande visible sur la fiche du donateur, sur celle du défunt honoré et dans l'historique du compte caritatif
+
+## 22. En-tête des documents
+
+- [x] Logo AND DOX à gauche, logo Waqf Dolel Xamxam à droite, sur les 13 modèles de documents
+- [x] Les 13 documents se rendent sans erreur, en portrait comme en paysage, les deux logos présents dans chacun
+- [x] Logo de l'application réparé après le renommage en `logo_anddox.png` (`/images/logo.png` répondait 404)
+
+---
+
 ## Points non techniques à garder en tête
 
 - Le champ "procuration" du module succession n'a **pas encore été validé juridiquement** — à faire vérifier par un juriste/notaire avant tout usage réel avec de vraies successions.

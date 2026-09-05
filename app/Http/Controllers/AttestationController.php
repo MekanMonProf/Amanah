@@ -47,7 +47,11 @@ class AttestationController extends Controller
             'dateGeneration' => now(),
         ])->setPaper('a4', 'portrait');
 
-        return $pdf->download('Attestation_Achat_' . $achat->numero_achat . '.pdf');
+        // Le nom du fichier suit le titre du document : un présent Waqf n'est pas une
+        // attestation d'achat ordinaire, et le destinataire le classe sous ce nom.
+        $prefixe = $achat->estUnPresent() ? 'Certificat_Hommage_Generosite_' : 'Attestation_Achat_';
+
+        return $pdf->download($prefixe . $achat->numero_achat . '.pdf');
     }
 
     public function radiation(Radiation $radiation)

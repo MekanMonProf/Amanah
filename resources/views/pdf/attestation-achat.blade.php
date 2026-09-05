@@ -23,7 +23,7 @@
         @include('pdf.partials.en-tete')
     </div>
 
-    <h1>{{ $achat->estUnPresent() ? 'Attestation de présent Waqf' : 'Attestation d\'achat d\'actions' }}</h1>
+    <h1>{{ $achat->estUnPresent() ? "Certificat d'Hommage et de Générosité" : 'Attestation d\'achat d\'actions' }}</h1>
 
     @if ($achat->estUnPresent())
         <p class="texte">

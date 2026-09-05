@@ -265,7 +265,7 @@
 
     @if ($offrandes->isNotEmpty())
         <div class="bg-purple-50 border border-purple-200 rounded-lg p-4 mb-4">
-            <h2 class="text-sm font-semibold text-purple-900 mb-1">Actions Waqf offertes à la mémoire d'un défunt</h2>
+            <h2 class="text-sm font-semibold text-purple-900 mb-1">Actions Waqf offertes par cet investisseur</h2>
             <p class="text-xs text-purple-700 mb-3">
                 Payées par cet investisseur, versées au Waqf caritatif « {{ \App\Models\Investisseur::NOM_WAQF_CARITATIF }} » — elles ne figurent donc pas dans ses comptes ci-dessous.
             </p>
@@ -274,7 +274,7 @@
                     <thead class="text-xs text-purple-800 border-b border-purple-200">
                         <tr>
                             <th class="text-left py-1">Date</th>
-                            <th class="text-left py-1">À la mémoire de</th>
+                            <th class="text-left py-1">Bénéficiaire</th>
                             <th class="text-right py-1">Actions</th>
                             <th class="text-right py-1">Montant</th>
                             <th class="text-right py-1">Attestation</th>
@@ -285,7 +285,8 @@
                             <tr class="border-b border-purple-100 last:border-0">
                                 <td class="py-1.5">{{ $offrande->date_achat->format('d/m/Y') }}</td>
                                 <td class="py-1.5 font-medium text-gray-800">
-                                    {{ $offrande->en_memoire_de }}
+                                    <span class="block text-xs font-normal text-purple-700">{{ $offrande->formuleOffrandeMajuscule() }}</span>
+                                    {{ $offrande->offrande_pour }}
                                     @if ($offrande->lien_avec_donateur)
                                         <span class="text-xs font-normal text-purple-700">({{ $offrande->lien_avec_donateur }})</span>
                                     @endif
@@ -305,8 +306,8 @@
 
     @if ($offrandesRecues->isNotEmpty())
         <div class="bg-purple-50 border border-purple-200 rounded-lg p-4 mb-4">
-            <h2 class="text-sm font-semibold text-purple-900 mb-1">Actions Waqf offertes à sa mémoire</h2>
-            <p class="text-xs text-purple-700 mb-3">Offrandes versées au Waqf caritatif en son nom.</p>
+            <h2 class="text-sm font-semibold text-purple-900 mb-1">Actions Waqf offertes en son honneur</h2>
+            <p class="text-xs text-purple-700 mb-3">Versées au Waqf caritatif en son nom : elles ne lui confèrent aucun droit patrimonial.</p>
             <ul class="text-sm space-y-1">
                 @foreach ($offrandesRecues as $offrande)
                     <li class="text-gray-800">

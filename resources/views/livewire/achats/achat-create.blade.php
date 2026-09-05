@@ -32,10 +32,12 @@
                 <label class="flex items-start gap-3 cursor-pointer">
                     <input type="checkbox" wire:model.live="enMemoire" class="mt-1 rounded border-gray-300 text-purple-600">
                     <span>
-                        <span class="text-sm font-medium text-gray-800">Offrir ces actions à la mémoire d'un défunt</span>
+                        <span class="text-sm font-medium text-gray-800">Offrir ces actions (hommage ou cadeau)</span>
                         <span class="block text-xs text-gray-500 mt-0.5">
                             {{ $investisseur->nom }} {{ $investisseur->prenom }} paie l'achat, mais les actions ne sont pas
-                            portées à son compte : elles sont versées au Waqf caritatif « {{ \App\Models\Investisseur::NOM_WAQF_CARITATIF }} ».
+                            portées à son compte : elles sont comptabilisées au Waqf caritatif
+                            « {{ \App\Models\Investisseur::NOM_WAQF_CARITATIF }} ». La personne honorée est mentionnée
+                            sur l'attestation, sans détenir les actions ni acquérir de droit.
                         </span>
                     </span>
                 </label>
@@ -44,7 +46,21 @@
                 @if ($enMemoire)
                     <div class="mt-4 space-y-3 border-t border-purple-200 pt-4">
                         <div>
-                            <label class="text-sm text-gray-600">Défunt honoré</label>
+                            <label class="text-sm text-gray-600">Motif de l'offrande</label>
+                            <div class="flex gap-3 mt-1">
+                                <label class="flex-1 flex items-center justify-center gap-2 border rounded-lg px-3 py-2 cursor-pointer bg-white {{ $typeOffrande === 'memoire' ? 'border-purple-500' : '' }}">
+                                    <input type="radio" wire:model.live="typeOffrande" value="memoire" class="hidden">
+                                    <span class="text-sm">À la mémoire d'un défunt</span>
+                                </label>
+                                <label class="flex-1 flex items-center justify-center gap-2 border rounded-lg px-3 py-2 cursor-pointer bg-white {{ $typeOffrande === 'honneur' ? 'border-purple-500' : '' }}">
+                                    <input type="radio" wire:model.live="typeOffrande" value="honneur" class="hidden">
+                                    <span class="text-sm">Cadeau à une personne vivante</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="text-sm text-gray-600">{{ $typeOffrande === 'memoire' ? 'Défunt honoré' : 'Bénéficiaire du cadeau' }}</label>
                             <div class="flex gap-3 mt-1">
                                 <label class="flex-1 flex items-center justify-center gap-2 border rounded-lg px-3 py-2 cursor-pointer bg-white {{ $defuntSource === 'interne' ? 'border-purple-500' : '' }}">
                                     <input type="radio" wire:model.live="defuntSource" value="interne" class="hidden">
@@ -60,7 +76,7 @@
                         @if ($defuntSource === 'interne')
                             <div>
                                 <select wire:model="defuntInvestisseurId" class="w-full border rounded px-3 py-2 bg-white">
-                                    <option value="">— Sélectionner un investisseur déclaré décédé —</option>
+                                    <option value="">— Sélectionner {{ $typeOffrande === 'memoire' ? 'un investisseur déclaré décédé' : 'un investisseur' }} —</option>
                                     @foreach ($this->defuntsDisponibles as $defunt)
                                         <option value="{{ $defunt->id }}">
                                             {{ $defunt->nom }} {{ $defunt->prenom }} ({{ $defunt->identifiant_externe }}){{ $defunt->date_deces ? ' — décédé(e) le ' . $defunt->date_deces->format('d/m/Y') : '' }}
@@ -70,13 +86,13 @@
                                 @error('defuntInvestisseurId') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                                 @if ($this->defuntsDisponibles->isEmpty())
                                     <p class="text-xs text-amber-700 mt-1">
-                                        Aucun investisseur n'est déclaré décédé — choisissez « Personne extérieure ».
+                                        {{ $typeOffrande === "memoire" ? "Aucun investisseur n'est déclaré décédé" : "Aucun autre investisseur disponible" }} — choisissez « Personne extérieure ».
                                     </p>
                                 @endif
                             </div>
                         @else
                             <div>
-                                <input type="text" wire:model="defuntNom" maxlength="150" placeholder="Nom et prénom du défunt" class="w-full border rounded px-3 py-2 bg-white">
+                                <input type="text" wire:model="defuntNom" maxlength="150" placeholder="{{ $typeOffrande === 'memoire' ? 'Nom et prénom du défunt' : 'Nom et prénom du bénéficiaire' }}" class="w-full border rounded px-3 py-2 bg-white">
                                 @error('defuntNom') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                             </div>
                         @endif
@@ -106,7 +122,7 @@
                             </datalist>
                             @error('lienAvecDonateur') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                             <p class="text-xs text-gray-500 mt-1">
-                                Comment le défunt était lié au donateur. Laissez vide si l'on honore une personne sans lien de parenté.
+                                {{ $typeOffrande === 'memoire' ? 'Comment le défunt était lié au donateur.' : 'Comment le bénéficiaire est lié au donateur.' }} Laissez vide s'il n'y a pas de lien de parenté.
                             </p>
                         </div>
                     </div>

@@ -23,9 +23,9 @@
         @include('pdf.partials.en-tete')
     </div>
 
-    <h1>{{ $achat->estEnMemoire() ? 'Attestation d\'offrande Waqf' : 'Attestation d\'achat d\'actions' }}</h1>
+    <h1>{{ $achat->estOffrande() ? 'Attestation d\'offrande Waqf' : 'Attestation d\'achat d\'actions' }}</h1>
 
-    @if ($achat->estEnMemoire())
+    @if ($achat->estOffrande())
         <p class="texte">
             AND DOX S.A. atteste que <strong>{{ $achat->offertPar->nom }} {{ $achat->offertPar->prenom }}</strong>
             (identifiant {{ $achat->offertPar->identifiant_externe }}) a offert
@@ -35,13 +35,13 @@
             {{-- Expression plutot qu'un @if : Blade ne reconnait pas une directive collee a un
                  mot : sa regex exige un caractere non-mot juste avant l'arobase, sinon la
                  directive est recopiee telle quelle et la vue ne compile plus. --}}
-            <strong>à la mémoire de {{ $achat->en_memoire_de }}</strong>{{ $achat->lien_avec_donateur ? ', ' . mb_strtolower($achat->lien_avec_donateur) . ' du donateur' : '' }}.
+            <strong>{{ $achat->formuleOffrande() }} {{ $achat->offrande_pour }}</strong>{{ $achat->lien_avec_donateur ? ', ' . mb_strtolower($achat->lien_avec_donateur) . ' du donateur' : '' }}.
         </p>
         <p class="texte">
             Conformément au principe d'inaliénabilité du Waqf, ces actions sont versées au compte
             institutionnel <strong>{{ $investisseur->nom }}</strong> ({{ $compte->numero_compte }}).
-            Elles n'ouvrent au donateur aucun droit patrimonial : ni restitution du capital,
-            ni versement de dividendes.
+            Elles n'ouvrent aucun droit patrimonial — ni restitution du capital, ni versement de
+            dividendes — au donateur, ni à la personne honorée.
         </p>
     @else
         <p class="texte">
@@ -55,10 +55,10 @@
     @endif
 
     <table class="details">
-        @if ($achat->estEnMemoire())
+        @if ($achat->estOffrande())
         <tr>
-            <td class="label">À la mémoire de</td>
-            <td><strong>{{ $achat->en_memoire_de }}</strong></td>
+            <td class="label">{{ $achat->estEnMemoire() ? 'À la mémoire de' : 'Au profit de' }}</td>
+            <td><strong>{{ $achat->offrande_pour }}</strong></td>
         </tr>
         @if ($achat->lien_avec_donateur)
         <tr>

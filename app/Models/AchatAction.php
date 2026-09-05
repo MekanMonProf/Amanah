@@ -15,7 +15,7 @@ class AchatAction extends Model
         'compte_id', 'numero_achat', 'date_achat', 'type_achat', 'nombre_actions',
         'prix_unitaire', 'montant', 'mode_paiement', 'reference_facture',
         'photo_facture_path', 'observations', 'saisi_par',
-        'offert_par_investisseur_id', 'en_memoire_de', 'lien_avec_donateur', 'en_memoire_investisseur_id',
+        'offert_par_investisseur_id', 'type_offrande', 'offrande_pour', 'lien_avec_donateur', 'offrande_pour_investisseur_id',
     ];
 
     protected $casts = ['date_achat' => 'date'];
@@ -35,16 +35,41 @@ class AchatAction extends Model
     }
 
     /**
-     * Le défunt honoré, quand il s'agit d'un investisseur de la plateforme.
-     * Nul pour une personne extérieure : seul en_memoire_de est alors renseigné.
+     * La personne honorée, quand il s'agit d'un investisseur de la plateforme.
+     * Nul pour une personne extérieure : seul offrande_pour est alors renseigné.
      */
-    public function enMemoireInvestisseur()
+    public function offrandePourInvestisseur()
     {
-        return $this->belongsTo(Investisseur::class, 'en_memoire_investisseur_id');
+        return $this->belongsTo(Investisseur::class, 'offrande_pour_investisseur_id');
     }
 
-    public function estEnMemoire(): bool
+    /** L'achat est une offrande : payé par un donateur, comptabilisé au Waqf caritatif. */
+    public function estOffrande(): bool
     {
         return $this->offert_par_investisseur_id !== null;
+    }
+
+    /** Hommage à un défunt (par opposition à un cadeau fait à une personne vivante). */
+    public function estEnMemoire(): bool
+    {
+        return $this->estOffrande() && $this->type_offrande === 'memoire';
+    }
+
+    /**
+     * « à la mémoire de » pour un défunt, « au profit de » pour un cadeau à un vivant :
+     * la formule sert aussi bien aux attestations qu'aux écrans.
+     */
+    public function formuleOffrande(): string
+    {
+        return $this->estEnMemoire() ? 'à la mémoire de' : 'au profit de';
+    }
+
+    /**
+     * La même formule en début de phrase. Passe par Str::ucfirst et non ucfirst() :
+     * ce dernier travaille octet par octet et mutile le « à » accentué en UTF-8.
+     */
+    public function formuleOffrandeMajuscule(): string
+    {
+        return \Illuminate\Support\Str::ucfirst($this->formuleOffrande());
     }
 }

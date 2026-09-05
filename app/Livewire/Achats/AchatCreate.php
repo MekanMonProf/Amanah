@@ -50,12 +50,17 @@ class AchatCreate extends Component
     public ?float $montantCalcule = null;
 
     /**
-     * Achat Waqf offert à la mémoire d'un défunt : les actions vont au compte institutionnel
-     * « Waqf Dolel Xamxam », pas au compte de l'investisseur qui paie.
+     * Offrande Waqf : le donateur paie, mais les actions vont au compte institutionnel
+     * « Waqf Dolel Xamxam », jamais à son propre compte. Elle honore soit un défunt,
+     * soit une personne vivante à qui l'on fait cadeau — dans les deux cas la personne
+     * honorée n'est qu'une mention, sans droit patrimonial.
      */
     public bool $enMemoire = false;
 
-    /** 'interne' = défunt déjà enregistré comme investisseur, 'externe' = personne extérieure. */
+    /** 'memoire' = hommage à un défunt, 'honneur' = cadeau à une personne vivante. */
+    public string $typeOffrande = 'memoire';
+
+    /** 'interne' = personne déjà enregistrée comme investisseur, 'externe' = personne extérieure. */
     public string $defuntSource = 'interne';
 
     public ?int $defuntInvestisseurId = null;
@@ -86,14 +91,24 @@ class AchatCreate extends Component
     }
 
     /**
-     * Les défunts sélectionnables : investisseurs déclarés décédés. Le donateur lui-même
-     * ne peut pas y figurer (mount() interdit déjà la page à un investisseur décédé).
+     * Les investisseurs sélectionnables comme personne honorée : les décédés pour un
+     * hommage, les vivants pour un cadeau. Le donateur lui-même est exclu — on ne
+     * s'offre pas un cadeau à soi-même, et le compte crédité ne serait pas le sien.
      */
     public function getDefuntsDisponiblesProperty()
     {
-        return Investisseur::where('statut', 'decede')
-            ->orderBy('nom')->orderBy('prenom')
+        $requete = $this->typeOffrande === 'memoire'
+            ? Investisseur::where('statut', 'decede')
+            : Investisseur::where('statut', '!=', 'decede')->where('id', '!=', $this->investisseur->id);
+
+        return $requete->orderBy('nom')->orderBy('prenom')
             ->get(['id', 'nom', 'prenom', 'identifiant_externe', 'date_deces']);
+    }
+
+    /** Changer de motif invalide la personne déjà choisie : elle n'est plus éligible. */
+    public function updatedTypeOffrande(): void
+    {
+        $this->defuntInvestisseurId = null;
     }
 
     protected function appliquerPrixParDefaut(): void
@@ -116,34 +131,51 @@ class AchatCreate extends Component
      */
     protected function validerDefunt(): ?Investisseur
     {
-        if ($this->categorie !== 'waqf') {
+        if ($this->categorie !== "waqf") {
             throw ValidationException::withMessages([
-                'enMemoire' => 'Une offrande à la mémoire d\'un défunt n\'est possible qu\'en catégorie Waqf.',
+                "enMemoire" => "Une offrande n'est possible qu'en catégorie Waqf.",
             ]);
         }
 
         $this->validate([
-            'defuntSource' => ['required', 'in:interne,externe'],
-            'lienAvecDonateur' => ['nullable', 'string', 'max:100'],
-        ], attributes: ['lienAvecDonateur' => 'lien avec le donateur']);
+            "typeOffrande" => ["required", "in:memoire,honneur"],
+            "defuntSource" => ["required", "in:interne,externe"],
+            "lienAvecDonateur" => ["nullable", "string", "max:100"],
+        ], attributes: ["lienAvecDonateur" => "lien avec le donateur"]);
 
-        if ($this->defuntSource === 'externe') {
+        $hommage = $this->typeOffrande === "memoire";
+
+        if ($this->defuntSource === "externe") {
             $this->validate([
-                'defuntNom' => ['required', 'string', 'min:3', 'max:150'],
-            ], attributes: ['defuntNom' => 'nom du défunt']);
+                "defuntNom" => ["required", "string", "min:3", "max:150"],
+            ], attributes: ["defuntNom" => $hommage ? "nom du défunt" : "nom du bénéficiaire"]);
 
             return null;
         }
 
+        // Règle symétrique : un hommage vise un défunt, un cadeau une personne vivante.
+        // Revalidée ici car la liste affichée n'engage que le navigateur.
+        $regle = $hommage
+            ? Rule::exists("investisseurs", "id")->where("statut", "decede")
+            : Rule::exists("investisseurs", "id")->where(fn ($q) => $q->where("statut", "!=", "decede"));
+
         $this->validate([
-            'defuntInvestisseurId' => [
-                'required',
-                Rule::exists('investisseurs', 'id')->where('statut', 'decede'),
-            ],
+            "defuntInvestisseurId" => ["required", $regle],
         ], messages: [
-            'defuntInvestisseurId.required' => 'Sélectionnez le défunt honoré.',
-            'defuntInvestisseurId.exists' => 'Cet investisseur n\'est pas déclaré décédé sur la plateforme.',
+            "defuntInvestisseurId.required" => $hommage
+                ? "Sélectionnez le défunt honoré."
+                : "Sélectionnez la personne à qui vous offrez ces actions.",
+            "defuntInvestisseurId.exists" => $hommage
+                ? "Cet investisseur n'est pas déclaré décédé sur la plateforme."
+                : "Cet investisseur est déclaré décédé — choisissez plutôt un hommage à sa mémoire.",
         ]);
+
+        // On ne s'offre pas un cadeau à soi-même : la mention n'aurait aucun sens.
+        if ((int) $this->defuntInvestisseurId === $this->investisseur->id) {
+            throw ValidationException::withMessages([
+                "defuntInvestisseurId" => "Le donateur ne peut pas être le bénéficiaire de sa propre offrande.",
+            ]);
+        }
 
         return Investisseur::findOrFail($this->defuntInvestisseurId);
     }
@@ -196,13 +228,14 @@ class AchatCreate extends Component
             'observations' => $this->observations ?: null,
             'saisi_par' => Auth::id(),
             'offert_par_investisseur_id' => $this->enMemoire ? $this->investisseur->id : null,
-            'en_memoire_de' => $this->enMemoire ? $this->nomDuDefunt($defunt) : null,
+            'type_offrande' => $this->enMemoire ? $this->typeOffrande : null,
+            'offrande_pour' => $this->enMemoire ? $this->nomDuDefunt($defunt) : null,
             'lien_avec_donateur' => $this->enMemoire ? (trim($this->lienAvecDonateur) ?: null) : null,
-            'en_memoire_investisseur_id' => $defunt?->id,
+            'offrande_pour_investisseur_id' => $defunt?->id,
         ]);
 
         if ($this->enMemoire) {
-            session()->flash('succes', "Achat {$achat->numero_achat} enregistré : {$this->nombre_actions} action(s) offerte(s) à la mémoire de {$achat->en_memoire_de}, versées au {$compte->numero_compte} (" . Investisseur::NOM_WAQF_CARITATIF . ').');
+            session()->flash('succes', "Achat {$achat->numero_achat} enregistré : {$this->nombre_actions} action(s) offerte(s) {$achat->formuleOffrande()} {$achat->offrande_pour}, versées au {$compte->numero_compte} (" . Investisseur::NOM_WAQF_CARITATIF . ').');
         } else {
             session()->flash('succes', "Achat {$achat->numero_achat} enregistré : {$this->nombre_actions} action(s) pour le compte {$compte->numero_compte}.");
         }
@@ -215,7 +248,8 @@ class AchatCreate extends Component
                 'numero_achat' => $achat->numero_achat, 'compte' => $compte->numero_compte,
                 'nombre_actions' => $achat->nombre_actions, 'montant' => (float) $achat->montant,
                 'offert_par' => $this->enMemoire ? $this->investisseur->identifiant_externe : null,
-                'en_memoire_de' => $achat->en_memoire_de,
+                'type_offrande' => $achat->type_offrande,
+                'offrande_pour' => $achat->offrande_pour,
             ], fn ($valeur) => $valeur !== null),
         );
 

@@ -54,7 +54,7 @@ class AchatsHistorique extends Component
                 $q->where('numero_achat', 'like', "%{$this->recherche}%")
                   ->orWhere('reference_facture', 'like', "%{$this->recherche}%")
                   ->orWhere('mode_paiement', 'like', "%{$this->recherche}%")
-                  ->orWhere('en_memoire_de', 'like', "%{$this->recherche}%");
+                  ->orWhere('offrande_pour', 'like', "%{$this->recherche}%");
             });
         }
 

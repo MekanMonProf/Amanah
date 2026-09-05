@@ -65,9 +65,9 @@
                         <td class="py-1">{{ $achat->date_achat->format('d/m/Y') }}</td>
                         <td class="py-1">
                             {{ ucfirst($achat->type_achat) }}
-                            @if ($achat->estEnMemoire())
+                            @if ($achat->estOffrande())
                                 <span class="block text-xs text-purple-700">
-                                    À la mémoire de {{ $achat->en_memoire_de }}{{ $achat->lien_avec_donateur ? ' (' . $achat->lien_avec_donateur . ')' : '' }}{{ $achat->offertPar ? ' — offert par ' . $achat->offertPar->nom . ' ' . $achat->offertPar->prenom : '' }}
+                                    {{ $achat->formuleOffrandeMajuscule() }} {{ $achat->offrande_pour }}{{ $achat->lien_avec_donateur ? ' (' . $achat->lien_avec_donateur . ')' : '' }}{{ $achat->offertPar ? ' — offert par ' . $achat->offertPar->nom . ' ' . $achat->offertPar->prenom : '' }}
                                 </span>
                             @endif
                         </td>

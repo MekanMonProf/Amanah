@@ -32,7 +32,10 @@
             <strong>{{ number_format($achat->nombre_actions, 0, ',', ' ') }} action(s)</strong> Waqf,
             au prix unitaire de {{ number_format($achat->prix_unitaire, 0, ',', ' ') }} CFA par action,
             le {{ $achat->date_achat->translatedFormat('d F Y') }},
-            <strong>à la mémoire de {{ $achat->en_memoire_de }}</strong>.
+            {{-- Expression plutot qu'un @if : Blade ne reconnait pas une directive collee a un
+                 mot : sa regex exige un caractere non-mot juste avant l'arobase, sinon la
+                 directive est recopiee telle quelle et la vue ne compile plus. --}}
+            <strong>à la mémoire de {{ $achat->en_memoire_de }}</strong>{{ $achat->lien_avec_donateur ? ', ' . mb_strtolower($achat->lien_avec_donateur) . ' du donateur' : '' }}.
         </p>
         <p class="texte">
             Conformément au principe d'inaliénabilité du Waqf, ces actions sont versées au compte
@@ -57,6 +60,12 @@
             <td class="label">À la mémoire de</td>
             <td><strong>{{ $achat->en_memoire_de }}</strong></td>
         </tr>
+        @if ($achat->lien_avec_donateur)
+        <tr>
+            <td class="label">Lien avec le donateur</td>
+            <td>{{ $achat->lien_avec_donateur }}</td>
+        </tr>
+        @endif
         <tr>
             <td class="label">Offert par</td>
             <td>{{ $achat->offertPar->nom }} {{ $achat->offertPar->prenom }} ({{ $achat->offertPar->identifiant_externe }})</td>

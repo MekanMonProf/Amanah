@@ -67,7 +67,7 @@
                             {{ ucfirst($achat->type_achat) }}
                             @if ($achat->estEnMemoire())
                                 <span class="block text-xs text-purple-700">
-                                    À la mémoire de {{ $achat->en_memoire_de }}@if ($achat->offertPar) — offert par {{ $achat->offertPar->nom }} {{ $achat->offertPar->prenom }}@endif
+                                    À la mémoire de {{ $achat->en_memoire_de }}{{ $achat->lien_avec_donateur ? ' (' . $achat->lien_avec_donateur . ')' : '' }}{{ $achat->offertPar ? ' — offert par ' . $achat->offertPar->nom . ' ' . $achat->offertPar->prenom : '' }}
                                 </span>
                             @endif
                         </td>

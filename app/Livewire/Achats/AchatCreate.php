@@ -62,6 +62,9 @@ class AchatCreate extends Component
 
     public string $defuntNom = '';
 
+    /** Lien du defunt avec le donateur (« Pere », « Mere », « Ami »...). Facultatif. */
+    public string $lienAvecDonateur = '';
+
     public function mount(Investisseur $investisseur): void
     {
         $this->assurerAccesGestionnaire($investisseur);
@@ -121,7 +124,8 @@ class AchatCreate extends Component
 
         $this->validate([
             'defuntSource' => ['required', 'in:interne,externe'],
-        ]);
+            'lienAvecDonateur' => ['nullable', 'string', 'max:100'],
+        ], attributes: ['lienAvecDonateur' => 'lien avec le donateur']);
 
         if ($this->defuntSource === 'externe') {
             $this->validate([
@@ -193,6 +197,7 @@ class AchatCreate extends Component
             'saisi_par' => Auth::id(),
             'offert_par_investisseur_id' => $this->enMemoire ? $this->investisseur->id : null,
             'en_memoire_de' => $this->enMemoire ? $this->nomDuDefunt($defunt) : null,
+            'lien_avec_donateur' => $this->enMemoire ? (trim($this->lienAvecDonateur) ?: null) : null,
             'en_memoire_investisseur_id' => $defunt?->id,
         ]);
 

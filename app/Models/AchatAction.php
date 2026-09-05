@@ -15,7 +15,7 @@ class AchatAction extends Model
         'compte_id', 'numero_achat', 'date_achat', 'type_achat', 'nombre_actions',
         'prix_unitaire', 'montant', 'mode_paiement', 'reference_facture',
         'photo_facture_path', 'observations', 'saisi_par',
-        'offert_par_investisseur_id', 'en_memoire_de', 'en_memoire_investisseur_id',
+        'offert_par_investisseur_id', 'en_memoire_de', 'lien_avec_donateur', 'en_memoire_investisseur_id',
     ];
 
     protected $casts = ['date_achat' => 'date'];

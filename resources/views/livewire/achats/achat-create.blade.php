@@ -80,6 +80,35 @@
                                 @error('defuntNom') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                             </div>
                         @endif
+
+                        <div>
+                            <label class="text-sm text-gray-600">
+                                Lien avec {{ $investisseur->nom }} {{ $investisseur->prenom }}
+                                <span class="text-gray-400">(facultatif)</span>
+                            </label>
+                            <input type="text" wire:model="lienAvecDonateur" maxlength="100" list="liens-defunt"
+                                   placeholder="Père, Mère, Épouse, Frère, Ami..."
+                                   class="w-full border rounded px-3 py-2 bg-white mt-1">
+                            <datalist id="liens-defunt">
+                                <option value="Père"></option>
+                                <option value="Mère"></option>
+                                <option value="Époux"></option>
+                                <option value="Épouse"></option>
+                                <option value="Frère"></option>
+                                <option value="Sœur"></option>
+                                <option value="Fils"></option>
+                                <option value="Fille"></option>
+                                <option value="Oncle"></option>
+                                <option value="Tante"></option>
+                                <option value="Grand-père"></option>
+                                <option value="Grand-mère"></option>
+                                <option value="Ami"></option>
+                            </datalist>
+                            @error('lienAvecDonateur') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+                            <p class="text-xs text-gray-500 mt-1">
+                                Comment le défunt était lié au donateur. Laissez vide si l'on honore une personne sans lien de parenté.
+                            </p>
+                        </div>
                     </div>
                 @endif
             </div>

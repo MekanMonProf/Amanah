@@ -284,7 +284,12 @@
                         @foreach ($offrandes as $offrande)
                             <tr class="border-b border-purple-100 last:border-0">
                                 <td class="py-1.5">{{ $offrande->date_achat->format('d/m/Y') }}</td>
-                                <td class="py-1.5 font-medium text-gray-800">{{ $offrande->en_memoire_de }}</td>
+                                <td class="py-1.5 font-medium text-gray-800">
+                                    {{ $offrande->en_memoire_de }}
+                                    @if ($offrande->lien_avec_donateur)
+                                        <span class="text-xs font-normal text-purple-700">({{ $offrande->lien_avec_donateur }})</span>
+                                    @endif
+                                </td>
                                 <td class="py-1.5 text-right">{{ number_format($offrande->nombre_actions, 0, ',', ' ') }}</td>
                                 <td class="py-1.5 text-right">{{ number_format($offrande->montant, 0, ',', ' ') }} CFA</td>
                                 <td class="py-1.5 text-right">
@@ -307,7 +312,7 @@
                     <li class="text-gray-800">
                         {{ $offrande->date_achat->format('d/m/Y') }} —
                         {{ number_format($offrande->nombre_actions, 0, ',', ' ') }} action(s)
-                        offerte(s) par <strong>{{ $offrande->offertPar?->nom }} {{ $offrande->offertPar?->prenom }}</strong>
+                        offerte(s) par <strong>{{ $offrande->offertPar?->nom }} {{ $offrande->offertPar?->prenom }}</strong>@if ($offrande->lien_avec_donateur) <span class="text-gray-500">({{ mb_strtolower($offrande->lien_avec_donateur) }})</span>@endif
                     </li>
                 @endforeach
             </ul>

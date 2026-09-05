@@ -95,7 +95,9 @@ class InvestisseurShow extends Component
             return;
         }
 
-        $motDePasse = str()->random(10);
+        // Préfixé par l'identifiant de l'investisseur : le gestionnaire n'a plus que le
+        // bloc aléatoire à lui dicter (voir App\Support\MotDePasseTemporaire).
+        $motDePasse = \App\Support\MotDePasseTemporaire::generer($this->investisseur->identifiant_externe);
 
         $user = User::create([
             'nom' => $this->investisseur->nom,
@@ -148,7 +150,7 @@ class InvestisseurShow extends Component
             return;
         }
 
-        $nouveauMotDePasse = str()->random(10);
+        $nouveauMotDePasse = \App\Support\MotDePasseTemporaire::generer($this->investisseur->identifiant_externe);
 
         $this->investisseur->user->update([
             'password' => Hash::make($nouveauMotDePasse),

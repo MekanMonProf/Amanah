@@ -912,7 +912,7 @@ class ImportateurDonnees
      */
     protected function importerGestionnaire(array $d): array
     {
-        $motDePasse = str()->random(10);
+        $motDePasse = MotDePasseTemporaire::generer();
 
         $user = User::create([
             'nom' => $d['nom'],

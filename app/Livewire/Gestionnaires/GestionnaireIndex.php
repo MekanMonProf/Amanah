@@ -43,7 +43,7 @@ class GestionnaireIndex extends Component
 
     public function ouvrirFormulaire(): void
     {
-        $this->mot_de_passe = str()->random(10);
+        $this->mot_de_passe = \App\Support\MotDePasseTemporaire::generer();
         $this->afficherFormulaire = true;
         $this->gestionnaireEnEditionId = null;
     }
@@ -271,7 +271,7 @@ class GestionnaireIndex extends Component
     {
         $gestionnaire = Gestionnaire::with('user')->findOrFail($gestionnaireId);
 
-        $nouveauMotDePasse = str()->random(10);
+        $nouveauMotDePasse = \App\Support\MotDePasseTemporaire::generer();
 
         $gestionnaire->user->update([
             'password' => Hash::make($nouveauMotDePasse),

@@ -125,7 +125,7 @@ class InvestisseurEdit extends Component
     public function mount(Investisseur $investisseur): void
     {
         $this->assurerAccesGestionnaire($investisseur);
-        abort_if($investisseur->estDecede(), 403, 'Ce compte est gelé — l\'investisseur est déclaré décédé. Gérez la succession depuis sa fiche.');
+        abort_if($investisseur->estDecede(), 403, __("Ce compte est gelé — l'investisseur est déclaré décédé. Gérez la succession depuis sa fiche."));
         $this->investisseur = $investisseur;
 
         $valeurs = $investisseur->only($this->champsTexte);
@@ -162,7 +162,7 @@ class InvestisseurEdit extends Component
         // vérification est donc plus stricte ici que sur les contacts secondaires
         // (bénéficiaire, représentant légal) ci-dessous.
         if (\App\Support\Telephone::estAmbigu($this->telephone)) {
-            $this->addError('telephone', 'Ce numéro semble étranger : précisez l\'indicatif pays devant (ex : +33 pour la France, +221 pour le Sénégal).');
+            $this->addError('telephone', __("Ce numéro semble étranger : précisez l'indicatif pays devant (ex : +33 pour la France, +221 pour le Sénégal)."));
             return;
         }
 
@@ -230,7 +230,7 @@ class InvestisseurEdit extends Component
                 ->update(['reinvestissement_auto' => $this->reinvestissementAutoWaqf]);
         }
 
-        session()->flash('succes', 'Dossier mis à jour avec succès.');
+        session()->flash('succes', __("Dossier mis à jour avec succès."));
 
         $this->redirectRoute('investisseurs.show', $this->investisseur, navigate: true);
     }

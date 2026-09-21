@@ -74,7 +74,7 @@ class AchatCreate extends Component
     {
         $this->assurerAccesGestionnaire($investisseur);
         $this->investisseur = $investisseur;
-        abort_if($investisseur->estDecede(), 403, 'Ce compte est gelé — l\'investisseur est déclaré décédé. Gérez la succession depuis sa fiche.');
+        abort_if($investisseur->estDecede(), 403, __("Ce compte est gelé — l'investisseur est déclaré décédé. Gérez la succession depuis sa fiche."));
         $this->date_achat = now()->toDateString();
         $this->appliquerPrixParDefaut();
     }
@@ -133,7 +133,7 @@ class AchatCreate extends Component
     {
         if ($this->categorie !== "waqf") {
             throw ValidationException::withMessages([
-                "faireUnPresent" => "Un présent n'est possible qu'en catégorie Waqf.",
+                "faireUnPresent" => __("Un présent n'est possible qu'en catégorie Waqf."),
             ]);
         }
 
@@ -142,8 +142,8 @@ class AchatCreate extends Component
             "defuntSource" => ["required", "in:interne,externe"],
             "lienAvecDonateur" => ["nullable", "string", "max:100"],
         ], attributes: [
-            "typePresent" => "motif du présent",
-            "lienAvecDonateur" => "lien avec le donateur",
+            "typePresent" => __("motif du présent"),
+            "lienAvecDonateur" => __("lien avec le donateur"),
         ]);
 
         $hommage = $this->typePresent === "memoire";
@@ -151,7 +151,7 @@ class AchatCreate extends Component
         if ($this->defuntSource === "externe") {
             $this->validate([
                 "defuntNom" => ["required", "string", "min:3", "max:150"],
-            ], attributes: ["defuntNom" => $hommage ? "nom du défunt" : "nom du bénéficiaire"]);
+            ], attributes: ["defuntNom" => $hommage ? __("nom du défunt") : __("nom du bénéficiaire")]);
 
             return null;
         }
@@ -166,17 +166,17 @@ class AchatCreate extends Component
             "defuntInvestisseurId" => ["required", $regle],
         ], messages: [
             "defuntInvestisseurId.required" => $hommage
-                ? "Sélectionnez le défunt honoré."
-                : "Sélectionnez la personne à qui vous offrez ces actions.",
+                ? __("Sélectionnez le défunt honoré.")
+                : __("Sélectionnez la personne à qui vous offrez ces actions."),
             "defuntInvestisseurId.exists" => $hommage
-                ? "Cet investisseur n'est pas déclaré décédé sur la plateforme."
-                : "Cet investisseur est déclaré décédé — choisissez plutôt un hommage à sa mémoire.",
+                ? __("Cet investisseur n'est pas déclaré décédé sur la plateforme.")
+                : __("Cet investisseur est déclaré décédé — choisissez plutôt un hommage à sa mémoire."),
         ]);
 
         // On ne s'offre pas un cadeau à soi-même : la mention n'aurait aucun sens.
         if ((int) $this->defuntInvestisseurId === $this->investisseur->id) {
             throw ValidationException::withMessages([
-                "defuntInvestisseurId" => "Le donateur ne peut pas être le bénéficiaire de son propre présent.",
+                "defuntInvestisseurId" => __("Le donateur ne peut pas être le bénéficiaire de son propre présent."),
             ]);
         }
 
@@ -238,9 +238,9 @@ class AchatCreate extends Component
         ]);
 
         if ($this->faireUnPresent) {
-            session()->flash('succes', "Achat {$achat->numero_achat} enregistré : {$this->nombre_actions} action(s) offerte(s) {$achat->formulePresent()} {$achat->present_pour}, versées au {$compte->numero_compte} (" . Investisseur::NOM_WAQF_CARITATIF . ').');
+            session()->flash('succes', __("Achat :numero enregistré : :actions action(s) offerte(s) :formule :beneficiaire, versées au :compte (:waqf).", ["numero" => $achat->numero_achat, "actions" => $this->nombre_actions, "formule" => $achat->formulePresent(), "beneficiaire" => $achat->present_pour, "compte" => $compte->numero_compte, "waqf" => Investisseur::NOM_WAQF_CARITATIF]));
         } else {
-            session()->flash('succes', "Achat {$achat->numero_achat} enregistré : {$this->nombre_actions} action(s) pour le compte {$compte->numero_compte}.");
+            session()->flash('succes', __("Achat :numero enregistré : :actions action(s) pour le compte :compte.", ["numero" => $achat->numero_achat, "actions" => $this->nombre_actions, "compte" => $compte->numero_compte]));
         }
 
         \App\Models\AuditLog::enregistrer(

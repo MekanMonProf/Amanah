@@ -104,7 +104,7 @@ class InvestisseurIndex extends Component
 
     public function creer(): void
     {
-        abort_if(Auth::user()->role === 'lecture', 403, 'Action non autorisée pour le rôle Lecture.');
+        abort_if(Auth::user()->role === 'lecture', 403, __("Action non autorisée pour le rôle Lecture."));
 
         $this->validate();
 
@@ -113,7 +113,7 @@ class InvestisseurIndex extends Component
         // vaut demander l'indicatif explicitement (ex: +33...) que de risquer de
         // confondre deux personnes plus tard (voir App\Support\Telephone).
         if (\App\Support\Telephone::estAmbigu($this->telephone)) {
-            $this->addError('telephone', 'Ce numéro semble étranger : précisez l\'indicatif pays devant (ex : +33 pour la France, +221 pour le Sénégal).');
+            $this->addError('telephone', __("Ce numéro semble étranger : précisez l'indicatif pays devant (ex : +33 pour la France, +221 pour le Sénégal)."));
             return;
         }
 

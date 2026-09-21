@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    /*
+     * Les navigateurs centrent <th> par defaut, ce qui ecrase l alignement pose sur
+     * <thead> : les en-tetes de tableau etaient centres alors que le code demandait
+     * un alignement au debut de ligne. En heritant, ils suivent l alignement voulu —
+     * et s inversent d eux-memes en arabe, ou le debut de ligne est a droite.
+     */
+    th {
+        text-align: inherit;
+    }
+}

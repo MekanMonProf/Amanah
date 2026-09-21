@@ -37,7 +37,7 @@ class InvestisseurShow extends Component
      */
     protected function interdireSiLectureSeule(): void
     {
-        abort_if(Auth::user()->role === 'lecture', 403, 'Action non autorisée pour le rôle Lecture.');
+        abort_if(Auth::user()->role === 'lecture', 403, __("Action non autorisée pour le rôle Lecture."));
     }
 
     /**
@@ -46,7 +46,7 @@ class InvestisseurShow extends Component
      */
     protected function interdireSiDecede(): void
     {
-        abort_if($this->investisseur->estDecede(), 403, 'Ce compte est gelé — l\'investisseur est déclaré décédé.');
+        abort_if($this->investisseur->estDecede(), 403, __("Ce compte est gelé — l'investisseur est déclaré décédé."));
     }
 
     /**
@@ -56,7 +56,7 @@ class InvestisseurShow extends Component
      */
     protected function interdireSiPasDirectionAdministrateur(): void
     {
-        abort_if(! in_array(Auth::user()->role, ['direction', 'administrateur'], true), 403, 'Action réservée à la Direction/Administrateur.');
+        abort_if(! in_array(Auth::user()->role, ['direction', 'administrateur'], true), 403, __("Action réservée à la Direction/Administrateur."));
     }
 
     /**
@@ -81,17 +81,17 @@ class InvestisseurShow extends Component
         $telephoneNormalise = \App\Support\Telephone::normaliser($this->investisseur->telephone);
 
         if (! $aUnEmail && $telephoneNormalise === null) {
-            session()->flash('erreur_acces', 'Un email ou un numéro de téléphone doit être renseigné sur le dossier avant de créer un accès (voir "Modifier le dossier").');
+            session()->flash('erreur_acces', __('Un email ou un numéro de téléphone doit être renseigné sur le dossier avant de créer un accès (voir « Modifier le dossier »).'));
             return;
         }
 
         if ($aUnEmail && User::where('email', $this->investisseur->email)->exists()) {
-            session()->flash('erreur_acces', 'Cet email est déjà utilisé par un autre compte utilisateur.');
+            session()->flash('erreur_acces', __("Cet email est déjà utilisé par un autre compte utilisateur."));
             return;
         }
 
         if (! $aUnEmail && User::where('telephone', $telephoneNormalise)->exists()) {
-            session()->flash('erreur_acces', 'Ce numéro de téléphone est déjà utilisé par un autre compte utilisateur.');
+            session()->flash('erreur_acces', __("Ce numéro de téléphone est déjà utilisé par un autre compte utilisateur."));
             return;
         }
 
@@ -191,7 +191,7 @@ class InvestisseurShow extends Component
         $ancienGestionnaire = $this->investisseur->gestionnaire;
 
         if ($ancienGestionnaire && $ancienGestionnaire->id === $nouveauGestionnaire->id) {
-            $this->addError('nouveauGestionnaireId', 'Cet investisseur est déjà assigné à ce gestionnaire.');
+            $this->addError('nouveauGestionnaireId', __("Cet investisseur est déjà assigné à ce gestionnaire."));
             return;
         }
 
@@ -207,7 +207,7 @@ class InvestisseurShow extends Component
 
         $this->investisseur->refresh();
         $this->reset(['afficherFormulaireTransfert', 'nouveauGestionnaireId', 'motifTransfert']);
-        session()->flash('succes', 'Gestionnaire réassigné avec succès.');
+        session()->flash('succes', __("Gestionnaire réassigné avec succès."));
     }
 
     /**

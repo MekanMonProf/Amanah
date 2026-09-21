@@ -39,7 +39,7 @@ new #[Layout('layouts.guest')] class extends Component {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'identifiant' => 'Ces identifiants ne correspondent à aucun compte.',
+                'identifiant' => __("Ces identifiants ne correspondent à aucun compte."),
             ]);
         }
 
@@ -60,7 +60,7 @@ new #[Layout('layouts.guest')] class extends Component {
         $seconds = RateLimiter::availableIn($this->throttleKey());
 
         throw ValidationException::withMessages([
-            'identifiant' => "Trop de tentatives de connexion. Merci de réessayer dans {$seconds} secondes.",
+            'identifiant' => __("Trop de tentatives de connexion. Merci de réessayer dans :secondes secondes.", ['secondes' => $seconds]),
         ]);
     }
 
@@ -75,13 +75,13 @@ new #[Layout('layouts.guest')] class extends Component {
 
     <form wire:submit="login">
         <div>
-            <x-input-label for="identifiant" value="Email ou téléphone" />
+            <x-input-label for="identifiant" :value="__('Email ou téléphone')" />
             <x-text-input wire:model="identifiant" id="identifiant" class="block mt-1 w-full" type="text" name="identifiant" required autofocus autocomplete="username" />
             <x-input-error :messages="$errors->get('identifiant')" class="mt-2" />
         </div>
 
         <div class="mt-4">
-            <x-input-label for="password" value="Mot de passe" />
+            <x-input-label for="password" :value="__('Mot de passe')" />
             <x-text-input wire:model="password" id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="current-password" />
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
@@ -89,19 +89,19 @@ new #[Layout('layouts.guest')] class extends Component {
         <div class="block mt-4">
             <label for="remember" class="inline-flex items-center">
                 <input wire:model="remember" id="remember" type="checkbox" class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800" name="remember">
-                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">Se souvenir de moi</span>
+                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __("Se souvenir de moi") }}</span>
             </label>
         </div>
 
         <div class="flex items-center justify-end mt-4">
             @if (Route::has('password.request'))
                 <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}" wire:navigate>
-                    Mot de passe oublié ?
+                    {{ __("Mot de passe oublié ?") }}
                 </a>
             @endif
 
             <x-primary-button class="ms-3">
-                Se connecter
+                {{ __("Se connecter") }}
             </x-primary-button>
         </div>
     </form>

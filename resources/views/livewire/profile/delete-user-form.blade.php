@@ -28,7 +28,7 @@ new class extends Component {
 <section class="space-y-6">
     <header>
         <h2 class="text-lg font-medium text-gray-900">
-            Supprimer le compte
+            {{ __("Supprimer le compte") }}
         </h2>
 
         <p class="mt-1 text-sm text-gray-600">
@@ -40,12 +40,12 @@ new class extends Component {
     <x-danger-button
         x-data=""
         x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion')"
-    >Supprimer le compte</x-danger-button>
+    >{{ __("Supprimer le compte") }}</x-danger-button>
 
     <x-modal name="confirm-user-deletion" :show="$errors->isNotEmpty()" focusable>
         <form wire:submit="deleteUser" class="p-6">
             <h2 class="text-lg font-medium text-gray-900">
-                Êtes-vous sûr de vouloir supprimer votre compte ?
+                {{ __("Êtes-vous sûr de vouloir supprimer votre compte ?") }}
             </h2>
 
             <p class="mt-1 text-sm text-gray-600">
@@ -70,11 +70,11 @@ new class extends Component {
 
             <div class="mt-6 flex justify-end">
                 <x-secondary-button x-on:click="$dispatch('close')">
-                    Annuler
+                    {{ __("Annuler") }}
                 </x-secondary-button>
 
                 <x-danger-button class="ms-3">
-                    Supprimer le compte
+                    {{ __("Supprimer le compte") }}
                 </x-danger-button>
             </div>
         </form>

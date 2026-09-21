@@ -21,22 +21,21 @@ new #[Layout('layouts.guest')] class extends Component {
 
 <div>
     <div class="mb-4 text-sm text-gray-600">
-        Mot de passe oublié ? Pas de problème. Indiquez votre adresse email et nous vous enverrons
-        un lien pour en choisir un nouveau.
+        {{ __("Mot de passe oublié ? Pas de problème. Indiquez votre adresse email et nous vous enverrons un lien pour en choisir un nouveau.") }}
     </div>
 
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
     <form wire:submit="sendPasswordResetLink">
         <div>
-            <x-input-label for="email" value="Email" />
+            <x-input-label for="email" :value="__('Email')" />
             <x-text-input wire:model="email" id="email" class="block mt-1 w-full" type="email" name="email" required autofocus />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
         <div class="flex items-center justify-end mt-4">
             <x-primary-button>
-                Envoyer le lien de réinitialisation
+                {{ __("Envoyer le lien de réinitialisation") }}
             </x-primary-button>
         </div>
     </form>

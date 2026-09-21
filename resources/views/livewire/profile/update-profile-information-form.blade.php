@@ -57,11 +57,11 @@ new class extends Component {
 <section>
     <header>
         <h2 class="text-lg font-medium text-gray-900">
-            Informations du profil
+            {{ __("Informations du profil") }}
         </h2>
 
         <p class="mt-1 text-sm text-gray-600">
-            Mettez à jour votre nom et votre adresse email.
+            {{ __("Mettez à jour votre nom et votre adresse email.") }}
         </p>
     </header>
 
@@ -86,16 +86,16 @@ new class extends Component {
             @if (auth()->user() instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! auth()->user()->hasVerifiedEmail())
                 <div>
                     <p class="text-sm mt-2 text-gray-800">
-                        Votre adresse email n'est pas vérifiée.
+                        {{ __("Votre adresse email n'est pas vérifiée.") }}
 
                         <button wire:click.prevent="sendVerification" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                            Cliquez ici pour renvoyer l'email de vérification.
+                            {{ __("Cliquez ici pour renvoyer l'email de vérification.") }}
                         </button>
                     </p>
 
                     @if (session('status') === 'verification-link-sent')
                         <p class="mt-2 font-medium text-sm text-green-600">
-                            Un nouveau lien de vérification a été envoyé à votre adresse email.
+                            {{ __("Un nouveau lien de vérification a été envoyé à votre adresse email.") }}
                         </p>
                     @endif
                 </div>
@@ -103,10 +103,10 @@ new class extends Component {
         </div>
 
         <div class="flex items-center gap-4">
-            <x-primary-button>Enregistrer</x-primary-button>
+            <x-primary-button>{{ __("Enregistrer") }}</x-primary-button>
 
             <x-action-message class="me-3" on="profile-updated">
-                Enregistré.
+                {{ __("Enregistré.") }}
             </x-action-message>
         </div>
     </form>

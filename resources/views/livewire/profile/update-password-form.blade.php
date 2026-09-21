@@ -36,11 +36,11 @@ new class extends Component {
 <section>
     <header>
         <h2 class="text-lg font-medium text-gray-900">
-            Modifier le mot de passe
+            {{ __("Modifier le mot de passe") }}
         </h2>
 
         <p class="mt-1 text-sm text-gray-600">
-            Utilisez un mot de passe long et unique pour la sécurité de votre compte.
+            {{ __("Utilisez un mot de passe long et unique pour la sécurité de votre compte.") }}
         </p>
     </header>
 
@@ -64,10 +64,10 @@ new class extends Component {
         </div>
 
         <div class="flex items-center gap-4">
-            <x-primary-button>Enregistrer</x-primary-button>
+            <x-primary-button>{{ __("Enregistrer") }}</x-primary-button>
 
             <x-action-message class="me-3" on="password-updated">
-                Enregistré.
+                {{ __("Enregistré.") }}
             </x-action-message>
         </div>
     </form>

@@ -76,7 +76,7 @@
                                     <option value="">{{ $typePresent === 'memoire' ? __("— Sélectionner un investisseur déclaré décédé —") : __("— Sélectionner un investisseur —") }}</option>
                                     @foreach ($this->defuntsDisponibles as $defunt)
                                         <option value="{{ $defunt->id }}">
-                                            {{ $defunt->nom }} {{ $defunt->prenom }} ({{ $defunt->identifiant_externe }}){{ $defunt->date_deces ? ' — décédé(e) le ' . $defunt->date_deces->format('d/m/Y') : '' }}
+                                            {{ $defunt->nom }} {{ $defunt->prenom }} ({{ $defunt->identifiant_externe }}){{ $defunt->date_deces ? ' — ' . __('décédé(e) le :date', ['date' => $defunt->date_deces->format('d/m/Y')]) : '' }}
                                         </option>
                                     @endforeach
                                 </select>

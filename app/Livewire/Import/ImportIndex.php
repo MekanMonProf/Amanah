@@ -87,8 +87,8 @@ class ImportIndex extends Component
         $this->validate([
             'fichier' => 'required|file|max:10240',
         ], [
-            'fichier.required' => 'Choisissez un fichier à importer.',
-            'fichier.max' => 'Le fichier ne doit pas dépasser 10 Mo.',
+            'fichier.required' => __("Choisissez un fichier à importer."),
+            'fichier.max' => __("Le fichier ne doit pas dépasser 10 Mo."),
         ]);
 
         $this->nomFichier = $this->fichier->getClientOriginalName();
@@ -111,9 +111,9 @@ class ImportIndex extends Component
         $this->colonnesManquantes = array_values(array_diff(ImportateurDonnees::colonnesObligatoires($this->type), $contenu['entetes']));
 
         if ($this->colonnesManquantes !== []) {
-            $this->erreurLecture = sprintf(
-                'Colonne(s) obligatoire(s) absente(s) du fichier : %s. Téléchargez le modèle ci-dessus pour retrouver les en-têtes attendus.',
-                implode(', ', $this->colonnesManquantes)
+            $this->erreurLecture = __(
+                "Colonne(s) obligatoire(s) absente(s) du fichier : :colonnes. Téléchargez le modèle ci-dessus pour retrouver les en-têtes attendus.",
+                ['colonnes' => implode(', ', $this->colonnesManquantes)]
             );
 
             return;
@@ -175,7 +175,7 @@ class ImportIndex extends Component
         $analyse = $this->relireAnalyse($this->jetonAnalyse);
 
         if (! $analyse || $analyse['type'] !== $this->type) {
-            $this->erreurLecture = 'Le contrôle du fichier a expiré. Redéposez le fichier pour relancer l\'analyse.';
+            $this->erreurLecture = __("Le contrôle du fichier a expiré. Redéposez le fichier pour relancer l'analyse.");
             $this->reset(['jetonAnalyse', 'resume', 'apercu']);
 
             return;

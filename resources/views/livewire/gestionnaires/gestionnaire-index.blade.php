@@ -3,7 +3,7 @@
         <h1 class="text-xl sm:text-2xl font-semibold text-gray-800">{{ __("Gestionnaires d'actionnaires") }}</h1>
         <button wire:click="{{ $afficherFormulaire ? '$set(\'afficherFormulaire\', false)' : 'ouvrirFormulaire' }}"
                 class="bg-emerald-700 text-white px-4 py-2 rounded-lg hover:bg-emerald-800 w-full sm:w-auto">
-            {{ $afficherFormulaire ? 'Annuler' : '+ Nouveau gestionnaire' }}
+            {{ $afficherFormulaire ? __('Annuler') : __('+ Nouveau gestionnaire') }}
         </button>
     </div>
 
@@ -158,7 +158,7 @@
                     </td>
                     <td class="p-3">
                         <span class="px-2 py-1 text-xs rounded-full {{ $g->actif ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-600' }}">
-                            {{ $g->actif ? 'Actif' : 'Inactif' }}
+                            {{ $g->actif ? __('Actif') : __('Inactif') }}
                         </span>
                     </td>
                     <td class="p-3 text-end whitespace-nowrap">

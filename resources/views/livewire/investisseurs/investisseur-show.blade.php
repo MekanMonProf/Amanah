@@ -137,7 +137,7 @@
         <div class="bg-white border rounded-lg p-4">
             <div class="text-xs text-gray-500 uppercase">{{ __("Gestionnaire") }}</div>
             <div class="mt-1 flex items-center justify-between gap-2">
-                <span>{{ $investisseur->gestionnaire?->user?->nom ?? '— Non assigné' }}</span>
+                <span>{{ $investisseur->gestionnaire?->user?->nom ?? '— ' . __('Non assigné') }}</span>
                 @if (in_array(auth()->user()->role, ['direction', 'administrateur']) && ! $investisseur->estDecede())
                     <button wire:click="$toggle('afficherFormulaireTransfert')" class="text-xs text-emerald-700 hover:underline whitespace-nowrap">
                         {{ __("Changer →") }}

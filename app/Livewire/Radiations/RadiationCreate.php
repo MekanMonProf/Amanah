@@ -68,7 +68,7 @@ class RadiationCreate extends Component
         $this->validate();
 
         if ($this->nombre_actions_radiees > $this->actionsDetenues) {
-            $this->addError('nombre_actions_radiees', "Impossible de radier plus d'actions que détenues ({$this->actionsDetenues}).");
+            $this->addError('nombre_actions_radiees', __("Impossible de radier plus d'actions que détenues (:detenues).", ['detenues' => $this->actionsDetenues]));
             return;
         }
 

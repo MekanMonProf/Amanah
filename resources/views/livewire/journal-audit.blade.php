@@ -74,7 +74,7 @@
                         <td class="p-3 text-end">
                             @if ($entree->donnees_avant || $entree->donnees_apres)
                                 <button wire:click="basculerDetail({{ $entree->id }})" class="text-xs text-emerald-700 hover:underline">
-                                    {{ in_array($entree->id, $lignesOuvertes) ? 'Masquer' : 'Détails' }}
+                                    {{ in_array($entree->id, $lignesOuvertes) ? __('Masquer') : __('Détails') }}
                                 </button>
                             @endif
                         </td>

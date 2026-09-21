@@ -25,7 +25,7 @@
                 @endif
             </div>
             <button type="button" wire:click="$toggle('modifierDelai')" class="text-sm text-emerald-700 hover:underline whitespace-nowrap">
-                {{ $modifierDelai ? 'Annuler' : 'Modifier' }}
+                {{ $modifierDelai ? __('Annuler') : __('Modifier') }}
             </button>
         </div>
 

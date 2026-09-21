@@ -33,7 +33,7 @@
                         {{ ucfirst($item['compte']->categorie) }}
                     </span>
                     <span class="text-xs px-2 py-1 rounded-full {{ $item['compte']->reinvestissement_auto ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-600' }}">
-                        {{ __("Réinvestissement auto") }} : {{ $item['compte']->reinvestissement_auto ? 'Oui' : 'Non' }}
+                        {{ __("Réinvestissement auto") }} : {{ $item['compte']->reinvestissement_auto ? __('Oui') : __('Non') }}
                     </span>
                 </div>
 

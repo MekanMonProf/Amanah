@@ -168,11 +168,13 @@ class GestionnaireIndex extends Component
                 ->count();
 
             if ($nbInvestisseursActifs > 0) {
-                session()->flash('erreur_desactivation', sprintf(
-                    'Impossible de désactiver %s %s : %d investisseur(s) actif(s) encore assigné(s). Réassignez-les tous d\'un coup ci-dessous, ou un par un avec le bouton "Changer →" sur chaque fiche investisseur.',
-                    $gestionnaire->user->nom,
-                    $gestionnaire->user->prenom,
-                    $nbInvestisseursActifs
+                session()->flash('erreur_desactivation', __(
+                    "Impossible de désactiver :nom :prenom : :nombre investisseur(s) actif(s) encore assigné(s). Réassignez-les tous d'un coup ci-dessous, ou un par un avec le bouton « Changer → » sur chaque fiche investisseur.",
+                    [
+                        'nom' => $gestionnaire->user->nom,
+                        'prenom' => $gestionnaire->user->prenom,
+                        'nombre' => $nbInvestisseursActifs,
+                    ]
                 ));
                 $this->gestionnaireADesactiverId = $gestionnaireId;
                 return;
@@ -252,13 +254,13 @@ class GestionnaireIndex extends Component
 
         $this->gestionnaireADesactiverId = null;
         $this->reset(['nouveauGestionnairePourReassignation', 'motifReassignationMasse']);
-        session()->flash('succes_modification', sprintf(
-            '%d investisseur(s) réassigné(s) à %s %s. %s %s a été désactivé.',
-            $investisseurs->count(),
-            $nouveauGestionnaire->user->nom,
-            $nouveauGestionnaire->user->prenom,
-            $ancienGestionnaire->user->nom,
-            $ancienGestionnaire->user->prenom,
+        session()->flash('succes_modification', __(
+            ":nombre investisseur(s) réassigné(s) à :nouveau. :ancien a été désactivé.",
+            [
+                'nombre' => $investisseurs->count(),
+                'nouveau' => $nouveauGestionnaire->user->nom . ' ' . $nouveauGestionnaire->user->prenom,
+                'ancien' => $ancienGestionnaire->user->nom . ' ' . $ancienGestionnaire->user->prenom,
+            ]
         ));
     }
 

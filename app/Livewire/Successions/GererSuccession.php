@@ -82,11 +82,11 @@ class GererSuccession extends Component
             $montantActions = $nbActions * $prixUnitaire;
 
             if ($compte->categorie === 'waqf') {
-                $destination = 'Waqf Dolel Xamxam (œuvre caritative)';
+                $destination = __(":waqf (œuvre caritative)", ['waqf' => Investisseur::NOM_WAQF_CARITATIF]);
             } elseif ($this->modeReglementCommercial === 'paiement') {
-                $destination = "Paiement direct — {$mandataire->nom} {$mandataire->prenom}";
+                $destination = __("Paiement direct — :mandataire", ['mandataire' => $mandataire->nom . ' ' . $mandataire->prenom]);
             } else {
-                $destination = "{$mandataire->nom} {$mandataire->prenom} (compte investisseur)";
+                $destination = __(":mandataire (compte investisseur)", ['mandataire' => $mandataire->nom . ' ' . $mandataire->prenom]);
             }
 
             $lignes[] = [
@@ -292,13 +292,13 @@ class GererSuccession extends Component
                     $compteCaritatif = $this->compteWaqfCaritatif();
                     $this->transfererVersCompte($compteDefunt, $compteCaritatif, $mandataire, $nbActions, $soldeInitial, "capital redirigé vers l'œuvre caritative Waqf Dolel Xamxam");
 
-                    $resultat[] = ['compte' => $compteDefunt->numero_compte, 'destination' => 'Waqf Dolel Xamxam (œuvre caritative)', 'actions' => $nbActions, 'montant' => $soldeInitial];
+                    $resultat[] = ['compte' => $compteDefunt->numero_compte, 'destination' => __(":waqf (œuvre caritative)", ['waqf' => Investisseur::NOM_WAQF_CARITATIF]), 'actions' => $nbActions, 'montant' => $soldeInitial];
                     continue;
                 }
 
                 if ($this->modeReglementCommercial === 'paiement') {
                     $actionsLiquidees = $this->liquiderActions($compteDefunt);
-                    $resultat[] = ['compte' => $compteDefunt->numero_compte, 'destination' => "En attente de versement — {$mandataire->nom} {$mandataire->prenom}", 'actions' => $actionsLiquidees, 'montant' => $compteDefunt->solde()];
+                    $resultat[] = ['compte' => $compteDefunt->numero_compte, 'destination' => __("En attente de versement — :mandataire", ['mandataire' => $mandataire->nom . ' ' . $mandataire->prenom]), 'actions' => $actionsLiquidees, 'montant' => $compteDefunt->solde()];
                 } else {
                     if (! $mandataire->investisseur_heritier_id) {
                         $this->creerDossierMandataire($mandataire);
@@ -306,7 +306,7 @@ class GererSuccession extends Component
                     $compteMandataire = $mandataire->investisseurHeritier->compteOuCree('commercial');
                     $this->transfererVersCompte($compteDefunt, $compteMandataire, $mandataire, $nbActions, $soldeInitial, "transmis au mandataire {$mandataire->nom} {$mandataire->prenom}");
 
-                    $resultat[] = ['compte' => $compteDefunt->numero_compte, 'destination' => "{$mandataire->nom} {$mandataire->prenom} (compte investisseur)", 'actions' => $nbActions, 'montant' => $soldeInitial];
+                    $resultat[] = ['compte' => $compteDefunt->numero_compte, 'destination' => __(":mandataire (compte investisseur)", ['mandataire' => $mandataire->nom . ' ' . $mandataire->prenom]), 'actions' => $nbActions, 'montant' => $soldeInitial];
                 }
             }
 

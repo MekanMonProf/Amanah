@@ -143,7 +143,7 @@
                     </div>
                     <label class="flex items-center gap-2 cursor-pointer">
                         <input type="checkbox" wire:model="reinvestissementAutoCommercial" class="w-4 h-4">
-                        <span class="text-sm text-gray-600">{{ $reinvestissementAutoCommercial ? 'Activé' : 'Désactivé' }}</span>
+                        <span class="text-sm text-gray-600">{{ $reinvestissementAutoCommercial ? __('Activé') : __('Désactivé') }}</span>
                     </label>
                 </div>
             @else
@@ -159,7 +159,7 @@
                     </div>
                     <label class="flex items-center gap-2 cursor-pointer">
                         <input type="checkbox" wire:model="reinvestissementAutoWaqf" class="w-4 h-4">
-                        <span class="text-sm text-gray-600">{{ $reinvestissementAutoWaqf ? 'Activé' : 'Désactivé' }}</span>
+                        <span class="text-sm text-gray-600">{{ $reinvestissementAutoWaqf ? __('Activé') : __('Désactivé') }}</span>
                     </label>
                 </div>
             @else

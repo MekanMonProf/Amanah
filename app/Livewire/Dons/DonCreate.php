@@ -113,7 +113,7 @@ class DonCreate extends Component
                 return;
             }
             if ($this->nombreActions > $this->compteSource->nombreActions()) {
-                $this->addError('nombreActions', "Impossible de donner plus d'actions que détenues ({$this->compteSource->nombreActions()}).");
+                $this->addError('nombreActions', __("Impossible de donner plus d'actions que détenues (:detenues).", ['detenues' => $this->compteSource->nombreActions()]));
                 return;
             }
         } else {

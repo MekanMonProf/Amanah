@@ -155,7 +155,7 @@
             @if ($compteWaqfId)
                 <div class="flex items-center justify-between py-2">
                     <div>
-                        <span class="px-2 py-1 text-xs font-semibold rounded bg-purple-100 text-purple-700">Waqf</span>
+                        <span class="px-2 py-1 text-xs font-semibold rounded bg-purple-100 text-purple-700">{{ __("Waqf") }}</span>
                     </div>
                     <label class="flex items-center gap-2 cursor-pointer">
                         <input type="checkbox" wire:model="reinvestissementAutoWaqf" class="w-4 h-4">

@@ -40,7 +40,7 @@ class AjustementCreate extends Component
             userId: Auth::id(),
         );
 
-        session()->flash('succes', 'Ajustement enregistré. Le solde du compte a été corrigé.');
+        session()->flash('succes', __("Ajustement enregistré. Le solde du compte a été corrigé."));
 
         \App\Models\AuditLog::enregistrer(
             action: 'ajustement',

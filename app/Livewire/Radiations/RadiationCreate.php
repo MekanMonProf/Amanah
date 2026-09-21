@@ -46,7 +46,7 @@ class RadiationCreate extends Component
     {
         $this->assurerAccesGestionnairePourCompte($compte);
         $this->compte = $compte;
-        abort_if($compte->investisseur->estDecede(), 403, 'Ce compte est gelé — l\'investisseur est déclaré décédé. Gérez la succession depuis sa fiche.');
+        abort_if($compte->investisseur->estDecede(), 403, __("Ce compte est gelé — l'investisseur est déclaré décédé. Gérez la succession depuis sa fiche."));
         $this->date_radiation = now()->toDateString();
         $this->actionsDetenues = $compte->nombreActions();
         $this->prix_unitaire = (float) ($compte->politique()?->prix_unitaire_action ?? 25000);
@@ -61,7 +61,7 @@ class RadiationCreate extends Component
     public function enregistrer(): void
     {
         if (! $this->radiationAutorisee) {
-            $this->addError('nombre_actions_radiees', 'La radiation n\'est pas autorisée pour cette catégorie de compte.');
+            $this->addError('nombre_actions_radiees', __("La radiation n'est pas autorisée pour cette catégorie de compte."));
             return;
         }
 

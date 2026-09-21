@@ -76,7 +76,7 @@ new #[Layout('layouts.guest')] class extends Component {
         </div>
 
         <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rtl:mr-4" href="{{ route('login') }}" wire:navigate>
+            <a class="underline text-sm text-gray-600 hover:text-gray-900 rtl:me-4" href="{{ route('login') }}" wire:navigate>
                 {{ __('Déjà inscrit ?') }}
             </a>
 

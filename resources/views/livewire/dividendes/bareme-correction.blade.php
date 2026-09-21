@@ -1,7 +1,7 @@
 <div class="p-4 sm:p-6 max-w-2xl">
-    <a href="{{ route('dividendes.calculer') }}" wire:navigate class="text-sm text-gray-500 hover:underline">← Retour au calcul des dividendes</a>
+    <a href="{{ route('dividendes.calculer') }}" wire:navigate class="text-sm text-gray-500 hover:underline">{{ __("← Retour au calcul des dividendes") }}</a>
 
-    <h1 class="text-xl sm:text-2xl font-semibold text-gray-800 mt-2 mb-1">Corriger un barème</h1>
+    <h1 class="text-xl sm:text-2xl font-semibold text-gray-800 mt-2 mb-1">{{ __("Corriger un barème") }}</h1>
     <p class="text-sm text-gray-500 mb-6">
         {{ $bareme->periode->translatedFormat('F Y') }} · {{ ucfirst($bareme->categorie) }}
     </p>
@@ -24,18 +24,18 @@
 
     <form wire:submit="corriger" class="bg-white border rounded-lg p-5 shadow-sm space-y-4">
         <div>
-            <div class="text-xs text-gray-500 uppercase">Taux actuel</div>
+            <div class="text-xs text-gray-500 uppercase">{{ __("Taux actuel") }}</div>
             <div class="text-xl font-semibold text-gray-800">{{ \App\Support\Montant::format($ancienTaux) }}&#8239;CFA/action</div>
         </div>
 
         <div>
-            <label class="text-sm text-gray-600">Nouveau taux (CFA/action)</label>
+            <label class="text-sm text-gray-600">{{ __("Nouveau taux (CFA/action)") }}</label>
             <input type="number" step="0.01" wire:model="nouveauTaux" class="w-full border rounded px-3 py-2">
             @error('nouveauTaux') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
         </div>
 
         <div>
-            <label class="text-sm text-gray-600">Motif de la correction (obligatoire, pour l'audit)</label>
+            <label class="text-sm text-gray-600">{{ __("Motif de la correction (obligatoire, pour l'audit)") }}</label>
             <textarea wire:model="motif" rows="3" class="w-full border rounded px-3 py-2"
                       placeholder="Ex : Taux saisi à 99 999 CFA par erreur de frappe le 08/08/2026, correction au taux réellement décidé par la Direction."></textarea>
             @error('motif') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
@@ -43,8 +43,8 @@
 
         <button type="submit" wire:loading.attr="disabled" wire:target="corriger"
                 class="bg-red-600 text-white px-5 py-2 rounded-lg w-full sm:w-auto hover:bg-red-700 disabled:opacity-50">
-            <span wire:loading.remove wire:target="corriger">Corriger le barème et ajuster les comptes</span>
-            <span wire:loading wire:target="corriger">Correction en cours...</span>
+            <span wire:loading.remove wire:target="corriger">{{ __("Corriger le barème et ajuster les comptes") }}</span>
+            <span wire:loading wire:target="corriger">{{ __("Correction en cours...") }}</span>
         </button>
     </form>
 </div>

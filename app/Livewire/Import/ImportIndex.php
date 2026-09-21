@@ -182,13 +182,13 @@ class ImportIndex extends Component
         }
 
         if (($this->resume['erreurs'] ?? 0) > 0 && ! $this->confirmeIgnorerErreurs) {
-            $this->addError('confirmeIgnorerErreurs', 'Cochez la case pour confirmer que les lignes en erreur seront ignorées.');
+            $this->addError('confirmeIgnorerErreurs', __("Cochez la case pour confirmer que les lignes en erreur seront ignorées."));
 
             return;
         }
 
         if (($this->resume['valides'] ?? 0) === 0) {
-            $this->addError('confirmeIgnorerErreurs', 'Aucune ligne valide à importer.');
+            $this->addError('confirmeIgnorerErreurs', __("Aucune ligne valide à importer."));
 
             return;
         }

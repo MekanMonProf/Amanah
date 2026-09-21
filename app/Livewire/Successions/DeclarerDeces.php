@@ -51,7 +51,7 @@ class DeclarerDeces extends Component
             apres: ['date_deces' => $this->dateDeces],
         );
 
-        session()->flash('succes', 'Décès déclaré. Le compte est désormais gelé — gérez la succession pour répartir les avoirs.');
+        session()->flash('succes', __("Décès déclaré. Le compte est désormais gelé — gérez la succession pour répartir les avoirs."));
 
         $this->redirectRoute('successions.gerer', $this->investisseur, navigate: true);
     }

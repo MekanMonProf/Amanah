@@ -47,7 +47,7 @@ class BaremeCorrection extends Component
         $this->validate();
 
         if ($this->nouveauTaux == $this->ancienTaux) {
-            $this->addError('nouveauTaux', 'Le nouveau taux est identique à l\'ancien — rien à corriger.');
+            $this->addError('nouveauTaux', __("Le nouveau taux est identique à l'ancien — rien à corriger."));
             return;
         }
 

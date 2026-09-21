@@ -84,7 +84,7 @@ class GestionnaireIndex extends Component
         ]);
 
         if (\App\Support\Telephone::estAmbigu($this->telephone)) {
-            $this->addError('telephone', 'Ce numéro semble étranger : précisez l\'indicatif pays devant (ex : +33 pour la France, +221 pour le Sénégal).');
+            $this->addError('telephone', __("Ce numéro semble étranger : précisez l'indicatif pays devant (ex : +33 pour la France, +221 pour le Sénégal)."));
             return;
         }
 
@@ -107,7 +107,7 @@ class GestionnaireIndex extends Component
 
         $this->gestionnaireEnEditionId = null;
         $this->reset(['nom', 'prenom', 'email', 'telephone']);
-        session()->flash('succes_modification', 'Profil du gestionnaire mis à jour.');
+        session()->flash('succes_modification', __("Profil du gestionnaire mis à jour."));
     }
 
     public function creer(): void
@@ -115,7 +115,7 @@ class GestionnaireIndex extends Component
         $this->validate();
 
         if (\App\Support\Telephone::estAmbigu($this->telephone)) {
-            $this->addError('telephone', 'Ce numéro semble étranger : précisez l\'indicatif pays devant (ex : +33 pour la France, +221 pour le Sénégal).');
+            $this->addError('telephone', __("Ce numéro semble étranger : précisez l'indicatif pays devant (ex : +33 pour la France, +221 pour le Sénégal)."));
             return;
         }
 
@@ -214,7 +214,7 @@ class GestionnaireIndex extends Component
         ]);
 
         if ($this->nouveauGestionnairePourReassignation === $ancienGestionnaire->id) {
-            $this->addError('nouveauGestionnairePourReassignation', 'Choisissez un gestionnaire différent de celui à désactiver.');
+            $this->addError('nouveauGestionnairePourReassignation', __("Choisissez un gestionnaire différent de celui à désactiver."));
             return;
         }
 

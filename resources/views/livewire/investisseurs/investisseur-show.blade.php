@@ -307,7 +307,7 @@
     @if ($presentsRecus->isNotEmpty())
         <div class="bg-purple-50 border border-purple-200 rounded-lg p-4 mb-4">
             <h2 class="text-sm font-semibold text-purple-900 mb-1">{{ __("Présents Waqf reçus en son honneur") }}</h2>
-            <p class="text-xs text-purple-700 mb-3">Versées au Waqf caritatif en son nom : elles ne lui confèrent aucun droit patrimonial.</p>
+            <p class="text-xs text-purple-700 mb-3">{{ __("Versées au Waqf caritatif en son nom : elles ne lui confèrent aucun droit patrimonial.") }}</p>
             <ul class="text-sm space-y-1">
                 @foreach ($presentsRecus as $present)
                     <li class="text-gray-800">

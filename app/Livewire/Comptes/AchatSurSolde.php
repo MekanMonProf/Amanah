@@ -25,7 +25,7 @@ class AchatSurSolde extends Component
     {
         $this->assurerAccesGestionnairePourCompte($compte);
         $this->compte = $compte;
-        abort_if($compte->investisseur->estDecede(), 403, 'Ce compte est gelé — l\'investisseur est déclaré décédé. Gérez la succession depuis sa fiche.');
+        abort_if($compte->investisseur->estDecede(), 403, __("Ce compte est gelé — l'investisseur est déclaré décédé. Gérez la succession depuis sa fiche."));
         $this->calculerApercu();
     }
 

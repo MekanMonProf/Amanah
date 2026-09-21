@@ -48,7 +48,7 @@ class GererDeuxFa extends Component
         $google2fa = new Google2FA();
 
         if (! $google2fa->verifyKey($this->secretTemporaire, $this->codeConfirmation)) {
-            $this->addError('codeConfirmation', 'Code invalide — vérifiez l\'heure de votre téléphone et réessayez.');
+            $this->addError('codeConfirmation', __("Code invalide — vérifiez l'heure de votre téléphone et réessayez."));
             return;
         }
 

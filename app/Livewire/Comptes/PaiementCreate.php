@@ -49,7 +49,7 @@ class PaiementCreate extends Component
     {
         $this->assurerAccesGestionnairePourCompte($compte);
         $this->compte = $compte;
-        abort_if($compte->investisseur->estDecede(), 403, 'Ce compte est gelé — l\'investisseur est déclaré décédé. Gérez la succession depuis sa fiche.');
+        abort_if($compte->investisseur->estDecede(), 403, __("Ce compte est gelé — l'investisseur est déclaré décédé. Gérez la succession depuis sa fiche."));
         $this->date_paiement = now()->toDateString();
 
         $this->source = request()->query('source') === 'radiation' ? 'radiation' : 'dividende';
@@ -71,7 +71,7 @@ class PaiementCreate extends Component
     public function enregistrer(): void
     {
         if (! $this->versementAutorise) {
-            $this->addError('montant', 'Ce versement n\'est pas autorisé pour cette catégorie de compte (voir la politique d\'investissement).');
+            $this->addError('montant', __("Ce versement n'est pas autorisé pour cette catégorie de compte (voir la politique d'investissement)."));
             return;
         }
 

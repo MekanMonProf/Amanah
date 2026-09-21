@@ -1,6 +1,6 @@
 <div class="p-4 sm:p-6">
     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
-        <h1 class="text-xl sm:text-2xl font-semibold text-gray-800">Gestionnaires d'actionnaires</h1>
+        <h1 class="text-xl sm:text-2xl font-semibold text-gray-800">{{ __("Gestionnaires d'actionnaires") }}</h1>
         <button wire:click="{{ $afficherFormulaire ? '$set(\'afficherFormulaire\', false)' : 'ouvrirFormulaire' }}"
                 class="bg-emerald-700 text-white px-4 py-2 rounded-lg hover:bg-emerald-800 w-full sm:w-auto">
             {{ $afficherFormulaire ? 'Annuler' : '+ Nouveau gestionnaire' }}
@@ -12,9 +12,9 @@
             @if ($emailConcerneParReinit)
                 ✓ Mot de passe réinitialisé pour <strong>{{ $emailConcerneParReinit }}</strong> et envoyé par email.
             @else
-                ✓ Gestionnaire créé. Ses identifiants de connexion lui ont été envoyés par email.
+                {{ __("✓ Gestionnaire créé. Ses identifiants de connexion lui ont été envoyés par email.") }}
             @endif
-            <span class="text-xs text-amber-600">(mot de passe généré : <span class="font-mono">{{ $dernierMotDePasseGenere }}</span>, au cas où l'email n'arrive pas)</span>
+            <span class="text-xs text-amber-600">({{ __("mot de passe généré") }} : <span class="font-mono">{{ $dernierMotDePasseGenere }}</span>, {{ __("au cas où l'email n'arrive pas") }})</span>
         </div>
     @endif
 
@@ -32,12 +32,12 @@
 
     @if ($gestionnaireADesactiverId)
         <div class="bg-white border rounded-lg p-5 mb-6 shadow-sm">
-            <p class="text-sm font-medium text-gray-700 mb-3">Réassigner tout le portefeuille puis désactiver</p>
+            <p class="text-sm font-medium text-gray-700 mb-3">{{ __("Réassigner tout le portefeuille puis désactiver") }}</p>
             <form wire:submit="reassignerPortefeuilleEtDesactiver" class="flex flex-col sm:flex-row gap-2 sm:items-end">
                 <div class="flex-1">
-                    <label class="text-xs text-gray-500">Nouveau gestionnaire pour tous ses investisseurs</label>
+                    <label class="text-xs text-gray-500">{{ __("Nouveau gestionnaire pour tous ses investisseurs") }}</label>
                     <select wire:model="nouveauGestionnairePourReassignation" class="w-full border rounded px-3 py-2 text-sm">
-                        <option value="">— Choisir —</option>
+                        <option value="">{{ __("— Choisir —") }}</option>
                         @foreach ($gestionnaires as $g)
                             @if ($g->id !== $gestionnaireADesactiverId && $g->actif)
                                 <option value="{{ $g->id }}">{{ $g->user->nom }} {{ $g->user->prenom }}</option>
@@ -47,15 +47,15 @@
                     @error('nouveauGestionnairePourReassignation') <span class="text-red-600 text-xs">{{ $message }}</span> @enderror
                 </div>
                 <div class="flex-1">
-                    <label class="text-xs text-gray-500">Motif (optionnel)</label>
+                    <label class="text-xs text-gray-500">{{ __("Motif (optionnel)") }}</label>
                     <input type="text" wire:model="motifReassignationMasse" class="w-full border rounded px-3 py-2 text-sm">
                 </div>
                 <div class="flex gap-2">
                     <button type="submit" class="bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm whitespace-nowrap">
-                        Réassigner et désactiver
+                        {{ __("Réassigner et désactiver") }}
                     </button>
                     <button type="button" wire:click="annulerReassignationMasse" class="text-sm text-gray-500 hover:underline">
-                        Annuler
+                        {{ __("Annuler") }}
                     </button>
                 </div>
             </form>
@@ -64,33 +64,33 @@
 
     @if ($gestionnaireEnEditionId)
         <div class="bg-white border rounded-lg p-5 mb-6 shadow-sm">
-            <p class="text-sm font-medium text-gray-700 mb-3">Modifier le profil du gestionnaire</p>
+            <p class="text-sm font-medium text-gray-700 mb-3">{{ __("Modifier le profil du gestionnaire") }}</p>
             <form wire:submit="enregistrerModification" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label class="text-sm text-gray-600">Nom</label>
+                    <label class="text-sm text-gray-600">{{ __("Nom") }}</label>
                     <input type="text" wire:model="nom" class="w-full border rounded px-3 py-2">
                     @error('nom') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                 </div>
                 <div>
-                    <label class="text-sm text-gray-600">Prénom</label>
+                    <label class="text-sm text-gray-600">{{ __("Prénom") }}</label>
                     <input type="text" wire:model="prenom" class="w-full border rounded px-3 py-2">
                 </div>
                 <div>
-                    <label class="text-sm text-gray-600">Email (identifiant de connexion)</label>
+                    <label class="text-sm text-gray-600">{{ __("Email (identifiant de connexion)") }}</label>
                     <input type="email" wire:model="email" class="w-full border rounded px-3 py-2">
                     @error('email') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                 </div>
                 <div>
-                    <label class="text-sm text-gray-600">Téléphone</label>
+                    <label class="text-sm text-gray-600">{{ __("Téléphone") }}</label>
                     <input type="text" wire:model="telephone" placeholder="771234567 ou +33... si étranger" class="w-full border rounded px-3 py-2">
                     @error('telephone') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                 </div>
                 <div class="sm:col-span-2 flex gap-2">
                     <button type="submit" class="bg-emerald-700 text-white px-4 py-2 rounded-lg w-full sm:w-auto">
-                        Enregistrer les modifications
+                        {{ __("Enregistrer les modifications") }}
                     </button>
                     <button type="button" wire:click="annulerModification" class="text-sm text-gray-500 hover:underline">
-                        Annuler
+                        {{ __("Annuler") }}
                     </button>
                 </div>
             </form>
@@ -101,33 +101,33 @@
         <div class="bg-white border rounded-lg p-5 mb-6 shadow-sm">
             <form wire:submit="creer" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label class="text-sm text-gray-600">Nom</label>
+                    <label class="text-sm text-gray-600">{{ __("Nom") }}</label>
                     <input type="text" wire:model="nom" class="w-full border rounded px-3 py-2">
                     @error('nom') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                 </div>
                 <div>
-                    <label class="text-sm text-gray-600">Prénom</label>
+                    <label class="text-sm text-gray-600">{{ __("Prénom") }}</label>
                     <input type="text" wire:model="prenom" class="w-full border rounded px-3 py-2">
                 </div>
                 <div>
-                    <label class="text-sm text-gray-600">Email (identifiant de connexion)</label>
+                    <label class="text-sm text-gray-600">{{ __("Email (identifiant de connexion)") }}</label>
                     <input type="email" wire:model="email" class="w-full border rounded px-3 py-2">
                     @error('email') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                 </div>
                 <div>
-                    <label class="text-sm text-gray-600">Téléphone</label>
+                    <label class="text-sm text-gray-600">{{ __("Téléphone") }}</label>
                     <input type="text" wire:model="telephone" placeholder="771234567 ou +33... si étranger" class="w-full border rounded px-3 py-2">
                     @error('telephone') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                 </div>
                 <div class="sm:col-span-2">
-                    <label class="text-sm text-gray-600">Mot de passe temporaire</label>
+                    <label class="text-sm text-gray-600">{{ __("Mot de passe temporaire") }}</label>
                     <input type="text" wire:model="mot_de_passe" class="w-full border rounded px-3 py-2 font-mono">
                     @error('mot_de_passe') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
-                    <p class="text-xs text-gray-400 mt-1">Généré automatiquement, modifiable si besoin.</p>
+                    <p class="text-xs text-gray-400 mt-1">{{ __("Généré automatiquement, modifiable si besoin.") }}</p>
                 </div>
                 <div class="sm:col-span-2">
                     <button type="submit" class="bg-emerald-700 text-white px-4 py-2 rounded-lg w-full sm:w-auto">
-                        Créer le compte gestionnaire
+                        {{ __("Créer le compte gestionnaire") }}
                     </button>
                 </div>
             </form>
@@ -135,13 +135,13 @@
     @endif
 
     <table class="w-full bg-white border rounded-lg overflow-hidden">
-        <thead class="bg-gray-50 text-left text-sm text-gray-600">
+        <thead class="bg-gray-50 text-start text-sm text-gray-600">
             <tr>
-                <th class="p-3">Nom</th>
-                <th class="p-3">Email</th>
-                <th class="p-3">Téléphone</th>
-                <th class="p-3 text-right">Investisseurs</th>
-                <th class="p-3">Statut</th>
+                <th class="p-3">{{ __("Nom") }}</th>
+                <th class="p-3">{{ __("Email") }}</th>
+                <th class="p-3">{{ __("Téléphone") }}</th>
+                <th class="p-3 text-end">{{ __("Investisseurs") }}</th>
+                <th class="p-3">{{ __("Statut") }}</th>
                 <th class="p-3"></th>
             </tr>
         </thead>
@@ -151,7 +151,7 @@
                     <td class="p-3">{{ $g->user->nom }} {{ $g->user->prenom }}</td>
                     <td class="p-3 text-sm text-gray-600">{{ $g->user->email }}</td>
                     <td class="p-3 text-sm text-gray-600">{{ $g->user->telephone ?: '—' }}</td>
-                    <td class="p-3 text-right">
+                    <td class="p-3 text-end">
                         <a href="{{ route('investisseurs.index') }}?gestionnaire={{ $g->id }}" wire:navigate class="text-emerald-700 hover:underline">
                             {{ $g->investisseurs_count }}
                         </a>
@@ -161,13 +161,13 @@
                             {{ $g->actif ? 'Actif' : 'Inactif' }}
                         </span>
                     </td>
-                    <td class="p-3 text-right whitespace-nowrap">
-                        <button wire:click="modifier({{ $g->id }})" class="text-sm text-gray-600 hover:underline mr-3">
-                            Modifier
+                    <td class="p-3 text-end whitespace-nowrap">
+                        <button wire:click="modifier({{ $g->id }})" class="text-sm text-gray-600 hover:underline me-3">
+                            {{ __("Modifier") }}
                         </button>
                         <button wire:click="reinitialiserMotDePasse({{ $g->id }})" wire:confirm="Générer un nouveau mot de passe temporaire pour {{ $g->user->email }} ?"
-                                class="text-sm text-blue-600 hover:underline mr-3">
-                            Réinitialiser le mot de passe
+                                class="text-sm text-blue-600 hover:underline me-3">
+                            {{ __("Réinitialiser le mot de passe") }}
                         </button>
                         <button wire:click="basculerActif({{ $g->id }})" wire:confirm="Confirmer le changement de statut ?"
                                 class="text-sm text-gray-500 hover:underline">
@@ -176,7 +176,7 @@
                     </td>
                 </tr>
             @empty
-                <tr><td colspan="6" class="p-6 text-center text-gray-400">Aucun gestionnaire pour l'instant.</td></tr>
+                <tr><td colspan="6" class="p-6 text-center text-gray-400">{{ __("Aucun gestionnaire pour l'instant.") }}</td></tr>
             @endforelse
         </tbody>
     </table>

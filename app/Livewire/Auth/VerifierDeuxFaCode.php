@@ -38,7 +38,7 @@ class VerifierDeuxFaCode extends Component
             $user->update(['deux_fa_codes_recuperation' => array_values($codesRestants)]);
 
             session(['deux_fa_verifie' => true]);
-            session()->flash('avertissement_2fa', 'Code de récupération utilisé — il ne pourra plus resservir. Il vous en reste ' . count($codesRestants) . '.');
+            session()->flash('avertissement_2fa', __("Code de récupération utilisé — il ne pourra plus resservir. Il vous en reste :nombre.", ['nombre' => count($codesRestants)]));
             $this->redirectRoute('dashboard', navigate: true);
             return;
         }

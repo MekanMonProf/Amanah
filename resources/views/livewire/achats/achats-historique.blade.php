@@ -5,11 +5,11 @@
                class="border rounded px-3 py-1.5 text-sm w-full sm:w-64">
 
         <select wire:model.live="filtreType" class="border rounded px-3 py-1.5 text-sm">
-            <option value="">Tous les types</option>
-            <option value="initial">Initial</option>
-            <option value="rajout">Rajout</option>
-            <option value="complement">Complément</option>
-            <option value="benefice">Bénéfice</option>
+            <option value="">{{ __("Tous les types") }}</option>
+            <option value="initial">{{ __("Initial") }}</option>
+            <option value="rajout">{{ __("Rajout") }}</option>
+            <option value="complement">{{ __("Complément") }}</option>
+            <option value="benefice">{{ __("Bénéfice") }}</option>
         </select>
 
         <input type="date" wire:model.live="dateDebut" class="border rounded px-3 py-1.5 text-sm" title="Du">
@@ -18,11 +18,11 @@
         @if ($recherche || $filtreType || $dateDebut || $dateFin)
             <button wire:click="$set('recherche', '')" wire:click.prevent="$set('filtreType', ''); $set('dateDebut', ''); $set('dateFin', '')"
                     class="text-xs text-gray-500 hover:underline self-center">
-                Réinitialiser
+                {{ __("Réinitialiser") }}
             </button>
         @endif
 
-        <div class="flex gap-2 sm:ml-auto">
+        <div class="flex gap-2 sm:ms-auto">
             <a href="{{ route('export.achats.csv', ['compte' => $compte->id, 'recherche' => $recherche, 'type' => $filtreType, 'date_debut' => $dateDebut, 'date_fin' => $dateFin]) }}"
                target="_blank" class="text-xs text-gray-600 border border-gray-300 rounded px-3 py-1.5 hover:bg-gray-50 whitespace-nowrap">
                 CSV
@@ -36,7 +36,7 @@
 
     <div class="overflow-x-auto">
         <table class="w-full text-sm min-w-[560px]">
-            <thead class="text-left text-gray-500">
+            <thead class="text-start text-gray-500">
                 <tr>
                     <th class="py-1 cursor-pointer select-none" wire:click="trierPar('numero_achat')">
                         N° {!! $tri === 'numero_achat' ? ($direction === 'asc' ? '↑' : '↓') : '' !!}
@@ -47,13 +47,13 @@
                     <th class="py-1 cursor-pointer select-none" wire:click="trierPar('type_achat')">
                         Type {!! $tri === 'type_achat' ? ($direction === 'asc' ? '↑' : '↓') : '' !!}
                     </th>
-                    <th class="py-1 text-right cursor-pointer select-none" wire:click="trierPar('nombre_actions')">
+                    <th class="py-1 text-end cursor-pointer select-none" wire:click="trierPar('nombre_actions')">
                         Actions {!! $tri === 'nombre_actions' ? ($direction === 'asc' ? '↑' : '↓') : '' !!}
                     </th>
-                    <th class="py-1 text-right cursor-pointer select-none" wire:click="trierPar('montant')">
+                    <th class="py-1 text-end cursor-pointer select-none" wire:click="trierPar('montant')">
                         Montant {!! $tri === 'montant' ? ($direction === 'asc' ? '↑' : '↓') : '' !!}
                     </th>
-                    <th class="py-1">Paiement</th>
+                    <th class="py-1">{{ __("Paiement") }}</th>
                     <th class="py-1"></th>
                     <th class="py-1"></th>
                 </tr>
@@ -71,24 +71,24 @@
                                 </span>
                             @endif
                         </td>
-                        <td class="py-1 text-right">{{ \App\Support\Montant::format($achat->nombre_actions) }}</td>
-                        <td class="py-1 text-right">{{ \App\Support\Montant::format($achat->montant) }}</td>
+                        <td class="py-1 text-end">{{ \App\Support\Montant::format($achat->nombre_actions) }}</td>
+                        <td class="py-1 text-end">{{ \App\Support\Montant::format($achat->montant) }}</td>
                         <td class="py-1 text-xs text-gray-500">{{ $achat->mode_paiement ?: '—' }}</td>
-                        <td class="py-1 text-right">
+                        <td class="py-1 text-end">
                             @if ($achat->photo_facture_path)
                                 <a href="{{ \Illuminate\Support\Facades\Storage::url($achat->photo_facture_path) }}" target="_blank" class="text-emerald-700 hover:underline text-xs">
-                                    Facture →
+                                    {{ __("Facture →") }}
                                 </a>
                             @endif
                         </td>
-                        <td class="py-1 text-right">
+                        <td class="py-1 text-end">
                             <a href="{{ route('achats.attestation', $achat) }}" target="_blank" class="text-gray-600 hover:underline text-xs whitespace-nowrap">
-                                📄 Attestation
+                                {{ __("📄 Attestation") }}
                             </a>
                         </td>
                     </tr>
                 @empty
-                    <tr><td colspan="8" class="py-4 text-center text-gray-400">Aucun achat ne correspond aux critères.</td></tr>
+                    <tr><td colspan="8" class="py-4 text-center text-gray-400">{{ __("Aucun achat ne correspond aux critères.") }}</td></tr>
                 @endforelse
             </tbody>
         </table>

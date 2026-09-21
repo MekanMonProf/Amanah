@@ -9,11 +9,11 @@
         @if ($recherche || $dateDebut || $dateFin)
             <button wire:click="$set('recherche', '')" wire:click.prevent="$set('dateDebut', ''); $set('dateFin', '')"
                     class="text-xs text-gray-500 hover:underline self-center">
-                Réinitialiser
+                {{ __("Réinitialiser") }}
             </button>
         @endif
 
-        <div class="flex gap-2 sm:ml-auto">
+        <div class="flex gap-2 sm:ms-auto">
             <a href="{{ route('export.radiations.csv', ['compte' => $compte->id, 'recherche' => $recherche, 'date_debut' => $dateDebut, 'date_fin' => $dateFin]) }}"
                target="_blank" class="text-xs text-gray-600 border border-gray-300 rounded px-3 py-1.5 hover:bg-gray-50 whitespace-nowrap">
                 CSV
@@ -27,7 +27,7 @@
 
     <div class="overflow-x-auto">
         <table class="w-full text-sm min-w-[640px]">
-            <thead class="text-left text-gray-500">
+            <thead class="text-start text-gray-500">
                 <tr>
                     <th class="py-1 cursor-pointer select-none" wire:click="trierPar('numero_radiation')">
                         N° {!! $tri === 'numero_radiation' ? ($direction === 'asc' ? '↑' : '↓') : '' !!}
@@ -35,13 +35,13 @@
                     <th class="py-1 cursor-pointer select-none" wire:click="trierPar('date_radiation')">
                         Date {!! $tri === 'date_radiation' ? ($direction === 'asc' ? '↑' : '↓') : '' !!}
                     </th>
-                    <th class="py-1 text-right cursor-pointer select-none" wire:click="trierPar('nombre_actions_radiees')">
+                    <th class="py-1 text-end cursor-pointer select-none" wire:click="trierPar('nombre_actions_radiees')">
                         Actions {!! $tri === 'nombre_actions_radiees' ? ($direction === 'asc' ? '↑' : '↓') : '' !!}
                     </th>
-                    <th class="py-1 text-right cursor-pointer select-none" wire:click="trierPar('montant_total')">
+                    <th class="py-1 text-end cursor-pointer select-none" wire:click="trierPar('montant_total')">
                         Montant {!! $tri === 'montant_total' ? ($direction === 'asc' ? '↑' : '↓') : '' !!}
                     </th>
-                    <th class="py-1">Statut</th>
+                    <th class="py-1">{{ __("Statut") }}</th>
                     <th class="py-1"></th>
                     <th class="py-1"></th>
                     <th class="py-1"></th>
@@ -56,42 +56,42 @@
                     <tr>
                         <td class="py-1 font-mono text-xs">{{ $radiation->numero_radiation }}</td>
                         <td class="py-1">{{ $radiation->date_radiation->format('d/m/Y') }}</td>
-                        <td class="py-1 text-right">{{ \App\Support\Montant::format($radiation->nombre_actions_radiees) }}</td>
-                        <td class="py-1 text-right">{{ \App\Support\Montant::format($radiation->montant_total) }}</td>
+                        <td class="py-1 text-end">{{ \App\Support\Montant::format($radiation->nombre_actions_radiees) }}</td>
+                        <td class="py-1 text-end">{{ \App\Support\Montant::format($radiation->montant_total) }}</td>
                         <td class="py-1">
                             @if ($restant <= 0)
-                                <span class="px-2 py-0.5 text-xs rounded-full bg-emerald-100 text-emerald-700">Payé</span>
+                                <span class="px-2 py-0.5 text-xs rounded-full bg-emerald-100 text-emerald-700">{{ __("Payé") }}</span>
                             @elseif ($verse > 0)
                                 <span class="px-2 py-0.5 text-xs rounded-full bg-amber-100 text-amber-700" title="Reste {{ \App\Support\Montant::format($restant) }}&#8239;CFA">
-                                    Partiel
+                                    {{ __("Partiel") }}
                                 </span>
                             @else
-                                <span class="px-2 py-0.5 text-xs rounded-full bg-gray-100 text-gray-600">Non payé</span>
+                                <span class="px-2 py-0.5 text-xs rounded-full bg-gray-100 text-gray-600">{{ __("Non payé") }}</span>
                             @endif
                         </td>
-                        <td class="py-1 text-right">
+                        <td class="py-1 text-end">
                             @if ($radiation->piece_justificative_path)
                                 <a href="{{ \Illuminate\Support\Facades\Storage::url($radiation->piece_justificative_path) }}" target="_blank" class="text-emerald-700 hover:underline text-xs">
-                                    Pièce →
+                                    {{ __("Pièce →") }}
                                 </a>
                             @endif
                         </td>
-                        <td class="py-1 text-right">
+                        <td class="py-1 text-end">
                             @if (auth()->user()->role !== 'lecture' && $restant > 0 && $compte->politique()?->versement_capital_radiation_possible)
                                 <a href="{{ route('comptes.paiement', $compte) }}?source=radiation&radiation_id={{ $radiation->id }}&montant={{ $restant }}&reference={{ $radiation->numero_radiation }}"
                                    wire:navigate class="text-teal-700 hover:underline text-xs whitespace-nowrap">
-                                    Verser →
+                                    {{ __("Verser →") }}
                                 </a>
                             @endif
                         </td>
-                        <td class="py-1 text-right">
+                        <td class="py-1 text-end">
                             <a href="{{ route('radiations.attestation', $radiation) }}" target="_blank" class="text-gray-600 hover:underline text-xs whitespace-nowrap">
-                                📄 Attestation
+                                {{ __("📄 Attestation") }}
                             </a>
                         </td>
                     </tr>
                 @empty
-                    <tr><td colspan="8" class="py-4 text-center text-gray-400">Aucune radiation enregistrée.</td></tr>
+                    <tr><td colspan="8" class="py-4 text-center text-gray-400">{{ __("Aucune radiation enregistrée.") }}</td></tr>
                 @endforelse
             </tbody>
         </table>

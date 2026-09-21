@@ -1,7 +1,7 @@
 <div class="p-4 sm:p-6">
     @if (! $investisseur)
         <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm text-amber-800">
-            Votre compte n'est relié à aucun dossier investisseur. Contactez votre gestionnaire.
+            {{ __("Votre compte n'est relié à aucun dossier investisseur. Contactez votre gestionnaire.") }}
         </div>
     @else
         <h1 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-1">
@@ -12,18 +12,18 @@
         <div class="bg-white border rounded-lg p-4 mb-6 inline-block">
             <form action="{{ route('portail.releve') }}" method="GET" target="_blank" class="flex flex-wrap items-end gap-2">
                 <div>
-                    <label class="text-xs text-gray-500 block mb-1">Du (optionnel)</label>
+                    <label class="text-xs text-gray-500 block mb-1">{{ __("Du (optionnel)") }}</label>
                     <input type="date" name="date_debut" class="border rounded px-2 py-1.5 text-sm">
                 </div>
                 <div>
-                    <label class="text-xs text-gray-500 block mb-1">Au (optionnel)</label>
+                    <label class="text-xs text-gray-500 block mb-1">{{ __("Au (optionnel)") }}</label>
                     <input type="date" name="date_fin" class="border rounded px-2 py-1.5 text-sm">
                 </div>
                 <button type="submit" class="text-sm text-emerald-700 border border-emerald-700 rounded-lg px-4 py-1.5 hover:bg-emerald-50 whitespace-nowrap">
-                    📄 Télécharger mon relevé (PDF)
+                    {{ __("📄 Télécharger mon relevé (PDF)") }}
                 </button>
             </form>
-            <p class="text-xs text-gray-400 mt-1">Laissez vide pour l'historique complet.</p>
+            <p class="text-xs text-gray-400 mt-1">{{ __("Laissez vide pour l'historique complet.") }}</p>
         </div>
 
         @forelse ($comptesEnrichis as $item)
@@ -39,25 +39,25 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-4">
                     <div>
-                        <div class="text-xs text-gray-500 uppercase">Actions détenues</div>
+                        <div class="text-xs text-gray-500 uppercase">{{ __("Actions détenues") }}</div>
                         <div class="text-2xl font-semibold text-gray-800">{{ \App\Support\Montant::format($item['nombre_actions']) }}</div>
                     </div>
                     <div>
-                        <div class="text-xs text-gray-500 uppercase">Solde du compte</div>
+                        <div class="text-xs text-gray-500 uppercase">{{ __("Solde du compte") }}</div>
                         <div class="text-2xl font-semibold text-emerald-700">{{ \App\Support\Montant::format($item['solde']) }}&#8239;CFA</div>
                     </div>
                 </div>
 
                 @if ($item['achats']->isNotEmpty())
                     <div class="mb-4">
-                        <div class="text-xs text-gray-500 uppercase mb-2">Mes achats</div>
+                        <div class="text-xs text-gray-500 uppercase mb-2">{{ __("Mes achats") }}</div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-sm min-w-[420px]">
-                                <thead class="text-left text-gray-500">
+                                <thead class="text-start text-gray-500">
                                     <tr>
-                                        <th class="py-1">Date</th>
-                                        <th class="py-1 text-right">Actions</th>
-                                        <th class="py-1 text-right">Montant</th>
+                                        <th class="py-1">{{ __("Date") }}</th>
+                                        <th class="py-1 text-end">{{ __("Actions") }}</th>
+                                        <th class="py-1 text-end">{{ __("Montant") }}</th>
                                         <th class="py-1"></th>
                                     </tr>
                                 </thead>
@@ -65,11 +65,11 @@
                                     @foreach ($item['achats'] as $achat)
                                         <tr>
                                             <td class="py-1">{{ $achat->date_achat->format('d/m/Y') }}</td>
-                                            <td class="py-1 text-right">{{ \App\Support\Montant::format($achat->nombre_actions) }}</td>
-                                            <td class="py-1 text-right">{{ \App\Support\Montant::format($achat->montant) }}</td>
-                                            <td class="py-1 text-right">
+                                            <td class="py-1 text-end">{{ \App\Support\Montant::format($achat->nombre_actions) }}</td>
+                                            <td class="py-1 text-end">{{ \App\Support\Montant::format($achat->montant) }}</td>
+                                            <td class="py-1 text-end">
                                                 <a href="{{ route('achats.attestation', $achat) }}" target="_blank" class="text-gray-600 hover:underline text-xs whitespace-nowrap">
-                                                    📄 Attestation
+                                                    {{ __("📄 Attestation") }}
                                                 </a>
                                             </td>
                                         </tr>
@@ -82,13 +82,13 @@
 
                 @if ($item['dernieres_ecritures']->isNotEmpty())
                     <div class="overflow-x-auto">
-                        <div class="text-xs text-gray-500 uppercase mb-2">Derniers mouvements</div>
+                        <div class="text-xs text-gray-500 uppercase mb-2">{{ __("Derniers mouvements") }}</div>
                         <table class="w-full text-sm min-w-[420px]">
-                            <thead class="text-left text-gray-500">
+                            <thead class="text-start text-gray-500">
                                 <tr>
-                                    <th class="py-1">Date</th>
-                                    <th class="py-1">Type</th>
-                                    <th class="py-1 text-right">Montant</th>
+                                    <th class="py-1">{{ __("Date") }}</th>
+                                    <th class="py-1">{{ __("Type") }}</th>
+                                    <th class="py-1 text-end">{{ __("Montant") }}</th>
                                     <th class="py-1"></th>
                                 </tr>
                             </thead>
@@ -97,13 +97,13 @@
                                     <tr>
                                         <td class="py-1">{{ $ecriture->date_ecriture->format('d/m/Y') }}</td>
                                         <td class="py-1">{{ str_replace('_', ' ', $ecriture->type_ecriture) }}</td>
-                                        <td class="py-1 text-right {{ $ecriture->montant >= 0 ? 'text-emerald-700' : 'text-red-600' }}">
+                                        <td class="py-1 text-end {{ $ecriture->montant >= 0 ? 'text-emerald-700' : 'text-red-600' }}">
                                             {{ $ecriture->montant >= 0 ? '+' : '' }}{{ \App\Support\Montant::format($ecriture->montant) }}
                                         </td>
-                                        <td class="py-1 text-right">
+                                        <td class="py-1 text-end">
                                             @if ($ecriture->type_ecriture === 'paiement')
                                                 <a href="{{ route('ecritures.attestation', $ecriture) }}" target="_blank" class="text-gray-600 hover:underline text-xs whitespace-nowrap">
-                                                    📄 Attestation
+                                                    {{ __("📄 Attestation") }}
                                                 </a>
                                             @endif
                                         </td>
@@ -116,7 +116,7 @@
             </div>
         @empty
             <div class="bg-white border rounded-lg p-8 text-center text-gray-400">
-                Aucun compte d'investissement pour l'instant.
+                {{ __("Aucun compte d'investissement pour l'instant.") }}
             </div>
         @endforelse
     @endif

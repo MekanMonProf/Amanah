@@ -47,7 +47,7 @@ class DividendeCalcul extends Component
         \App\Models\ParametreDividende::actuel()->update(['delai_eligibilite_jours' => $this->delaiEligibiliteJours]);
         $this->modifierDelai = false;
 
-        session()->flash('succes_parametre', 'Règle d\'éligibilité mise à jour.');
+        session()->flash('succes_parametre', __("Règle d'éligibilité mise à jour."));
     }
 
     public function updatedPeriode(): void

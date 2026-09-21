@@ -25,7 +25,7 @@ class SelecteurLangue extends Component
     {
         // Le code arrive du navigateur : on refuse tout ce qui n'est pas une langue
         // proposée plutôt que de le normaliser en silence.
-        abort_unless(Langue::estValide($code), 422, 'Langue non prise en charge.');
+        abort_unless(Langue::estValide($code), 422, __("Langue non prise en charge."));
 
         $this->langue = $code;
         session(['langue' => $code]);

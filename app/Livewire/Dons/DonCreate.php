@@ -47,7 +47,7 @@ class DonCreate extends Component
         $this->compteSource = $compte;
         $this->dateDon = now()->toDateString();
 
-        abort_if($compte->investisseur->estDecede(), 403, 'Ce compte est gelé — l\'investisseur est déclaré décédé. Gérez la succession depuis sa fiche.');
+        abort_if($compte->investisseur->estDecede(), 403, __("Ce compte est gelé — l'investisseur est déclaré décédé. Gérez la succession depuis sa fiche."));
     }
 
     public function getResultatsRechercheProperty()
@@ -75,7 +75,7 @@ class DonCreate extends Component
 
         // La recherche affichée ne propose déjà que la même catégorie, mais cette méthode
         // est appelable directement (requête Livewire forgée) — on revalide donc ici aussi.
-        abort_if($compte->categorie !== $this->compteSource->categorie, 403, 'Le destinataire doit être de la même catégorie que le compte source.');
+        abort_if($compte->categorie !== $this->compteSource->categorie, 403, __("Le destinataire doit être de la même catégorie que le compte source."));
         abort_if($compte->id === $this->compteSource->id, 403);
 
         $this->compteDestinataireId = $compte->id;
@@ -94,7 +94,7 @@ class DonCreate extends Component
         $this->validate();
 
         if (! $this->compteDestinataireId) {
-            $this->addError('rechercheDestinataire', 'Choisissez un investisseur destinataire.');
+            $this->addError('rechercheDestinataire', __("Choisissez un investisseur destinataire."));
             return;
         }
 
@@ -103,13 +103,13 @@ class DonCreate extends Component
         // sélection dans choisirDestinataire().
         $categorieDestinataire = CompteInvestissement::where('id', $this->compteDestinataireId)->value('categorie');
         if ($categorieDestinataire !== $this->compteSource->categorie || $this->compteDestinataireId === $this->compteSource->id) {
-            $this->addError('rechercheDestinataire', 'Le destinataire doit être de la même catégorie que le compte source.');
+            $this->addError('rechercheDestinataire', __("Le destinataire doit être de la même catégorie que le compte source."));
             return;
         }
 
         if ($this->typeDon === 'actions') {
             if (! $this->nombreActions) {
-                $this->addError('nombreActions', 'Indiquez le nombre d\'actions à donner.');
+                $this->addError('nombreActions', __("Indiquez le nombre d'actions à donner."));
                 return;
             }
             if ($this->nombreActions > $this->compteSource->nombreActions()) {
@@ -118,7 +118,7 @@ class DonCreate extends Component
             }
         } else {
             if (! $this->montant) {
-                $this->addError('montant', 'Indiquez le montant à donner.');
+                $this->addError('montant', __("Indiquez le montant à donner."));
                 return;
             }
             if ($this->montant > $this->compteSource->solde()) {
@@ -187,7 +187,7 @@ class DonCreate extends Component
             );
         });
 
-        session()->flash('succes', 'Don enregistré avec succès.');
+        session()->flash('succes', __("Don enregistré avec succès."));
 
         $this->redirectRoute('investisseurs.show', $this->compteSource->investisseur, navigate: true);
     }

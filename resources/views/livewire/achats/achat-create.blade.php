@@ -186,11 +186,11 @@
 
         <div>
             <label class="text-sm text-gray-600">{{ __("Facture ou reçu (photo / PDF)") }}</label>
-            <input type="file" wire:model="facture_upload" accept="image/*,.pdf" class="w-full border rounded px-3 py-2">
+            <x-champ-fichier model="facture_upload" accept="image/*,.pdf" />
             @error('facture_upload') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
             <div wire:loading wire:target="facture_upload" class="text-xs text-gray-400 mt-1">{{ __("Envoi en cours...") }}</div>
             @if ($facture_upload)
-                <p class="text-xs text-emerald-700 mt-1">✓ Fichier prêt : {{ $facture_upload->getClientOriginalName() }}</p>
+                <p class="text-xs text-emerald-700 mt-1">✓ {{ __("Fichier prêt : :fichier", ["fichier" => $facture_upload->getClientOriginalName()]) }}</p>
             @endif
         </div>
 

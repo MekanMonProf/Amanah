@@ -52,7 +52,7 @@
 
         <div>
             <label class="text-sm text-gray-600">Preuve de versement (obligatoire — photo / PDF)</label>
-            <input type="file" wire:model="preuve_upload" accept="image/*,.pdf" class="w-full border rounded px-3 py-2">
+            <x-champ-fichier model="preuve_upload" accept="image/*,.pdf" />
             @error('preuve_upload') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
             <div wire:loading wire:target="preuve_upload" class="text-xs text-gray-400 mt-1">Envoi en cours...</div>
         </div>

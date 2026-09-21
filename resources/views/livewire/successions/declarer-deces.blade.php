@@ -19,7 +19,7 @@
 
         <div>
             <label class="text-sm text-gray-600">Acte de décès (obligatoire — photo ou PDF)</label>
-            <input type="file" wire:model="pieceActeDecesUpload" accept="image/*,.pdf" class="w-full border rounded px-3 py-2">
+            <x-champ-fichier model="pieceActeDecesUpload" accept="image/*,.pdf" />
             @error('pieceActeDecesUpload') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
             <div wire:loading wire:target="pieceActeDecesUpload" class="text-xs text-gray-400 mt-1">Envoi en cours...</div>
         </div>

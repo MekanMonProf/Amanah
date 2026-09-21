@@ -93,17 +93,17 @@
                     </div>
                     <div>
                         <label class="text-sm text-gray-600">Pièce d'identité (CNI) du mandataire — obligatoire</label>
-                        <input type="file" wire:model="pieceIdentiteUpload" accept="image/*,.pdf" class="w-full border rounded px-3 py-2">
+                        <x-champ-fichier model="pieceIdentiteUpload" accept="image/*,.pdf" />
                         @error('pieceIdentiteUpload') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                     </div>
                     <div>
                         <label class="text-sm text-gray-600">Certificat d'hérédité (ou acte de notoriété) — obligatoire</label>
-                        <input type="file" wire:model="certificatHeritedeUpload" accept="image/*,.pdf" class="w-full border rounded px-3 py-2">
+                        <x-champ-fichier model="certificatHeritedeUpload" accept="image/*,.pdf" />
                         @error('certificatHeritedeUpload') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                     </div>
                     <div class="sm:col-span-2">
                         <label class="text-sm text-gray-600">Procuration signée par la famille, habilitant ce mandataire — obligatoire</label>
-                        <input type="file" wire:model="procurationUpload" accept="image/*,.pdf" class="w-full border rounded px-3 py-2">
+                        <x-champ-fichier model="procurationUpload" accept="image/*,.pdf" />
                         @error('procurationUpload') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                     </div>
                     <div class="sm:col-span-2 flex gap-2">

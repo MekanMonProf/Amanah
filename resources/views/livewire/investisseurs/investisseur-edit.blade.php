@@ -98,7 +98,7 @@
                 </div>
                 <div>
                     <label class="text-sm text-gray-600">{{ __("Scan / photo de la pièce") }}</label>
-                    <input type="file" wire:model="piece_identite_upload" accept="image/*" class="w-full border rounded px-3 py-2">
+                    <x-champ-fichier model="piece_identite_upload" accept="image/*" />
                     @error('piece_identite_upload') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                     <div wire:loading wire:target="piece_identite_upload" class="text-xs text-gray-400 mt-1">{{ __("Envoi en cours...") }}</div>
                     @if ($investisseur->piece_identite_path)
@@ -119,7 +119,7 @@
                 </div>
                 <div>
                     <label class="text-sm text-gray-600">{{ __("Document signé (photo / PDF)") }}</label>
-                    <input type="file" wire:model="convention_engagement_upload" accept="image/*,.pdf" class="w-full border rounded px-3 py-2">
+                    <x-champ-fichier model="convention_engagement_upload" accept="image/*,.pdf" />
                     @error('convention_engagement_upload') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                     <div wire:loading wire:target="convention_engagement_upload" class="text-xs text-gray-400 mt-1">{{ __("Envoi en cours...") }}</div>
                     @if ($investisseur->convention_engagement_path)

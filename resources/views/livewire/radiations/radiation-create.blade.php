@@ -64,7 +64,7 @@
 
         <div>
             <label class="text-sm text-gray-600">Pièce justificative (demande signée, photo / PDF)</label>
-            <input type="file" wire:model="piece_justificative_upload" accept="image/*,.pdf" class="w-full border rounded px-3 py-2">
+            <x-champ-fichier model="piece_justificative_upload" accept="image/*,.pdf" />
             @error('piece_justificative_upload') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
             <div wire:loading wire:target="piece_justificative_upload" class="text-xs text-gray-400 mt-1">Envoi en cours...</div>
         </div>

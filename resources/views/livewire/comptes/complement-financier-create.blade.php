@@ -69,11 +69,11 @@
 
         <div>
             <label class="text-sm text-gray-600">Justificatif de paiement (photo / PDF)</label>
-            <input type="file" wire:model="piece_justificative_upload" accept="image/*,.pdf" class="w-full border rounded px-3 py-2">
+            <x-champ-fichier model="piece_justificative_upload" accept="image/*,.pdf" />
             @error('piece_justificative_upload') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
             <div wire:loading wire:target="piece_justificative_upload" class="text-xs text-gray-400 mt-1">Envoi en cours...</div>
             @if ($piece_justificative_upload)
-                <p class="text-xs text-emerald-700 mt-1">✓ Fichier prêt : {{ $piece_justificative_upload->getClientOriginalName() }}</p>
+                <p class="text-xs text-emerald-700 mt-1">✓ {{ __("Fichier prêt : :fichier", ["fichier" => $piece_justificative_upload->getClientOriginalName()]) }}</p>
             @endif
         </div>
 

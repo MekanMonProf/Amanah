@@ -86,11 +86,7 @@
     <div class="bg-white border rounded-lg p-5 mb-6 shadow-sm">
         <h2 class="font-semibold text-gray-800 mb-3">2. Déposer le fichier</h2>
 
-        <input type="file" wire:model="fichier" accept=".xlsx,.xlsm,.csv,.txt,.tsv"
-               wire:key="fichier-{{ $type }}-{{ count($rapport) }}"
-               class="block w-full text-sm text-gray-600 border rounded-lg p-2
-                      file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0
-                      file:text-sm file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100">
+        <x-champ-fichier model="fichier" accept=".xlsx,.xlsm,.csv,.txt,.tsv" />
 
         @error('fichier') <span class="text-red-600 text-sm block mt-2">{{ $message }}</span> @enderror
 

@@ -32,35 +32,40 @@ new class extends Component
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     @if (auth()->user()->role === 'investisseur')
                         <x-nav-link :href="route('portail.mon-compte')" :active="request()->routeIs('portail.*')" wire:navigate>
-                            Mon compte
+                            {{ __("Mon compte") }}
                         </x-nav-link>
                     @else
                         <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
-                            Dashboard
+                            {{ __("Dashboard") }}
                         </x-nav-link>
                         <x-nav-link :href="route('investisseurs.index')" :active="request()->routeIs('investisseurs.*')" wire:navigate>
-                            Investisseurs
+                            {{ __("Investisseurs") }}
                         </x-nav-link>
                         @if (in_array(auth()->user()->role, ['direction', 'administrateur']))
                             <x-nav-link :href="route('gestionnaires.index')" :active="request()->routeIs('gestionnaires.*')" wire:navigate>
-                                Gestionnaires
+                                {{ __("Gestionnaires") }}
                             </x-nav-link>
                             <x-nav-link :href="route('dividendes.calculer')" :active="request()->routeIs('dividendes.*') || request()->routeIs('baremes.*')" wire:navigate>
-                                Dividendes
+                                {{ __("Dividendes") }}
                             </x-nav-link>
                             <x-nav-link :href="route('audit.index')" :active="request()->routeIs('audit.*')" wire:navigate>
-                                Journal d'audit
+                                {{ __("Journal d'audit") }}
                             </x-nav-link>
                             <x-nav-link :href="route('import.index')" :active="request()->routeIs('import.*')" wire:navigate>
-                                Import
+                                {{ __("Import") }}
                             </x-nav-link>
                         @endif
                     @endif
                 </div>
             </div>
 
-            <!-- Settings Dropdown -->
+            <!-- Selecteur de langue -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
+                <livewire:selecteur-langue />
+            </div>
+
+            <!-- Settings Dropdown -->
+            <div class="hidden sm:flex sm:items-center sm:ms-4">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
@@ -76,13 +81,13 @@ new class extends Component
 
                     <x-slot name="content">
                         <x-dropdown-link :href="route('profile')" wire:navigate>
-                            Profil
+                            {{ __("Profil") }}
                         </x-dropdown-link>
 
                         <!-- Authentication -->
                         <button wire:click="logout" class="w-full text-start">
                             <x-dropdown-link>
-                                Déconnexion
+                                {{ __("Déconnexion") }}
                             </x-dropdown-link>
                         </button>
                     </x-slot>
@@ -106,27 +111,27 @@ new class extends Component
         <div class="pt-2 pb-3 space-y-1">
             @if (auth()->user()->role === 'investisseur')
                 <x-responsive-nav-link :href="route('portail.mon-compte')" :active="request()->routeIs('portail.*')" wire:navigate>
-                    Mon compte
+                    {{ __("Mon compte") }}
                 </x-responsive-nav-link>
             @else
                 <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
-                    Dashboard
+                    {{ __("Dashboard") }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('investisseurs.index')" :active="request()->routeIs('investisseurs.*')" wire:navigate>
-                    Investisseurs
+                    {{ __("Investisseurs") }}
                 </x-responsive-nav-link>
                 @if (in_array(auth()->user()->role, ['direction', 'administrateur']))
                     <x-responsive-nav-link :href="route('gestionnaires.index')" :active="request()->routeIs('gestionnaires.*')" wire:navigate>
-                        Gestionnaires
+                        {{ __("Gestionnaires") }}
                     </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('dividendes.calculer')" :active="request()->routeIs('dividendes.*') || request()->routeIs('baremes.*')" wire:navigate>
-                        Dividendes
+                        {{ __("Dividendes") }}
                     </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('audit.index')" :active="request()->routeIs('audit.*')" wire:navigate>
-                        Journal d'audit
+                        {{ __("Journal d'audit") }}
                     </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('import.index')" :active="request()->routeIs('import.*')" wire:navigate>
-                        Import
+                        {{ __("Import") }}
                     </x-responsive-nav-link>
                 @endif
             @endif
@@ -139,15 +144,19 @@ new class extends Component
                 <div class="font-medium text-sm text-gray-500">{{ auth()->user()->email }}</div>
             </div>
 
+            <div class="px-4 mt-3">
+                <livewire:selecteur-langue />
+            </div>
+
             <div class="mt-3 space-y-1">
                 <x-responsive-nav-link :href="route('profile')" wire:navigate>
-                    Profil
+                    {{ __("Profil") }}
                 </x-responsive-nav-link>
 
                 <!-- Authentication -->
                 <button wire:click="logout" class="w-full text-start">
                     <x-responsive-nav-link>
-                        Déconnexion
+                        {{ __("Déconnexion") }}
                     </x-responsive-nav-link>
                 </button>
             </div>

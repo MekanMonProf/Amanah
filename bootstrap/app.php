@@ -22,6 +22,8 @@ return Application::configure(basePath: dirname(__DIR__))
         // etait deja ouverte au moment de la desactivation (voir EnsureCompteActif).
         $middleware->web(append: [
             \App\Http\Middleware\EnsureCompteActif::class,
+            // Applique la langue d interface avant le rendu (voir AppliquerLangue).
+            \App\Http\Middleware\AppliquerLangue::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

@@ -10,7 +10,7 @@
     @if ($dernierMotDePasseGenere)
         <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6 text-sm text-amber-800">
             @if ($emailConcerneParReinit)
-                ✓ Mot de passe réinitialisé pour <strong>{{ $emailConcerneParReinit }}</strong> et envoyé par email.
+                ✓ {!! __("Mot de passe réinitialisé pour <strong>:email</strong> et envoyé par email.", ['email' => e($emailConcerneParReinit)]) !!}
             @else
                 {{ __("✓ Gestionnaire créé. Ses identifiants de connexion lui ont été envoyés par email.") }}
             @endif
@@ -82,7 +82,7 @@
                 </div>
                 <div>
                     <label class="text-sm text-gray-600">{{ __("Téléphone") }}</label>
-                    <input type="text" wire:model="telephone" placeholder="771234567 ou +33... si étranger" class="w-full border rounded px-3 py-2">
+                    <input type="text" wire:model="telephone" placeholder="{{ __('771234567 ou +33... si étranger') }}" class="w-full border rounded px-3 py-2">
                     @error('telephone') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                 </div>
                 <div class="sm:col-span-2 flex gap-2">
@@ -116,7 +116,7 @@
                 </div>
                 <div>
                     <label class="text-sm text-gray-600">{{ __("Téléphone") }}</label>
-                    <input type="text" wire:model="telephone" placeholder="771234567 ou +33... si étranger" class="w-full border rounded px-3 py-2">
+                    <input type="text" wire:model="telephone" placeholder="{{ __('771234567 ou +33... si étranger') }}" class="w-full border rounded px-3 py-2">
                     @error('telephone') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                 </div>
                 <div class="sm:col-span-2">
@@ -165,13 +165,13 @@
                         <button wire:click="modifier({{ $g->id }})" class="text-sm text-gray-600 hover:underline me-3">
                             {{ __("Modifier") }}
                         </button>
-                        <button wire:click="reinitialiserMotDePasse({{ $g->id }})" wire:confirm="Générer un nouveau mot de passe temporaire pour {{ $g->user->email }} ?"
+                        <button wire:click="reinitialiserMotDePasse({{ $g->id }})" wire:confirm="{{ __('Générer un nouveau mot de passe temporaire pour :identifiant ?', ['identifiant' => $g->user->email]) }}"
                                 class="text-sm text-blue-600 hover:underline me-3">
                             {{ __("Réinitialiser le mot de passe") }}
                         </button>
-                        <button wire:click="basculerActif({{ $g->id }})" wire:confirm="Confirmer le changement de statut ?"
+                        <button wire:click="basculerActif({{ $g->id }})" wire:confirm="{{ __('Confirmer le changement de statut ?') }}"
                                 class="text-sm text-gray-500 hover:underline">
-                            {{ $g->actif ? 'Désactiver' : 'Réactiver' }}
+                            {{ $g->actif ? __('Désactiver') : __('Réactiver') }}
                         </button>
                     </td>
                 </tr>

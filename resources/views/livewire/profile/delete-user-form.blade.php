@@ -32,8 +32,7 @@ new class extends Component {
         </h2>
 
         <p class="mt-1 text-sm text-gray-600">
-            Une fois votre compte supprimé, toutes ses ressources et données seront définitivement effacées.
-            Avant de supprimer votre compte, téléchargez toute donnée ou information que vous souhaitez conserver.
+            {{ __("Une fois votre compte supprimé, toutes ses ressources et données seront définitivement effacées. Avant de supprimer votre compte, téléchargez toute donnée ou information que vous souhaitez conserver.") }}
         </p>
     </header>
 
@@ -49,8 +48,7 @@ new class extends Component {
             </h2>
 
             <p class="mt-1 text-sm text-gray-600">
-                Une fois votre compte supprimé, toutes ses ressources et données seront définitivement effacées.
-                Merci d'entrer votre mot de passe pour confirmer que vous souhaitez supprimer définitivement votre compte.
+                {{ __("Une fois votre compte supprimé, toutes ses ressources et données seront définitivement effacées. Merci d'entrer votre mot de passe pour confirmer que vous souhaitez supprimer définitivement votre compte.") }}
             </p>
 
             <div class="mt-6">
@@ -62,7 +60,7 @@ new class extends Component {
                     name="password"
                     type="password"
                     class="mt-1 block w-3/4"
-                    placeholder="Mot de passe"
+                    placeholder="{{ __('Mot de passe') }}"
                 />
 
                 <x-input-error :messages="$errors->get('password')" class="mt-2" />

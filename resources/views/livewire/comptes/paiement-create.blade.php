@@ -9,9 +9,7 @@
 
     @if (!$versementAutorise)
         <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 text-sm text-red-800">
-            ⛔ {{ $source === 'radiation' ? 'Le versement du capital radié' : 'Le versement de dividendes' }}
-            n'est pas autorisé pour la catégorie <strong>{{ ucfirst($compte->categorie) }}</strong>,
-            selon la politique d'investissement en vigueur.
+            ⛔ {!! __(":operation n'est pas autorisé pour la catégorie <strong>:categorie</strong>, selon la politique d'investissement en vigueur.", ['operation' => $source === 'radiation' ? __('Le versement du capital radié') : __('Le versement de dividendes'), 'categorie' => e(ucfirst($compte->categorie))]) !!}
             @if ($source === 'radiation')
                 {{ __("Les fonds restent disponibles sur le compte financier.") }}
             @else
@@ -21,10 +19,9 @@
     @else
         <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-sm text-blue-800">
             @if ($source === 'radiation')
-                ℹ️ Ce versement correspond au capital d'une radiation d'actions, remis concrètement à l'investisseur.
+                ℹ️ {{ __("Ce versement correspond au capital d'une radiation d'actions, remis concrètement à l'investisseur.") }}
             @else
-                ℹ️ Ce versement représente un dividende (ou un solde) que l'investisseur a choisi de <strong>ne pas
-                réinvestir</strong>, et que vous lui remettez concrètement (espèces, transfert...).
+                ℹ️ {!! __("Ce versement représente un dividende (ou un solde) que l'investisseur a choisi de <strong>ne pas réinvestir</strong>, et que vous lui remettez concrètement (espèces, transfert...).") !!}
             @endif
         </div>
     @endif

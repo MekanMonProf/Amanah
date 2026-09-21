@@ -49,7 +49,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="text-sm text-gray-600">{{ __("Téléphone") }}</label>
-                    <input type="text" wire:model="telephone" placeholder="771234567 ou +33... si étranger" class="w-full border rounded px-3 py-2">
+                    <input type="text" wire:model="telephone" placeholder="{{ __('771234567 ou +33... si étranger') }}" class="w-full border rounded px-3 py-2">
                     @error('telephone') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                 </div>
                 <div>
@@ -90,7 +90,7 @@
                 </div>
                 <div>
                     <label class="text-sm text-gray-600">{{ __("Lieu / autorité de délivrance") }}</label>
-                    <input type="text" wire:model="lieu_delivrance_piece" placeholder="Préfecture de Dakar..." class="w-full border rounded px-3 py-2">
+                    <input type="text" wire:model="lieu_delivrance_piece" placeholder="{{ __('Préfecture de Dakar...') }}" class="w-full border rounded px-3 py-2">
                 </div>
                 <div>
                     <label class="text-sm text-gray-600">{{ __("Date d'expiration") }}</label>
@@ -209,7 +209,7 @@
                 </div>
                 <div>
                     <label class="text-sm text-gray-600">{{ __("Lien") }}</label>
-                    <input type="text" wire:model="beneficiaire_lien" placeholder="Épouse, Fils..." class="w-full border rounded px-3 py-2">
+                    <input type="text" wire:model="beneficiaire_lien" placeholder="{{ __('Ex :') }} Épouse, Fils..." class="w-full border rounded px-3 py-2">
                 </div>
                 <div>
                     <label class="text-sm text-gray-600">{{ __("Téléphone") }}</label>

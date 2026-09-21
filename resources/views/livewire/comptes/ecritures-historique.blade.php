@@ -1,7 +1,7 @@
 <div>
     <div class="flex flex-col sm:flex-row gap-2 mb-3">
         <input type="text" wire:model.live.debounce.300ms="recherche"
-               placeholder="Rechercher dans les observations..."
+               placeholder="{{ __('Rechercher dans les observations...') }}"
                class="border rounded px-3 py-1.5 text-sm w-full sm:w-64">
 
         <select wire:model.live="filtreType" class="border rounded px-3 py-1.5 text-sm">
@@ -40,8 +40,8 @@
         <table class="w-full text-sm min-w-[480px]">
             <thead class="text-start text-gray-500">
                 <tr>
-                    <th class="py-1 w-10" title="Ordre réel d'enregistrement — toujours fiable, quel que soit le tri utilisé">#</th>
-                    <th class="py-1 cursor-pointer select-none" wire:click="trierPar('date_ecriture')" title="Date à laquelle se rapporte l'opération — peut différer de l'ordre réel d'enregistrement">
+                    <th class="py-1 w-10" title="{{ __("Ordre réel d'enregistrement — toujours fiable, quel que soit le tri utilisé") }}">#</th>
+                    <th class="py-1 cursor-pointer select-none" wire:click="trierPar('date_ecriture')" title="{{ __("Date à laquelle se rapporte l'opération — peut différer de l'ordre réel d'enregistrement") }}">
                         Date effective {!! $tri === 'date_ecriture' ? ($direction === 'asc' ? '↑' : '↓') : '' !!}
                     </th>
                     <th class="py-1 cursor-pointer select-none" wire:click="trierPar('type_ecriture')">
@@ -99,9 +99,7 @@
 
     @if ($tri !== 'id')
         <p class="text-xs text-gray-400 mt-2">
-            Tri actuel : {{ $tri === 'date_ecriture' ? 'date effective' : $tri }}. La colonne <strong>#</strong> à
-            gauche montre toujours l'ordre réel d'enregistrement, sur lequel le solde est calculé — fiez-vous à elle,
-            pas à l'ordre des lignes, pour suivre la progression du solde.
+            {!! __("Tri actuel : :tri. La colonne <strong>#</strong> à gauche montre toujours l'ordre réel d'enregistrement, sur lequel le solde est calculé — fiez-vous à elle, pas à l'ordre des lignes, pour suivre la progression du solde.", ['tri' => $tri === 'date_ecriture' ? __('date effective') : $tri]) !!}
         </p>
     @endif
 </div>

@@ -25,7 +25,7 @@
             <div class="flex items-center justify-between bg-emerald-50 border border-emerald-200 rounded-lg p-4">
                 <div>
                     <p class="text-sm font-medium text-emerald-800">{{ __("2FA activé") }}</p>
-                    <p class="text-xs text-emerald-600">Depuis le {{ auth()->user()->deux_fa_confirme_le?->format('d/m/Y') }}</p>
+                    <p class="text-xs text-emerald-600">{{ __('Depuis le :date', ['date' => auth()->user()->deux_fa_confirme_le?->format('d/m/Y')]) }}</p>
                 </div>
                 @if (! $confirmerDesactivation)
                     <button wire:click="demanderDesactivation" class="text-sm text-red-600 hover:underline">
@@ -49,13 +49,13 @@
         @elseif ($enCoursActivation)
             <div class="bg-white border rounded-lg p-4">
                 <p class="text-sm text-gray-700 mb-3">
-                    Scannez ce QR code avec votre application d'authentification, puis entrez le code à 6 chiffres généré.
+                    {{ __("Scannez ce QR code avec votre application d'authentification, puis entrez le code à 6 chiffres généré.") }}
                 </p>
                 <div class="flex justify-center mb-4">
-                    <img src="{{ $qrCodeSvg }}" alt="QR Code d'activation 2FA" class="border rounded-lg p-2" width="200" height="200">
+                    <img src="{{ $qrCodeSvg }}" alt="{{ __("QR Code d'activation 2FA") }}" class="border rounded-lg p-2" width="200" height="200">
                 </div>
                 <p class="text-xs text-gray-400 text-center mb-4">
-                    Impossible de scanner ? Clé manuelle : <span class="font-mono">{{ $secretTemporaire }}</span>
+                    {{ __("Impossible de scanner ? Clé manuelle :") }} <span class="font-mono">{{ $secretTemporaire }}</span>
                 </p>
 
                 <form wire:submit="confirmerActivation" class="max-w-xs mx-auto">

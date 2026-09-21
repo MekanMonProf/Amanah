@@ -1,6 +1,6 @@
 <div>
     <div class="mb-4 text-sm text-gray-600">
-        Entrez le code à 6 chiffres de votre application d'authentification, ou l'un de vos codes de récupération.
+        {{ __("Entrez le code à 6 chiffres de votre application d'authentification, ou l'un de vos codes de récupération.") }}
     </div>
 
     <form wire:submit="verifier">

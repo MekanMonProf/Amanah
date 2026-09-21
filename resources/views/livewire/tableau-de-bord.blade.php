@@ -4,7 +4,7 @@
     @if ($vue === 'gestionnaire')
         @if (isset($aucunPortefeuille))
             <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm text-amber-800">
-                Votre compte utilisateur n'est relié à aucun profil gestionnaire. Contactez un administrateur.
+                {{ __("Votre compte utilisateur n'est relié à aucun profil gestionnaire. Contactez un administrateur.") }}
             </div>
         @else
             {{-- Vue Gestionnaire : mon portefeuille --}}

@@ -8,7 +8,7 @@
     </p>
 
     <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-sm text-blue-800">
-        ℹ️ Un don d'actions transfère la propriété sans contrepartie financière pour le donateur.
+        ℹ️ {{ __("Un don d'actions transfère la propriété sans contrepartie financière pour le donateur.") }}
         {{ __("Un don de solde déplace de l'argent en interne, entre les deux comptes financiers.") }}
         {!! __("Le destinataire doit avoir un compte de la <strong>même catégorie</strong> (:categorie).", ["categorie" => ucfirst($compteSource->categorie)]) !!}
     </div>
@@ -50,7 +50,7 @@
                 </div>
             @else
                 <input type="text" wire:model.live.debounce.300ms="rechercheDestinataire"
-                       placeholder="Rechercher par nom ou identifiant..."
+                       placeholder="{{ __('Rechercher par nom ou identifiant...') }}"
                        class="w-full border rounded px-3 py-2 mt-1">
                 @error('rechercheDestinataire') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
 
@@ -65,7 +65,7 @@
                         @endforeach
                     </div>
                 @elseif (strlen($rechercheDestinataire) >= 2)
-                    <p class="text-xs text-gray-400 mt-1">Aucun compte {{ $typeDon ? '' : '' }}{{ ucfirst($compteSource->categorie) }} trouvé pour cette recherche.</p>
+                    <p class="text-xs text-gray-400 mt-1">{{ __('Aucun compte :categorie trouvé pour cette recherche.', ['categorie' => ucfirst($compteSource->categorie)]) }}</p>
                 @endif
             @endif
         </div>
@@ -92,7 +92,7 @@
 
         <div>
             <label class="text-sm text-gray-600">{{ __("Motif (obligatoire, pour la traçabilité)") }}</label>
-            <textarea wire:model="motif" rows="2" class="w-full border rounded px-3 py-2" placeholder="Ex : Don familial à l'occasion de..."></textarea>
+            <textarea wire:model="motif" rows="2" class="w-full border rounded px-3 py-2" placeholder="{{ __("Ex : Don familial à l'occasion de...") }}"></textarea>
             @error('motif') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
         </div>
 

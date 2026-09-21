@@ -7,18 +7,13 @@
     </p>
 
     <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 text-sm text-red-800">
-        ⚠️ <strong>Cette correction affecte {{ $nbComptesConcernes }} compte(s)</strong> ayant déjà reçu le
-        dividende de cette période à l'ancien taux. Chacun recevra automatiquement une écriture d'ajustement
-        correctrice — rien n'est supprimé, tout reste tracé. Si un compte avait déjà utilisé ce dividende pour
-        un réinvestissement automatique, son solde peut devenir négatif si le nouveau taux est inférieur :
-        c'est le reflet honnête de l'erreur, à régulariser au besoin avec l'investisseur.
+        ⚠️ <strong>{{ __('Cette correction affecte :nombre compte(s)', ['nombre' => $nbComptesConcernes]) }}</strong>
+        {{ __("ayant déjà reçu le dividende de cette période à l'ancien taux. Chacun recevra automatiquement une écriture d'ajustement correctrice — rien n'est supprimé, tout reste tracé. Si un compte avait déjà utilisé ce dividende pour un réinvestissement automatique, son solde peut devenir négatif si le nouveau taux est inférieur : c'est le reflet honnête de l'erreur, à régulariser au besoin avec l'investisseur.") }}
     </div>
 
     @if ($resultat)
         <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-4 mb-6 text-sm text-emerald-800">
-            ✓ Correction appliquée : <strong>{{ $resultat['nb_comptes'] }}</strong> compte(s) ajusté(s),
-            pour un total de <strong>{{ \App\Support\Montant::format($resultat['total_ajuste']) }}&#8239;CFA</strong>
-            {{ $resultat['total_ajuste'] >= 0 ? 'crédités' : 'débités' }} au global.
+            ✓ {!! __("Correction appliquée : <strong>:nombre</strong> compte(s) ajusté(s), pour un total de <strong>:montant</strong> :sens au global.", ['nombre' => $resultat['nb_comptes'], 'montant' => \App\Support\Montant::avecDevise($resultat['total_ajuste']), 'sens' => $resultat['total_ajuste'] >= 0 ? __('crédités') : __('débités')]) !!}
         </div>
     @endif
 
@@ -37,7 +32,7 @@
         <div>
             <label class="text-sm text-gray-600">{{ __("Motif de la correction (obligatoire, pour l'audit)") }}</label>
             <textarea wire:model="motif" rows="3" class="w-full border rounded px-3 py-2"
-                      placeholder="Ex : Taux saisi à 99 999 CFA par erreur de frappe le 08/08/2026, correction au taux réellement décidé par la Direction."></textarea>
+                      placeholder="{{ __('Ex : Taux saisi à 99 999 CFA par erreur de frappe le 08/08/2026, correction au taux réellement décidé par la Direction.') }}"></textarea>
             @error('motif') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
         </div>
 

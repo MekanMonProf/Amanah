@@ -4,20 +4,18 @@
     <h1 class="text-xl sm:text-2xl font-semibold text-gray-800 mt-2 mb-1">{{ __("Gestion de la succession") }}</h1>
     <p class="text-sm text-gray-500 mb-6">
         {{ $investisseur->nom }} {{ $investisseur->prenom }} ({{ $investisseur->identifiant_externe }}) —
-        décédé(e) le {{ $investisseur->date_deces?->format('d/m/Y') }}
+        {{ __('décédé(e) le :date', ['date' => $investisseur->date_deces?->format('d/m/Y')]) }}
         @if ($investisseur->piece_acte_deces_path)
             · <a href="{{ \Illuminate\Support\Facades\Storage::url($investisseur->piece_acte_deces_path) }}" target="_blank" class="text-emerald-700 hover:underline">{{ __("Voir l'acte de décès") }}</a>
         @endif
     </p>
 
     <div class="bg-purple-50 border border-purple-200 rounded-lg p-4 mb-3 text-sm text-purple-800">
-        🕌 <strong>Compte(s) Waqf :</strong> le capital est automatiquement redirigé vers l'œuvre caritative
-        <strong>{{ __("Waqf Dolel Xamxam") }}</strong>, jamais vers le mandataire — conformément au principe d'inaliénabilité du Waqf.
+        🕌 {!! __("<strong>Compte(s) Waqf :</strong> le capital est automatiquement redirigé vers l'œuvre caritative <strong>:waqf</strong>, jamais vers le mandataire — conformément au principe d'inaliénabilité du Waqf.", ['waqf' => \App\Models\Investisseur::NOM_WAQF_CARITATIF]) !!}
     </div>
 
     <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-sm text-blue-800">
-        ℹ️ <strong>Compte(s) Commercial :</strong> la famille désigne un mandataire/procurataire unique, muni d'une
-        procuration. Vous choisissez ensuite s'il devient investisseur ou si les avoirs lui sont payés directement.
+        ℹ️ {!! __("<strong>Compte(s) Commercial :</strong> la famille désigne un mandataire/procurataire unique, muni d'une procuration. Vous choisissez ensuite s'il devient investisseur ou si les avoirs lui sont payés directement.") !!}
     </div>
 
     @if ($investisseur->succession_reglee)
@@ -88,7 +86,7 @@
                     </div>
                     <div>
                         <label class="text-sm text-gray-600">{{ __("Lien avec le défunt") }}</label>
-                        <input type="text" wire:model="lienParente" placeholder="Fils, Épouse, Avocat mandaté..." class="w-full border rounded px-3 py-2">
+                        <input type="text" wire:model="lienParente" placeholder="{{ __('Ex :') }} Fils, Épouse, Avocat mandaté..." class="w-full border rounded px-3 py-2">
                         @error('lienParente') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                     </div>
                     <div>
@@ -145,9 +143,9 @@
                 </div>
                 <p class="text-xs text-gray-400 mt-2">
                     @if ($modeReglementCommercial === 'paiement')
-                        Les actions Commercial seront converties en argent, puis tout sera payé directement au mandataire — aucun dossier investisseur ne sera créé pour lui.
+                        {{ __("Les actions Commercial seront converties en argent, puis tout sera payé directement au mandataire — aucun dossier investisseur ne sera créé pour lui.") }}
                     @else
-                        Le mandataire devient investisseur (un dossier lui sera créé s'il n'en a pas déjà un) et reçoit les actions et le solde Commercial sur son propre compte.
+                        {{ __("Le mandataire devient investisseur (un dossier lui sera créé s'il n'en a pas déjà un) et reçoit les actions et le solde Commercial sur son propre compte.") }}
                     @endif
                     {{ __("Ce choix ne concerne que le Commercial — le Waqf suit toujours sa propre règle, ci-dessus.") }}
                 </p>
@@ -183,7 +181,7 @@
                 </div>
             @endif
 
-            <button wire:click="reglerSuccession" wire:confirm="Régler définitivement cette succession selon l'aperçu ci-dessus ? Cette action ne peut pas être annulée depuis l'interface."
+            <button wire:click="reglerSuccession" wire:confirm="{{ __("Régler définitivement cette succession selon l'aperçu ci-dessus ? Cette action ne peut pas être annulée depuis l'interface.") }}"
                     wire:loading.attr="disabled" wire:target="reglerSuccession"
                     class="bg-red-600 text-white px-5 py-2 rounded-lg hover:bg-red-700 disabled:opacity-50">
                 <span wire:loading.remove wire:target="reglerSuccession">{{ __("Régler la succession") }}</span>

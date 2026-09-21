@@ -9,13 +9,11 @@
 
     @if (!$radiationAutorisee)
         <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 text-sm text-red-800">
-            ⛔ La radiation n'est pas autorisée pour la catégorie <strong>{{ ucfirst($compte->categorie) }}</strong>,
-            selon la politique d'investissement en vigueur.
+            ⛔ {!! __("La radiation n'est pas autorisée pour la catégorie <strong>:categorie</strong>, selon la politique d'investissement en vigueur.", ['categorie' => e(ucfirst($compte->categorie))]) !!}
         </div>
     @else
         <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-sm text-blue-800">
-            ℹ️ Le capital correspondant sera crédité sur le compte financier, en attente de versement effectif
-            via le module Paiement — rien n'est payé automatiquement ici.
+            ℹ️ {{ __("Le capital correspondant sera crédité sur le compte financier, en attente de versement effectif via le module Paiement — rien n'est payé automatiquement ici.") }}
         </div>
     @endif
 

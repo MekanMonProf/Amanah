@@ -5,9 +5,7 @@
     </p>
 
     <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-6 text-sm text-blue-800">
-        ℹ️ Ordre à respecter : <strong>{{ __("gestionnaires") }}</strong> → <strong>{{ __("investisseurs") }}</strong> →
-        <strong>{{ __("achats") }}</strong> → <strong>{{ __("écritures financières") }}</strong>. Chaque étape s'appuie sur la précédente
-        (un achat a besoin de son investisseur, un investisseur peut être rattaché à son gestionnaire).
+        ℹ️ {!! __("Ordre à respecter : <strong>gestionnaires</strong> → <strong>investisseurs</strong> → <strong>achats</strong> → <strong>écritures financières</strong>. Chaque étape s'appuie sur la précédente (un achat a besoin de son investisseur, un investisseur peut être rattaché à son gestionnaire).") !!}
     </div>
 
     <!-- Choix du type de données -->
@@ -25,20 +23,20 @@
     <div class="bg-white border rounded-lg p-5 mb-6 shadow-sm" x-data="{ colonnes: false }">
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
             <div>
-                <h2 class="font-semibold text-gray-800">1. Préparer le fichier — {{ $types[$type] }}</h2>
+                <h2 class="font-semibold text-gray-800">{{ __('1. Préparer le fichier — :type', ['type' => $types[$type]]) }}</h2>
                 <p class="text-sm text-gray-500 mt-1">
-                    Le modèle contient les en-têtes attendus et une ligne d'exemple à remplacer par vos données.
+                    {{ __("Le modèle contient les en-têtes attendus et une ligne d'exemple à remplacer par vos données.") }}
                 </p>
             </div>
             <a href="{{ route('import.modele', ['type' => $type]) }}"
                class="bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm hover:bg-emerald-800 text-center whitespace-nowrap">
-                ⬇ Télécharger le modèle CSV
+                ⬇ {{ __("Télécharger le modèle CSV") }}
             </a>
         </div>
 
         <button type="button" @click="colonnes = ! colonnes" class="text-sm text-emerald-700 hover:underline mt-3">
             {{-- style="display:none" évite le clignotement avant l'initialisation d'Alpine --}}
-            <span x-show="! colonnes">Voir les {{ count($schema) }} colonnes attendues</span>
+            <span x-show="! colonnes">{{ __('Voir les :nombre colonnes attendues', ['nombre' => count($schema)]) }}</span>
             <span x-show="colonnes" style="display: none">{{ __("Masquer les colonnes") }}</span>
         </button>
 
@@ -127,7 +125,7 @@
 
             @if ($colonnesInconnues)
                 <div class="bg-amber-50 border border-amber-200 text-amber-800 rounded-lg p-3 mb-4 text-sm">
-                    Colonne(s) du fichier non reconnue(s), donc non importée(s) :
+                    {{ __("Colonne(s) du fichier non reconnue(s), donc non importée(s) :") }}
                     <span class="font-mono text-xs">{{ implode(', ', $colonnesInconnues) }}</span>.
                     {{ __("Vérifiez l'orthographe des en-têtes si l'une d'elles devait être reprise.") }}
                 </div>
@@ -174,24 +172,20 @@
 
             @if ($apercuTronque)
                 <p class="text-xs text-gray-500 mt-2">
-                    Toutes les lignes à corriger sont affichées, complétées par un échantillon de lignes correctes.
+                    {{ __("Toutes les lignes à corriger sont affichées, complétées par un échantillon de lignes correctes.") }}
                     {{ __("Les autres lignes valides seront importées de la même façon.") }}
                 </p>
             @endif
 
             @if ($type === 'achats')
                 <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-4 text-sm text-blue-800">
-                    ℹ️ L'import n'enregistre que les achats. Les dividendes des mois passés se rattrapent
-                    ensuite en lançant <strong>{{ __("Dividendes → Calculer et distribuer") }}</strong>, qui rejoue tout
-                    l'historique des barèmes déjà fixés.
+                    ℹ️ {!! __("L'import n'enregistre que les achats. Les dividendes des mois passés se rattrapent ensuite en lançant <strong>:module</strong>, qui rejoue tout l'historique des barèmes déjà fixés.", ['module' => __('Dividendes → Calculer et distribuer')]) !!}
                 </div>
             @endif
 
             @if ($type === 'ecritures')
                 <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-4 text-sm text-blue-800">
-                    ℹ️ Les écritures sont enregistrées dans l'ordre des lignes du fichier, chacune recalculant
-                    le solde du compte. Aucun réinvestissement automatique n'est déclenché : les achats
-                    correspondants doivent être repris par l'import « Achats d'actions ».
+                    ℹ️ {{ __("Les écritures sont enregistrées dans l'ordre des lignes du fichier, chacune recalculant le solde du compte. Aucun réinvestissement automatique n'est déclenché : les achats correspondants doivent être repris par l'import « Achats d'actions ».") }}
                 </div>
             @endif
 
@@ -200,8 +194,7 @@
                     <label class="flex items-start gap-2 text-sm text-gray-700 mb-3">
                         <input type="checkbox" wire:model="confirmeIgnorerErreurs" class="mt-0.5 rounded border-gray-300 text-emerald-700">
                         <span>
-                            J'ai lu le tableau : importer les <strong>{{ $resume['valides'] }}</strong> ligne(s) valide(s)
-                            et ignorer les <strong>{{ $resume['erreurs'] }}</strong> ligne(s) en erreur.
+                            {!! __("J'ai lu le tableau : importer les <strong>:valides</strong> ligne(s) valide(s) et ignorer les <strong>:erreurs</strong> ligne(s) en erreur.", ['valides' => $resume['valides'], 'erreurs' => $resume['erreurs']]) !!}
                             {{ __("Je pourrai corriger le fichier et réimporter ces lignes ensuite.") }}
                         </span>
                     </label>
@@ -212,7 +205,7 @@
                     <button type="button" wire:click="importer" wire:loading.attr="disabled" wire:target="importer"
                             @disabled($resume['valides'] === 0)
                             class="bg-emerald-700 text-white px-5 py-2 rounded-lg hover:bg-emerald-800 disabled:opacity-50 disabled:cursor-not-allowed">
-                        <span wire:loading.remove wire:target="importer">Importer les {{ $resume['valides'] }} ligne(s) valide(s)</span>
+                        <span wire:loading.remove wire:target="importer">{{ __('Importer les :nombre ligne(s) valide(s)', ['nombre' => $resume['valides']]) }}</span>
                         <span wire:loading wire:target="importer">{{ __("Enregistrement en cours…") }}</span>
                     </button>
                     <button type="button" wire:click="reinitialiser" class="text-sm text-gray-500 hover:underline px-2">
@@ -226,14 +219,14 @@
     <!-- Rapport final -->
     @if ($rapport)
         <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-5 mb-6">
-            <h2 class="font-semibold text-emerald-800 mb-2">Import terminé — {{ $types[$rapport['type']] }}</h2>
+            <h2 class="font-semibold text-emerald-800 mb-2">{{ __('Import terminé — :type', ['type' => $types[$rapport['type']]]) }}</h2>
             <ul class="text-sm text-emerald-800 space-y-1">
-                <li>✓ <strong>{{ $rapport['importees'] }}</strong> ligne(s) enregistrée(s) depuis {{ $rapport['fichier'] }}</li>
+                <li>✓ {!! __('<strong>:nombre</strong> ligne(s) enregistrée(s) depuis :fichier', ['nombre' => $rapport['importees'], 'fichier' => e($rapport['fichier'])]) !!}</li>
                 @if ($rapport['doublons'] > 0)
-                    <li>• {{ $rapport['doublons'] }} doublon(s) ignoré(s) — déjà présents en base</li>
+                    <li>• {{ __(':nombre doublon(s) ignoré(s) — déjà présents en base', ['nombre' => $rapport['doublons']]) }}</li>
                 @endif
                 @if ($rapport['erreurs'] > 0)
-                    <li>• {{ $rapport['erreurs'] }} ligne(s) en erreur non importée(s) — corrigez-les dans le fichier puis relancez un import</li>
+                    <li>• {{ __(':nombre ligne(s) en erreur non importée(s) — corrigez-les dans le fichier puis relancez un import', ['nombre' => $rapport['erreurs']]) }}</li>
                 @endif
             </ul>
             <p class="text-xs text-emerald-700 mt-3">{{ __("L'opération est tracée dans le journal d'audit.") }}</p>
@@ -248,7 +241,7 @@
                 <strong>{{ __("Copiez cette liste maintenant : elle ne sera plus affichée.") }}</strong>
                 {{ __("Chaque gestionnaire devra changer son mot de passe à la première connexion.") }}
                 {{ __("Pour envoyer l'email à quelqu'un en particulier, utilisez « Réinitialiser le mot de passe »") }}
-                sur la page <a href="{{ route('gestionnaires.index') }}" class="underline" wire:navigate>{{ __("Gestionnaires") }}</a>.
+                {{ __('sur la page') }} <a href="{{ route('gestionnaires.index') }}" class="underline" wire:navigate>{{ __("Gestionnaires") }}</a>.
             </p>
             <div class="overflow-x-auto">
                 <table class="min-w-full text-sm bg-white rounded-lg">

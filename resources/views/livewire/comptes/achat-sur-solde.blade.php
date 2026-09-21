@@ -16,9 +16,9 @@
     @if ($resultatNbAchats !== null)
         <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-4 mb-6 text-sm text-emerald-800">
             @if ($resultatNbAchats > 0)
-                ✓ {{ $resultatNbAchats }} action(s) achetée(s) avec succès à partir du solde disponible.
+                ✓ {{ __(":nombre action(s) achetée(s) avec succès à partir du solde disponible.", ['nombre' => $resultatNbAchats]) }}
             @else
-                Le solde actuel ne couvre pas le prix d'une action complète — rien à acheter pour l'instant.
+                {{ __("Le solde actuel ne couvre pas le prix d'une action complète — rien à acheter pour l'instant.") }}
             @endif
         </div>
     @endif
@@ -38,23 +38,21 @@
         @if ($nbActionsPossibles > 0)
             <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
                 <p class="text-sm text-emerald-800 mb-1">
-                    Ce solde permet d'acheter <strong>{{ $nbActionsPossibles }}</strong> action(s), pour un montant de
-                    <strong>{{ \App\Support\Montant::format($montantUtilise) }}&#8239;CFA</strong>.
+                    {!! __("Ce solde permet d'acheter <strong>:nombre</strong> action(s), pour un montant de <strong>:montant</strong>.", ['nombre' => $nbActionsPossibles, 'montant' => \App\Support\Montant::avecDevise($montantUtilise)]) !!}
                 </p>
                 <p class="text-xs text-emerald-700">
-                    Reliquat conservé sur le compte après achat : {{ \App\Support\Montant::format($reliquat) }}&#8239;CFA.
+                    {{ __("Reliquat conservé sur le compte après achat : :montant.", ['montant' => \App\Support\Montant::avecDevise($reliquat)]) }}
                 </p>
             </div>
 
             <button wire:click="confirmerAchat" wire:loading.attr="disabled" wire:target="confirmerAchat"
                     class="bg-emerald-700 text-white px-5 py-2 rounded-lg w-full sm:w-auto disabled:opacity-50">
-                <span wire:loading.remove wire:target="confirmerAchat">Confirmer l'achat de {{ $nbActionsPossibles }} action(s)</span>
+                <span wire:loading.remove wire:target="confirmerAchat">{{ __("Confirmer l'achat de :nombre action(s)", ['nombre' => $nbActionsPossibles]) }}</span>
                 <span wire:loading wire:target="confirmerAchat">{{ __("Traitement...") }}</span>
             </button>
         @else
             <div class="bg-gray-50 border rounded-lg p-4 text-sm text-gray-500">
-                Le solde actuel ({{ \App\Support\Montant::format($compte->solde()) }}&#8239;CFA) ne couvre pas le prix
-                d'une action ({{ \App\Support\Montant::format($prixAction) }}&#8239;CFA). Rien à acheter pour l'instant.
+                {{ __("Le solde actuel (:solde) ne couvre pas le prix d'une action (:prix). Rien à acheter pour l'instant.", ['solde' => \App\Support\Montant::avecDevise($compte->solde()), 'prix' => \App\Support\Montant::avecDevise($prixAction)]) }}
             </div>
         @endif
     </div>

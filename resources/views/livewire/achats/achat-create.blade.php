@@ -100,7 +100,7 @@
                                 <span class="text-gray-400">{{ __("(facultatif)") }}</span>
                             </label>
                             <input type="text" wire:model="lienAvecDonateur" maxlength="100" list="liens-defunt"
-                                   placeholder="Père, Mère, Épouse, Frère, Ami..."
+                                   placeholder="{{ __('Ex :') }} Père, Mère, Épouse, Frère, Ami..."
                                    class="w-full border rounded px-3 py-2 bg-white mt-1">
                             <datalist id="liens-defunt">
                                 <option value="Père"></option>

@@ -8,8 +8,7 @@
     </p>
 
     <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-sm text-blue-800">
-        ℹ️ L'investisseur verse un montant pour compléter son solde et acheter immédiatement une ou
-        plusieurs actions, sans attendre la prochaine distribution de dividendes (règle de gestion, section 11).
+        ℹ️ {{ __("L'investisseur verse un montant pour compléter son solde et acheter immédiatement une ou plusieurs actions, sans attendre la prochaine distribution de dividendes (règle de gestion, section 11).") }}
     </div>
 
     <div class="grid grid-cols-2 gap-4 mb-6">
@@ -26,13 +25,9 @@
     @if ($resultatNbAchats !== null)
         <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-4 mb-6 text-sm text-emerald-800">
             @if ($resultatNbAchats > 0)
-                ✓ Versement enregistré : <strong>{{ $resultatNbAchats }}</strong> action(s) achetée(s) automatiquement.
-                Solde avant : {{ \App\Support\Montant::format($resultatMontantAvant) }}&#8239;CFA →
-                après : {{ \App\Support\Montant::format($resultatMontantApres) }}&#8239;CFA (reliquat conservé sur le compte).
+                ✓ {!! __("Versement enregistré : <strong>:nombre</strong> action(s) achetée(s) automatiquement. Solde avant : :avant → après : :apres (reliquat conservé sur le compte).", ['nombre' => $resultatNbAchats, 'avant' => \App\Support\Montant::avecDevise($resultatMontantAvant), 'apres' => \App\Support\Montant::avecDevise($resultatMontantApres)]) !!}
             @else
-                ✓ Versement enregistré. Le solde ({{ \App\Support\Montant::format($resultatMontantApres) }}&#8239;CFA)
-                ne couvre pas encore le prix d'une action complète — il reste disponible sur le compte
-                pour un prochain complément ou le prochain dividende.
+                ✓ {{ __("Versement enregistré. Le solde (:solde) ne couvre pas encore le prix d'une action complète — il reste disponible sur le compte pour un prochain complément ou le prochain dividende.", ['solde' => \App\Support\Montant::avecDevise($resultatMontantApres)]) }}
             @endif
         </div>
     @endif

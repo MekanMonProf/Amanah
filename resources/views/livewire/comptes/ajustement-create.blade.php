@@ -20,7 +20,7 @@
         <div>
             <label class="text-sm text-gray-600">{{ __("Montant de l'ajustement (CFA)") }}</label>
             <input type="number" step="0.01" wire:model="montant" class="w-full border rounded px-3 py-2"
-                   placeholder="Positif pour créditer, négatif pour débiter">
+                   placeholder="{{ __('Positif pour créditer, négatif pour débiter') }}">
             @error('montant') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
             <p class="text-xs text-gray-400 mt-1">
                 {!! __("Exemple : si un dividende de 99 999 CFA a été crédité par erreur au lieu de 8 000 CFA, entrez <strong>-91 999</strong> pour corriger.") !!}
@@ -36,7 +36,7 @@
         <div>
             <label class="text-sm text-gray-600">{{ __("Motif (obligatoire, pour l'audit)") }}</label>
             <textarea wire:model="observations" rows="3" class="w-full border rounded px-3 py-2"
-                      placeholder="Ex: Correction erreur de saisie — dividende avril 2026 saisi à 99 999 CFA au lieu de 8 000 CFA (6 actions × 1000 CFA)."></textarea>
+                      placeholder="{{ __('Ex : Correction erreur de saisie — dividende avril 2026 saisi à 99 999 CFA au lieu de 8 000 CFA (6 actions × 1000 CFA).') }}"></textarea>
             @error('observations') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
         </div>
 

@@ -1,6 +1,6 @@
 <div>
     <div class="mb-4 text-sm text-gray-600">
-        Pour des raisons de sécurité, vous devez définir votre propre mot de passe avant de continuer.
+        {{ __("Pour des raisons de sécurité, vous devez définir votre propre mot de passe avant de continuer.") }}
     </div>
 
     <form wire:submit="enregistrer">

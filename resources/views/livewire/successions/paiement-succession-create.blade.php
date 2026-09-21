@@ -3,7 +3,7 @@
 
     <h1 class="text-xl sm:text-2xl font-semibold text-gray-800 mt-2 mb-1">{{ __("Versement — Succession") }}</h1>
     <p class="text-sm text-gray-500 mb-6">
-        Défunt : {{ $defunt->nom }} {{ $defunt->prenom }} ({{ $defunt->identifiant_externe }}) ·
+        {{ __('Défunt :') }} {{ $defunt->nom }} {{ $defunt->prenom }} ({{ $defunt->identifiant_externe }}) ·
         Compte <span class="font-mono">{{ $compte->numero_compte }}</span>
         @if ($mandataire)
             <br>Mandataire : {{ $mandataire->nom }} {{ $mandataire->prenom }} ({{ $mandataire->lien_parente }})
@@ -11,8 +11,7 @@
     </p>
 
     <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-sm text-blue-800">
-        ℹ️ Les actions de ce compte ont déjà été liquidées. Ce versement remet concrètement l'argent
-        disponible au mandataire désigné par la famille.
+        ℹ️ {{ __("Les actions de ce compte ont déjà été liquidées. Ce versement remet concrètement l'argent disponible au mandataire désigné par la famille.") }}
     </div>
 
     <div class="bg-white border rounded-lg p-4 mb-6">

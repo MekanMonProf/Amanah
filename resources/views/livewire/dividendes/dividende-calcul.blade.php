@@ -19,8 +19,7 @@
                         @if ($delaiEligibiliteJours === 0)
                             {{ __("Un achat compte pour le dividende du mois en cours, quel que soit le jour du mois.") }}
                         @else
-                            Un achat effectué dans les <strong>{{ $delaiEligibiliteJours }} derniers jours</strong> du mois
-                            ne compte qu'à partir du mois suivant.
+                            {!! __("Un achat effectué dans les <strong>:jours derniers jours</strong> du mois ne compte qu'à partir du mois suivant.", ['jours' => $delaiEligibiliteJours]) !!}
                         @endif
                     </p>
                 @endif

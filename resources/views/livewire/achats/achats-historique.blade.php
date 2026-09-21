@@ -1,7 +1,7 @@
 <div>
     <div class="flex flex-col sm:flex-row gap-2 mb-3">
         <input type="text" wire:model.live.debounce.300ms="recherche"
-               placeholder="Rechercher (n°, référence, paiement)..."
+               placeholder="{{ __('Rechercher (n°, référence, paiement)...') }}"
                class="border rounded px-3 py-1.5 text-sm w-full sm:w-64">
 
         <select wire:model.live="filtreType" class="border rounded px-3 py-1.5 text-sm">

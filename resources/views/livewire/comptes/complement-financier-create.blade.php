@@ -15,11 +15,11 @@
     <div class="grid grid-cols-2 gap-4 mb-6">
         <div class="bg-white border rounded-lg p-4">
             <div class="text-xs text-gray-500 uppercase">Solde actuel</div>
-            <div class="text-xl font-semibold text-gray-800">{{ number_format($compte->solde(), 0, ',', ' ') }} CFA</div>
+            <div class="text-xl font-semibold text-gray-800">{{ \App\Support\Montant::format($compte->solde()) }}&#8239;CFA</div>
         </div>
         <div class="bg-white border rounded-lg p-4">
             <div class="text-xs text-gray-500 uppercase">Prix d'une action</div>
-            <div class="text-xl font-semibold text-gray-800">{{ number_format($prixAction, 0, ',', ' ') }} CFA</div>
+            <div class="text-xl font-semibold text-gray-800">{{ \App\Support\Montant::format($prixAction) }}&#8239;CFA</div>
         </div>
     </div>
 
@@ -27,10 +27,10 @@
         <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-4 mb-6 text-sm text-emerald-800">
             @if ($resultatNbAchats > 0)
                 ✓ Versement enregistré : <strong>{{ $resultatNbAchats }}</strong> action(s) achetée(s) automatiquement.
-                Solde avant : {{ number_format($resultatMontantAvant, 0, ',', ' ') }} CFA →
-                après : {{ number_format($resultatMontantApres, 0, ',', ' ') }} CFA (reliquat conservé sur le compte).
+                Solde avant : {{ \App\Support\Montant::format($resultatMontantAvant) }}&#8239;CFA →
+                après : {{ \App\Support\Montant::format($resultatMontantApres) }}&#8239;CFA (reliquat conservé sur le compte).
             @else
-                ✓ Versement enregistré. Le solde ({{ number_format($resultatMontantApres, 0, ',', ' ') }} CFA)
+                ✓ Versement enregistré. Le solde ({{ \App\Support\Montant::format($resultatMontantApres) }}&#8239;CFA)
                 ne couvre pas encore le prix d'une action complète — il reste disponible sur le compte
                 pour un prochain complément ou le prochain dividende.
             @endif

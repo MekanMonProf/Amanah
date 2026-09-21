@@ -19,11 +19,11 @@
                 </div>
                 <div class="bg-white border rounded-lg p-4">
                     <div class="text-xs text-gray-500 uppercase">Actions détenues</div>
-                    <div class="text-2xl font-semibold text-gray-800">{{ number_format($totalActions, 0, ',', ' ') }}</div>
+                    <div class="text-2xl font-semibold text-gray-800">{{ \App\Support\Montant::format($totalActions) }}</div>
                 </div>
                 <div class="bg-white border rounded-lg p-4">
                     <div class="text-xs text-gray-500 uppercase">Solde cumulé</div>
-                    <div class="text-2xl font-semibold text-emerald-700">{{ number_format($totalSolde, 0, ',', ' ') }} CFA</div>
+                    <div class="text-2xl font-semibold text-emerald-700">{{ \App\Support\Montant::format($totalSolde) }}&#8239;CFA</div>
                 </div>
             </div>
 
@@ -46,7 +46,7 @@
                         <div class="flex justify-between py-2 border-b last:border-0 text-sm">
                             <span class="font-mono text-xs text-gray-500">{{ $achat->numero_achat }}</span>
                             <span>{{ $achat->nombre_actions }} action(s)</span>
-                            <span class="text-gray-500">{{ number_format($achat->montant, 0, ',', ' ') }} CFA</span>
+                            <span class="text-gray-500">{{ \App\Support\Montant::format($achat->montant) }}&#8239;CFA</span>
                         </div>
                     @empty
                         <p class="text-sm text-gray-400">Aucun achat pour l'instant.</p>
@@ -71,11 +71,11 @@
             </div>
             <div class="bg-white border rounded-lg p-4">
                 <div class="text-xs text-gray-500 uppercase">Dividendes distribués (total)</div>
-                <div class="text-2xl font-semibold text-emerald-700">{{ number_format($totalDividendesDistribues, 0, ',', ' ') }} CFA</div>
+                <div class="text-2xl font-semibold text-emerald-700">{{ \App\Support\Montant::format($totalDividendesDistribues) }}&#8239;CFA</div>
             </div>
             <div class="bg-white border rounded-lg p-4">
                 <div class="text-xs text-gray-500 uppercase">Dividendes ce mois-ci</div>
-                <div class="text-2xl font-semibold text-gray-800">{{ number_format($dividendesCeMois, 0, ',', ' ') }} CFA</div>
+                <div class="text-2xl font-semibold text-gray-800">{{ \App\Support\Montant::format($dividendesCeMois) }}&#8239;CFA</div>
             </div>
         </div>
 
@@ -89,11 +89,11 @@
                                 <span class="font-medium">{{ $label }}</span>
                                 <span class="text-gray-500">
                                     {{ $comptesParCategorie[$cle] ?? 0 }} compte(s) ·
-                                    {{ number_format($actionsNettesParCategorie[$cle] ?? 0, 0, ',', ' ') }} action(s)
+                                    {{ \App\Support\Montant::format($actionsNettesParCategorie[$cle] ?? 0) }} action(s)
                                 </span>
                             </div>
                             <div class="text-lg font-semibold text-gray-800">
-                                {{ number_format($soldeParCategorie[$cle] ?? 0, 0, ',', ' ') }} CFA
+                                {{ \App\Support\Montant::format($soldeParCategorie[$cle] ?? 0) }}&#8239;CFA
                                 <span class="text-xs text-gray-400 font-normal">de solde cumulé</span>
                             </div>
                         </div>
@@ -105,7 +105,7 @@
                 <h2 class="font-semibold text-gray-800 mb-3">Radiations</h2>
                 <div class="text-xs text-gray-500 uppercase">Capital en attente de versement</div>
                 <div class="text-2xl font-semibold {{ $radiationsEnAttente > 0 ? 'text-amber-600' : 'text-gray-800' }}">
-                    {{ number_format($radiationsEnAttente, 0, ',', ' ') }} CFA
+                    {{ \App\Support\Montant::format($radiationsEnAttente) }}&#8239;CFA
                 </div>
                 @if ($radiationsEnAttente > 0)
                     <p class="text-xs text-gray-400 mt-2">Consultez les fiches investisseurs concernées pour verser.</p>

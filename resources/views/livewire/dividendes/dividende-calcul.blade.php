@@ -112,7 +112,7 @@
                         </div>
                         <div>
                             <div class="text-xs text-gray-500">Total distribué</div>
-                            <div class="text-lg font-semibold text-emerald-700">{{ number_format($resultats[$cle]['total_distribue'], 0, ',', ' ') }} CFA</div>
+                            <div class="text-lg font-semibold text-emerald-700">{{ \App\Support\Montant::format($resultats[$cle]['total_distribue']) }}&#8239;CFA</div>
                         </div>
                     </div>
                 </div>
@@ -137,10 +137,10 @@
                         <tr>
                             <td class="p-2">{{ \Illuminate\Support\Carbon::createFromFormat('Y-m', $mois)->translatedFormat('F Y') }}</td>
                             <td class="p-2 text-right">
-                                {{ isset($parCategorie['commercial']) ? number_format($parCategorie['commercial']['benefice_par_action'], 0, ',', ' ') . ' CFA' : '—' }}
+                                {{ isset($parCategorie['commercial']) ? \App\Support\Montant::format($parCategorie['commercial']['benefice_par_action']) . " CFA" : '—' }}
                             </td>
                             <td class="p-2 text-right">
-                                {{ isset($parCategorie['waqf']) ? number_format($parCategorie['waqf']['benefice_par_action'], 0, ',', ' ') . ' CFA' : '—' }}
+                                {{ isset($parCategorie['waqf']) ? \App\Support\Montant::format($parCategorie['waqf']['benefice_par_action']) . " CFA" : '—' }}
                             </td>
                             <td class="p-2 text-right whitespace-nowrap">
                                 @if (isset($parCategorie['commercial']))

@@ -38,8 +38,8 @@
                         <tr>
                             <td class="py-1 font-mono text-xs">{{ $ligne['compte'] }}</td>
                             <td class="py-1">{{ $ligne['destination'] }}</td>
-                            <td class="py-1 text-right">{{ number_format($ligne['actions'], 0, ',', ' ') }}</td>
-                            <td class="py-1 text-right">{{ number_format($ligne['montant'], 0, ',', ' ') }} CFA</td>
+                            <td class="py-1 text-right">{{ \App\Support\Montant::format($ligne['actions']) }}</td>
+                            <td class="py-1 text-right">{{ \App\Support\Montant::format($ligne['montant']) }}&#8239;CFA</td>
                             <td class="py-1 text-right"></td>
                         </tr>
                     @endforeach
@@ -55,7 +55,7 @@
                 <p class="text-sm font-semibold text-amber-800 mb-2">Versement(s) en attente :</p>
                 @foreach ($comptesEnAttente as $compte)
                     <div class="flex justify-between items-center py-1">
-                        <span class="text-sm">{{ $compte->numero_compte }} — {{ number_format($compte->solde(), 0, ',', ' ') }} CFA disponible</span>
+                        <span class="text-sm">{{ $compte->numero_compte }} — {{ \App\Support\Montant::format($compte->solde()) }}&#8239;CFA disponible</span>
                         <a href="{{ route('successions.paiement', $compte) }}" wire:navigate class="text-sm text-emerald-700 border border-emerald-700 rounded-lg px-3 py-1 hover:bg-emerald-50">
                             Verser au mandataire →
                         </a>
@@ -172,10 +172,10 @@
                                 <tr>
                                     <td class="py-1 font-mono text-xs">{{ $ligne['compte'] }}</td>
                                     <td class="py-1 text-xs">{{ $ligne['destination'] }}</td>
-                                    <td class="py-1 text-right">{{ number_format($ligne['nb_actions'], 0, ',', ' ') }}</td>
-                                    <td class="py-1 text-right">{{ number_format($ligne['montant_actions'], 0, ',', ' ') }}</td>
-                                    <td class="py-1 text-right">{{ number_format($ligne['solde'], 0, ',', ' ') }}</td>
-                                    <td class="py-1 text-right font-semibold">{{ number_format($ligne['total'], 0, ',', ' ') }} CFA</td>
+                                    <td class="py-1 text-right">{{ \App\Support\Montant::format($ligne['nb_actions']) }}</td>
+                                    <td class="py-1 text-right">{{ \App\Support\Montant::format($ligne['montant_actions']) }}</td>
+                                    <td class="py-1 text-right">{{ \App\Support\Montant::format($ligne['solde']) }}</td>
+                                    <td class="py-1 text-right font-semibold">{{ \App\Support\Montant::format($ligne['total']) }}&#8239;CFA</td>
                                 </tr>
                             @endforeach
                         </tbody>

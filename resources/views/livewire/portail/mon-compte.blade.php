@@ -40,11 +40,11 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-4">
                     <div>
                         <div class="text-xs text-gray-500 uppercase">Actions détenues</div>
-                        <div class="text-2xl font-semibold text-gray-800">{{ number_format($item['nombre_actions'], 0, ',', ' ') }}</div>
+                        <div class="text-2xl font-semibold text-gray-800">{{ \App\Support\Montant::format($item['nombre_actions']) }}</div>
                     </div>
                     <div>
                         <div class="text-xs text-gray-500 uppercase">Solde du compte</div>
-                        <div class="text-2xl font-semibold text-emerald-700">{{ number_format($item['solde'], 0, ',', ' ') }} CFA</div>
+                        <div class="text-2xl font-semibold text-emerald-700">{{ \App\Support\Montant::format($item['solde']) }}&#8239;CFA</div>
                     </div>
                 </div>
 
@@ -65,8 +65,8 @@
                                     @foreach ($item['achats'] as $achat)
                                         <tr>
                                             <td class="py-1">{{ $achat->date_achat->format('d/m/Y') }}</td>
-                                            <td class="py-1 text-right">{{ number_format($achat->nombre_actions, 0, ',', ' ') }}</td>
-                                            <td class="py-1 text-right">{{ number_format($achat->montant, 0, ',', ' ') }}</td>
+                                            <td class="py-1 text-right">{{ \App\Support\Montant::format($achat->nombre_actions) }}</td>
+                                            <td class="py-1 text-right">{{ \App\Support\Montant::format($achat->montant) }}</td>
                                             <td class="py-1 text-right">
                                                 <a href="{{ route('achats.attestation', $achat) }}" target="_blank" class="text-gray-600 hover:underline text-xs whitespace-nowrap">
                                                     📄 Attestation
@@ -98,7 +98,7 @@
                                         <td class="py-1">{{ $ecriture->date_ecriture->format('d/m/Y') }}</td>
                                         <td class="py-1">{{ str_replace('_', ' ', $ecriture->type_ecriture) }}</td>
                                         <td class="py-1 text-right {{ $ecriture->montant >= 0 ? 'text-emerald-700' : 'text-red-600' }}">
-                                            {{ $ecriture->montant >= 0 ? '+' : '' }}{{ number_format($ecriture->montant, 0, ',', ' ') }}
+                                            {{ $ecriture->montant >= 0 ? '+' : '' }}{{ \App\Support\Montant::format($ecriture->montant) }}
                                         </td>
                                         <td class="py-1 text-right">
                                             @if ($ecriture->type_ecriture === 'paiement')

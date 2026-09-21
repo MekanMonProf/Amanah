@@ -80,11 +80,11 @@ class BaremeCorrection extends Component
                     referenceType: 'dividendes',
                     referenceId: $dividende->id,
                     observations: sprintf(
-                        'Correction barème %s (%s) : %s → %s CFA/action. Motif : %s',
+                        'Correction barème %s (%s) : %s → %s CFA/action. Motif : %s',
                         $this->bareme->periode->translatedFormat('F Y'),
                         ucfirst($this->bareme->categorie),
-                        number_format($this->ancienTaux, 0, ',', ' '),
-                        number_format($this->nouveauTaux, 0, ',', ' '),
+                        \App\Support\Montant::format($this->ancienTaux),
+                        \App\Support\Montant::format($this->nouveauTaux),
                         $this->motif
                     ),
                     userId: Auth::id(),

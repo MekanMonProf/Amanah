@@ -20,7 +20,7 @@
         </div>
         <div class="bg-white border rounded-lg p-4">
             <div class="text-xs text-gray-500 uppercase">Solde disponible</div>
-            <div class="text-xl font-semibold text-gray-800">{{ number_format($compteSource->solde(), 0, ',', ' ') }} CFA</div>
+            <div class="text-xl font-semibold text-gray-800">{{ \App\Support\Montant::format($compteSource->solde()) }}&#8239;CFA</div>
         </div>
     </div>
 

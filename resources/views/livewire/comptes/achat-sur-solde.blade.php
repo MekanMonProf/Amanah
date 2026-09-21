@@ -28,11 +28,11 @@
         <div class="grid grid-cols-2 gap-4">
             <div>
                 <div class="text-xs text-gray-500 uppercase">Solde disponible</div>
-                <div class="text-xl font-semibold text-gray-800">{{ number_format($compte->solde(), 0, ',', ' ') }} CFA</div>
+                <div class="text-xl font-semibold text-gray-800">{{ \App\Support\Montant::format($compte->solde()) }}&#8239;CFA</div>
             </div>
             <div>
                 <div class="text-xs text-gray-500 uppercase">Prix d'une action</div>
-                <div class="text-xl font-semibold text-gray-800">{{ number_format($prixAction, 0, ',', ' ') }} CFA</div>
+                <div class="text-xl font-semibold text-gray-800">{{ \App\Support\Montant::format($prixAction) }}&#8239;CFA</div>
             </div>
         </div>
 
@@ -40,10 +40,10 @@
             <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
                 <p class="text-sm text-emerald-800 mb-1">
                     Ce solde permet d'acheter <strong>{{ $nbActionsPossibles }}</strong> action(s), pour un montant de
-                    <strong>{{ number_format($montantUtilise, 0, ',', ' ') }} CFA</strong>.
+                    <strong>{{ \App\Support\Montant::format($montantUtilise) }}&#8239;CFA</strong>.
                 </p>
                 <p class="text-xs text-emerald-700">
-                    Reliquat conservé sur le compte après achat : {{ number_format($reliquat, 0, ',', ' ') }} CFA.
+                    Reliquat conservé sur le compte après achat : {{ \App\Support\Montant::format($reliquat) }}&#8239;CFA.
                 </p>
             </div>
 
@@ -54,8 +54,8 @@
             </button>
         @else
             <div class="bg-gray-50 border rounded-lg p-4 text-sm text-gray-500">
-                Le solde actuel ({{ number_format($compte->solde(), 0, ',', ' ') }} CFA) ne couvre pas le prix
-                d'une action ({{ number_format($prixAction, 0, ',', ' ') }} CFA). Rien à acheter pour l'instant.
+                Le solde actuel ({{ \App\Support\Montant::format($compte->solde()) }}&#8239;CFA) ne couvre pas le prix
+                d'une action ({{ \App\Support\Montant::format($prixAction) }}&#8239;CFA). Rien à acheter pour l'instant.
             </div>
         @endif
     </div>

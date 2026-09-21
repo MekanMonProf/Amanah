@@ -83,7 +83,7 @@ class LecteurTableur
             if (count($lignes) > static::MAX_LIGNES) {
                 throw new \RuntimeException(sprintf(
                     "Le fichier dépasse %s lignes. Découpez-le en plusieurs fichiers et importez-les l'un après l'autre.",
-                    number_format(static::MAX_LIGNES, 0, ',', ' ')
+                    \App\Support\Montant::format(static::MAX_LIGNES)
                 ));
             }
         }

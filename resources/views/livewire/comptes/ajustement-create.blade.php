@@ -15,7 +15,7 @@
 
     <div class="bg-white border rounded-lg p-4 mb-6">
         <div class="text-xs text-gray-500 uppercase">Solde actuel du compte</div>
-        <div class="text-2xl font-semibold text-gray-800">{{ number_format($compte->solde(), 0, ',', ' ') }} CFA</div>
+        <div class="text-2xl font-semibold text-gray-800">{{ \App\Support\Montant::format($compte->solde()) }}&#8239;CFA</div>
     </div>
 
     <form wire:submit="enregistrer" class="bg-white border rounded-lg p-5 shadow-sm space-y-4">
@@ -46,7 +46,7 @@
         @if ($montant !== null)
             <div class="bg-gray-50 border rounded-lg p-3 text-sm">
                 Nouveau solde après ajustement :
-                <strong>{{ number_format($compte->solde() + $montant, 0, ',', ' ') }} CFA</strong>
+                <strong>{{ \App\Support\Montant::format($compte->solde() + $montant) }}&#8239;CFA</strong>
             </div>
         @endif
 

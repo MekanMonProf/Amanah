@@ -17,7 +17,7 @@
 
     <div class="bg-white border rounded-lg p-4 mb-6">
         <div class="text-xs text-gray-500 uppercase">Solde disponible</div>
-        <div class="text-2xl font-semibold text-gray-800">{{ number_format($compte->solde(), 0, ',', ' ') }} CFA</div>
+        <div class="text-2xl font-semibold text-gray-800">{{ \App\Support\Montant::format($compte->solde()) }}&#8239;CFA</div>
     </div>
 
     <form wire:submit="enregistrer" class="bg-white border rounded-lg p-5 shadow-sm space-y-4">

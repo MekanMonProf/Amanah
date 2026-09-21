@@ -41,7 +41,7 @@
         @if ($this->montantTotal > 0)
             <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-3 text-center">
                 <span class="text-sm text-emerald-700">Montant total à créditer : </span>
-                <span class="text-lg font-semibold text-emerald-800">{{ number_format($this->montantTotal, 0, ',', ' ') }} CFA</span>
+                <span class="text-lg font-semibold text-emerald-800">{{ \App\Support\Montant::format($this->montantTotal) }}&#8239;CFA</span>
             </div>
         @endif
 

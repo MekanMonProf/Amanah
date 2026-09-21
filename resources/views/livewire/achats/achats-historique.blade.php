@@ -71,8 +71,8 @@
                                 </span>
                             @endif
                         </td>
-                        <td class="py-1 text-right">{{ number_format($achat->nombre_actions, 0, ',', ' ') }}</td>
-                        <td class="py-1 text-right">{{ number_format($achat->montant, 0, ',', ' ') }}</td>
+                        <td class="py-1 text-right">{{ \App\Support\Montant::format($achat->nombre_actions) }}</td>
+                        <td class="py-1 text-right">{{ \App\Support\Montant::format($achat->montant) }}</td>
                         <td class="py-1 text-xs text-gray-500">{{ $achat->mode_paiement ?: '—' }}</td>
                         <td class="py-1 text-right">
                             @if ($achat->photo_facture_path)

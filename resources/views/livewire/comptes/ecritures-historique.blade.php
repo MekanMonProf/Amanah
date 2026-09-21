@@ -63,13 +63,16 @@
                         <td class="py-1">
                             {{ str_replace('_', ' ', $ecriture->type_ecriture) }}
                             @if ($ecriture->observations)
-                                <div class="text-xs text-gray-400">{{ $ecriture->observations }}</div>
+                                {{-- <bdi> isole ce texte du sens d ecriture de la page : les observations anciennes
+                                     contiennent des montants ecrits avec des espaces ordinaires, que l arabe
+                                     reordonnerait (« 1 400 CFA » -> « CFA 400 1 »). --}}
+                                <div class="text-xs text-gray-400"><bdi>{{ $ecriture->observations }}</bdi></div>
                             @endif
                         </td>                        
                         <td class="py-1 text-right {{ $ecriture->montant >= 0 ? 'text-emerald-700' : 'text-red-600' }}">
-                            {{ $ecriture->montant >= 0 ? '+' : '' }}{{ number_format($ecriture->montant, 0, ',', ' ') }}
+                            {{ $ecriture->montant >= 0 ? '+' : '' }}{{ \App\Support\Montant::format($ecriture->montant) }}
                         </td>
-                        <td class="py-1 text-right text-gray-500">{{ number_format($ecriture->solde_apres, 0, ',', ' ') }}</td>
+                        <td class="py-1 text-right text-gray-500">{{ \App\Support\Montant::format($ecriture->solde_apres) }}</td>
                         <td class="py-1 text-right">
                             @if ($ecriture->piece_justificative_path)
                                 <a href="{{ \Illuminate\Support\Facades\Storage::url($ecriture->piece_justificative_path) }}" target="_blank" class="text-emerald-700 hover:underline text-xs">

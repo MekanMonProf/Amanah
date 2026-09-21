@@ -1193,6 +1193,6 @@ class ImportateurDonnees
 
     protected function formaterMontant(float $montant): string
     {
-        return number_format($montant, 0, ',', ' ') . ' CFA';
+        return \App\Support\Montant::avecDevise($montant);
     }
 }

@@ -56,7 +56,7 @@ class PaiementSuccessionCreate extends Component
         $this->validate();
 
         if ($this->montant > $this->compte->solde()) {
-            $this->addError('montant', 'Le montant dépasse le solde disponible sur ce compte (' . number_format($this->compte->solde(), 0, ',', ' ') . ' CFA).');
+            $this->addError('montant', __("Le montant dépasse le solde disponible sur ce compte (:solde).", ['solde' => \App\Support\Montant::avecDevise($this->compte->solde())]));
             return;
         }
 
@@ -93,7 +93,7 @@ class PaiementSuccessionCreate extends Component
             ],
         );
 
-        session()->flash('succes', 'Versement de ' . number_format($this->montant, 0, ',', ' ') . ' CFA enregistré.');
+        session()->flash('succes', __("Versement de :montant enregistré.", ['montant' => \App\Support\Montant::avecDevise($this->montant)]));
 
         $this->redirectRoute('successions.gerer', $this->defunt, navigate: true);
     }

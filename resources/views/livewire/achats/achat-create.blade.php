@@ -162,7 +162,7 @@
         @if ($montantCalcule)
             <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-3 text-center">
                 <span class="text-sm text-emerald-700">{{ __("Montant total :") }}</span>
-                <span class="text-lg font-semibold text-emerald-800">{{ number_format($montantCalcule, 0, ',', ' ') }} CFA</span>
+                <span class="text-lg font-semibold text-emerald-800">{{ \App\Support\Montant::format($montantCalcule) }}&#8239;CFA</span>
             </div>
         @endif
 

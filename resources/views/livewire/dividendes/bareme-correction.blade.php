@@ -17,7 +17,7 @@
     @if ($resultat)
         <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-4 mb-6 text-sm text-emerald-800">
             ✓ Correction appliquée : <strong>{{ $resultat['nb_comptes'] }}</strong> compte(s) ajusté(s),
-            pour un total de <strong>{{ number_format($resultat['total_ajuste'], 0, ',', ' ') }} CFA</strong>
+            pour un total de <strong>{{ \App\Support\Montant::format($resultat['total_ajuste']) }}&#8239;CFA</strong>
             {{ $resultat['total_ajuste'] >= 0 ? 'crédités' : 'débités' }} au global.
         </div>
     @endif
@@ -25,7 +25,7 @@
     <form wire:submit="corriger" class="bg-white border rounded-lg p-5 shadow-sm space-y-4">
         <div>
             <div class="text-xs text-gray-500 uppercase">Taux actuel</div>
-            <div class="text-xl font-semibold text-gray-800">{{ number_format($ancienTaux, 0, ',', ' ') }} CFA/action</div>
+            <div class="text-xl font-semibold text-gray-800">{{ \App\Support\Montant::format($ancienTaux) }}&#8239;CFA/action</div>
         </div>
 
         <div>

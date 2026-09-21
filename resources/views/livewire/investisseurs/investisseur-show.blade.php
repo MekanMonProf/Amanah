@@ -191,7 +191,7 @@
                             <li>
                                 {{ $h->date_transfert->format('d/m/Y') }} —
                                 {{ $h->ancienGestionnaire?->user?->nom ?? __("Non assigné") }} → {{ $h->nouveauGestionnaire->user->nom }}
-                                @if ($h->motif) <span class="text-gray-400">({{ $h->motif }})</span> @endif
+                                @if ($h->motif) <span class="text-gray-400">(<bdi>{{ $h->motif }}</bdi>)</span> @endif
                                 @if ($h->effectuePar) <span class="text-gray-400">— {{ __("par") }} {{ $h->effectuePar->nom }}</span> @endif
                             </li>
                         @endforeach
@@ -259,7 +259,7 @@
     @if ($investisseur->notes_internes)
         <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-8">
             <div class="text-xs text-amber-700 uppercase mb-1">{{ __("Notes internes") }}</div>
-            <div class="text-sm text-amber-900 whitespace-pre-line">{{ $investisseur->notes_internes }}</div>
+            <div class="text-sm text-amber-900 whitespace-pre-line"><bdi>{{ $investisseur->notes_internes }}</bdi></div>
         </div>
     @endif
 
@@ -291,8 +291,8 @@
                                         <span class="text-xs font-normal text-purple-700">({{ $present->lien_avec_donateur }})</span>
                                     @endif
                                 </td>
-                                <td class="py-1.5 text-end">{{ number_format($present->nombre_actions, 0, ',', ' ') }}</td>
-                                <td class="py-1.5 text-end">{{ number_format($present->montant, 0, ',', ' ') }} CFA</td>
+                                <td class="py-1.5 text-end">{{ \App\Support\Montant::format($present->nombre_actions) }}</td>
+                                <td class="py-1.5 text-end">{{ \App\Support\Montant::format($present->montant) }}&#8239;CFA</td>
                                 <td class="py-1.5 text-end">
                                     <a href="{{ route('achats.attestation', $present) }}" class="text-purple-700 hover:underline">PDF</a>
                                 </td>
@@ -312,7 +312,7 @@
                 @foreach ($presentsRecus as $present)
                     <li class="text-gray-800">
                         {{ $present->date_achat->format('d/m/Y') }} —
-                        {{ __(":nombre action(s)", ["nombre" => number_format($present->nombre_actions, 0, ',', ' ')]) }}
+                        {{ __(":nombre action(s)", ["nombre" => \App\Support\Montant::format($present->nombre_actions)]) }}
                         offerte(s) par <strong>{{ $present->offertPar?->nom }} {{ $present->offertPar?->prenom }}</strong>@if ($present->lien_avec_donateur) <span class="text-gray-500">({{ mb_strtolower($present->lien_avec_donateur) }})</span>@endif
                     </li>
                 @endforeach
@@ -383,11 +383,11 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-4">
                 <div>
                     <div class="text-xs text-gray-500 uppercase">{{ __("Actions détenues") }}</div>
-                    <div class="text-2xl font-semibold text-gray-800">{{ number_format($item['nombre_actions'], 0, ',', ' ') }}</div>
+                    <div class="text-2xl font-semibold text-gray-800">{{ \App\Support\Montant::format($item['nombre_actions']) }}</div>
                 </div>
                 <div>
                     <div class="text-xs text-gray-500 uppercase">{{ __("Solde du compte financier") }}</div>
-                    <div class="text-2xl font-semibold text-emerald-700">{{ number_format($item['solde'], 0, ',', ' ') }} CFA</div>
+                    <div class="text-2xl font-semibold text-emerald-700">{{ \App\Support\Montant::format($item['solde']) }}&#8239;CFA</div>
                 </div>
             </div>
 

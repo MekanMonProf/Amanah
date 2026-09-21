@@ -122,7 +122,7 @@ class DonCreate extends Component
                 return;
             }
             if ($this->montant > $this->compteSource->solde()) {
-                $this->addError('montant', 'Le montant dépasse le solde disponible (' . number_format($this->compteSource->solde(), 0, ',', ' ') . ' CFA).');
+                $this->addError('montant', __("Le montant dépasse le solde disponible (:solde).", ['solde' => \App\Support\Montant::avecDevise($this->compteSource->solde())]));
                 return;
             }
         }

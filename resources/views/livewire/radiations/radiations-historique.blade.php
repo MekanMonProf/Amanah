@@ -56,13 +56,13 @@
                     <tr>
                         <td class="py-1 font-mono text-xs">{{ $radiation->numero_radiation }}</td>
                         <td class="py-1">{{ $radiation->date_radiation->format('d/m/Y') }}</td>
-                        <td class="py-1 text-right">{{ number_format($radiation->nombre_actions_radiees, 0, ',', ' ') }}</td>
-                        <td class="py-1 text-right">{{ number_format($radiation->montant_total, 0, ',', ' ') }}</td>
+                        <td class="py-1 text-right">{{ \App\Support\Montant::format($radiation->nombre_actions_radiees) }}</td>
+                        <td class="py-1 text-right">{{ \App\Support\Montant::format($radiation->montant_total) }}</td>
                         <td class="py-1">
                             @if ($restant <= 0)
                                 <span class="px-2 py-0.5 text-xs rounded-full bg-emerald-100 text-emerald-700">Payé</span>
                             @elseif ($verse > 0)
-                                <span class="px-2 py-0.5 text-xs rounded-full bg-amber-100 text-amber-700" title="Reste {{ number_format($restant, 0, ',', ' ') }} CFA">
+                                <span class="px-2 py-0.5 text-xs rounded-full bg-amber-100 text-amber-700" title="Reste {{ \App\Support\Montant::format($restant) }}&#8239;CFA">
                                     Partiel
                                 </span>
                             @else

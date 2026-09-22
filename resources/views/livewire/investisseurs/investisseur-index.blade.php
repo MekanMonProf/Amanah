@@ -1,7 +1,8 @@
 <div class="p-4 sm:p-6">
     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
         <h1 class="text-xl sm:text-2xl font-semibold text-gray-800">{{ __("Investisseurs") }}</h1>
-        <div class="flex gap-2 w-full sm:w-auto">
+        {{-- flex-wrap : sur telephone, le bouton principal passe seul a la ligne --}}
+        <div class="flex flex-wrap gap-2 w-full sm:w-auto">
             <a href="{{ route('export.investisseurs.csv', ['recherche' => $recherche, 'gestionnaire' => $filtreGestionnaireId, 'statut' => $filtreStatut]) }}"
                target="_blank" class="text-sm text-gray-700 border border-gray-300 rounded-lg px-4 py-2 hover:bg-gray-50 whitespace-nowrap text-center">
                 {{ __("Exporter CSV") }}

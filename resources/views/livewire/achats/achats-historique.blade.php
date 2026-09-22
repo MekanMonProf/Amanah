@@ -39,19 +39,19 @@
             <thead class="text-start text-gray-500">
                 <tr>
                     <th class="py-1 cursor-pointer select-none" wire:click="trierPar('numero_achat')">
-                        N° {!! $tri === 'numero_achat' ? ($direction === 'asc' ? '↑' : '↓') : '' !!}
+                        {{ __("N°") }} {!! $tri === 'numero_achat' ? ($direction === 'asc' ? '↑' : '↓') : '' !!}
                     </th>
                     <th class="py-1 cursor-pointer select-none" wire:click="trierPar('date_achat')">
-                        Date {!! $tri === 'date_achat' ? ($direction === 'asc' ? '↑' : '↓') : '' !!}
+                        {{ __("Date") }} {!! $tri === 'date_achat' ? ($direction === 'asc' ? '↑' : '↓') : '' !!}
                     </th>
                     <th class="py-1 cursor-pointer select-none" wire:click="trierPar('type_achat')">
-                        Type {!! $tri === 'type_achat' ? ($direction === 'asc' ? '↑' : '↓') : '' !!}
+                        {{ __("Type") }} {!! $tri === 'type_achat' ? ($direction === 'asc' ? '↑' : '↓') : '' !!}
                     </th>
                     <th class="py-1 text-end cursor-pointer select-none" wire:click="trierPar('nombre_actions')">
-                        Actions {!! $tri === 'nombre_actions' ? ($direction === 'asc' ? '↑' : '↓') : '' !!}
+                        {{ __("Actions") }} {!! $tri === 'nombre_actions' ? ($direction === 'asc' ? '↑' : '↓') : '' !!}
                     </th>
                     <th class="py-1 text-end cursor-pointer select-none" wire:click="trierPar('montant')">
-                        Montant {!! $tri === 'montant' ? ($direction === 'asc' ? '↑' : '↓') : '' !!}
+                        {{ __("Montant") }} {!! $tri === 'montant' ? ($direction === 'asc' ? '↑' : '↓') : '' !!}
                     </th>
                     <th class="py-1">{{ __("Paiement") }}</th>
                     <th class="py-1"></th>
@@ -64,7 +64,7 @@
                         <td class="py-1 font-mono text-xs">{{ $achat->numero_achat }}</td>
                         <td class="py-1">{{ $achat->date_achat->format('d/m/Y') }}</td>
                         <td class="py-1">
-                            {{ ucfirst($achat->type_achat) }}
+                            {{ __(\App\Support\Libelles::typeAchat($achat->type_achat)) }}
                             @if ($achat->estUnPresent())
                                 <span class="block text-xs text-purple-700">
                                     {{ $achat->formulePresentMajuscule() }} {{ $achat->present_pour }}{{ $achat->lien_avec_donateur ? ' (' . $achat->lien_avec_donateur . ')' : '' }}{{ $achat->offertPar ? ' — ' . __('offert par :donateur', ['donateur' => $achat->offertPar->nom . ' ' . $achat->offertPar->prenom]) : '' }}

@@ -5,7 +5,7 @@
         </div>
     @else
         <h1 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-1">
-            Bonjour {{ $investisseur->prenom ?: $investisseur->nom }}
+            {{ __("Bonjour :prenom", ["prenom" => $investisseur->prenom ?: $investisseur->nom]) }}
         </h1>
         <p class="text-sm text-gray-500 mb-4 font-mono">{{ $investisseur->identifiant_externe }}</p>
 
@@ -30,7 +30,7 @@
             <div class="bg-white border rounded-lg p-5 mb-4 shadow-sm">
                 <div class="flex justify-between items-center mb-4">
                     <span class="px-2 py-1 text-xs font-semibold rounded {{ $item['compte']->categorie === 'commercial' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700' }}">
-                        {{ ucfirst($item['compte']->categorie) }}
+                        {{ __(\App\Support\Libelles::categorie($item['compte']->categorie)) }}
                     </span>
                     <span class="text-xs px-2 py-1 rounded-full {{ $item['compte']->reinvestissement_auto ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-600' }}">
                         {{ __("Réinvestissement auto") }} : {{ $item['compte']->reinvestissement_auto ? __('Oui') : __('Non') }}
@@ -96,7 +96,7 @@
                                 @foreach ($item['dernieres_ecritures'] as $ecriture)
                                     <tr>
                                         <td class="py-1">{{ $ecriture->date_ecriture->format('d/m/Y') }}</td>
-                                        <td class="py-1">{{ str_replace('_', ' ', $ecriture->type_ecriture) }}</td>
+                                        <td class="py-1">{{ __(\App\Support\Libelles::typeEcriture($ecriture->type_ecriture)) }}</td>
                                         <td class="py-1 text-end {{ $ecriture->montant >= 0 ? 'text-emerald-700' : 'text-red-600' }}">
                                             {{ $ecriture->montant >= 0 ? '+' : '' }}{{ \App\Support\Montant::format($ecriture->montant) }}
                                         </td>

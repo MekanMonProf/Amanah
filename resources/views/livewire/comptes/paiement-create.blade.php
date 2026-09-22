@@ -4,12 +4,12 @@
     <h1 class="text-xl sm:text-2xl font-semibold text-gray-800 mt-2 mb-1">{{ __("Paiement à l'investisseur") }}</h1>
     <p class="text-sm text-gray-500 mb-6">
         {{ $compte->investisseur->nom }} {{ $compte->investisseur->prenom }} ·
-        <span class="font-mono">{{ $compte->numero_compte }}</span> ({{ ucfirst($compte->categorie) }})
+        <span class="font-mono">{{ $compte->numero_compte }}</span> ({{ __(\App\Support\Libelles::categorie($compte->categorie)) }})
     </p>
 
     @if (!$versementAutorise)
         <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 text-sm text-red-800">
-            ⛔ {!! __(":operation n'est pas autorisé pour la catégorie <strong>:categorie</strong>, selon la politique d'investissement en vigueur.", ['operation' => $source === 'radiation' ? __('Le versement du capital radié') : __('Le versement de dividendes'), 'categorie' => e(ucfirst($compte->categorie))]) !!}
+            ⛔ {!! __(":operation n'est pas autorisé pour la catégorie <strong>:categorie</strong>, selon la politique d'investissement en vigueur.", ['operation' => $source === 'radiation' ? __('Le versement du capital radié') : __('Le versement de dividendes'), 'categorie' => e(__(\App\Support\Libelles::categorie($compte->categorie)))]) !!}
             @if ($source === 'radiation')
                 {{ __("Les fonds restent disponibles sur le compte financier.") }}
             @else

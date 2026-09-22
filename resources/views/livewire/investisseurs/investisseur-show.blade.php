@@ -313,7 +313,7 @@
                     <li class="text-gray-800">
                         {{ $present->date_achat->format('d/m/Y') }} —
                         {{ __(":nombre action(s)", ["nombre" => \App\Support\Montant::format($present->nombre_actions)]) }}
-                        offerte(s) par <strong>{{ $present->offertPar?->nom }} {{ $present->offertPar?->prenom }}</strong>@if ($present->lien_avec_donateur) <span class="text-gray-500">({{ mb_strtolower($present->lien_avec_donateur) }})</span>@endif
+                        {{ __("offerte(s) par") }} <strong>{{ $present->offertPar?->nom }} {{ $present->offertPar?->prenom }}</strong>@if ($present->lien_avec_donateur) <span class="text-gray-500">({{ mb_strtolower($present->lien_avec_donateur) }})</span>@endif
                     </li>
                 @endforeach
             </ul>
@@ -335,7 +335,7 @@
             <div class="flex justify-between items-center mb-4">
                 <div class="flex items-center gap-3">
                     <span class="px-2 py-1 text-xs font-semibold rounded {{ $item['compte']->categorie === 'commercial' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700' }}">
-                        {{ ucfirst($item['compte']->categorie) }}
+                        {{ __(\App\Support\Libelles::categorie($item['compte']->categorie)) }}
                     </span>
                     <span class="font-mono text-sm text-gray-500">{{ $item['compte']->numero_compte }}</span>
                 </div>

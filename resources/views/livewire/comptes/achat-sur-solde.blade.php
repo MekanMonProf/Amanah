@@ -4,7 +4,7 @@
     <h1 class="text-xl sm:text-2xl font-semibold text-gray-800 mt-2 mb-1">{{ __("Achat manuel sur solde disponible") }}</h1>
     <p class="text-sm text-gray-500 mb-6">
         {{ $compte->investisseur->nom }} {{ $compte->investisseur->prenom }} ·
-        <span class="font-mono">{{ $compte->numero_compte }}</span> ({{ ucfirst($compte->categorie) }})
+        <span class="font-mono">{{ $compte->numero_compte }}</span> ({{ __(\App\Support\Libelles::categorie($compte->categorie)) }})
     </p>
 
     @if (!$compte->reinvestissement_auto)

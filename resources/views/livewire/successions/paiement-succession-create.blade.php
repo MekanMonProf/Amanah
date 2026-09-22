@@ -4,9 +4,9 @@
     <h1 class="text-xl sm:text-2xl font-semibold text-gray-800 mt-2 mb-1">{{ __("Versement — Succession") }}</h1>
     <p class="text-sm text-gray-500 mb-6">
         {{ __('Défunt :') }} {{ $defunt->nom }} {{ $defunt->prenom }} ({{ $defunt->identifiant_externe }}) ·
-        Compte <span class="font-mono">{{ $compte->numero_compte }}</span>
+        {{ __("Compte") }} <span class="font-mono">{{ $compte->numero_compte }}</span>
         @if ($mandataire)
-            <br>Mandataire : {{ $mandataire->nom }} {{ $mandataire->prenom }} ({{ $mandataire->lien_parente }})
+            <br>{{ __("Mandataire :") }} {{ $mandataire->nom }} {{ $mandataire->prenom }} ({{ $mandataire->lien_parente }})
         @endif
     </p>
 

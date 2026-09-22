@@ -3,7 +3,7 @@
 
     <h1 class="text-xl sm:text-2xl font-semibold text-gray-800 mt-2 mb-1">{{ __("Corriger un barème") }}</h1>
     <p class="text-sm text-gray-500 mb-6">
-        {{ $bareme->periode->translatedFormat('F Y') }} · {{ ucfirst($bareme->categorie) }}
+        {{ $bareme->periode->translatedFormat('F Y') }} · {{ __(\App\Support\Libelles::categorie($bareme->categorie)) }}
     </p>
 
     <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 text-sm text-red-800">
@@ -20,7 +20,7 @@
     <form wire:submit="corriger" class="bg-white border rounded-lg p-5 shadow-sm space-y-4">
         <div>
             <div class="text-xs text-gray-500 uppercase">{{ __("Taux actuel") }}</div>
-            <div class="text-xl font-semibold text-gray-800">{{ \App\Support\Montant::format($ancienTaux) }}&#8239;CFA/action</div>
+            <div class="text-xl font-semibold text-gray-800">{{ \App\Support\Montant::format($ancienTaux) }}&#8239;{{ __("CFA/action") }}</div>
         </div>
 
         <div>

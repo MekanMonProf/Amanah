@@ -4,12 +4,12 @@
     <h1 class="text-xl sm:text-2xl font-semibold text-gray-800 mt-2 mb-1">{{ __("Radiation d'actions") }}</h1>
     <p class="text-sm text-gray-500 mb-6">
         {{ $compte->investisseur->nom }} {{ $compte->investisseur->prenom }} ·
-        <span class="font-mono">{{ $compte->numero_compte }}</span> ({{ ucfirst($compte->categorie) }})
+        <span class="font-mono">{{ $compte->numero_compte }}</span> ({{ __(\App\Support\Libelles::categorie($compte->categorie)) }})
     </p>
 
     @if (!$radiationAutorisee)
         <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 text-sm text-red-800">
-            ⛔ {!! __("La radiation n'est pas autorisée pour la catégorie <strong>:categorie</strong>, selon la politique d'investissement en vigueur.", ['categorie' => e(ucfirst($compte->categorie))]) !!}
+            ⛔ {!! __("La radiation n'est pas autorisée pour la catégorie <strong>:categorie</strong>, selon la politique d'investissement en vigueur.", ['categorie' => e(__(\App\Support\Libelles::categorie($compte->categorie)))]) !!}
         </div>
     @else
         <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-sm text-blue-800">

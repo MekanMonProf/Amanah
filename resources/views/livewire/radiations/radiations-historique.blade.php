@@ -30,16 +30,16 @@
             <thead class="text-start text-gray-500">
                 <tr>
                     <th class="py-1 cursor-pointer select-none" wire:click="trierPar('numero_radiation')">
-                        N° {!! $tri === 'numero_radiation' ? ($direction === 'asc' ? '↑' : '↓') : '' !!}
+                        {{ __("N°") }} {!! $tri === 'numero_radiation' ? ($direction === 'asc' ? '↑' : '↓') : '' !!}
                     </th>
                     <th class="py-1 cursor-pointer select-none" wire:click="trierPar('date_radiation')">
-                        Date {!! $tri === 'date_radiation' ? ($direction === 'asc' ? '↑' : '↓') : '' !!}
+                        {{ __("Date") }} {!! $tri === 'date_radiation' ? ($direction === 'asc' ? '↑' : '↓') : '' !!}
                     </th>
                     <th class="py-1 text-end cursor-pointer select-none" wire:click="trierPar('nombre_actions_radiees')">
-                        Actions {!! $tri === 'nombre_actions_radiees' ? ($direction === 'asc' ? '↑' : '↓') : '' !!}
+                        {{ __("Actions") }} {!! $tri === 'nombre_actions_radiees' ? ($direction === 'asc' ? '↑' : '↓') : '' !!}
                     </th>
                     <th class="py-1 text-end cursor-pointer select-none" wire:click="trierPar('montant_total')">
-                        Montant {!! $tri === 'montant_total' ? ($direction === 'asc' ? '↑' : '↓') : '' !!}
+                        {{ __("Montant") }} {!! $tri === 'montant_total' ? ($direction === 'asc' ? '↑' : '↓') : '' !!}
                     </th>
                     <th class="py-1">{{ __("Statut") }}</th>
                     <th class="py-1"></th>

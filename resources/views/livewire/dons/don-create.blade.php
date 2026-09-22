@@ -3,14 +3,14 @@
 
     <h1 class="text-xl sm:text-2xl font-semibold text-gray-800 mt-2 mb-1">{{ __("Faire un don") }}</h1>
     <p class="text-sm text-gray-500 mb-6">
-        Depuis {{ $compteSource->investisseur->nom }} {{ $compteSource->investisseur->prenom }} ·
-        <span class="font-mono">{{ $compteSource->numero_compte }}</span> ({{ ucfirst($compteSource->categorie) }})
+        {{ __("Depuis") }} {{ $compteSource->investisseur->nom }} {{ $compteSource->investisseur->prenom }} ·
+        <span class="font-mono">{{ $compteSource->numero_compte }}</span> ({{ __(\App\Support\Libelles::categorie($compteSource->categorie)) }})
     </p>
 
     <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-sm text-blue-800">
         ℹ️ {{ __("Un don d'actions transfère la propriété sans contrepartie financière pour le donateur.") }}
         {{ __("Un don de solde déplace de l'argent en interne, entre les deux comptes financiers.") }}
-        {!! __("Le destinataire doit avoir un compte de la <strong>même catégorie</strong> (:categorie).", ["categorie" => ucfirst($compteSource->categorie)]) !!}
+        {!! __("Le destinataire doit avoir un compte de la <strong>même catégorie</strong> (:categorie).", ["categorie" => __(\App\Support\Libelles::categorie($compteSource->categorie))]) !!}
     </div>
 
     <div class="grid grid-cols-2 gap-4 mb-6">
@@ -65,7 +65,7 @@
                         @endforeach
                     </div>
                 @elseif (strlen($rechercheDestinataire) >= 2)
-                    <p class="text-xs text-gray-400 mt-1">{{ __('Aucun compte :categorie trouvé pour cette recherche.', ['categorie' => ucfirst($compteSource->categorie)]) }}</p>
+                    <p class="text-xs text-gray-400 mt-1">{{ __('Aucun compte :categorie trouvé pour cette recherche.', ['categorie' => __(\App\Support\Libelles::categorie($compteSource->categorie))]) }}</p>
                 @endif
             @endif
         </div>

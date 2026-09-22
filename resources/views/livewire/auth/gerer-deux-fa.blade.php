@@ -2,8 +2,7 @@
     <header>
         <h2 class="text-lg font-medium text-gray-900">{{ __("Authentification à deux facteurs") }}</h2>
         <p class="mt-1 text-sm text-gray-600">
-            {{ __("Renforcez la sécurité de votre compte avec une application d'authentification") }}
-            (Google Authenticator, Authy...).
+            {{ __("Renforcez la sécurité de votre compte avec une application d'authentification (Google Authenticator, Authy...).") }}
         </p>
     </header>
 

@@ -42,13 +42,13 @@
                 <tr>
                     <th class="py-1 w-10" title="{{ __("Ordre réel d'enregistrement — toujours fiable, quel que soit le tri utilisé") }}">#</th>
                     <th class="py-1 cursor-pointer select-none" wire:click="trierPar('date_ecriture')" title="{{ __("Date à laquelle se rapporte l'opération — peut différer de l'ordre réel d'enregistrement") }}">
-                        Date effective {!! $tri === 'date_ecriture' ? ($direction === 'asc' ? '↑' : '↓') : '' !!}
+                        {{ __("Date effective") }} {!! $tri === 'date_ecriture' ? ($direction === 'asc' ? '↑' : '↓') : '' !!}
                     </th>
                     <th class="py-1 cursor-pointer select-none" wire:click="trierPar('type_ecriture')">
-                        Type {!! $tri === 'type_ecriture' ? ($direction === 'asc' ? '↑' : '↓') : '' !!}
+                        {{ __("Type") }} {!! $tri === 'type_ecriture' ? ($direction === 'asc' ? '↑' : '↓') : '' !!}
                     </th>
                     <th class="py-1 text-end cursor-pointer select-none" wire:click="trierPar('montant')">
-                        Montant {!! $tri === 'montant' ? ($direction === 'asc' ? '↑' : '↓') : '' !!}
+                        {{ __("Montant") }} {!! $tri === 'montant' ? ($direction === 'asc' ? '↑' : '↓') : '' !!}
                     </th>
                     <th class="py-1 text-end">{{ __("Solde après") }}</th>
                     <th class="py-1"></th>
@@ -61,7 +61,7 @@
                         <td class="py-1 text-xs text-gray-400 font-mono">{{ $rangs[$ecriture->id] ?? '—' }}</td>
                         <td class="py-1">{{ $ecriture->date_ecriture->format('d/m/Y') }}</td>
                         <td class="py-1">
-                            {{ str_replace('_', ' ', $ecriture->type_ecriture) }}
+                            {{ __(\App\Support\Libelles::typeEcriture($ecriture->type_ecriture)) }}
                             @if ($ecriture->observations)
                                 {{-- <bdi> isole ce texte du sens d ecriture de la page : les observations anciennes
                                      contiennent des montants ecrits avec des espaces ordinaires, que l arabe

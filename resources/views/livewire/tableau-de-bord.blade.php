@@ -45,7 +45,7 @@
                     @forelse ($dernierAchats as $achat)
                         <div class="flex justify-between py-2 border-b last:border-0 text-sm">
                             <span class="font-mono text-xs text-gray-500">{{ $achat->numero_achat }}</span>
-                            <span>{{ $achat->nombre_actions }} action(s)</span>
+                            <span>{{ __(":nombre action(s)", ["nombre" => $achat->nombre_actions]) }}</span>
                             <span class="text-gray-500">{{ \App\Support\Montant::format($achat->montant) }}&#8239;CFA</span>
                         </div>
                     @empty
@@ -62,7 +62,7 @@
                 <div class="text-xs text-gray-500 uppercase">{{ __("Investisseurs actifs") }}</div>
                 <div class="text-2xl font-semibold text-gray-800">{{ $nbInvestisseursActifs }}</div>
                 @if ($nbInvestisseursSansGestionnaire > 0)
-                    <div class="text-xs text-amber-600 mt-1">{{ $nbInvestisseursSansGestionnaire }} sans gestionnaire</div>
+                    <div class="text-xs text-amber-600 mt-1">{{ __(":nombre sans gestionnaire", ["nombre" => $nbInvestisseursSansGestionnaire]) }}</div>
                 @endif
             </div>
             <div class="bg-white border rounded-lg p-4">
@@ -88,8 +88,8 @@
                             <div class="flex justify-between text-sm mb-1">
                                 <span class="font-medium">{{ $label }}</span>
                                 <span class="text-gray-500">
-                                    {{ $comptesParCategorie[$cle] ?? 0 }} compte(s) ·
-                                    {{ \App\Support\Montant::format($actionsNettesParCategorie[$cle] ?? 0) }} action(s)
+                                    {{ __(":nombre compte(s)", ["nombre" => $comptesParCategorie[$cle] ?? 0]) }} ·
+                                    {{ __(":nombre action(s)", ["nombre" => \App\Support\Montant::format($actionsNettesParCategorie[$cle] ?? 0)]) }}
                                 </span>
                             </div>
                             <div class="text-lg font-semibold text-gray-800">

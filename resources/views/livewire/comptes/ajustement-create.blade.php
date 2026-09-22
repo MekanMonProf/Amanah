@@ -4,7 +4,7 @@
     <h1 class="text-xl sm:text-2xl font-semibold text-gray-800 mt-2 mb-1">{{ __("Ajustement du compte financier") }}</h1>
     <p class="text-sm text-gray-500 mb-6">
         {{ $compte->investisseur->nom }} {{ $compte->investisseur->prenom }} ·
-        <span class="font-mono">{{ $compte->numero_compte }}</span> ({{ ucfirst($compte->categorie) }})
+        <span class="font-mono">{{ $compte->numero_compte }}</span> ({{ __(\App\Support\Libelles::categorie($compte->categorie)) }})
     </p>
 
     <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6 text-sm text-amber-800">

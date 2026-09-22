@@ -196,15 +196,9 @@
 
     <div class="mt-4">{{ $investisseurs->links() }}</div>
 
-    <div class="mt-8 bg-white border rounded-lg p-4">
-        <h2 class="text-sm font-semibold text-gray-700 mb-3">{{ __("Exports globaux (tous les comptes)") }}</h2>
-        <div class="flex flex-wrap gap-2">
-            <a href="{{ route('export.achats.global.csv') }}" target="_blank" class="text-xs text-gray-600 border border-gray-300 rounded px-3 py-1.5 hover:bg-gray-50">{{ __("Achats") }} — CSV</a>
-            <a href="{{ route('export.achats.global.pdf') }}" target="_blank" class="text-xs text-gray-600 border border-gray-300 rounded px-3 py-1.5 hover:bg-gray-50">{{ __("Achats") }} — PDF</a>
-            <a href="{{ route('export.ecritures.global.csv') }}" target="_blank" class="text-xs text-gray-600 border border-gray-300 rounded px-3 py-1.5 hover:bg-gray-50">{{ __("Écritures") }} — CSV</a>
-            <a href="{{ route('export.ecritures.global.pdf') }}" target="_blank" class="text-xs text-gray-600 border border-gray-300 rounded px-3 py-1.5 hover:bg-gray-50">{{ __("Écritures") }} — PDF</a>
-            <a href="{{ route('export.radiations.global.csv') }}" target="_blank" class="text-xs text-gray-600 border border-gray-300 rounded px-3 py-1.5 hover:bg-gray-50">{{ __("Radiations") }} — CSV</a>
-            <a href="{{ route('export.radiations.global.pdf') }}" target="_blank" class="text-xs text-gray-600 border border-gray-300 rounded px-3 py-1.5 hover:bg-gray-50">{{ __("Radiations") }} — PDF</a>
-        </div>
-    </div>
+    {{-- Les exports globaux ont leur propre ecran, atteignable depuis la barre laterale --}}
+    <p class="mt-8 text-sm text-gray-500">
+        {{ __("Les exports portant sur l'ensemble des comptes se trouvent sur la page Exports.") }}
+        <a href="{{ route('exports.index') }}" wire:navigate class="text-emerald-700 hover:underline">{{ __("Y aller") }} &rarr;</a>
+    </p>
 </div>

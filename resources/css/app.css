@@ -12,4 +12,70 @@
     th {
         text-align: inherit;
     }
+
+    /*
+     * Alpine retire cet attribut une fois le composant initialise. Sans la regle,
+     * les menus et le voile du tiroir clignotent au chargement de la page.
+     */
+    [x-cloak] {
+        display: none !important;
+    }
+}
+
+@layer components {
+    /*
+     * Tiroir de la barre laterale. Le decalage hors champ est ecrit ici plutot
+     * qu avec les variantes Tailwind `rtl:` et `lg:` : `rtl:` produit un selecteur
+     * d attribut, plus specifique que la media query de `lg:`, qui gagnait donc
+     * meme sur grand ecran — la barre sortait de l ecran en arabe. Les regles
+     * ci-dessous sont ordonnees pour que la plus specifique soit toujours la bonne.
+     */
+    .barre-laterale {
+        transform: translateX(-100%);
+    }
+
+    .barre-laterale.barre-ouverte {
+        transform: translateX(0);
+    }
+
+    [dir="rtl"] .barre-laterale {
+        transform: translateX(100%);
+    }
+
+    [dir="rtl"] .barre-laterale.barre-ouverte {
+        transform: translateX(0);
+    }
+
+    /* A partir de lg, la barre fait partie de la page : il n y a plus de tiroir. */
+    @media (min-width: 1024px) {
+        .barre-laterale,
+        [dir="rtl"] .barre-laterale {
+            transform: translateX(0);
+        }
+    }
+
+    /*
+     * Barre laterale repliee : seules les icones restent. Le repli ne vaut qu a
+     * partir de lg — en dessous, la barre est un tiroir affiche en entier, et
+     * masquer les libelles la rendrait illisible. D ou la regle sous media query
+     * plutot qu un x-show, qui lui ne connait pas les points de rupture.
+     */
+    @media (min-width: 1024px) {
+        .barre-repliee .etiquette {
+            display: none;
+        }
+
+        .barre-repliee .lien-nav {
+            justify-content: center;
+        }
+
+        /* Un filet remplace l intitule du groupe, qui n a plus la place de s ecrire */
+        .barre-repliee .separateur-groupe {
+            display: block;
+        }
+
+        .barre-repliee .logo-barre {
+            height: 2.25rem;
+        }
+    }
 }

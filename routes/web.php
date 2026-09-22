@@ -15,6 +15,7 @@ use App\Livewire\Comptes\AchatSurSolde;
 use App\Livewire\Radiations\RadiationCreate;
 use App\Livewire\Dons\DonCreate;
 use App\Livewire\Successions\DeclarerDeces;
+use App\Livewire\Successions\SuccessionIndex;
 use App\Livewire\Successions\GererSuccession;
 use App\Livewire\Successions\PaiementSuccessionCreate;
 use App\Livewire\Gestionnaires\GestionnaireIndex;
@@ -28,6 +29,7 @@ use App\Http\Controllers\AttestationSuccessionController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\ModeleImportController;
 use App\Livewire\Import\ImportIndex;
+use App\Livewire\Exports\ExportIndex;
 
 Route::view('/', 'welcome');
 
@@ -67,6 +69,9 @@ Route::middleware(['auth', 'doit.changer.mdp', 'deux.fa'])->group(function () {
         Route::get('/investisseurs', InvestisseurIndex::class)->name('investisseurs.index');
         Route::get('/investisseurs/{investisseur}', InvestisseurShow::class)->name('investisseurs.show');
         Route::get('/investisseurs/{investisseur}/releve', [ReleveController::class, 'pourGestionnaire'])->name('investisseurs.releve');
+
+        // Point d'entree unique vers les exports globaux listes juste apres
+        Route::get('/exports', ExportIndex::class)->name('exports.index');
 
         Route::get('/investisseurs/export/csv', [ExportController::class, 'investisseursCsv'])->name('export.investisseurs.csv');
         Route::get('/investisseurs/export/pdf', [ExportController::class, 'investisseursPdf'])->name('export.investisseurs.pdf');
@@ -110,6 +115,7 @@ Route::middleware(['auth', 'doit.changer.mdp', 'deux.fa'])->group(function () {
         Route::get('/import/modele/{type}', [ModeleImportController::class, 'telecharger'])->name('import.modele');
 
         // Succession (décès, héritiers, répartition) — action sensible, réservée
+        Route::get('/successions', SuccessionIndex::class)->name('successions.index');
         Route::get('/investisseurs/{investisseur}/deces/declarer', DeclarerDeces::class)->name('deces.declarer');
         Route::get('/investisseurs/{investisseur}/succession', GererSuccession::class)->name('successions.gerer');
         Route::get('/comptes/{compte}/paiement-succession', PaiementSuccessionCreate::class)->name('successions.paiement');

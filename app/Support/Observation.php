@@ -56,6 +56,7 @@ class Observation
     public const LIQUIDATION_SUCCESSION = 'Liquidation succession de :defunt — :actions action(s)';
     public const VERSEMENT_SUCCESSION = 'Versement succession de :defunt — au mandataire :mandataire — :mode';
     public const VERSEMENT_SUCCESSION_REF = 'Versement succession de :defunt — au mandataire :mandataire — :mode (réf. :reference)';
+    public const LIQUIDATION_RADIATION = 'Liquidation dans le cadre du règlement de succession de :defunt';
 
     // --- Reprise de l'existant ---
     public const REPRISE_IMPORT = 'Reprise de données (import)';
@@ -89,6 +90,7 @@ class Observation
             self::LIQUIDATION_SUCCESSION,
             self::VERSEMENT_SUCCESSION,
             self::VERSEMENT_SUCCESSION_REF,
+            self::LIQUIDATION_RADIATION,
             self::REPRISE_IMPORT,
         ];
     }
@@ -169,6 +171,162 @@ class Observation
         }
 
         return $prets;
+    }
+
+    /**
+     * Retrouve la clé qui a produit cette phrase française, et ses paramètres.
+     *
+     * Sert à la reprise de l'historique : les observations écrites avant que la
+     * structure ne soit rangée en base ne sont que du texte. Null dès que la
+     * phrase ne se reconstruit pas exactement, à la largeur des espaces près —
+     * mieux vaut une observation non traduite qu'une observation mal étiquetée
+     * dans un historique financier.
+     *
+     * @return array{0: string, 1: array}|null
+     */
+    public static function reconnaitre(string $phrase): ?array
+    {
+        $normalisee = self::normaliser($phrase);
+
+        foreach (self::motifs() as $cle => $motif) {
+            if (! preg_match($motif, $normalisee, $captures)) {
+                continue;
+            }
+
+            $parametres = self::versValeursBrutes($captures);
+
+            if ($parametres === null) {
+                continue;
+            }
+
+            if (self::normaliser(self::francais($cle, $parametres)) !== $normalisee) {
+                continue;
+            }
+
+            return [$cle, $parametres];
+        }
+
+        return null;
+    }
+
+    /**
+     * Une expression régulière par clé, jetons transformés en groupes nommés.
+     * Les clés portant le plus de jetons passent en premier : sans cela
+     * « Complément financier — Wave (réf. X) » serait happé par la variante sans
+     * référence, avec le mode « Wave (réf. X) ».
+     *
+     * @return array<string, string>
+     */
+    private static function motifs(): array
+    {
+        static $motifs = null;
+
+        if ($motifs !== null) {
+            return $motifs;
+        }
+
+        $cles = self::cles();
+        usort($cles, fn ($a, $b) => [substr_count($b, ':'), strlen($b)] <=> [substr_count($a, ':'), strlen($a)]);
+
+        $motifs = [];
+
+        foreach ($cles as $cle) {
+            // preg_quote échappe aussi les deux-points : poser les groupes après
+            // coup collerait un antislash devant chacun et casserait le motif.
+            // D'où les sentinelles, posées avant l'échappement.
+            $sentinelles = [];
+
+            $avecSentinelles = preg_replace_callback(
+                '/:([a-z_]+)/',
+                function ($trouve) use (&$sentinelles) {
+                    $marque = "\x01" . count($sentinelles) . "\x01";
+                    $sentinelles[$marque] = $trouve[1];
+
+                    return $marque;
+                },
+                $cle,
+            );
+
+            $motif = preg_quote(self::normaliser($avecSentinelles), '/');
+
+            foreach ($sentinelles as $marque => $nom) {
+                $motif = str_replace($marque, "(?P<{$nom}>.+?)", $motif);
+            }
+
+            $motifs[$cle] = '/^' . $motif . '$/us';
+        }
+
+        return $motifs;
+    }
+
+    /**
+     * Remonte du texte affiché vers la valeur brute attendue par la clé — date
+     * ISO pour la période, code d'énumération pour la catégorie, nombre pour les
+     * montants. Null si l'un d'eux ne se relit pas.
+     */
+    private static function versValeursBrutes(array $captures): ?array
+    {
+        $bruts = [];
+
+        foreach ($captures as $nom => $valeur) {
+            if (is_int($nom)) {
+                continue;
+            }
+
+            switch ($nom) {
+                case 'periode':
+                    try {
+                        $bruts[$nom] = Carbon::createFromLocaleFormat('!F Y', 'fr', $valeur)->toDateString();
+                    } catch (\Throwable) {
+                        return null;
+                    }
+                    break;
+
+                case 'categorie':
+                    $code = self::relireCategorie($valeur);
+                    if ($code === null) {
+                        return null;
+                    }
+                    $bruts[$nom] = $code;
+                    break;
+
+                case 'ancien':
+                case 'nouveau':
+                case 'actions':
+                    $nombre = str_replace([' ', "\u{202F}", "\u{00A0}"], '', $valeur);
+                    if (! is_numeric($nombre)) {
+                        return null;
+                    }
+                    $bruts[$nom] = $nombre + 0;
+                    break;
+
+                default:
+                    $bruts[$nom] = $valeur;
+            }
+        }
+
+        return $bruts;
+    }
+
+    private static function relireCategorie(string $libelle): ?string
+    {
+        foreach (['commercial', 'waqf'] as $code) {
+            if (Libelles::categorie($code) === $libelle) {
+                return $code;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Ramène les espaces fines et insécables à l'espace ordinaire. Les
+     * observations écrites avant App\Support\Montant séparent les milliers par
+     * une espace ordinaire, là où la clé pose aujourd'hui une espace fine.
+     */
+    private static function normaliser(string $texte): string
+    {
+        return str_replace(["\u{202F}", "\u{00A0}"], ' ', $texte);
     }
 
     /** Retire les jetons non remplacés, pour que la recherche ne porte que sur les mots. */

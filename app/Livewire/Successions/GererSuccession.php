@@ -256,7 +256,11 @@ class GererSuccession extends Component
                 'nombre_actions_radiees' => $nbActions,
                 'prix_unitaire_action' => $prixUnitaire,
                 'montant_total' => $montantActions,
-                'observations' => "Liquidation dans le cadre du règlement de succession de {$defunt}",
+                'observations' => \App\Support\Observation::francais(
+                    \App\Support\Observation::LIQUIDATION_RADIATION, ['defunt' => $defunt],
+                ),
+                'observation_cle' => \App\Support\Observation::LIQUIDATION_RADIATION,
+                'observation_parametres' => ['defunt' => $defunt],
             ]);
 
             $compteDefunt->ajouterEcriture(

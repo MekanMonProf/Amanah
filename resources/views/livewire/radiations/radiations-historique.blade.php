@@ -55,7 +55,15 @@
                     @endphp
                     <tr>
                         <td class="py-1 font-mono text-xs">{{ $radiation->numero_radiation }}</td>
-                        <td class="py-1">{{ $radiation->date_radiation->format('d/m/Y') }}</td>
+                        <td class="py-1">
+                            {{ $radiation->date_radiation->format('d/m/Y') }}
+                            @if ($radiation->observations || $radiation->observation_cle)
+                                {{-- <bdi> isole ce texte du sens d ecriture de la page, comme dans
+                                     l historique des ecritures : une observation saisie peut contenir
+                                     des montants ecrits avec des espaces ordinaires. --}}
+                                <div class="text-xs text-gray-400"><bdi>{{ $radiation->observation_affichee }}</bdi></div>
+                            @endif
+                        </td>
                         <td class="py-1 text-end">{{ \App\Support\Montant::format($radiation->nombre_actions_radiees) }}</td>
                         <td class="py-1 text-end">{{ \App\Support\Montant::format($radiation->montant_total) }}</td>
                         <td class="py-1">

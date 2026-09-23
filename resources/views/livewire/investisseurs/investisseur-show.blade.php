@@ -405,6 +405,13 @@
                 </div>
             @endif
 
+            @if ($item['compte']->donsEmis()->exists() || $item['compte']->donsRecus()->exists())
+                <div class="mb-4">
+                    <div class="text-xs text-gray-500 uppercase mb-2">{{ __("Historique des dons") }}</div>
+                    <livewire:dons.dons-historique :compte="$item['compte']" :key="'dons-'.$item['compte']->id" />
+                </div>
+            @endif
+
             @if ($item['dernieres_ecritures']->isNotEmpty())
                 <div class="mt-4">
                     <div class="text-xs text-gray-500 uppercase mb-2">{{ __("Écritures du compte financier") }}</div>

@@ -12,6 +12,8 @@
             <option value="paiement">{{ __("Paiement") }}</option>
             <option value="radiation">{{ __("Radiation") }}</option>
             <option value="ajustement">{{ __("Ajustement") }}</option>
+            <option value="don_sortant">{{ __("Don sortant") }}</option>
+            <option value="don_entrant">{{ __("Don entrant") }}</option>
         </select>
 
         <input type="date" wire:model.live="dateDebut" class="border rounded px-3 py-1.5 text-sm" title="Du">

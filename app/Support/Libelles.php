@@ -34,6 +34,8 @@ class Libelles
         'versement_complementaire' => 'Versement complémentaire',
         'ajustement' => 'Ajustement',
         'radiation' => 'Radiation',
+        'don_sortant' => 'Don sortant',
+        'don_entrant' => 'Don entrant',
     ];
 
     public static function categorie(?string $valeur): string

@@ -52,7 +52,18 @@ class EcrituresHistorique extends Component
         $query = $this->compte->ecritures()->getQuery()->reorder();
 
         if ($this->recherche) {
-            $query->where('observations', 'like', "%{$this->recherche}%");
+            // La base ne contient que le francais. Pour qu une recherche en arabe
+            // ou en anglais trouve quand meme les observations ecrites par
+            // l application, on traduit d abord le terme en cles connues.
+            $cles = \App\Support\Observation::clesCorrespondant($this->recherche);
+
+            $query->where(function ($q) use ($cles) {
+                $q->where('observations', 'like', "%{$this->recherche}%");
+
+                if ($cles !== []) {
+                    $q->orWhereIn('observation_cle', $cles);
+                }
+            });
         }
 
         if ($this->filtreType) {

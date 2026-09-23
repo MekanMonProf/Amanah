@@ -43,7 +43,7 @@ class AchatSurSolde extends Component
     {
         $nbAchats = $this->compte->acheterActionsAvecSoldeDisponible(
             typeAchat: 'complement',
-            observation: 'Achat manuel depuis le solde disponible',
+            observationCle: \App\Support\Observation::ACHAT_SUR_SOLDE,
             userId: Auth::id(),
         );
 

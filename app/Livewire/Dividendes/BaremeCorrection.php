@@ -79,14 +79,14 @@ class BaremeCorrection extends Component
                     dateEcriture: now()->toDateString(),
                     referenceType: 'dividendes',
                     referenceId: $dividende->id,
-                    observations: sprintf(
-                        'Correction barème %s (%s) : %s → %s CFA/action. Motif : %s',
-                        $this->bareme->periode->translatedFormat('F Y'),
-                        ucfirst($this->bareme->categorie),
-                        \App\Support\Montant::format($this->ancienTaux),
-                        \App\Support\Montant::format($this->nouveauTaux),
-                        $this->motif
-                    ),
+                    observationCle: \App\Support\Observation::CORRECTION_BAREME,
+                    observationParametres: [
+                        'periode' => $this->bareme->periode->toDateString(),
+                        'categorie' => $this->bareme->categorie,
+                        'ancien' => $this->ancienTaux,
+                        'nouveau' => $this->nouveauTaux,
+                        'motif' => $this->motif,
+                    ],
                     userId: Auth::id(),
                 );
 

@@ -68,15 +68,13 @@ class PaiementSuccessionCreate extends Component
             dateEcriture: $this->date_paiement,
             referenceType: 'succession_deces',
             referenceId: $this->defunt->id,
-            observations: sprintf(
-                'Versement succession de %s %s — au mandataire %s %s — %s%s',
-                $this->defunt->nom,
-                $this->defunt->prenom,
-                $this->mandataire?->nom,
-                $this->mandataire?->prenom,
-                $this->mode_paiement,
-                $this->reference ? " (réf. {$this->reference})" : ''
-            ),
+            observationCle: \App\Support\Observation::selonReference(\App\Support\Observation::VERSEMENT_SUCCESSION, \App\Support\Observation::VERSEMENT_SUCCESSION_REF, $this->reference),
+            observationParametres: [
+                'defunt' => trim($this->defunt->nom . ' ' . $this->defunt->prenom),
+                'mandataire' => trim($this->mandataire?->nom . ' ' . $this->mandataire?->prenom),
+                'mode' => $this->mode_paiement,
+                'reference' => $this->reference,
+            ],
             userId: Auth::id(),
             pieceJustificativePath: $cheminPreuve,
         );

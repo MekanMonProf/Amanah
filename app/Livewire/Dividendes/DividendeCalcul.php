@@ -176,7 +176,8 @@ class DividendeCalcul extends Component
                         dateEcriture: $periodeBareme->toDateString(),
                         referenceType: 'dividendes',
                         referenceId: $dividende->id,
-                        observations: 'Dividende ' . $periodeBareme->translatedFormat('F Y'),
+                        observationCle: \App\Support\Observation::DIVIDENDE,
+                    observationParametres: ['periode' => $periodeBareme->toDateString()],
                         userId: Auth::id(),
                     );
 

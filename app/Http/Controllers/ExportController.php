@@ -89,7 +89,18 @@ class ExportController extends Controller
         $query = $compte->ecritures()->getQuery()->reorder('id', 'asc');
 
         if ($recherche = $request->query('recherche')) {
-            $query->where('observations', 'like', "%{$recherche}%");
+            // Meme regle qu a l ecran : le terme cherche est aussi rapproche des
+            // cles d observation, pour que l export rende les memes lignes que
+            // la liste, quelle que soit la langue de saisie.
+            $cles = \App\Support\Observation::clesCorrespondant($recherche);
+
+            $query->where(function ($q) use ($recherche, $cles) {
+                $q->where('observations', 'like', "%{$recherche}%");
+
+                if ($cles !== []) {
+                    $q->orWhereIn('observation_cle', $cles);
+                }
+            });
         }
         if ($type = $request->query('type')) {
             $query->where('type_ecriture', $type);

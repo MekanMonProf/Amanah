@@ -61,11 +61,8 @@ class ComplementFinancierCreate extends Component
             type: 'versement_complementaire',
             montant: $this->montant,
             dateEcriture: $this->date_versement,
-            observations: sprintf(
-                'Complément financier — %s%s',
-                $this->mode_paiement,
-                $this->reference ? " (réf. {$this->reference})" : ''
-            ),
+            observationCle: \App\Support\Observation::selonReference(\App\Support\Observation::COMPLEMENT, \App\Support\Observation::COMPLEMENT_REF, $this->reference),
+            observationParametres: ['mode' => $this->mode_paiement, 'reference' => $this->reference],
             userId: Auth::id(),
             pieceJustificativePath: $cheminPiece,
         );
@@ -73,7 +70,7 @@ class ComplementFinancierCreate extends Component
         // Achat immédiat de toutes les actions que le nouveau solde permet (section 11)
         $nbAchats = $this->compte->acheterActionsAvecSoldeDisponible(
             typeAchat: 'complement',
-            observation: 'Achat suite à complément financier',
+            observationCle: \App\Support\Observation::ACHAT_COMPLEMENT,
             userId: Auth::id(),
         );
 

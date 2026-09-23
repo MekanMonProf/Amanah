@@ -16,9 +16,28 @@ class AchatAction extends Model
         'prix_unitaire', 'montant', 'mode_paiement', 'reference_facture',
         'photo_facture_path', 'observations', 'saisi_par',
         'offert_par_investisseur_id', 'type_present', 'present_pour', 'lien_avec_donateur', 'present_pour_investisseur_id',
+        'observation_cle', 'observation_parametres',
     ];
 
-    protected $casts = ['date_achat' => 'date'];
+    protected $casts = [
+        'date_achat' => 'date',
+        'observation_parametres' => 'array',
+    ];
+
+    /**
+     * Texte à afficher pour l'observation. Traduit quand l'application l'a
+     * écrite (une clé est rangée à côté), rendu tel quel quand une personne
+     * l'a saisie — voir App\Support\Observation.
+     */
+    public function getObservationAfficheeAttribute(): string
+    {
+        return \App\Support\Observation::rendre(
+            $this->observation_cle,
+            $this->observation_parametres,
+            $this->observations,
+        );
+    }
+
 
     public function compte()
     {

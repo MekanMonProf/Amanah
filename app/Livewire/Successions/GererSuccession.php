@@ -210,7 +210,8 @@ class GererSuccession extends Component
                 dateEcriture: now()->toDateString(),
                 referenceType: 'dons',
                 referenceId: $don->id,
-                observations: "Don sortant par décès — {$defunt}",
+                observationCle: \App\Support\Observation::DON_SORTANT_DECES,
+                observationParametres: ['defunt' => $defunt],
                 userId: Auth::id(),
             );
 
@@ -220,7 +221,8 @@ class GererSuccession extends Component
                 dateEcriture: now()->toDateString(),
                 referenceType: 'dons',
                 referenceId: $don->id,
-                observations: "Don entrant par décès de {$defunt}",
+                observationCle: \App\Support\Observation::DON_ENTRANT_DECES,
+                observationParametres: ['defunt' => $defunt],
                 userId: Auth::id(),
             );
 
@@ -228,7 +230,8 @@ class GererSuccession extends Component
             // pour que l'achat qui en résulte ne se confonde pas avec un réinvestissement ordinaire.
             $destination->tenterReinvestissementAutomatique(
                 Auth::id(),
-                "Réinvestissement automatique — hérite de {$defunt} (succession)"
+                \App\Support\Observation::REINVESTISSEMENT_SUCCESSION,
+                ['defunt' => $defunt],
             );
         }
     }
@@ -262,7 +265,8 @@ class GererSuccession extends Component
                 dateEcriture: now()->toDateString(),
                 referenceType: 'radiations',
                 referenceId: $radiation->id,
-                observations: "Liquidation succession de {$defunt} — {$nbActions} action(s)",
+                observationCle: \App\Support\Observation::LIQUIDATION_SUCCESSION,
+                observationParametres: ['defunt' => $defunt, 'actions' => $nbActions],
                 userId: Auth::id(),
             );
         }

@@ -62,11 +62,11 @@
                         <td class="py-1">{{ $ecriture->date_ecriture->format('d/m/Y') }}</td>
                         <td class="py-1">
                             {{ __(\App\Support\Libelles::typeEcriture($ecriture->type_ecriture)) }}
-                            @if ($ecriture->observations)
+                            @if ($ecriture->observations || $ecriture->observation_cle)
                                 {{-- <bdi> isole ce texte du sens d ecriture de la page : les observations anciennes
                                      contiennent des montants ecrits avec des espaces ordinaires, que l arabe
                                      reordonnerait (« 1 400 CFA » -> « CFA 400 1 »). --}}
-                                <div class="text-xs text-gray-400"><bdi>{{ $ecriture->observations }}</bdi></div>
+                                <div class="text-xs text-gray-400"><bdi>{{ $ecriture->observation_affichee }}</bdi></div>
                             @endif
                         </td>                        
                         <td class="py-1 text-end {{ $ecriture->montant >= 0 ? 'text-emerald-700' : 'text-red-600' }}">

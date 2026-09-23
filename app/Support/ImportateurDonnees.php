@@ -1022,7 +1022,10 @@ class ImportateurDonnees
             type: $d['type_ecriture'],
             montant: (float) $d['montant'],
             dateEcriture: $d['date_ecriture'],
-            observations: $d['observations'] ?: 'Reprise de données (import)',
+            // Le fichier fournit son propre libelle, ou rien : dans ce cas seulement,
+            // la phrase vient de l application et se traduit a l affichage.
+            observations: $d['observations'] ?: null,
+            observationCle: $d['observations'] ? null : \App\Support\Observation::REPRISE_IMPORT,
             userId: Auth::id(),
         );
 

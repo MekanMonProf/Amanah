@@ -155,7 +155,8 @@ class DonCreate extends Component
                     dateEcriture: $this->dateDon,
                     referenceType: 'dons',
                     referenceId: $don->id,
-                    observations: "Don à {$compteDestinataire->investisseur->nom} — {$this->motif}",
+                    observationCle: \App\Support\Observation::DON_SORTANT,
+                    observationParametres: ['beneficiaire' => $compteDestinataire->investisseur->nom, 'motif' => $this->motif],
                     userId: Auth::id(),
                 );
 
@@ -165,7 +166,8 @@ class DonCreate extends Component
                     dateEcriture: $this->dateDon,
                     referenceType: 'dons',
                     referenceId: $don->id,
-                    observations: "Don reçu de {$this->compteSource->investisseur->nom} — {$this->motif}",
+                    observationCle: \App\Support\Observation::DON_ENTRANT,
+                    observationParametres: ['donateur' => $this->compteSource->investisseur->nom, 'motif' => $this->motif],
                     userId: Auth::id(),
                 );
 

@@ -101,7 +101,8 @@ class RadiationCreate extends Component
             dateEcriture: $this->date_radiation,
             referenceType: 'radiations',
             referenceId: $radiation->id,
-            observations: "Radiation {$radiation->numero_radiation} — {$this->nombre_actions_radiees} action(s), capital disponible pour versement",
+            observationCle: \App\Support\Observation::RADIATION_CAPITAL,
+            observationParametres: ['numero' => $radiation->numero_radiation, 'actions' => $this->nombre_actions_radiees],
             userId: Auth::id(),
         );
 

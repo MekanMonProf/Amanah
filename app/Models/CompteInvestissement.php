@@ -97,9 +97,15 @@ class CompteInvestissement extends Model
      * Enregistre une écriture et fige le nouveau solde.
      * C'est l'UNIQUE point d'entrée pour modifier le solde d'un compte.
      */
-    public function ajouterEcriture(string $type, float $montant, string $dateEcriture, ?string $referenceType = null, ?int $referenceId = null, ?string $observations = null, ?int $userId = null, ?string $pieceJustificativePath = null): EcritureCompteFinancier
+    public function ajouterEcriture(string $type, float $montant, string $dateEcriture, ?string $referenceType = null, ?int $referenceId = null, ?string $observations = null, ?int $userId = null, ?string $pieceJustificativePath = null, ?string $observationCle = null, array $observationParametres = []): EcritureCompteFinancier
     {
         $nouveauSolde = $this->solde() + $montant;
+
+        // Observation ecrite par l application : la colonne francaise reste la
+        // version de reference, la cle permet de la retraduire a l affichage.
+        if ($observationCle !== null) {
+            $observations = \App\Support\Observation::francais($observationCle, $observationParametres);
+        }
 
         return $this->ecritures()->create([
             'type_ecriture' => $type,
@@ -109,6 +115,8 @@ class CompteInvestissement extends Model
             'reference_id' => $referenceId,
             'date_ecriture' => $dateEcriture,
             'observations' => $observations,
+            'observation_cle' => $observationCle,
+            'observation_parametres' => $observationCle !== null ? $observationParametres : null,
             'piece_justificative_path' => $pieceJustificativePath,
             'created_by' => $userId,
         ]);
@@ -131,7 +139,7 @@ class CompteInvestissement extends Model
      * Logique commune : achète autant d'actions que le solde le permet, tant qu'il en couvre
      * au moins une. Utilisée par le réinvestissement automatique et le complément financier.
      */
-    public function acheterActionsAvecSoldeDisponible(string $typeAchat, string $observation, ?int $userId = null): int
+    public function acheterActionsAvecSoldeDisponible(string $typeAchat, string $observationCle, ?int $userId = null, array $observationParametres = []): int
     {
         $politique = $this->politique();
         $prixAction = (float) $politique->prix_unitaire_action;
@@ -139,6 +147,8 @@ class CompteInvestissement extends Model
         if ($prixAction <= 0) {
             return 0;
         }
+
+        $observation = \App\Support\Observation::francais($observationCle, $observationParametres);
 
         $nbAchatsRealises = 0;
         $garantieFou = 0;
@@ -161,6 +171,8 @@ class CompteInvestissement extends Model
                 'prix_unitaire' => $prixAction,
                 'montant' => $montant,
                 'observations' => $observation,
+                'observation_cle' => $observationCle,
+                'observation_parametres' => $observationParametres,
             ]);
 
             $this->ajouterEcriture(
@@ -169,7 +181,8 @@ class CompteInvestissement extends Model
                 dateEcriture: now()->toDateString(),
                 referenceType: 'achats_actions',
                 referenceId: $achat->id,
-                observations: $observation,
+                observationCle: $observationCle,
+                observationParametres: $observationParametres,
                 userId: $userId,
             );
 
@@ -179,12 +192,12 @@ class CompteInvestissement extends Model
         return $nbAchatsRealises;
     }
 
-    public function tenterReinvestissementAutomatique(?int $userId = null, ?string $observationPersonnalisee = null): void
+    public function tenterReinvestissementAutomatique(?int $userId = null, ?string $observationCle = null, array $observationParametres = []): void
     {
         if (! $this->reinvestissement_auto) {
             return;
         }
 
-        $this->acheterActionsAvecSoldeDisponible('benefice', $observationPersonnalisee ?? 'Réinvestissement automatique', $userId);
+        $this->acheterActionsAvecSoldeDisponible('benefice', $observationCle ?? \App\Support\Observation::REINVESTISSEMENT, $userId, $observationParametres);
     }
 }

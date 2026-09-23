@@ -87,7 +87,9 @@ class PaiementCreate extends Component
             $cheminPreuve = $this->preuve_upload->store('preuves-paiement', 'public');
         }
 
-        $libelle = $this->source === 'radiation' ? 'Versement du capital radié' : 'Versement à l\'investisseur';
+        $cleVersement = $this->source === 'radiation'
+            ? \App\Support\Observation::selonReference(\App\Support\Observation::VERSEMENT_CAPITAL_RADIE, \App\Support\Observation::VERSEMENT_CAPITAL_RADIE_REF, $this->reference)
+            : \App\Support\Observation::selonReference(\App\Support\Observation::VERSEMENT_INVESTISSEUR, \App\Support\Observation::VERSEMENT_INVESTISSEUR_REF, $this->reference);
 
         $this->compte->ajouterEcriture(
             type: 'paiement',
@@ -95,12 +97,8 @@ class PaiementCreate extends Component
             dateEcriture: $this->date_paiement,
             referenceType: $this->radiationId ? 'radiations' : null,
             referenceId: $this->radiationId,
-            observations: sprintf(
-                '%s — %s%s',
-                $libelle,
-                $this->mode_paiement,
-                $this->reference ? " (réf. {$this->reference})" : ''
-            ),
+            observationCle: $cleVersement,
+            observationParametres: ['mode' => $this->mode_paiement, 'reference' => $this->reference],
             userId: Auth::id(),
             pieceJustificativePath: $cheminPreuve,
         );

@@ -129,6 +129,7 @@
         <div class="bg-white border rounded-lg p-4">
             <div class="text-xs text-gray-500 uppercase">{{ __("Téléphone") }}</div>
             <div class="mt-1">{{ $investisseur->telephone ?: '—' }}</div>
+            <x-lien-whatsapp :numero="$investisseur->whatsapp" :telephone="$investisseur->telephone" class="mt-1 text-sm" />
         </div>
         <div class="bg-white border rounded-lg p-4">
             <div class="text-xs text-gray-500 uppercase">{{ __("Email") }}</div>

@@ -33,6 +33,10 @@ class InvestisseurEdit extends Component
 
     #[Validate('nullable|string|max:30')]
     public string $telephone = '';
+    public string $whatsapp = '';
+
+    /** Le WhatsApp est presque toujours le numero de telephone : coche par defaut. */
+    public bool $whatsappIdentique = true;
 
     #[Validate('nullable|string|max:255')]
     public string $adresse = '';
@@ -93,6 +97,8 @@ class InvestisseurEdit extends Component
 
     #[Validate('nullable|string|max:30')]
     public string $representant_legal_telephone = '';
+    public string $representant_legal_whatsapp = '';
+    public bool $representantWhatsappIdentique = true;
 
     // Bénéficiaire désigné
     #[Validate('nullable|string|max:150')]
@@ -103,6 +109,8 @@ class InvestisseurEdit extends Component
 
     #[Validate('nullable|string|max:30')]
     public string $beneficiaire_telephone = '';
+    public string $beneficiaire_whatsapp = '';
+    public bool $beneficiaireWhatsappIdentique = true;
 
     // Interne
     #[Validate('nullable|string|max:2000')]
@@ -116,10 +124,10 @@ class InvestisseurEdit extends Component
     public bool $reinvestissementAutoWaqf = true;
 
     protected array $champsTexte = [
-        'type_personne', 'nom', 'prenom', 'email', 'telephone', 'adresse', 'ville', 'pays',
+        'type_personne', 'nom', 'prenom', 'email', 'telephone', 'whatsapp', 'adresse', 'ville', 'pays',
         'nationalite', 'lieu_naissance', 'type_identification', 'numero_identification', 'lieu_delivrance_piece',
-        'raison_sociale', 'rccm', 'ninea', 'representant_legal_nom', 'representant_legal_telephone',
-        'beneficiaire_nom', 'beneficiaire_lien', 'beneficiaire_telephone', 'notes_internes',
+        'raison_sociale', 'rccm', 'ninea', 'representant_legal_nom', 'representant_legal_telephone', 'representant_legal_whatsapp',
+        'beneficiaire_nom', 'beneficiaire_lien', 'beneficiaire_telephone', 'beneficiaire_whatsapp', 'notes_internes',
     ];
 
     public function mount(Investisseur $investisseur): void
@@ -133,6 +141,12 @@ class InvestisseurEdit extends Component
         foreach ($this->champsTexte as $champ) {
             $this->$champ = $valeurs[$champ] ?? '';
         }
+
+        // La case « meme numero » reflete ce qui est en base : elle ne doit pas
+        // rester cochee sur un dossier ou les deux numeros different reellement.
+        $this->whatsappIdentique = \App\Support\Telephone::memeNumero($investisseur->telephone, $investisseur->whatsapp);
+        $this->representantWhatsappIdentique = \App\Support\Telephone::memeNumero($investisseur->representant_legal_telephone, $investisseur->representant_legal_whatsapp);
+        $this->beneficiaireWhatsappIdentique = \App\Support\Telephone::memeNumero($investisseur->beneficiaire_telephone, $investisseur->beneficiaire_whatsapp);
 
         $this->date_naissance = $investisseur->date_naissance?->toDateString();
         $this->date_delivrance_piece = $investisseur->date_delivrance_piece?->toDateString();
@@ -172,6 +186,7 @@ class InvestisseurEdit extends Component
             'prenom' => $this->prenom ?: null,
             'email' => $this->email ?: null,
             'telephone' => \App\Support\Telephone::normaliser($this->telephone),
+            'whatsapp' => \App\Support\Telephone::pourWhatsapp($this->whatsappIdentique, $this->telephone, $this->whatsapp),
             'adresse' => $this->adresse ?: null,
             'ville' => $this->ville ?: null,
             'pays' => $this->pays ?: null,
@@ -189,9 +204,11 @@ class InvestisseurEdit extends Component
             'ninea' => $this->ninea ?: null,
             'representant_legal_nom' => $this->representant_legal_nom ?: null,
             'representant_legal_telephone' => \App\Support\Telephone::normaliser($this->representant_legal_telephone),
+            'representant_legal_whatsapp' => \App\Support\Telephone::pourWhatsapp($this->representantWhatsappIdentique, $this->representant_legal_telephone, $this->representant_legal_whatsapp),
             'beneficiaire_nom' => $this->beneficiaire_nom ?: null,
             'beneficiaire_lien' => $this->beneficiaire_lien ?: null,
             'beneficiaire_telephone' => \App\Support\Telephone::normaliser($this->beneficiaire_telephone),
+            'beneficiaire_whatsapp' => \App\Support\Telephone::pourWhatsapp($this->beneficiaireWhatsappIdentique, $this->beneficiaire_telephone, $this->beneficiaire_whatsapp),
             'notes_internes' => $this->notes_internes ?: null,
         ];
 

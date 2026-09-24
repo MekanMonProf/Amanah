@@ -42,6 +42,7 @@
                     <label class="text-sm text-gray-600">{{ __("Téléphone") }}</label>
                     <input type="text" wire:model="telephone" placeholder="{{ __("771234567 ou +33... si étranger") }}" class="w-full border rounded px-3 py-2">
                     @error('telephone') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+                    <x-champ-whatsapp champ="whatsapp" drapeau="whatsappIdentique" :actif="$whatsappIdentique" />
                 </div>
                 <div>
                     <label class="text-sm text-gray-600">{{ __("Email") }}</label>

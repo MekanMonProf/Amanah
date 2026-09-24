@@ -28,6 +28,10 @@ class GestionnaireIndex extends Component
 
     #[Validate('nullable|string|max:30')]
     public string $telephone = '';
+    public string $whatsapp = '';
+
+    /** Le WhatsApp est presque toujours le numero de telephone : coche par defaut. */
+    public bool $whatsappIdentique = true;
 
     #[Validate('required|string|min:8')]
     public string $mot_de_passe = '';
@@ -85,6 +89,8 @@ class GestionnaireIndex extends Component
         $this->prenom = $gestionnaire->user->prenom ?? '';
         $this->email = $gestionnaire->user->email;
         $this->telephone = $gestionnaire->user->telephone ?? '';
+        $this->whatsapp = $gestionnaire->user->whatsapp ?? '';
+        $this->whatsappIdentique = \App\Support\Telephone::memeNumero($gestionnaire->user->telephone, $gestionnaire->user->whatsapp);
         $this->afficherFormulaire = false;
         $this->resetErrorBag();
     }
@@ -108,6 +114,7 @@ class GestionnaireIndex extends Component
             'prenom' => 'nullable|string|max:150',
             'email' => 'required|email|max:190|unique:users,email,' . $gestionnaire->user_id,
             'telephone' => 'nullable|string|max:30',
+            'whatsapp' => 'nullable|string|max:30',
         ]);
 
         if (\App\Support\Telephone::estAmbigu($this->telephone)) {
@@ -122,6 +129,7 @@ class GestionnaireIndex extends Component
             'prenom' => $this->prenom ?: null,
             'email' => $this->email,
             'telephone' => \App\Support\Telephone::normaliser($this->telephone),
+            'whatsapp' => \App\Support\Telephone::pourWhatsapp($this->whatsappIdentique, $this->telephone, $this->whatsapp),
         ]);
 
         \App\Models\AuditLog::enregistrer(
@@ -151,6 +159,7 @@ class GestionnaireIndex extends Component
             'prenom' => $this->prenom,
             'email' => $this->email,
             'telephone' => \App\Support\Telephone::normaliser($this->telephone),
+            'whatsapp' => \App\Support\Telephone::pourWhatsapp($this->whatsappIdentique, $this->telephone, $this->whatsapp),
             'password' => Hash::make($this->mot_de_passe),
             'role' => 'gestionnaire',
             'actif' => true,
@@ -173,7 +182,7 @@ class GestionnaireIndex extends Component
             apres: ['nom' => $user->nom, 'prenom' => $user->prenom, 'email' => $user->email],
         );
 
-        $this->reset(['nom', 'prenom', 'email', 'telephone', 'mot_de_passe', 'afficherFormulaire']);
+        $this->reset(['nom', 'prenom', 'email', 'telephone', 'whatsapp', 'whatsappIdentique', 'mot_de_passe', 'afficherFormulaire']);
         $this->dispatch('gestionnaire-cree');
     }
 

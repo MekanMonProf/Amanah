@@ -38,6 +38,12 @@ class InvestisseurIndex extends Component
     #[Validate('nullable|string|max:30')]
     public string $telephone = '';
 
+    #[Validate('nullable|string|max:30')]
+    public string $whatsapp = '';
+
+    /** Le WhatsApp est presque toujours le numero de telephone : coche par defaut. */
+    public bool $whatsappIdentique = true;
+
     #[Validate('nullable|email|max:190')]
     public string $email = '';
 
@@ -133,13 +139,14 @@ class InvestisseurIndex extends Component
             'nom' => $this->nom,
             'prenom' => $this->prenom,
             'telephone' => \App\Support\Telephone::normaliser($this->telephone),
+            'whatsapp' => \App\Support\Telephone::pourWhatsapp($this->whatsappIdentique, $this->telephone, $this->whatsapp),
             'email' => $this->email ?: null,
             'pays' => $this->pays,
             'gestionnaire_id' => $gestionnaireId,
             'statut' => 'actif',
         ]);
 
-        $this->reset(['nom', 'prenom', 'telephone', 'email', 'pays', 'afficherFormulaire']);
+        $this->reset(['nom', 'prenom', 'telephone', 'whatsapp', 'whatsappIdentique', 'email', 'pays', 'afficherFormulaire']);
         \App\Models\AuditLog::enregistrer(
             action: 'creation',
             entite: 'investisseur',

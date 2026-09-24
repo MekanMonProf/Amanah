@@ -83,6 +83,7 @@
                     <div>
                         <label class="text-sm text-gray-600">{{ __("Téléphone") }}</label>
                         <input type="text" wire:model="telephone" class="w-full border rounded px-3 py-2">
+                        <x-champ-whatsapp champ="whatsapp" drapeau="whatsappIdentique" :actif="$whatsappIdentique" />
                     </div>
                     <div>
                         <label class="text-sm text-gray-600">{{ __("Lien avec le défunt") }}</label>

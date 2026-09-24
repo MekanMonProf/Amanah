@@ -136,6 +136,39 @@ class Telephone
      * que d'accepter ce numero ambigu en silence, l'appelant doit demander
      * explicitement l'indicatif pays a l'utilisateur (ex: "+33 pour la France").
      */
+    /**
+     * La case « même numéro sur WhatsApp » doit-elle être cochée ?
+     *
+     * Oui quand les deux numéros se valent, mais aussi quand il n'y en a aucun :
+     * sur un dossier vide, il n'y a rien à distinguer, et revenir décoché
+     * suggérerait à tort que l'investisseur a deux numéros différents.
+     *
+     * Volontairement distinct d'identiques(), qui sert à détecter les doublons :
+     * là, deux numéros absents ne sont pas « la même personne ».
+     */
+    public static function memeNumero(?string $telephone, ?string $whatsapp): bool
+    {
+        if (blank($telephone) && blank($whatsapp)) {
+            return true;
+        }
+
+        return self::identiques($telephone, $whatsapp);
+    }
+
+    /**
+     * Numéro WhatsApp à enregistrer.
+     *
+     * Le cas courant est « le même que le téléphone » : la case est cochée et il
+     * n'y a rien à saisir. On recopie alors le téléphone plutôt que de laisser la
+     * colonne vide, qui se lirait comme « pas de WhatsApp » au lieu de « même
+     * numéro ». Décochée, c'est le numéro saisi qui compte — normalisé comme
+     * tous les autres, pour que la comparaison reste possible.
+     */
+    public static function pourWhatsapp(bool $memeNumero, ?string $telephone, ?string $saisi): ?string
+    {
+        return self::normaliser($memeNumero ? $telephone : $saisi);
+    }
+
     public static function estAmbigu(?string $valeur): bool
     {
         $normalise = static::normaliser($valeur);

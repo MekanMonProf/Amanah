@@ -90,6 +90,7 @@
                     <label class="text-sm text-gray-600">{{ __("Téléphone") }}</label>
                     <input type="text" wire:model="telephone" placeholder="{{ __('771234567 ou +33... si étranger') }}" class="w-full border rounded px-3 py-2">
                     @error('telephone') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+                    <x-champ-whatsapp champ="whatsapp" drapeau="whatsappIdentique" :actif="$whatsappIdentique" />
                 </div>
                 <div class="sm:col-span-2 flex gap-2">
                     <button type="submit" class="bg-emerald-700 text-white px-4 py-2 rounded-lg w-full sm:w-auto">
@@ -124,6 +125,7 @@
                     <label class="text-sm text-gray-600">{{ __("Téléphone") }}</label>
                     <input type="text" wire:model="telephone" placeholder="{{ __('771234567 ou +33... si étranger') }}" class="w-full border rounded px-3 py-2">
                     @error('telephone') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+                    <x-champ-whatsapp champ="whatsapp" drapeau="whatsappIdentique" :actif="$whatsappIdentique" />
                 </div>
                 <div class="sm:col-span-2">
                     <label class="text-sm text-gray-600">{{ __("Mot de passe temporaire") }}</label>
@@ -161,7 +163,10 @@
                         @endif
                     </td>
                     <td class="p-3 text-sm text-gray-600">{{ $g->user?->email ?: '—' }}</td>
-                    <td class="p-3 text-sm text-gray-600">{{ $g->user?->telephone ?: '—' }}</td>
+                    <td class="p-3 text-sm text-gray-600">
+                        {{ $g->user?->telephone ?: '—' }}
+                        <x-lien-whatsapp :numero="$g->user?->whatsapp" :telephone="$g->user?->telephone" class="block text-xs" />
+                    </td>
                     <td class="p-3 text-end">
                         <a href="{{ route('investisseurs.index') }}?gestionnaire={{ $g->id }}" wire:navigate class="text-emerald-700 hover:underline">
                             {{ $g->investisseurs_count }}

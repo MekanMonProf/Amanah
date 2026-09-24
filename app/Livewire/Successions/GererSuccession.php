@@ -30,6 +30,10 @@ class GererSuccession extends Component
 
     #[Validate('nullable|string|max:30')]
     public string $telephone = '';
+    public string $whatsapp = '';
+
+    /** Le WhatsApp est presque toujours le numero de telephone : coche par defaut. */
+    public bool $whatsappIdentique = true;
 
     #[Validate('required|string|max:100')]
     public string $lienParente = '';
@@ -116,7 +120,8 @@ class GererSuccession extends Component
             'investisseur_id' => $this->investisseur->id,
             'nom' => $this->nom,
             'prenom' => $this->prenom ?: null,
-            'telephone' => $this->telephone ?: null,
+            'telephone' => \App\Support\Telephone::normaliser($this->telephone),
+            'whatsapp' => \App\Support\Telephone::pourWhatsapp($this->whatsappIdentique, $this->telephone, $this->whatsapp),
             'lien_parente' => $this->lienParente,
             'part_pourcentage' => 100,
             'piece_identite_path' => $cheminIdentite,
@@ -131,7 +136,7 @@ class GererSuccession extends Component
             apres: ['mandataire' => $this->nom . ' ' . $this->prenom, 'lien' => $this->lienParente],
         );
 
-        $this->reset(['nom', 'prenom', 'telephone', 'lienParente', 'pieceIdentiteUpload', 'certificatHeritedeUpload', 'procurationUpload', 'afficherFormulaire']);
+        $this->reset(['nom', 'prenom', 'telephone', 'whatsapp', 'whatsappIdentique', 'lienParente', 'pieceIdentiteUpload', 'certificatHeritedeUpload', 'procurationUpload', 'afficherFormulaire']);
     }
 
     public function retirerMandataire(): void

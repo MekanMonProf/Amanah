@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Heritier extends Model
 {
     protected $fillable = [
-        'investisseur_id', 'investisseur_heritier_id', 'nom', 'prenom', 'telephone',
+        'investisseur_id', 'investisseur_heritier_id', 'nom', 'prenom', 'telephone', 'whatsapp',
         'lien_parente', 'part_pourcentage', 'piece_identite_path',
         'piece_justificative_path', 'piece_certificat_heredite_path',
     ];

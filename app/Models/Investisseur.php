@@ -104,6 +104,27 @@ class Investisseur extends Model
         return $this->hasMany(Heritier::class, 'investisseur_id');
     }
 
+    /**
+     * Ce qui manque au dossier pour être complet — voir App\Support\Completude.
+     *
+     * @return list<string>
+     */
+    public function champsManquants(): array
+    {
+        return \App\Support\Completude::manquants($this);
+    }
+
+    public function dossierComplet(): bool
+    {
+        return \App\Support\Completude::estComplet($this);
+    }
+
+    /** Dossiers auxquels il manque au moins une pièce du dossier d'identification. */
+    public function scopeIncomplets($requete)
+    {
+        return \App\Support\Completude::filtrerIncomplets($requete);
+    }
+
     public function estDecede(): bool
     {
         return $this->statut === 'decede';

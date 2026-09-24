@@ -125,6 +125,27 @@
         </div>
     @endif
 
+    @php($manquants = $investisseur->champsManquants())
+    @if ($manquants)
+        {{-- Signale sans bloquer : le dossier reste utilisable, mais l ecart se voit. --}}
+        <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4">
+            <p class="text-sm font-semibold text-amber-800">
+                {{ __("Dossier incomplet — :nombre élément(s) manquant(s)", ['nombre' => count($manquants)]) }}
+            </p>
+            <ul class="mt-2 text-sm text-amber-800 list-disc list-inside space-y-0.5">
+                @foreach ($manquants as $manquant)
+                    <li>{{ __($manquant) }}</li>
+                @endforeach
+            </ul>
+            @if (auth()->user()->role !== 'lecture')
+                <a href="{{ route('investisseurs.modifier', $investisseur) }}" wire:navigate
+                   class="mt-3 inline-block text-sm text-amber-900 underline">
+                    {{ __("Compléter le dossier") }} &rarr;
+                </a>
+            @endif
+        </div>
+    @endif
+
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-4">
         <div class="bg-white border rounded-lg p-4">
             <div class="text-xs text-gray-500 uppercase">{{ __("Téléphone") }}</div>

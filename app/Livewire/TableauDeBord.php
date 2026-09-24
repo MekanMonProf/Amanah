@@ -43,6 +43,7 @@ class TableauDeBord extends Component
         $nbInvestisseursActifs = Investisseur::where('statut', 'actif')->count();
         $nbInvestisseursSansGestionnaire = Investisseur::whereNull('gestionnaire_id')->where('statut', 'actif')->count();
         $nbGestionnairesActifs = Gestionnaire::where('actif', true)->count();
+        $nbDossiersIncomplets = Investisseur::where('statut', 'actif')->incomplets()->count();
 
         $comptesParCategorie = CompteInvestissement::where('statut', 'actif')
             ->selectRaw('categorie, count(*) as nb')
@@ -82,6 +83,7 @@ class TableauDeBord extends Component
         return [
             'nbInvestisseursActifs' => $nbInvestisseursActifs,
             'nbInvestisseursSansGestionnaire' => $nbInvestisseursSansGestionnaire,
+            'nbDossiersIncomplets' => $nbDossiersIncomplets,
             'nbGestionnairesActifs' => $nbGestionnairesActifs,
             'comptesParCategorie' => $comptesParCategorie,
             'actionsNettesParCategorie' => $actionsNettesParCategorie,

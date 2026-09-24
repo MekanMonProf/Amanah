@@ -19,6 +19,9 @@ class InvestisseurIndex extends Component
     public ?int $filtreGestionnaireId = null;
     public string $filtreStatut = '';
     public string $filtreAcces = '';
+
+    /** '' = tous, 'incomplets' = dossiers auxquels il manque une piece. */
+    public string $filtreCompletude = '';
     public bool $afficherFormulaire = false;
 
     public string $tri = 'nom';
@@ -61,6 +64,12 @@ class InvestisseurIndex extends Component
             $this->gestionnaire_id = $this->filtreGestionnaireId;
         } elseif (request()->has('gestionnaire')) {
             $this->filtreGestionnaireId = (int) request()->query('gestionnaire');
+        }
+
+        // Le tableau de bord renvoie ici avec ?completude=incomplets : le compteur
+        // doit atterrir sur la liste deja filtree, sinon il ne fait rien faire.
+        if (request()->query('completude') === 'incomplets') {
+            $this->filtreCompletude = 'incomplets';
         }
     }
 
@@ -185,6 +194,10 @@ class InvestisseurIndex extends Component
 
         if ($this->filtreStatut) {
             $query->where('statut', $this->filtreStatut);
+        }
+
+        if ($this->filtreCompletude === 'incomplets') {
+            $query->incomplets();
         }
 
         // Mode de connexion : la plupart des investisseurs n'ont pas d'email (voir

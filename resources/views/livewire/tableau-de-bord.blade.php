@@ -64,6 +64,13 @@
                 @if ($nbInvestisseursSansGestionnaire > 0)
                     <div class="text-xs text-amber-600 mt-1">{{ __(":nombre sans gestionnaire", ["nombre" => $nbInvestisseursSansGestionnaire]) }}</div>
                 @endif
+                @if ($nbDossiersIncomplets > 0)
+                    {{-- Un chiffre seul ne fait rien faire : le lien mene droit a la liste filtree. --}}
+                    <a href="{{ route('investisseurs.index', ['completude' => 'incomplets']) }}" wire:navigate
+                       class="text-xs text-amber-600 hover:underline mt-1 block">
+                        {{ __(":nombre dossier(s) incomplet(s)", ["nombre" => $nbDossiersIncomplets]) }} &rarr;
+                    </a>
+                @endif
             </div>
             <div class="bg-white border rounded-lg p-4">
                 <div class="text-xs text-gray-500 uppercase">{{ __("Gestionnaires actifs") }}</div>

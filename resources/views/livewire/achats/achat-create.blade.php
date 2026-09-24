@@ -4,6 +4,17 @@
     <h1 class="text-xl sm:text-2xl font-semibold text-gray-800 mt-2 mb-1">{{ __("Nouvel achat d'actions") }}</h1>
     <p class="text-sm text-gray-500 mb-6">{{ $investisseur->nom }} {{ $investisseur->prenom }} · {{ $investisseur->identifiant_externe }}</p>
 
+    @php($manquants = $investisseur->champsManquants())
+    @if ($manquants)
+        {{-- Avertissement et non blocage : arreter la souscription pour une piece
+             manquante couterait plus cher que le risque qu on cherche a reduire. --}}
+        <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4 text-sm text-amber-800">
+            <p class="font-semibold">{{ __("Le dossier de cet investisseur est incomplet.") }}</p>
+            <p class="mt-1">{{ __("Manquent : :liste.", ['liste' => collect($manquants)->map(fn ($m) => __($m))->implode(', ')]) }}</p>
+            <p class="mt-1">{{ __("L'achat reste possible, mais le dossier devra être complété.") }}</p>
+        </div>
+    @endif
+
     <form wire:submit="enregistrer" class="bg-white border rounded-lg p-5 shadow-sm space-y-4">
 
         <div>

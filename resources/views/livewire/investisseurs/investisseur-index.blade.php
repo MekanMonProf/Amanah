@@ -91,6 +91,11 @@
             <option value="aucun">{{ __("Pas d'accès portail") }}</option>
         </select>
 
+        <select wire:model.live="filtreCompletude" class="border-gray-300 rounded-lg text-sm w-full sm:w-auto">
+            <option value="">{{ __("Tous les dossiers") }}</option>
+            <option value="incomplets">{{ __("Dossiers incomplets") }}</option>
+        </select>
+
         @if ($gestionnaires->isNotEmpty())
             <select wire:model.live="filtreGestionnaireId" class="border rounded px-3 py-2 w-full sm:w-auto">
                 <option value="">{{ __("Tous les gestionnaires") }}</option>

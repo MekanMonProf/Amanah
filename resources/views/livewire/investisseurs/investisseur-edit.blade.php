@@ -78,7 +78,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="text-sm text-gray-600">{{ __("Type de pièce") }}</label>
-                    <input type="text" wire:model="type_identification" placeholder="CNI, Passeport..." class="w-full border rounded px-3 py-2">
+                    <input type="text" wire:model="type_identification" placeholder="{{ __('CNI, Passeport...') }}" class="w-full border rounded px-3 py-2">
                 </div>
                 <div>
                     <label class="text-sm text-gray-600">{{ __("Numéro") }}</label>

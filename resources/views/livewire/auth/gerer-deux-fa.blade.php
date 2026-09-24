@@ -58,7 +58,7 @@
                 </p>
 
                 <form wire:submit="confirmerActivation" class="max-w-xs mx-auto">
-                    <x-input-label for="codeConfirmation" value="Code de confirmation" />
+                    <x-input-label for="codeConfirmation" :value="__('Code de confirmation')" />
                     <x-text-input wire:model="codeConfirmation" id="codeConfirmation" class="block mt-1 w-full text-center text-lg tracking-widest" inputmode="numeric" autofocus />
                     <x-input-error :messages="$errors->get('codeConfirmation')" class="mt-2" />
                     <x-primary-button type="submit" class="mt-3 w-full justify-center">{{ __("Activer") }}</x-primary-button>

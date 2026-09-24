@@ -19,7 +19,7 @@
 
     <div class="flex flex-col sm:flex-row flex-wrap gap-3 mb-4">
         <input type="text" wire:model.live.debounce.300ms="recherche"
-               placeholder="Rechercher (utilisateur, email, id)..."
+               placeholder="{{ __('Rechercher (utilisateur, email, id)...') }}"
                class="border rounded px-3 py-2 text-sm w-full sm:w-64">
 
         <select wire:model.live="filtreAction" class="border rounded px-3 py-2 text-sm">

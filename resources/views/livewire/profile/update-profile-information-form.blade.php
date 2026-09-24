@@ -67,19 +67,19 @@ new class extends Component {
 
     <form wire:submit="updateProfileInformation" class="mt-6 space-y-6">
         <div>
-            <x-input-label for="nom" value="Nom" />
+            <x-input-label for="nom" :value="__('Nom')" />
             <x-text-input wire:model="nom" id="nom" name="nom" type="text" class="mt-1 block w-full" required autofocus autocomplete="family-name" />
             <x-input-error class="mt-2" :messages="$errors->get('nom')" />
         </div>
 
         <div>
-            <x-input-label for="prenom" value="Prénom" />
+            <x-input-label for="prenom" :value="__('Prénom')" />
             <x-text-input wire:model="prenom" id="prenom" name="prenom" type="text" class="mt-1 block w-full" autocomplete="given-name" />
             <x-input-error class="mt-2" :messages="$errors->get('prenom')" />
         </div>
 
         <div>
-            <x-input-label for="email" value="Email" />
+            <x-input-label for="email" :value="__('Email')" />
             <x-text-input wire:model="email" id="email" name="email" type="email" class="mt-1 block w-full" required autocomplete="username" />
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
 

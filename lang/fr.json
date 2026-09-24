@@ -1,6 +1,8 @@
 {
-    "Showing": "Affichage de",
-    "to": "à",
+    "Go to page :page": "Aller à la page :page",
     "of": "sur",
-    "results": "résultat(s)"
+    "Pagination Navigation": "Navigation par pages",
+    "results": "résultat(s)",
+    "Showing": "Affichage de",
+    "to": "à"
 }

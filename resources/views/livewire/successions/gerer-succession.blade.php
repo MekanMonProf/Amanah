@@ -123,7 +123,7 @@
                             <a href="{{ \Illuminate\Support\Facades\Storage::url($this->mandataire->piece_justificative_path) }}" target="_blank" class="text-emerald-700 hover:underline">{{ __("Procuration →") }}</a>
                         </div>
                     </div>
-                    <button wire:click="retirerMandataire" wire:confirm="Retirer ce mandataire et en désigner un autre ?" class="text-xs text-red-600 hover:underline">
+                    <button wire:click="retirerMandataire" wire:confirm="{{ __('Retirer ce mandataire et en désigner un autre ?') }}" class="text-xs text-red-600 hover:underline">
                         {{ __("Changer") }}
                     </button>
                 </div>

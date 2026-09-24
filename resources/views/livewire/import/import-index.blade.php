@@ -55,7 +55,7 @@
                             <td class="px-3 py-2 align-top">
                                 <span class="font-mono text-xs">{{ $colonne }}</span>
                                 @if ($definition['obligatoire'])
-                                    <span class="text-red-600 text-xs ms-1" title="Colonne obligatoire">*</span>
+                                    <span class="text-red-600 text-xs ms-1" title="{{ __('Colonne obligatoire') }}">*</span>
                                 @endif
                             </td>
                             <td class="px-3 py-2 align-top text-gray-700">

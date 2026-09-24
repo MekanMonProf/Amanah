@@ -168,7 +168,7 @@
                     <select wire:model="nouveauGestionnaireId" class="w-full border rounded px-3 py-2 text-sm">
                         <option value="">{{ __("— Choisir —") }}</option>
                         @foreach ($gestionnaires as $g)
-                            <option value="{{ $g->id }}">{{ $g->user->nom }} {{ $g->user->prenom }}</option>
+                            <option value="{{ $g->id }}">{{ $g->nomComplet() }}</option>
                         @endforeach
                     </select>
                     @error('nouveauGestionnaireId') <span class="text-red-600 text-xs">{{ $message }}</span> @enderror

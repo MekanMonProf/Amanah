@@ -371,7 +371,7 @@ class ImportateurDonnees
 
         if ($type === 'investisseurs') {
             $reference['identifiants'] = Investisseur::pluck('identifiant_externe')->map(fn ($id) => strtoupper($id))->flip()->all();
-            $reference['gestionnaires'] = Gestionnaire::with('user')->get()
+            $reference['gestionnaires'] = Gestionnaire::avecCompte()->with('user')->get()
                 ->mapWithKeys(fn ($g) => [strtolower($g->user->email) => ['id' => $g->id, 'actif' => $g->actif]])
                 ->all();
         }

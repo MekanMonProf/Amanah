@@ -53,9 +53,32 @@ class GestionnaireIndex extends Component
      * réutilise les mêmes champs (nom/prenom/email/telephone) pour profiter des messages
      * de validation français déjà mappés pour ces noms de propriétés.
      */
+    /**
+     * Une fiche gestionnaire dont le compte de connexion a ete supprime ne peut
+     * plus etre modifiee : il n y a plus de nom a changer, ni d adresse ou
+     * envoyer un mot de passe. La reassignation de son portefeuille, elle, reste
+     * autorisee — c est justement la seule issue.
+     */
+    private function refuserSiOrphelin(Gestionnaire $gestionnaire): bool
+    {
+        if (! $gestionnaire->estOrphelin()) {
+            return false;
+        }
+
+        session()->flash('erreur_orphelin', __(
+            "Cette fiche gestionnaire n'a plus de compte de connexion : elle ne peut plus être modifiée. Réassignez son portefeuille à un autre gestionnaire.",
+        ));
+
+        return true;
+    }
+
     public function modifier(int $gestionnaireId): void
     {
         $gestionnaire = Gestionnaire::with('user')->findOrFail($gestionnaireId);
+
+        if ($this->refuserSiOrphelin($gestionnaire)) {
+            return;
+        }
 
         $this->gestionnaireEnEditionId = $gestionnaireId;
         $this->nom = $gestionnaire->user->nom;
@@ -75,6 +98,10 @@ class GestionnaireIndex extends Component
     public function enregistrerModification(): void
     {
         $gestionnaire = Gestionnaire::with('user')->findOrFail($this->gestionnaireEnEditionId);
+
+        if ($this->refuserSiOrphelin($gestionnaire)) {
+            return;
+        }
 
         $this->validate([
             'nom' => 'required|string|max:150',
@@ -159,7 +186,12 @@ class GestionnaireIndex extends Component
      */
     public function basculerActif(int $gestionnaireId): void
     {
-        $gestionnaire = Gestionnaire::findOrFail($gestionnaireId);
+        $gestionnaire = Gestionnaire::with('user')->findOrFail($gestionnaireId);
+
+        if ($this->refuserSiOrphelin($gestionnaire)) {
+            return;
+        }
+
         $nouveauStatut = ! $gestionnaire->actif;
 
         if (! $nouveauStatut) {
@@ -172,7 +204,7 @@ class GestionnaireIndex extends Component
                     "Impossible de désactiver :nom :prenom : :nombre investisseur(s) actif(s) encore assigné(s). Réassignez-les tous d'un coup ci-dessous, ou un par un avec le bouton « Changer → » sur chaque fiche investisseur.",
                     [
                         'nom' => $gestionnaire->user->nom,
-                        'prenom' => $gestionnaire->user->prenom,
+                        'prenom' => $gestionnaire->user->prenom ?? '',
                         'nombre' => $nbInvestisseursActifs,
                     ]
                 ));
@@ -222,34 +254,41 @@ class GestionnaireIndex extends Component
 
         $nouveauGestionnaire = Gestionnaire::with('user')->findOrFail($this->nouveauGestionnairePourReassignation);
 
+        // Le nouveau titulaire, lui, doit pouvoir se connecter : on ne transfere
+        // pas un portefeuille vers une fiche sans compte.
+        if ($nouveauGestionnaire->estOrphelin()) {
+            $this->addError('nouveauGestionnairePourReassignation', __("Ce gestionnaire n'a plus de compte de connexion : choisissez-en un autre."));
+            return;
+        }
+
         $investisseurs = \App\Models\Investisseur::where('gestionnaire_id', $ancienGestionnaire->id)
             ->where('statut', 'actif')
             ->get();
 
         foreach ($investisseurs as $investisseur) {
-            $investisseur->transfererVers($nouveauGestionnaire, $this->motifReassignationMasse ?: "Réassignation en masse — désactivation de {$ancienGestionnaire->user->nom} {$ancienGestionnaire->user->prenom}", \Illuminate\Support\Facades\Auth::id());
+            $investisseur->transfererVers($nouveauGestionnaire, $this->motifReassignationMasse ?: "Réassignation en masse — désactivation de {$ancienGestionnaire->nomComplet()}", \Illuminate\Support\Facades\Auth::id());
         }
 
         \App\Models\AuditLog::enregistrer(
             action: 'reassignation_masse',
             entite: 'gestionnaire',
             entiteId: $ancienGestionnaire->id,
-            avant: ['gestionnaire' => "{$ancienGestionnaire->user->nom} {$ancienGestionnaire->user->prenom}"],
+            avant: ['gestionnaire' => $ancienGestionnaire->nomComplet()],
             apres: [
-                'gestionnaire' => "{$nouveauGestionnaire->user->nom} {$nouveauGestionnaire->user->prenom}",
+                'gestionnaire' => $nouveauGestionnaire->nomComplet(),
                 'nombre_investisseurs' => $investisseurs->count(),
                 'motif' => $this->motifReassignationMasse ?: null,
             ],
         );
 
         $ancienGestionnaire->update(['actif' => false]);
-        $ancienGestionnaire->user->update(['actif' => false]);
+        $ancienGestionnaire->user?->update(['actif' => false]);
 
         \App\Models\AuditLog::enregistrer(
             action: 'desactivation',
             entite: 'gestionnaire',
             entiteId: $ancienGestionnaire->id,
-            apres: ['email' => $ancienGestionnaire->user->email, 'actif' => false],
+            apres: ['email' => $ancienGestionnaire->user?->email, 'actif' => false],
         );
 
         $this->gestionnaireADesactiverId = null;
@@ -258,8 +297,8 @@ class GestionnaireIndex extends Component
             ":nombre investisseur(s) réassigné(s) à :nouveau. :ancien a été désactivé.",
             [
                 'nombre' => $investisseurs->count(),
-                'nouveau' => $nouveauGestionnaire->user->nom . ' ' . $nouveauGestionnaire->user->prenom,
-                'ancien' => $ancienGestionnaire->user->nom . ' ' . $ancienGestionnaire->user->prenom,
+                'nouveau' => $nouveauGestionnaire->nomComplet(),
+                'ancien' => $ancienGestionnaire->nomComplet(),
             ]
         ));
     }
@@ -272,6 +311,10 @@ class GestionnaireIndex extends Component
     public function reinitialiserMotDePasse(int $gestionnaireId): void
     {
         $gestionnaire = Gestionnaire::with('user')->findOrFail($gestionnaireId);
+
+        if ($this->refuserSiOrphelin($gestionnaire)) {
+            return;
+        }
 
         $nouveauMotDePasse = \App\Support\MotDePasseTemporaire::generer();
 

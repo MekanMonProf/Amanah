@@ -58,7 +58,7 @@
                         <select wire:model="gestionnaire_id" class="w-full border rounded px-3 py-2">
                             <option value="">{{ __("-- Choisir --") }}</option>
                             @foreach ($gestionnaires as $g)
-                                <option value="{{ $g->id }}">{{ $g->user->nom }} {{ $g->user->prenom }}</option>
+                                <option value="{{ $g->id }}">{{ $g->nomComplet() }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -94,7 +94,7 @@
             <select wire:model.live="filtreGestionnaireId" class="border rounded px-3 py-2 w-full sm:w-auto">
                 <option value="">{{ __("Tous les gestionnaires") }}</option>
                 @foreach ($gestionnaires as $g)
-                    <option value="{{ $g->id }}">{{ $g->user->nom }} {{ $g->user->prenom }}</option>
+                    <option value="{{ $g->id }}">{{ $g->nomComplet() }}</option>
                 @endforeach
             </select>
         @endif

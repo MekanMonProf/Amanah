@@ -199,7 +199,7 @@ class InvestisseurIndex extends Component
         return view('livewire.investisseurs.investisseur-index', [
             'investisseurs' => $this->requeteFiltree()->orderBy($this->tri, $this->direction)->paginate(20),
             'gestionnaires' => Auth::user()->role !== 'gestionnaire'
-                ? Gestionnaire::with('user')->where('actif', true)->get()
+                ? Gestionnaire::avecCompte()->with('user')->where('actif', true)->get()
                 : collect(),
         ]);
     }

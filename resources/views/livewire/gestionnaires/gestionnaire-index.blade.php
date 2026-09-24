@@ -24,6 +24,12 @@
         </div>
     @endif
 
+    @if (session('erreur_orphelin'))
+        <div class="bg-red-50 border border-red-200 text-red-800 rounded-lg px-4 py-3 mb-4 text-sm">
+            {{ session('erreur_orphelin') }}
+        </div>
+    @endif
+
     @if (session('erreur_desactivation'))
         <div class="bg-red-50 border border-red-200 text-red-700 rounded-lg p-3 mb-4 text-sm">
             {{ session('erreur_desactivation') }}
@@ -39,8 +45,8 @@
                     <select wire:model="nouveauGestionnairePourReassignation" class="w-full border rounded px-3 py-2 text-sm">
                         <option value="">{{ __("— Choisir —") }}</option>
                         @foreach ($gestionnaires as $g)
-                            @if ($g->id !== $gestionnaireADesactiverId && $g->actif)
-                                <option value="{{ $g->id }}">{{ $g->user->nom }} {{ $g->user->prenom }}</option>
+                            @if ($g->id !== $gestionnaireADesactiverId && $g->actif && ! $g->estOrphelin())
+                                <option value="{{ $g->id }}">{{ $g->nomComplet() }}</option>
                             @endif
                         @endforeach
                     </select>
@@ -148,9 +154,14 @@
         <tbody class="divide-y">
             @forelse ($gestionnaires as $g)
                 <tr class="hover:bg-gray-50">
-                    <td class="p-3">{{ $g->user->nom }} {{ $g->user->prenom }}</td>
-                    <td class="p-3 text-sm text-gray-600">{{ $g->user->email }}</td>
-                    <td class="p-3 text-sm text-gray-600">{{ $g->user->telephone ?: '—' }}</td>
+                    <td class="p-3">
+                        {{ $g->nomComplet() }}
+                        @if ($g->estOrphelin())
+                            <span class="ms-1 px-2 py-0.5 text-xs rounded-full bg-red-100 text-red-700 whitespace-nowrap">{{ __("Compte de connexion supprimé") }}</span>
+                        @endif
+                    </td>
+                    <td class="p-3 text-sm text-gray-600">{{ $g->user?->email ?: '—' }}</td>
+                    <td class="p-3 text-sm text-gray-600">{{ $g->user?->telephone ?: '—' }}</td>
                     <td class="p-3 text-end">
                         <a href="{{ route('investisseurs.index') }}?gestionnaire={{ $g->id }}" wire:navigate class="text-emerald-700 hover:underline">
                             {{ $g->investisseurs_count }}
@@ -162,17 +173,23 @@
                         </span>
                     </td>
                     <td class="p-3 text-end whitespace-nowrap">
-                        <button wire:click="modifier({{ $g->id }})" class="text-sm text-gray-600 hover:underline me-3">
-                            {{ __("Modifier") }}
-                        </button>
-                        <button wire:click="reinitialiserMotDePasse({{ $g->id }})" wire:confirm="{{ __('Générer un nouveau mot de passe temporaire pour :identifiant ?', ['identifiant' => $g->user->email]) }}"
-                                class="text-sm text-blue-600 hover:underline me-3">
-                            {{ __("Réinitialiser le mot de passe") }}
-                        </button>
-                        <button wire:click="basculerActif({{ $g->id }})" wire:confirm="{{ __('Confirmer le changement de statut ?') }}"
-                                class="text-sm text-gray-500 hover:underline">
-                            {{ $g->actif ? __('Désactiver') : __('Réactiver') }}
-                        </button>
+                        @if ($g->estOrphelin())
+                            {{-- Sans compte de connexion, aucune de ces actions n a de sens :
+                                 il n y a plus de nom a changer ni d adresse ou ecrire. --}}
+                            <span class="text-sm text-gray-400">{{ __("Aucune action possible") }}</span>
+                        @else
+                            <button wire:click="modifier({{ $g->id }})" class="text-sm text-gray-600 hover:underline me-3">
+                                {{ __("Modifier") }}
+                            </button>
+                            <button wire:click="reinitialiserMotDePasse({{ $g->id }})" wire:confirm="{{ __('Générer un nouveau mot de passe temporaire pour :identifiant ?', ['identifiant' => $g->user->email]) }}"
+                                    class="text-sm text-blue-600 hover:underline me-3">
+                                {{ __("Réinitialiser le mot de passe") }}
+                            </button>
+                            <button wire:click="basculerActif({{ $g->id }})" wire:confirm="{{ __('Confirmer le changement de statut ?') }}"
+                                    class="text-sm text-gray-500 hover:underline">
+                                {{ $g->actif ? __('Désactiver') : __('Réactiver') }}
+                            </button>
+                        @endif
                     </td>
                 </tr>
             @empty

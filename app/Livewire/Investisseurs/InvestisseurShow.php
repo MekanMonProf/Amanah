@@ -201,8 +201,8 @@ class InvestisseurShow extends Component
             action: 'transfert_gestionnaire',
             entite: 'investisseur',
             entiteId: $this->investisseur->id,
-            avant: ['gestionnaire' => $ancienGestionnaire ? "{$ancienGestionnaire->user->nom} {$ancienGestionnaire->user->prenom}" : null],
-            apres: ['gestionnaire' => "{$nouveauGestionnaire->user->nom} {$nouveauGestionnaire->user->prenom}", 'motif' => $this->motifTransfert ?: null],
+            avant: ['gestionnaire' => $ancienGestionnaire?->nomComplet()],
+            apres: ['gestionnaire' => $nouveauGestionnaire->nomComplet(), 'motif' => $this->motifTransfert ?: null],
         );
 
         $this->investisseur->refresh();
@@ -268,7 +268,7 @@ class InvestisseurShow extends Component
                 ->where('present_pour_investisseur_id', $this->investisseur->id)
                 ->latest('date_achat')->get(),
             'gestionnaires' => in_array(Auth::user()->role, ['direction', 'administrateur'], true)
-                ? Gestionnaire::with('user')->where('actif', true)->get()
+                ? Gestionnaire::avecCompte()->with('user')->where('actif', true)->get()
                 : collect(),
             'historiqueAffectations' => in_array(Auth::user()->role, ['direction', 'administrateur'], true)
                 ? $this->investisseur->historiqueAffectations()->with(['ancienGestionnaire.user', 'nouveauGestionnaire.user', 'effectuePar'])->latest('id')->get()

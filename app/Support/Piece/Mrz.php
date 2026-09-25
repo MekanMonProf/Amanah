@@ -59,7 +59,7 @@ class Mrz
      * Analyse des lignes déjà isolées.
      *
      * @param  list<string>  $lignes
-     * @return array{champs: array<string, string>, ecartes: list<string>, format: ?string}
+     * @return array{champs: array<string, string>, ecartes: array<string, string>, format: ?string}
      */
     public static function lire(array $lignes): array
     {
@@ -138,7 +138,7 @@ class Mrz
     /**
      * Passeport : 2 lignes de 44.
      *
-     * @return array{champs: array<string, string>, ecartes: list<string>, format: string}|null
+     * @return array{champs: array<string, string>, ecartes: array<string, string>, format: string}|null
      */
     private static function extraireTd3(array $lignes): ?array
     {
@@ -182,7 +182,7 @@ class Mrz
     /**
      * Carte d'identité biométrique : 3 lignes de 30.
      *
-     * @return array{champs: array<string, string>, ecartes: list<string>, format: string}|null
+     * @return array{champs: array<string, string>, ecartes: array<string, string>, format: string}|null
      */
     private static function extraireTd1(array $lignes): ?array
     {
@@ -222,7 +222,10 @@ class Mrz
         return ['champs' => $champs, 'ecartes' => $ecartes, 'format' => 'TD1'];
     }
 
-    /** Range la valeur si elle est lisible et vérifiée, sinon note le champ écarté. */
+    /**
+     * Range la valeur si sa clé de contrôle tombe juste. Sinon elle rejoint les
+     * valeurs non confirmées : lue, mais pas au point d'être proposée seule.
+     */
     private static function poser(array &$champs, array &$ecartes, string $nom, ?string $valeur, bool $verifiee): void
     {
         if ($valeur === null || $valeur === '') {
@@ -235,7 +238,10 @@ class Mrz
             return;
         }
 
-        $ecartes[] = $nom;
+        // On garde la valeur lue : elle n est pas confirmee, mais la montrer
+        // permet au gestionnaire de la comparer a la piece plutot que de rester
+        // devant un champ vide sans savoir si la lecture a eu lieu.
+        $ecartes[$nom] = $valeur;
     }
 
     /**

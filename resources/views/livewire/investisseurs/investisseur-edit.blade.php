@@ -153,6 +153,26 @@
                         </div>
                     @endif
 
+                    @if ($nonConfirmesPiece)
+                        <div class="mt-3 bg-sky-50 border border-sky-200 rounded-lg p-3">
+                            <p class="text-sm font-semibold text-sky-900">{{ __("Lu, mais non confirmé") }}</p>
+                            <p class="mt-1 text-xs text-sky-800">
+                                {{ __("La clé de contrôle de la pièce n'a pas validé ces valeurs. Comparez-les au document avant de les reprendre.") }}
+                            </p>
+                            <ul class="mt-2 space-y-1">
+                                @foreach ($nonConfirmesPiece as $champ => $valeur)
+                                    <li class="flex items-center gap-2 text-sm text-sky-900">
+                                        <span>{{ $libelles[$champ] ?? $champ }} : <strong>{{ $valeur }}</strong></span>
+                                        <button type="button" wire:click="accepterNonConfirme('{{ $champ }}')"
+                                                class="text-xs border border-sky-300 rounded px-2 py-0.5 hover:bg-sky-100">
+                                            {{ __("Reprendre") }}
+                                        </button>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
                     @if ($motifLecturePiece === \App\Support\Piece\LecteurPiece::AUCUNE_MRZ)
                         <p class="mt-2 text-xs text-gray-500">{{ __("Aucune bande lisible sur cette image — saisissez les champs à la main.") }}</p>
                     @elseif ($motifLecturePiece === \App\Support\Piece\LecteurPiece::ECHEC)

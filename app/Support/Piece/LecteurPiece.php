@@ -52,7 +52,7 @@ class LecteurPiece
     }
 
     /**
-     * @return array{champs: array<string, string>, ecartes: list<string>, format: ?string, motif: ?string}
+     * @return array{champs: array<string, string>, ecartes: array<string, string>, format: ?string, motif: ?string}
      */
     public static function lire(string $cheminImage): array
     {
@@ -121,7 +121,7 @@ class LecteurPiece
         return config('piece.tesseract.binaire');
     }
 
-    /** @return array{champs: array, ecartes: list<string>, format: null, motif: string} */
+    /** @return array{champs: array, ecartes: array<string, string>, format: null, motif: string} */
     private static function rien(string $motif): array
     {
         return ['champs' => [], 'ecartes' => [], 'format' => null, 'motif' => $motif];

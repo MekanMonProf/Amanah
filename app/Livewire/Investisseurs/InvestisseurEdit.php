@@ -81,6 +81,12 @@ class InvestisseurEdit extends Component
     /** Champs lus qui contredisent ce qui est deja saisi — signales, jamais appliques. */
     public array $divergencesPiece = [];
 
+    /**
+     * Champs lus dont la cle de controle n a pas confirme la lecture. Montres
+     * pour que le gestionnaire les compare a la piece, jamais appliques d office.
+     */
+    public array $nonConfirmesPiece = [];
+
     /** Pourquoi la lecture n a rien donne, le cas echeant. */
     public ?string $motifLecturePiece = null;
 
@@ -151,6 +157,7 @@ class InvestisseurEdit extends Component
     {
         $this->propositionsPiece = [];
         $this->divergencesPiece = [];
+        $this->nonConfirmesPiece = [];
         $this->motifLecturePiece = null;
 
         if (! $this->piece_identite_upload) {
@@ -178,6 +185,29 @@ class InvestisseurEdit extends Component
                 $this->divergencesPiece[$champ] = $valeur;
             }
         }
+
+        // Une valeur dont la cle n a pas confirme la lecture n est pas proposee,
+        // mais elle est montree : sans cela le champ reste vide sans que rien ne
+        // dise si la lecture a eu lieu ou non — c est ce qui s est passe au
+        // premier essai sur une vraie piece.
+        foreach ($lecture['ecartes'] as $champ => $valeur) {
+            if (property_exists($this, $champ) && blank($this->$champ)) {
+                $this->nonConfirmesPiece[$champ] = $valeur;
+            }
+        }
+    }
+
+    /**
+     * Recopie une valeur non confirmee, apres que le gestionnaire l a comparee a
+     * la piece. La cle de controle protege d une corruption silencieuse ; un
+     * humain qui lit la valeur a l ecran et la valide n a rien de silencieux.
+     */
+    public function accepterNonConfirme(string $champ): void
+    {
+        if (isset($this->nonConfirmesPiece[$champ]) && property_exists($this, $champ)) {
+            $this->$champ = $this->nonConfirmesPiece[$champ];
+            unset($this->nonConfirmesPiece[$champ]);
+        }
     }
 
     /** Recopie les valeurs proposees dans le formulaire. L enregistrement reste a faire. */
@@ -194,7 +224,7 @@ class InvestisseurEdit extends Component
 
     public function ignorerPropositionsPiece(): void
     {
-        $this->reset(['propositionsPiece', 'divergencesPiece', 'motifLecturePiece']);
+        $this->reset(['propositionsPiece', 'divergencesPiece', 'nonConfirmesPiece', 'motifLecturePiece']);
     }
 
     public function mount(Investisseur $investisseur): void

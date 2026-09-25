@@ -147,11 +147,27 @@ class LecteurPiece
         for ($rang = $debut - 1; $rang >= 0; $rang--) {
             $candidat = self::numeroPlausible($brutes[$rang] ?? '');
 
-            if ($candidat !== null) {
-                $resultat['ecartes']['numero_imprime'] = $candidat;
-
-                return;
+            if ($candidat === null) {
+                continue;
             }
+
+            // Le numero de la carte senegalaise porte la date de naissance : si
+            // elle est plausible, et surtout si elle coincide avec celle de la
+            // bande, la lecture se verifie d elle-meme. Voir NumeroCni.
+            $dateDeLaBande = $resultat['champs']['date_naissance'] ?? null;
+
+            if (NumeroCni::concordeAvec($candidat, $dateDeLaBande)) {
+                $resultat['champs']['numero_identification'] = $candidat;
+            } elseif (NumeroCni::structureValide($candidat)) {
+                // Structure conforme mais rien pour la recouper : mieux qu un
+                // texte quelconque, pas assez pour etre affirme.
+                $resultat['ecartes']['numero_imprime'] = $candidat;
+                $resultat['champs']['date_naissance'] ??= NumeroCni::dateDeNaissance($candidat);
+            } else {
+                $resultat['ecartes']['numero_imprime'] = $candidat;
+            }
+
+            return;
         }
     }
 

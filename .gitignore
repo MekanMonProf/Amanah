@@ -22,3 +22,7 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Donnees de langue Tesseract : trop lourdes pour le depot,
+# voir config/piece.php pour la commande de telechargement.
+/storage/app/tessdata

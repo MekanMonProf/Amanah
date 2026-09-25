@@ -22,6 +22,16 @@ use Carbon\Carbon;
  */
 class Mrz
 {
+    /**
+     * Silhouette de la ligne de données : les positions où la norme impose un
+     * chiffre, une lettre ou un sexe. Un texte quelconque n'y ressemble pas, et
+     * chaque champ reste ensuite vérifié par sa propre clé.
+     */
+    private const FORME_TD3 = '/^[A-Z0-9<]{9}\d[A-Z<]{3}\d{6}\d[MFX<]\d{6}\d[A-Z0-9<]{16}$/';
+    // 6 date + 1 cle + 1 sexe + 6 date + 1 cle + 3 nationalite + 11 facultatif
+    // + 1 cle composite = 30. C est ce dernier caractere que j avais oublie.
+    private const FORME_TD1 = '/^\d{6}\d[MFX<]\d{6}\d[A-Z<]{3}[A-Z0-9<]{12}$/';
+
     /** Poids cycliques de l'algorithme de contrôle MRZ (norme OACI 9303). */
     private const POIDS = [7, 3, 1];
 
@@ -85,7 +95,10 @@ class Mrz
             $ligne = str_replace([' ', '«', '‹', '"'], '<', $ligne);
             $ligne = preg_replace('/[^A-Z0-9<]/', '', $ligne) ?? '';
 
-            if (in_array(strlen($ligne), [30, 36, 44], true) && substr_count($ligne, '<') >= 2) {
+            // Longueur approchante plutot qu exacte : un caractere de trop sur la
+            // ligne du nom ne doit pas faire perdre la piece entiere. C est la
+            // cle de controle, plus loin, qui fait foi.
+            if (strlen($ligne) >= 28 && strlen($ligne) <= 48 && substr_count($ligne, '<') >= 2) {
                 $retenues[] = $ligne;
             }
         }
@@ -129,13 +142,16 @@ class Mrz
      */
     private static function extraireTd3(array $lignes): ?array
     {
-        $paire = self::paire($lignes, 44);
+        $rang = self::ligneDeDonnees($lignes, self::FORME_TD3);
 
-        if (! $paire) {
+        if ($rang === null) {
             return null;
         }
 
-        [$haut, $bas] = $paire;
+        $bas = $lignes[$rang];
+        // La ligne du nom precede la ligne de donnees. Elle ne porte aucune cle :
+        // on ne s en sert que si elle est intacte, voir plus bas.
+        $haut = $lignes[$rang - 1] ?? '';
 
         $champs = [];
         $ecartes = [];
@@ -158,7 +174,7 @@ class Mrz
 
         $champs['type_identification'] = 'Passeport';
 
-        self::poserNoms($champs, substr($haut, 5));
+        self::poserNoms($champs, $haut, 44, 5);
 
         return ['champs' => $champs, 'ecartes' => $ecartes, 'format' => 'TD3'];
     }
@@ -170,13 +186,15 @@ class Mrz
      */
     private static function extraireTd1(array $lignes): ?array
     {
-        $trio = self::trio($lignes, 30);
+        $rang = self::ligneDeDonnees($lignes, self::FORME_TD1);
 
-        if (! $trio) {
+        if ($rang === null || ! isset($lignes[$rang - 1])) {
             return null;
         }
 
-        [$un, $deux, $trois] = $trio;
+        $un = $lignes[$rang - 1];
+        $deux = $lignes[$rang];
+        $trois = $lignes[$rang + 1] ?? '';
 
         $champs = [];
         $ecartes = [];
@@ -199,7 +217,7 @@ class Mrz
 
         $champs['type_identification'] = "Carte nationale d'identité";
 
-        self::poserNoms($champs, $trois);
+        self::poserNoms($champs, $trois, 30, 0);
 
         return ['champs' => $champs, 'ecartes' => $ecartes, 'format' => 'TD1'];
     }
@@ -220,9 +238,23 @@ class Mrz
         $ecartes[] = $nom;
     }
 
-    /** « DIOP<<MOUSSA<AMADOU » => nom « DIOP », prénom « Moussa Amadou ». */
-    private static function poserNoms(array &$champs, string $zone): void
+    /**
+     * « DIOP<<MOUSSA<AMADOU » => nom « DIOP », prénom « Moussa Amadou ».
+     *
+     * La ligne des noms est la seule de la MRZ à ne porter aucune clé de
+     * contrôle : rien ne permet de vérifier ce qu'on y a lu. On ne s'en sert
+     * donc que si elle a exactement la longueur attendue — un caractère de trop
+     * ou de moins trahit une lecture douteuse, et un nom faux sur un dossier
+     * d'identification vaut moins que pas de nom du tout.
+     */
+    private static function poserNoms(array &$champs, string $ligne, int $longueurAttendue, int $debut): void
     {
+        if (strlen($ligne) !== $longueurAttendue) {
+            return;
+        }
+
+        $zone = substr($ligne, $debut);
+
         [$nom, $prenoms] = array_pad(explode('<<', trim($zone, '<'), 2), 2, '');
 
         $nom = self::sansChevrons($nom);
@@ -281,19 +313,20 @@ class Mrz
         }
     }
 
-    /** @return array{0: string, 1: string}|null */
-    private static function paire(array $lignes, int $longueur): ?array
+    /**
+     * Rang de la ligne porteuse des données, celle dont on peut vérifier la
+     * lecture. C'est elle qui identifie le format — pas la ligne des noms, qui
+     * n'a pas de clé et dont une seule lettre mal lue suffirait à faire perdre
+     * la pièce entière.
+     */
+    private static function ligneDeDonnees(array $lignes, string $forme): ?int
     {
-        $candidates = array_values(array_filter($lignes, fn ($l) => strlen($l) === $longueur));
+        foreach ($lignes as $rang => $ligne) {
+            if (preg_match($forme, $ligne)) {
+                return $rang;
+            }
+        }
 
-        return count($candidates) >= 2 ? [$candidates[0], $candidates[1]] : null;
-    }
-
-    /** @return array{0: string, 1: string, 2: string}|null */
-    private static function trio(array $lignes, int $longueur): ?array
-    {
-        $candidates = array_values(array_filter($lignes, fn ($l) => strlen($l) === $longueur));
-
-        return count($candidates) >= 3 ? [$candidates[0], $candidates[1], $candidates[2]] : null;
+        return null;
     }
 }

@@ -423,11 +423,13 @@ class PresentationSeeder extends Seeder
             $mois = $periode->copy();
 
             $this->le($mois->copy()->endOfMonth()->toDateString(), function () use ($mois, $delai) {
-                foreach (['commercial' => 900, 'waqf' => 750] as $categorie => $base) {
-                    // Un rendement qui varie d'un mois à l'autre : une courbe plate
-                    // en démonstration donne l'impression d'un chiffre inventé.
-                    $benefice = $base + (($mois->month * 137) % 600);
+                // Un rendement qui varie d'un mois à l'autre : une courbe plate
+                // en démonstration donne l'impression d'un chiffre inventé. Le
+                // même taux pour les deux catégories — le rendement vient du même
+                // portefeuille, seule la destination du produit les distingue.
+                $benefice = 900 + (($mois->month * 137) % 600);
 
+                foreach (['commercial', 'waqf'] as $categorie) {
                     $bareme = BaremeDividende::updateOrCreate(
                         ['periode' => $mois->toDateString(), 'categorie' => $categorie],
                         ['benefice_par_action' => $benefice, 'fixe_par' => Auth::id()],

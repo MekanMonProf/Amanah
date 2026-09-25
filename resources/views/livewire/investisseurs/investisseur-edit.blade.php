@@ -105,6 +105,59 @@
                     @if ($investisseur->piece_identite_path)
                         <a href="{{ \Illuminate\Support\Facades\Storage::url($investisseur->piece_identite_path) }}" target="_blank" class="text-xs text-emerald-700 hover:underline">{{ __("Voir le fichier actuel") }}</a>
                     @endif
+
+                    {{-- Lecture de la bande MRZ. Rien n est ecrit d autorite : on propose,
+                         le gestionnaire valide. Voir App\Support\Piece\Mrz. --}}
+                    @php($libelles = [
+                        'nom' => __('Nom'),
+                        'prenom' => __('Prénom'),
+                        'numero_identification' => __('Numéro de pièce'),
+                        'type_identification' => __('Type de pièce'),
+                        'date_naissance' => __('Date de naissance'),
+                        'date_expiration_piece' => __("Date d'expiration"),
+                        'nationalite' => __('Nationalité'),
+                    ])
+
+                    @if ($propositionsPiece)
+                        <div class="mt-3 bg-emerald-50 border border-emerald-200 rounded-lg p-3">
+                            <p class="text-sm font-semibold text-emerald-900">
+                                {{ __("Pièce lue — :nombre valeur(s) proposée(s)", ['nombre' => count($propositionsPiece)]) }}
+                            </p>
+                            <ul class="mt-2 text-sm text-emerald-900 space-y-0.5">
+                                @foreach ($propositionsPiece as $champ => $valeur)
+                                    <li><span class="text-emerald-700">{{ $libelles[$champ] ?? $champ }} :</span> <strong>{{ $valeur }}</strong></li>
+                                @endforeach
+                            </ul>
+                            <div class="mt-3 flex gap-2">
+                                <button type="button" wire:click="appliquerPropositionsPiece"
+                                        class="text-sm bg-emerald-700 text-white rounded-lg px-3 py-1.5 hover:bg-emerald-800">
+                                    {{ __("Remplir les champs") }}
+                                </button>
+                                <button type="button" wire:click="ignorerPropositionsPiece"
+                                        class="text-sm text-gray-600 hover:underline">
+                                    {{ __("Ignorer") }}
+                                </button>
+                            </div>
+                        </div>
+                    @endif
+
+                    @if ($divergencesPiece)
+                        <div class="mt-3 bg-amber-50 border border-amber-200 rounded-lg p-3">
+                            <p class="text-sm font-semibold text-amber-800">{{ __("La pièce ne dit pas la même chose que le formulaire") }}</p>
+                            <ul class="mt-2 text-sm text-amber-800 space-y-0.5">
+                                @foreach ($divergencesPiece as $champ => $valeur)
+                                    <li>{{ $libelles[$champ] ?? $champ }} : <strong>{{ $valeur }}</strong> {{ __("sur la pièce") }}</li>
+                                @endforeach
+                            </ul>
+                            <p class="mt-2 text-xs text-amber-700">{{ __("Rien n'a été modifié — vérifiez laquelle des deux valeurs est la bonne.") }}</p>
+                        </div>
+                    @endif
+
+                    @if ($motifLecturePiece === \App\Support\Piece\LecteurPiece::AUCUNE_MRZ)
+                        <p class="mt-2 text-xs text-gray-500">{{ __("Aucune bande lisible sur cette image — saisissez les champs à la main.") }}</p>
+                    @elseif ($motifLecturePiece === \App\Support\Piece\LecteurPiece::ECHEC)
+                        <p class="mt-2 text-xs text-gray-500">{{ __("La lecture automatique a échoué — saisissez les champs à la main.") }}</p>
+                    @endif
                 </div>
             </div>
         </div>

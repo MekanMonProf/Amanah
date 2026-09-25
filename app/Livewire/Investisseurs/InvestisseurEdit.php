@@ -75,6 +75,15 @@ class InvestisseurEdit extends Component
     #[Validate('nullable|image|max:5120')]
     public $piece_identite_upload = null;
 
+    /** Champs lus sur la piece et actuellement vides dans le formulaire. */
+    public array $propositionsPiece = [];
+
+    /** Champs lus qui contredisent ce qui est deja saisi — signales, jamais appliques. */
+    public array $divergencesPiece = [];
+
+    /** Pourquoi la lecture n a rien donne, le cas echeant. */
+    public ?string $motifLecturePiece = null;
+
     // Convention d'engagement
     #[Validate('nullable|date')]
     public ?string $date_signature_convention = null;
@@ -129,6 +138,64 @@ class InvestisseurEdit extends Component
         'raison_sociale', 'rccm', 'ninea', 'representant_legal_nom', 'representant_legal_telephone', 'representant_legal_whatsapp',
         'beneficiaire_nom', 'beneficiaire_lien', 'beneficiaire_telephone', 'beneficiaire_whatsapp', 'notes_internes',
     ];
+
+    /**
+     * Des que la piece est jointe, on tente d en lire la bande MRZ.
+     *
+     * Rien n est ecrit d autorite : les valeurs lues sont proposees, et celles
+     * qui contredisent une saisie existante sont seulement signalees. Sur un
+     * dossier d identification, un ecart entre la piece et le formulaire est
+     * precisement ce qu on veut voir, pas ce qu on veut effacer.
+     */
+    public function updatedPieceIdentiteUpload(): void
+    {
+        $this->propositionsPiece = [];
+        $this->divergencesPiece = [];
+        $this->motifLecturePiece = null;
+
+        if (! $this->piece_identite_upload) {
+            return;
+        }
+
+        $this->validateOnly('piece_identite_upload');
+
+        $lecture = \App\Support\Piece\LecteurPiece::lire($this->piece_identite_upload->getRealPath());
+
+        if ($lecture['format'] === null) {
+            $this->motifLecturePiece = $lecture['motif'];
+
+            return;
+        }
+
+        foreach ($lecture['champs'] as $champ => $valeur) {
+            if (! property_exists($this, $champ)) {
+                continue;
+            }
+
+            if (blank($this->$champ)) {
+                $this->propositionsPiece[$champ] = $valeur;
+            } elseif (mb_strtolower(trim((string) $this->$champ)) !== mb_strtolower($valeur)) {
+                $this->divergencesPiece[$champ] = $valeur;
+            }
+        }
+    }
+
+    /** Recopie les valeurs proposees dans le formulaire. L enregistrement reste a faire. */
+    public function appliquerPropositionsPiece(): void
+    {
+        foreach ($this->propositionsPiece as $champ => $valeur) {
+            if (property_exists($this, $champ)) {
+                $this->$champ = $valeur;
+            }
+        }
+
+        $this->propositionsPiece = [];
+    }
+
+    public function ignorerPropositionsPiece(): void
+    {
+        $this->reset(['propositionsPiece', 'divergencesPiece', 'motifLecturePiece']);
+    }
 
     public function mount(Investisseur $investisseur): void
     {

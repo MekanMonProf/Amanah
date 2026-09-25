@@ -116,6 +116,7 @@
                         'date_naissance' => __('Date de naissance'),
                         'date_expiration_piece' => __("Date d'expiration"),
                         'nationalite' => __('Nationalité'),
+                        'numero_imprime' => __('Numéro imprimé sur la pièce'),
                     ])
 
                     @if ($propositionsPiece)

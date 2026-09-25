@@ -78,6 +78,14 @@ class InvestisseurEdit extends Component
     /** Champs lus sur la piece et actuellement vides dans le formulaire. */
     public array $propositionsPiece = [];
 
+    /**
+     * Valeurs lues qui ne portent pas le nom d un champ du formulaire.
+     *
+     * Le numero imprime au-dessus de la bande est propose a part de celui que
+     * porte la bande : sur la carte senegalaise les deux existent et different.
+     */
+    private const CHAMPS_LUS = ['numero_imprime' => 'numero_identification'];
+
     /** Champs lus qui contredisent ce qui est deja saisi — signales, jamais appliques. */
     public array $divergencesPiece = [];
 
@@ -191,7 +199,9 @@ class InvestisseurEdit extends Component
         // dise si la lecture a eu lieu ou non — c est ce qui s est passe au
         // premier essai sur une vraie piece.
         foreach ($lecture['ecartes'] as $champ => $valeur) {
-            if (property_exists($this, $champ) && blank($this->$champ)) {
+            $cible = self::CHAMPS_LUS[$champ] ?? $champ;
+
+            if (property_exists($this, $cible) && blank($this->$cible)) {
                 $this->nonConfirmesPiece[$champ] = $valeur;
             }
         }
@@ -204,8 +214,10 @@ class InvestisseurEdit extends Component
      */
     public function accepterNonConfirme(string $champ): void
     {
-        if (isset($this->nonConfirmesPiece[$champ]) && property_exists($this, $champ)) {
-            $this->$champ = $this->nonConfirmesPiece[$champ];
+        $cible = self::CHAMPS_LUS[$champ] ?? $champ;
+
+        if (isset($this->nonConfirmesPiece[$champ]) && property_exists($this, $cible)) {
+            $this->$cible = $this->nonConfirmesPiece[$champ];
             unset($this->nonConfirmesPiece[$champ]);
         }
     }

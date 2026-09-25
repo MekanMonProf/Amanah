@@ -70,11 +70,16 @@ class LecteurPiece
             return self::rien(self::ECHEC);
         }
 
-        $resultat = Mrz::lire(preg_split('/\R/', $texte) ?: []);
+        $brutes = preg_split('/\R/', $texte) ?: [];
+        $resultat = Mrz::lire($brutes);
 
         if ($resultat['format'] === null) {
             return self::rien(self::AUCUNE_MRZ);
         }
+
+        self::ajouterNumeroImprime($resultat, $brutes);
+
+        unset($resultat['lignes'], $resultat['debutBande']);
 
         return $resultat + ['motif' => null];
     }
@@ -114,6 +119,60 @@ class LecteurPiece
 
             return null;
         }
+    }
+
+    /**
+     * Numero imprime juste au-dessus de la bande.
+     *
+     * Sur la carte d identite senegalaise, le numero qui compte est imprime
+     * au-dessus des trois lignes et non dedans : la bande n en porte donc
+     * aucune trace, et aucune cle ne permet de le verifier. Il rejoint les
+     * valeurs non confirmees, a comparer a la piece — jamais une proposition
+     * ferme.
+     *
+     * Il est propose meme quand la bande a livre un numero : sur la carte
+     * senegalaise les deux existent et ne sont pas le meme — la bande porte un
+     * numero de carte, le recto le numero d identification. C est au
+     * gestionnaire de dire lequel il veut.
+     */
+    private static function ajouterNumeroImprime(array &$resultat, array $brutes): void
+    {
+        $debut = $resultat['debutBande'];
+
+        if ($debut === null) {
+            return;
+        }
+
+        // On remonte au-dessus de la bande jusqu a la premiere ligne non vide.
+        for ($rang = $debut - 1; $rang >= 0; $rang--) {
+            $candidat = self::numeroPlausible($brutes[$rang] ?? '');
+
+            if ($candidat !== null) {
+                $resultat['ecartes']['numero_imprime'] = $candidat;
+
+                return;
+            }
+        }
+    }
+
+    /**
+     * Une ligne imprimee ressemble-t-elle a un numero de piece ?
+     *
+     * Assez de chiffres pour ne pas confondre avec une mention administrative,
+     * assez court pour ne pas ramasser une adresse. Le NIN senegalais fait
+     * treize chiffres ; on accepte un peu autour, sans jamais rien affirmer.
+     */
+    private static function numeroPlausible(string $ligne): ?string
+    {
+        $nettoye = preg_replace('/[^A-Z0-9]/', '', strtoupper($ligne)) ?? '';
+
+        if (strlen($nettoye) < 6 || strlen($nettoye) > 20) {
+            return null;
+        }
+
+        $chiffres = preg_match_all('/\d/', $nettoye);
+
+        return $chiffres >= 6 && $chiffres >= strlen($nettoye) * 0.6 ? $nettoye : null;
     }
 
     private static function binaire(): string

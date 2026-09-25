@@ -27,10 +27,10 @@ class Mrz
      * chiffre, une lettre ou un sexe. Un texte quelconque n'y ressemble pas, et
      * chaque champ reste ensuite vérifié par sa propre clé.
      */
-    private const FORME_TD3 = '/^[A-Z0-9<]{9}\d[A-Z<]{3}\d{6}\d[MFX<]\d{6}\d[A-Z0-9<]{16}$/';
+    private const FORME_TD3 = '/^[A-Z0-9<]{9}\d[A-Z<]{3}\d{6}\d[MFX<]\d{6}\d[A-Z0-9<]{13,19}$/';
     // 6 date + 1 cle + 1 sexe + 6 date + 1 cle + 3 nationalite + 11 facultatif
     // + 1 cle composite = 30. C est ce dernier caractere que j avais oublie.
-    private const FORME_TD1 = '/^\d{6}\d[MFX<]\d{6}\d[A-Z<]{3}[A-Z0-9<]{12}$/';
+    private const FORME_TD1 = '/^\d{6}\d[MFX<]\d{6}\d[A-Z<]{3}[A-Z0-9<]{9,15}$/';
 
     /** Poids cycliques de l'algorithme de contrôle MRZ (norme OACI 9303). */
     private const POIDS = [7, 3, 1];
@@ -59,7 +59,7 @@ class Mrz
      * Analyse des lignes déjà isolées.
      *
      * @param  list<string>  $lignes
-     * @return array{champs: array<string, string>, ecartes: array<string, string>, format: ?string}
+     * @return array{champs: array<string, string>, ecartes: array<string, string>, format: ?string, lignes: list<string>, debutBande: ?int}
      */
     public static function lire(array $lignes): array
     {
@@ -73,7 +73,7 @@ class Mrz
             return $td1;
         }
 
-        return ['champs' => [], 'ecartes' => [], 'format' => null];
+        return ['champs' => [], 'ecartes' => [], 'format' => null, 'lignes' => $lignes, 'debutBande' => null];
     }
 
     /**
@@ -98,9 +98,13 @@ class Mrz
             // Longueur approchante plutot qu exacte : un caractere de trop sur la
             // ligne du nom ne doit pas faire perdre la piece entiere. C est la
             // cle de controle, plus loin, qui fait foi.
-            if (strlen($ligne) >= 28 && strlen($ligne) <= 48 && substr_count($ligne, '<') >= 2) {
-                $retenues[] = $ligne;
-            }
+            //
+            // Les autres lignes sont conservees vides plutot que supprimees : le
+            // rang de chacune doit rester celui de l image, sinon on ne peut plus
+            // designer « la ligne juste au-dessus de la bande ».
+            $retenues[] = (strlen($ligne) >= 28 && strlen($ligne) <= 48 && substr_count($ligne, '<') >= 2)
+                ? $ligne
+                : '';
         }
 
         return $retenues;
@@ -174,9 +178,10 @@ class Mrz
 
         $champs['type_identification'] = 'Passeport';
 
-        self::poserNoms($champs, $haut, 44, 5);
+        self::poserNoms($ecartes, $haut, 44, 5);
 
-        return ['champs' => $champs, 'ecartes' => $ecartes, 'format' => 'TD3'];
+        return ['champs' => $champs, 'ecartes' => $ecartes, 'format' => 'TD3',
+            'lignes' => $lignes, 'debutBande' => max(0, $rang - 1)];
     }
 
     /**
@@ -199,9 +204,14 @@ class Mrz
         $champs = [];
         $ecartes = [];
 
-        self::poser($champs, $ecartes, 'numero_identification',
-            self::sansChevrons(substr($un, 5, 9)),
-            self::verifie(substr($un, 5, 9), $un[14]));
+        // La premiere ligne peut manquer ou etre illisible : seule la ligne de
+        // donnees est garantie, c est elle qui a identifie le format. Quinze
+        // caracteres suffisent — le numero et sa cle —, la queue peut deborder.
+        if (strlen($un) >= 15) {
+            self::poser($champs, $ecartes, 'numero_identification',
+                self::sansChevrons(substr($un, 5, 9)),
+                self::verifie(substr($un, 5, 9), $un[14]));
+        }
 
         self::poser($champs, $ecartes, 'date_naissance',
             self::date(substr($deux, 0, 6), passe: true),
@@ -217,9 +227,10 @@ class Mrz
 
         $champs['type_identification'] = "Carte nationale d'identité";
 
-        self::poserNoms($champs, $trois, 30, 0);
+        self::poserNoms($ecartes, $trois, 30, 0);
 
-        return ['champs' => $champs, 'ecartes' => $ecartes, 'format' => 'TD1'];
+        return ['champs' => $champs, 'ecartes' => $ecartes, 'format' => 'TD1',
+            'lignes' => $lignes, 'debutBande' => max(0, $rang - 1)];
     }
 
     /**
@@ -248,14 +259,14 @@ class Mrz
      * « DIOP<<MOUSSA<AMADOU » => nom « DIOP », prénom « Moussa Amadou ».
      *
      * La ligne des noms est la seule de la MRZ à ne porter aucune clé de
-     * contrôle : rien ne permet de vérifier ce qu'on y a lu. On ne s'en sert
-     * donc que si elle a exactement la longueur attendue — un caractère de trop
-     * ou de moins trahit une lecture douteuse, et un nom faux sur un dossier
-     * d'identification vaut moins que pas de nom du tout.
+     * contrôle : rien ne permet de vérifier ce qu'on y a lu, et une lettre
+     * parasite y passe inaperçue même quand la longueur tombe juste. Les noms
+     * rejoignent donc les valeurs non confirmées — montrés pour être comparés à
+     * la pièce, jamais donnés pour vérifiés.
      */
-    private static function poserNoms(array &$champs, string $ligne, int $longueurAttendue, int $debut): void
+    private static function poserNoms(array &$ecartes, string $ligne, int $longueurAttendue, int $debut): void
     {
-        if (strlen($ligne) !== $longueurAttendue) {
+        if (abs(strlen($ligne) - $longueurAttendue) > 2) {
             return;
         }
 
@@ -263,21 +274,30 @@ class Mrz
 
         [$nom, $prenoms] = array_pad(explode('<<', trim($zone, '<'), 2), 2, '');
 
+        // Dans une MRZ, le double chevron separe les champs : ce qui suit les
+        // prenoms est du remplissage, meme quand l OCR l a rendu en lettres.
+        $prenoms = explode('<<', $prenoms)[0];
+
         $nom = self::sansChevrons($nom);
         $prenoms = self::sansChevrons($prenoms);
 
         if ($nom !== '') {
-            $champs['nom'] = $nom;
+            $ecartes['nom'] = $nom;
         }
 
         if ($prenoms !== '') {
-            $champs['prenom'] = $prenoms;
+            $ecartes['prenom'] = $prenoms;
         }
     }
 
     private static function sansChevrons(string $valeur): string
     {
-        return trim(preg_replace('/<+/', ' ', $valeur) ?? '');
+        $texte = trim(preg_replace('/<+/', ' ', $valeur) ?? '');
+
+        // L OCR rend parfois une longue suite de chevrons comme une suite de la
+        // meme lettre — « AISSATOUCKKKKKKKKKK ». Trois caracteres identiques de
+        // suite ne sont pas un nom : on coupe la queue plutot que d afficher ça.
+        return trim(preg_replace('/(.)\1{2,}.*$/u', '', $texte) ?? $texte);
     }
 
     private static function nationalite(string $code): ?string
@@ -328,7 +348,7 @@ class Mrz
     private static function ligneDeDonnees(array $lignes, string $forme): ?int
     {
         foreach ($lignes as $rang => $ligne) {
-            if (preg_match($forme, $ligne)) {
+            if ($ligne !== '' && preg_match($forme, $ligne)) {
                 return $rang;
             }
         }

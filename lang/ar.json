@@ -788,5 +788,6 @@
     "Rétablir l'accès de :identifiant ? Le mot de passe reste celui qu'il avait avant la révocation.": "استعادة وصول :identifiant؟ تبقى كلمة المرور كما كانت قبل الإلغاء.",
     "L'accès au portail est révoqué. L'investisseur ne peut plus se connecter ; une session en cours est coupée immédiatement.": "تم إلغاء الوصول إلى البوابة. لم يعد بإمكان المستثمر تسجيل الدخول، وتُنهى أي جلسة مفتوحة فوراً.",
     "L'accès au portail est rétabli avec le même identifiant et le même mot de passe qu'avant.": "تمت استعادة الوصول إلى البوابة بنفس المعرّف وكلمة المرور السابقين.",
-    "Ce compte a été désactivé. Contactez votre gestionnaire.": "تم إلغاء تفعيل هذا الحساب. يرجى الاتصال بالمسؤول عنك."
+    "Ce compte a été désactivé. Contactez votre gestionnaire.": "تم إلغاء تفعيل هذا الحساب. يرجى الاتصال بالمسؤول عنك.",
+    "Afficher": "إظهار"
 }

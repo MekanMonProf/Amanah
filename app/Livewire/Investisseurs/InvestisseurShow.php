@@ -20,6 +20,21 @@ class InvestisseurShow extends Component
 
     public ?string $dernierMotDePasseGenere = null;
 
+    /**
+     * Les sections d'historique repliées, par nature et non par compte : replier
+     * « Historique des achats » sur une fiche le replie sur toutes les autres,
+     * parce que c'est cette section-là qu'on ne veut plus voir.
+     *
+     * L'état vit en session plutôt que dans le navigateur : il suit donc la
+     * personne d'une fiche à l'autre sans dépendre du stockage local, qui revient
+     * vide en navigation privée.
+     *
+     * @var array<string, bool>
+     */
+    public array $blocsReplies = [];
+
+    public const CLE_SESSION_BLOCS = 'amanah.blocs_replies';
+
     public bool $afficherFormulaireTransfert = false;
     public ?int $nouveauGestionnaireId = null;
     public string $motifTransfert = '';
@@ -28,6 +43,21 @@ class InvestisseurShow extends Component
     {
         $this->assurerAccesGestionnaire($investisseur);
         $this->investisseur = $investisseur;
+        $this->blocsReplies = session(self::CLE_SESSION_BLOCS, []);
+    }
+
+    /**
+     * Replie ou déplie une section d'historique.
+     *
+     * Une section replicée n'est pas cachée, elle n'est plus rendue : son composant
+     * imbriqué et les requêtes qu'il fait disparaissent avec elle. C'est l'intérêt
+     * de le décider ici plutôt que dans le navigateur.
+     */
+    public function basculerBloc(string $cle): void
+    {
+        $this->blocsReplies[$cle] = ! ($this->blocsReplies[$cle] ?? false);
+
+        session()->put(self::CLE_SESSION_BLOCS, $this->blocsReplies);
     }
 
     /**

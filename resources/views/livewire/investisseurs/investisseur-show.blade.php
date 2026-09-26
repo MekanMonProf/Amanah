@@ -443,7 +443,7 @@
 
             @if ($item['achats']->isNotEmpty())
                 <x-bloc-repliable :titre="__('Historique des achats')" cle="achats"
-                                  :id="'bloc-achats-'.$item['compte']->id" :nombre="$item['achats']->count()">
+                                  :nombre="$item['achats']->count()" :replie="$blocsReplies['achats'] ?? false">
                     <livewire:achats.achats-historique :compte="$item['compte']" :key="'achats-'.$item['compte']->id" />
                 </x-bloc-repliable>
             @endif
@@ -451,7 +451,7 @@
             @php($nbRadiations = $item['compte']->radiations()->count())
             @if ($nbRadiations > 0)
                 <x-bloc-repliable :titre="__('Historique des radiations')" cle="radiations"
-                                  :id="'bloc-radiations-'.$item['compte']->id" :nombre="$nbRadiations">
+                                  :nombre="$nbRadiations" :replie="$blocsReplies['radiations'] ?? false">
                     <livewire:radiations.radiations-historique :compte="$item['compte']" :key="'radiations-'.$item['compte']->id" />
                 </x-bloc-repliable>
             @endif
@@ -459,14 +459,14 @@
             @php($nbDons = $item['compte']->donsEmis()->count() + $item['compte']->donsRecus()->count())
             @if ($nbDons > 0)
                 <x-bloc-repliable :titre="__('Historique des dons')" cle="dons"
-                                  :id="'bloc-dons-'.$item['compte']->id" :nombre="$nbDons">
+                                  :nombre="$nbDons" :replie="$blocsReplies['dons'] ?? false">
                     <livewire:dons.dons-historique :compte="$item['compte']" :key="'dons-'.$item['compte']->id" />
                 </x-bloc-repliable>
             @endif
 
             @if ($item['dernieres_ecritures']->isNotEmpty())
                 <x-bloc-repliable :titre="__('Écritures du compte financier')" cle="ecritures"
-                                  :id="'bloc-ecritures-'.$item['compte']->id" :nombre="$item['compte']->ecritures->count()">
+                                  :nombre="$item['compte']->ecritures->count()" :replie="$blocsReplies['ecritures'] ?? false">
                     <livewire:comptes.ecritures-historique :compte="$item['compte']" :key="'ecritures-'.$item['compte']->id" />
                 </x-bloc-repliable>
             @else

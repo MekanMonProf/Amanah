@@ -69,6 +69,22 @@ class AchatAction extends Model
     }
 
     /** Hommage à un défunt (par opposition à un cadeau fait à une personne vivante). */
+    /**
+     * Les actions viennent-elles d'un réinvestissement de dividendes ?
+     *
+     * La distinction compte sur une attestation : dans un achat, l'investisseur
+     * a versé de l'argent ; ici, ce sont ses bénéfices qui ont été convertis en
+     * actions. Parler d'« achat » et de « prix payé » serait inexact, et le
+     * document sert précisément de preuve de ce qui s'est passé.
+     *
+     * L'achat sur solde (« complement ») reste un achat : l'argent est celui de
+     * l'investisseur, il a seulement transité par son compte.
+     */
+    public function estUnReinvestissement(): bool
+    {
+        return $this->type_achat === 'benefice';
+    }
+
     public function estEnMemoire(): bool
     {
         return $this->estUnPresent() && $this->type_present === 'memoire';

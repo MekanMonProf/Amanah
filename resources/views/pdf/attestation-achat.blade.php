@@ -23,7 +23,15 @@
         @include('pdf.partials.en-tete')
     </div>
 
-    <h1>{{ $achat->estUnPresent() ? "Certificat d'Hommage et de Générosité" : 'Attestation d\'achat d\'actions' }}</h1>
+    @php
+        $titre = match (true) {
+            $achat->estUnPresent() => "Certificat d'Hommage et de Générosité",
+            $achat->estUnReinvestissement() => "Attestation de réinvestissement de dividendes",
+            default => "Attestation d'achat d'actions",
+        };
+    @endphp
+
+    <h1>{{ $titre }}</h1>
 
     @if ($achat->estUnPresent())
         <p class="texte">
@@ -42,6 +50,21 @@
             institutionnel <strong>{{ $investisseur->nom }}</strong> ({{ $compte->numero_compte }}).
             Elles n'ouvrent aucun droit patrimonial — ni restitution du capital, ni versement de
             dividendes — au donateur, ni à la personne honorée.
+        </p>
+    @elseif ($achat->estUnReinvestissement())
+        <p class="texte">
+            AND DOX S.A. atteste que <strong>{{ $investisseur->nom }} {{ $investisseur->prenom }}</strong>
+            (identifiant {{ $investisseur->identifiant_externe }}) s'est vu attribuer
+            <strong>{{ number_format($achat->nombre_actions, 0, ',', ' ') }} action(s)</strong>
+            de catégorie <strong>{{ \App\Support\Libelles::categorie($compte->categorie) }}</strong>,
+            par réinvestissement des dividendes portés à son compte,
+            sur la base de {{ number_format($achat->prix_unitaire, 0, ',', ' ') }} CFA par action,
+            le {{ $achat->date_achat->translatedFormat('d F Y') }}.
+        </p>
+        <p class="texte">
+            Cette opération ne correspond à aucun versement de l'investisseur : elle convertit
+            en actions les bénéfices qui lui étaient acquis, conformément à l'option de
+            réinvestissement automatique retenue pour ce compte.
         </p>
     @else
         <p class="texte">
@@ -72,7 +95,7 @@
         </tr>
         @endif
         <tr>
-            <td class="label">N° d'achat</td>
+            <td class="label">{{ $achat->estUnReinvestissement() ? "N° d'opération" : "N° d'achat" }}</td>
             <td>{{ $achat->numero_achat }}</td>
         </tr>
         <tr>
@@ -80,19 +103,19 @@
             <td>{{ $compte->numero_compte }} ({{ \App\Support\Libelles::categorie($compte->categorie) }})</td>
         </tr>
         <tr>
-            <td class="label">Type d'achat</td>
-            <td>{{ \App\Support\Libelles::typeAchat($achat->type_achat) }}</td>
+            <td class="label">{{ $achat->estUnReinvestissement() ? "Nature de l'opération" : "Type d'achat" }}</td>
+            <td>{{ $achat->estUnReinvestissement() ? 'Réinvestissement de dividendes' : \App\Support\Libelles::typeAchat($achat->type_achat) }}</td>
         </tr>
         <tr>
             <td class="label">Nombre d'actions</td>
             <td>{{ number_format($achat->nombre_actions, 0, ',', ' ') }}</td>
         </tr>
         <tr>
-            <td class="label">Prix unitaire</td>
+            <td class="label">{{ $achat->estUnReinvestissement() ? "Valeur unitaire de l'action" : 'Prix unitaire' }}</td>
             <td>{{ number_format($achat->prix_unitaire, 0, ',', ' ') }} CFA</td>
         </tr>
         <tr>
-            <td class="label">Montant total</td>
+            <td class="label">{{ $achat->estUnReinvestissement() ? 'Montant réinvesti' : 'Montant total' }}</td>
             <td class="montant-total">{{ number_format($achat->montant, 0, ',', ' ') }} CFA</td>
         </tr>
         @if ($achat->mode_paiement)

@@ -51,7 +51,11 @@ class AttestationController extends Controller
 
         // Le nom du fichier suit le titre du document : un présent Waqf n'est pas une
         // attestation d'achat ordinaire, et le destinataire le classe sous ce nom.
-        $prefixe = $achat->estUnPresent() ? 'Certificat_Hommage_Generosite_' : 'Attestation_Achat_';
+        $prefixe = match (true) {
+            $achat->estUnPresent() => 'Certificat_Hommage_Generosite_',
+            $achat->estUnReinvestissement() => 'Attestation_Reinvestissement_',
+            default => 'Attestation_Achat_',
+        };
 
         return $this->rendrePdf($pdf, $prefixe . $achat->numero_achat . '.pdf');
     }

@@ -442,31 +442,33 @@
             </div>
 
             @if ($item['achats']->isNotEmpty())
-                <div class="mb-4">
-                    <div class="text-xs text-gray-500 uppercase mb-2">{{ __("Historique des achats") }}</div>
+                <x-bloc-repliable :titre="__('Historique des achats')" cle="achats"
+                                  :id="'bloc-achats-'.$item['compte']->id" :nombre="$item['achats']->count()">
                     <livewire:achats.achats-historique :compte="$item['compte']" :key="'achats-'.$item['compte']->id" />
-                </div>
+                </x-bloc-repliable>
             @endif
 
-            @if ($item['compte']->radiations()->exists())
-                <div class="mb-4">
-                    <div class="text-xs text-gray-500 uppercase mb-2">{{ __("Historique des radiations") }}</div>
+            @php($nbRadiations = $item['compte']->radiations()->count())
+            @if ($nbRadiations > 0)
+                <x-bloc-repliable :titre="__('Historique des radiations')" cle="radiations"
+                                  :id="'bloc-radiations-'.$item['compte']->id" :nombre="$nbRadiations">
                     <livewire:radiations.radiations-historique :compte="$item['compte']" :key="'radiations-'.$item['compte']->id" />
-                </div>
+                </x-bloc-repliable>
             @endif
 
-            @if ($item['compte']->donsEmis()->exists() || $item['compte']->donsRecus()->exists())
-                <div class="mb-4">
-                    <div class="text-xs text-gray-500 uppercase mb-2">{{ __("Historique des dons") }}</div>
+            @php($nbDons = $item['compte']->donsEmis()->count() + $item['compte']->donsRecus()->count())
+            @if ($nbDons > 0)
+                <x-bloc-repliable :titre="__('Historique des dons')" cle="dons"
+                                  :id="'bloc-dons-'.$item['compte']->id" :nombre="$nbDons">
                     <livewire:dons.dons-historique :compte="$item['compte']" :key="'dons-'.$item['compte']->id" />
-                </div>
+                </x-bloc-repliable>
             @endif
 
             @if ($item['dernieres_ecritures']->isNotEmpty())
-                <div class="mt-4">
-                    <div class="text-xs text-gray-500 uppercase mb-2">{{ __("Écritures du compte financier") }}</div>
+                <x-bloc-repliable :titre="__('Écritures du compte financier')" cle="ecritures"
+                                  :id="'bloc-ecritures-'.$item['compte']->id" :nombre="$item['compte']->ecritures->count()">
                     <livewire:comptes.ecritures-historique :compte="$item['compte']" :key="'ecritures-'.$item['compte']->id" />
-                </div>
+                </x-bloc-repliable>
             @else
                 <p class="text-sm text-gray-400 italic">{{ __("Aucune écriture pour l'instant sur ce compte.") }}</p>
             @endif

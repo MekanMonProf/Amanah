@@ -14,7 +14,19 @@ new class extends Component {
     {
         $this->nom = Auth::user()->nom;
         $this->prenom = Auth::user()->prenom ?? '';
-        $this->email = Auth::user()->email;
+        $this->email = Auth::user()->email ?? '';
+    }
+
+    /**
+     * Un compte se reconnaît à son email ou à son téléphone.
+     *
+     * Les investisseurs du portail entrent souvent par le téléphone et n'ont pas
+     * d'email : exiger l'adresse ici les empêcherait d'enregistrer leur propre nom.
+     * Elle ne redevient obligatoire que lorsqu'elle est le seul identifiant.
+     */
+    public function emailObligatoire(): bool
+    {
+        return blank(Auth::user()->telephone);
     }
 
     public function updateProfileInformation(): void
@@ -24,8 +36,16 @@ new class extends Component {
         $validated = $this->validate([
             'nom' => ['required', 'string', 'max:150'],
             'prenom' => ['nullable', 'string', 'max:150'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class.',email,'.$user->id],
+            'email' => [
+                $this->emailObligatoire() ? 'required' : 'nullable',
+                'string', 'lowercase', 'email', 'max:255',
+                'unique:'.User::class.',email,'.$user->id,
+            ],
         ]);
+
+        // Une adresse vide se range à null, pas à la chaîne vide : l'index unique
+        // refuserait le deuxième compte sans email.
+        $validated['email'] = blank($validated['email'] ?? null) ? null : $validated['email'];
 
         $user->fill($validated);
 
@@ -78,9 +98,20 @@ new class extends Component {
             <x-input-error class="mt-2" :messages="$errors->get('prenom')" />
         </div>
 
+        @if (filled(auth()->user()->telephone))
+            <div>
+                <x-input-label for="telephone" :value="__('Téléphone')" />
+                <x-text-input id="telephone" name="telephone" type="text" class="mt-1 block w-full bg-gray-50 text-gray-600"
+                              value="{{ auth()->user()->telephone }}" disabled />
+                <p class="mt-2 text-sm text-gray-500">
+                    {{ __("C'est le numéro avec lequel vous vous connectez. Pour le changer, contactez votre gestionnaire.") }}
+                </p>
+            </div>
+        @endif
+
         <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input wire:model="email" id="email" name="email" type="email" class="mt-1 block w-full" required autocomplete="username" />
+            <x-input-label for="email" :value="$this->emailObligatoire() ? __('Email') : __('Email (facultatif)')" />
+            <x-text-input wire:model="email" id="email" name="email" type="email" class="mt-1 block w-full" :required="$this->emailObligatoire()" autocomplete="username" />
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
 
             @if (auth()->user() instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! auth()->user()->hasVerifiedEmail())

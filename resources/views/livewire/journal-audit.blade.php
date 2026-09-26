@@ -25,14 +25,14 @@
         <select wire:model.live="filtreAction" class="border rounded px-3 py-2 text-sm">
             <option value="">{{ __("Toutes les actions") }}</option>
             @foreach ($actionsDisponibles as $a)
-                <option value="{{ $a }}">{{ str_replace('_', ' ', $a) }}</option>
+                <option value="{{ $a }}">{{ __(\App\Support\Libelles::actionAudit($a)) }}</option>
             @endforeach
         </select>
 
         <select wire:model.live="filtreEntite" class="border rounded px-3 py-2 text-sm">
             <option value="">{{ __("Toutes les entités") }}</option>
             @foreach ($entitesDisponibles as $e)
-                <option value="{{ $e }}">{{ str_replace('_', ' ', $e) }}</option>
+                <option value="{{ $e }}">{{ __(\App\Support\Libelles::entiteAudit($e)) }}</option>
             @endforeach
         </select>
 
@@ -64,11 +64,11 @@
                         <td class="p-3">{{ $entree->user?->nom }} {{ $entree->user?->prenom }}</td>
                         <td class="p-3">
                             <span class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-700">
-                                {{ str_replace('_', ' ', $entree->action) }}
+                                {{ __(\App\Support\Libelles::actionAudit($entree->action)) }}
                             </span>
                         </td>
                         <td class="p-3 text-xs text-gray-500">
-                            {{ str_replace('_', ' ', $entree->entite) }}
+                            {{ __(\App\Support\Libelles::entiteAudit($entree->entite)) }}
                             @if ($entree->entite_id) #{{ $entree->entite_id }} @endif
                         </td>
                         <td class="p-3 text-end">

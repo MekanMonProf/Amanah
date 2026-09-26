@@ -115,6 +115,10 @@ class PresentationSeeder extends Seeder
             'dons', 'heritiers', 'historique_affectations', 'ecritures_compte_financier',
             'dividendes', 'baremes_dividendes', 'radiations', 'achats_actions',
             'comptes_investissement', 'investisseurs', 'gestionnaires',
+            // Le journal aussi : conservé, il garderait des entrées désignant des
+            // fiches qui viennent d'être effacées, et mélangerait à la démonstration
+            // les traces des essais précédents.
+            'audit_logs',
         ] as $table) {
             DB::table($table)->truncate();
         }
@@ -329,6 +333,10 @@ class PresentationSeeder extends Seeder
                     );
 
                     $investisseur->update(['user_id' => $user->id]);
+
+                    $this->tracer('creation_acces_portail', 'investisseur', $investisseur->id, [
+                        'identifiant' => $user->email ?? $user->telephone,
+                    ]);
                 }
 
                 $this->tracer('creation', 'investisseur', $investisseur->id, [
@@ -370,7 +378,7 @@ class PresentationSeeder extends Seeder
 
                     $achatCree = $this->creerAchat($compte, $achat);
 
-                    $this->tracer('creation', 'achat_action', $achatCree->id, [
+                    $this->tracer('creation', 'achat', $achatCree->id, [
                         'numero_achat' => $achatCree->numero_achat,
                         'nombre_actions' => $achatCree->nombre_actions,
                         'montant' => $achatCree->montant,
@@ -459,6 +467,10 @@ class PresentationSeeder extends Seeder
                 $compte->acheterActionsAvecSoldeDisponible(
                     'complement', Observation::ACHAT_COMPLEMENT, Auth::id(),
                 );
+
+                $this->tracer('complement_financier', 'compte_investissement', $compte->id, [
+                    'montant' => $c['montant'], 'mode_paiement' => $c['mode'],
+                ]);
             });
         }
     }
@@ -586,7 +598,7 @@ class PresentationSeeder extends Seeder
             foreach ($dividendes as $dividende) {
                 $delta = round($dividende->nombre_actions * ($nouveau - $ancien), 2);
 
-                if ($delta == 0.0) {
+                if ($delta == 0.0 || $dividende->compte->estSolde()) {
                     continue;
                 }
 
@@ -656,6 +668,10 @@ class PresentationSeeder extends Seeder
                     observationParametres: ['mode' => $v['mode'], 'reference' => $v['reference']],
                     userId: Auth::id(),
                 );
+
+                $this->tracer('paiement', 'compte_investissement', $compte->id, [
+                    'montant' => $montant, 'mode_paiement' => $v['mode'], 'reference' => $v['reference'],
+                ]);
             });
         }
     }
@@ -730,6 +746,11 @@ class PresentationSeeder extends Seeder
                         observationParametres: ['mode' => 'Virement bancaire'],
                         userId: Auth::id(),
                     );
+
+                    $this->tracer('paiement', 'compte_investissement', $compte->id, [
+                        'montant' => $aVerser, 'mode_paiement' => 'Virement bancaire',
+                        'radiation' => $radiation->numero_radiation,
+                    ]);
                 }
             });
         }
@@ -755,6 +776,11 @@ class PresentationSeeder extends Seeder
                 'date_don' => '2026-05-10',
                 'motif' => 'Don familial',
                 'created_by' => Auth::id(),
+            ]);
+
+            $this->tracer('don', 'compte_investissement', $source->id, [
+                'type_don' => 'actions', 'nombre_actions' => 2,
+                'destinataire' => $destinataire->numero_compte, 'motif' => 'Don familial',
             ]);
         });
 
@@ -801,6 +827,11 @@ class PresentationSeeder extends Seeder
             );
 
             $destinataire->tenterReinvestissementAutomatique(Auth::id());
+
+            $this->tracer('don', 'compte_investissement', $source->id, [
+                'type_don' => 'solde', 'montant' => $montant,
+                'destinataire' => $destinataire->numero_compte, 'motif' => 'Soutien à un proche',
+            ]);
         });
     }
 
@@ -827,7 +858,15 @@ class PresentationSeeder extends Seeder
 
                 // Le modèle sait le faire : il consigne le transfert et réassigne
                 // d'un seul geste, exactement comme depuis la fiche investisseur.
+                $ancien = $investisseur->gestionnaire;
+
                 $investisseur->transfererVers($nouveau, $t['motif'], Auth::id());
+
+                $this->tracer('transfert_gestionnaire', 'investisseur', $investisseur->id, [
+                    'ancien_gestionnaire' => $ancien?->user?->nom,
+                    'nouveau_gestionnaire' => $nouveau->user?->nom,
+                    'motif' => $t['motif'],
+                ]);
             });
         }
     }
@@ -858,6 +897,14 @@ class PresentationSeeder extends Seeder
                 'telephone' => Telephone::normaliser('771000032'),
                 'whatsapp' => Telephone::normaliser('771000032'),
                 'lien_parente' => 'Fils', 'part_pourcentage' => 40,
+            ]);
+
+            $this->tracer('declaration_deces', 'investisseur', $defunt->id, [
+                'date_deces' => '2026-06-08',
+            ]);
+
+            $this->tracer('designation_mandataire_succession', 'investisseur', $defunt->id, [
+                'mandataire' => 'Ndiaye Awa', 'lien_parente' => 'Épouse',
             ]);
         });
 
@@ -903,7 +950,15 @@ class PresentationSeeder extends Seeder
                 userId: Auth::id(),
             );
 
+            $this->tracer('versement_succession', 'compte_investissement', $compte->id, [
+                'defunt' => $nom, 'mandataire' => 'Ndiaye Awa', 'mode_paiement' => 'Virement bancaire',
+            ]);
+
             $defunt->update(['succession_reglee' => true]);
+
+            $this->tracer('reglement_succession', 'investisseur', $defunt->id, [
+                'actions_liquidees' => $actions, 'mandataire' => 'Ndiaye Awa',
+            ]);
         });
 
         // — Succession encore ouverte : c'est elle qui doit apparaître « à régler »
@@ -920,6 +975,14 @@ class PresentationSeeder extends Seeder
                 'telephone' => Telephone::normaliser('771000041'),
                 'whatsapp' => Telephone::normaliser('+33612345678'),
                 'lien_parente' => 'Fille', 'part_pourcentage' => 100,
+            ]);
+
+            $this->tracer('declaration_deces', 'investisseur', $defunt->id, [
+                'date_deces' => '2026-09-01',
+            ]);
+
+            $this->tracer('designation_mandataire_succession', 'investisseur', $defunt->id, [
+                'mandataire' => 'Sow Fatou', 'lien_parente' => 'Fille',
             ]);
         });
     }
@@ -1085,7 +1148,7 @@ class PresentationSeeder extends Seeder
              'achats' => [['date' => '2026-07-03', 'categorie' => 'commercial', 'actions' => 19, 'mode' => 'Chèque']]],
 
             ['nom' => 'Samb', 'prenom' => 'Astou', 'tel' => '771100028', 'pays' => 'Sénégal', 'ville' => 'Dakar',
-             'naissance' => '1990-09-05', 'inscrit' => '2026-07-15', 'complet' => false,
+             'naissance' => '1990-09-05', 'gestionnaire' => 'sarr', 'inscrit' => '2026-07-15', 'complet' => false,
              'achats' => [['date' => '2026-07-18', 'categorie' => 'commercial', 'actions' => 8, 'mode' => 'Wave']]],
 
             ['nom' => 'Diagne', 'prenom' => 'Babacar', 'tel' => '771100029', 'pays' => 'Sénégal', 'ville' => 'Dakar',

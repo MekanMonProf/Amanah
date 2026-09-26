@@ -83,6 +83,18 @@ class CompteInvestissement extends Model
     }
 
     /**
+     * Un dossier clos : le titulaire est décédé et sa succession a été réglée.
+     *
+     * Porter quoi que ce soit sur un tel compte rouvrirait un dossier soldé sans
+     * que personne l'ait décidé — le solde repasserait au-dessus de zéro alors que
+     * le mandataire a déjà été payé.
+     */
+    public function estSolde(): bool
+    {
+        return (bool) ($this->investisseur?->estDecede() && $this->investisseur->succession_reglee);
+    }
+
+    /**
      * Solde du compte financier : toujours dérivé de la DERNIÈRE écriture insérée.
      * reorder() efface le tri par défaut de la relation (id asc) avant d'appliquer id desc.
      */
@@ -141,6 +153,15 @@ class CompteInvestissement extends Model
      */
     public function acheterActionsAvecSoldeDisponible(string $typeAchat, string $observationCle, ?int $userId = null, array $observationParametres = []): int
     {
+        // Le compte d'un défunt n'acquiert plus d'actions. Le produit qui lui revient
+        // — dividende du mois, ajustement rétroactif — reste porté au compte en
+        // numéraire et sera versé au mandataire lors du règlement. Convertir cet
+        // argent en parts reviendrait à faire souscrire quelqu'un qui n'est plus là,
+        // et gonflerait le capital à liquider après la date du décès.
+        if ($this->investisseur?->estDecede()) {
+            return 0;
+        }
+
         $politique = $this->politique();
         $prixAction = (float) $politique->prix_unitaire_action;
 

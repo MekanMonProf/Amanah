@@ -15,6 +15,12 @@
         <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-4 mb-6 text-sm text-emerald-800">
             ✓ {!! __("Correction appliquée : <strong>:nombre</strong> compte(s) ajusté(s), pour un total de <strong>:montant</strong> :sens au global.", ['nombre' => $resultat['nb_comptes'], 'montant' => \App\Support\Montant::avecDevise($resultat['total_ajuste']), 'sens' => $resultat['total_ajuste'] >= 0 ? __('crédités') : __('débités')]) !!}
         </div>
+
+        @if (($resultat['nb_comptes_soldes'] ?? 0) > 0)
+            <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6 text-sm text-amber-800">
+                {!! __("<strong>:nombre</strong> compte(s) de succession déjà réglée n'ont pas été ajustés : le dossier est soldé et le mandataire payé. L'ajustement qui leur revient doit être traité à part.", ['nombre' => $resultat['nb_comptes_soldes']]) !!}
+            </div>
+        @endif
     @endif
 
     <form wire:submit="corriger" class="bg-white border rounded-lg p-5 shadow-sm space-y-4">

@@ -57,9 +57,10 @@ class BaremeCorrection extends Component
             ->get();
 
         $nbComptesAjustes = 0;
+        $nbComptesSoldes = 0;
         $totalAjuste = 0;
 
-        DB::transaction(function () use ($dividendesConcernes, &$nbComptesAjustes, &$totalAjuste) {
+        DB::transaction(function () use ($dividendesConcernes, &$nbComptesAjustes, &$nbComptesSoldes, &$totalAjuste) {
             // 1) Le barème lui-même est mis à jour (la valeur affichée pour cette période)
             $this->bareme->update(['benefice_par_action' => $this->nouveauTaux]);
 
@@ -72,6 +73,14 @@ class BaremeCorrection extends Component
                 }
 
                 $compte = $dividende->compte;
+
+                // Un dossier de succession déjà réglé ne se rouvre pas d'office : le
+                // mandataire a été payé et le compte soldé. On le compte à part pour
+                // que l'opérateur sache qu'un ajustement reste dû à cette succession.
+                if ($compte->estSolde()) {
+                    $nbComptesSoldes++;
+                    continue;
+                }
 
                 $compte->ajouterEcriture(
                     type: 'ajustement',
@@ -113,11 +122,13 @@ class BaremeCorrection extends Component
                 'taux' => $this->nouveauTaux, 'periode' => $this->bareme->periode->format('Y-m'),
                 'categorie' => $this->bareme->categorie, 'motif' => $this->motif,
                 'comptes_ajustes' => $nbComptesAjustes,
+                'comptes_soldes_ignores' => $nbComptesSoldes,
             ],
         );
 
         $this->resultat = [
             'nb_comptes' => $nbComptesAjustes,
+            'nb_comptes_soldes' => $nbComptesSoldes,
             'total_ajuste' => $totalAjuste,
         ];
 

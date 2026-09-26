@@ -44,7 +44,7 @@
                 <tr>
                     <td>{{ $e->created_at->format('d/m/Y H:i') }}</td>
                     <td>{{ $e->user?->nom }} {{ $e->user?->prenom }}</td>
-                    <td>{{ str_replace('_', ' ', $e->action) }}</td>
+                    <td>{{ \App\Support\Libelles::actionAudit($e->action) }}</td>
                     <td>{{ str_replace('_', ' ', $e->entite) }} @if($e->entite_id) #{{ $e->entite_id }} @endif</td>
                     <td>
                         @if ($e->donnees_apres)

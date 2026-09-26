@@ -33,7 +33,7 @@ class AttestationSuccessionController extends Controller
         $mandataire = $defunt->heritiers()->first();
 
         $radiation = Radiation::where('compte_id', $compte->id)
-            ->where('numero_radiation', 'like', 'RAD-SUCC-%')
+            ->where('numero_radiation', 'like', \App\Models\Radiation::PREFIXE_SUCCESSION . '%')
             ->latest('id')
             ->first();
 

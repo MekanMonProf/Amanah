@@ -51,6 +51,15 @@ class PresentationSeeder extends Seeder
     /** @var array<string, Investisseur> */
     private array $investisseurs = [];
 
+    /**
+     * Les événements en attente, sous la forme [date, rang de déclaration, bloc].
+     *
+     * @var array<int, array{0: string, 1: int, 2: callable}>
+     */
+    private array $file = [];
+
+    private bool $differer = false;
+
     public function run(): void
     {
         $this->command->info('Jeu de démonstration — novembre 2025 à aujourd’hui.');
@@ -60,6 +69,13 @@ class PresentationSeeder extends Seeder
         $this->equipe();
 
         Auth::login($this->administrateur);
+
+        // Les blocs qui suivent ne jouent rien : ils déclarent des événements datés.
+        // C'est jouerLaChronologie() qui les exécute ensuite, du plus ancien au plus
+        // récent — sans quoi l'ordre des appels ci-dessous ferait loi et l'on verrait,
+        // par exemple, un dividende de novembre 2025 calculé sur des actions achetées
+        // en février 2026.
+        $this->differer = true;
 
         $this->portefeuille();
         $this->souscriptionsInitiales();
@@ -72,6 +88,9 @@ class PresentationSeeder extends Seeder
         $this->dons();
         $this->transfertsDeGestionnaire();
         $this->successions();
+
+        $this->differer = false;
+        $this->jouerLaChronologie();
 
         Auth::logout();
         Carbon::setTestNow();
@@ -133,8 +152,44 @@ class PresentationSeeder extends Seeder
         );
     }
 
-    /** Joue un bloc d'événements à la date indiquée, comme s'ils s'y étaient produits. */
+    /**
+     * Un bloc d'événements à la date indiquée, comme s'ils s'y étaient produits.
+     *
+     * Tant que la déclaration est en cours, le bloc est mis en file ; il n'est joué
+     * qu'à son rang chronologique. Hors de cette phase — la constitution de l'équipe,
+     * qui doit exister avant tout le reste — il s'exécute immédiatement.
+     */
     private function le(string $date, callable $action): void
+    {
+        if ($this->differer) {
+            $this->file[] = [$date, count($this->file), $action];
+
+            return;
+        }
+
+        $this->jouer($date, $action);
+    }
+
+    /**
+     * Vide la file dans l'ordre des dates.
+     *
+     * À égalité de date, le rang de déclaration départage : deux événements du même
+     * jour gardent l'ordre dans lequel les blocs les ont écrits, qui est celui qui a
+     * du sens (on ouvre le compte avant d'y verser).
+     */
+    private function jouerLaChronologie(): void
+    {
+        $file = $this->file;
+        $this->file = [];
+
+        usort($file, fn (array $a, array $b) => [$a[0], $a[1]] <=> [$b[0], $b[1]]);
+
+        foreach ($file as [$date, , $action]) {
+            $this->jouer($date, $action);
+        }
+    }
+
+    private function jouer(string $date, callable $action): void
     {
         Carbon::setTestNow(Carbon::parse($date)->setTime(10, 0));
         $action();
@@ -752,8 +807,12 @@ class PresentationSeeder extends Seeder
     private function transfertsDeGestionnaire(): void
     {
         $transferts = [
-            ['id' => 'A0016', 'date' => '2026-03-02', 'vers' => 'sarr', 'motif' => 'Rééquilibrage des portefeuilles'],
-            ['id' => 'A0022', 'date' => '2026-05-19', 'vers' => 'ndoye', 'motif' => 'Rapprochement géographique'],
+            // Les dates suivent l'inscription de chacun : A0016 entre le 20 mars,
+            // A0022 le 21 mai. Un transfert antérieur à l'inscription ne se jouait
+            // que par l'ordre des blocs, et disparaissait dès qu'on rétablissait
+            // la chronologie réelle.
+            ['id' => 'A0016', 'date' => '2026-05-04', 'vers' => 'sarr', 'motif' => 'Rééquilibrage des portefeuilles'],
+            ['id' => 'A0022', 'date' => '2026-07-06', 'vers' => 'ndoye', 'motif' => 'Rapprochement géographique'],
             ['id' => 'A0027', 'date' => '2026-08-11', 'vers' => 'diallo', 'motif' => 'Demande de l’investisseur'],
         ];
 
@@ -816,7 +875,7 @@ class PresentationSeeder extends Seeder
 
             $radiation = Radiation::create([
                 'compte_id' => $compte->id,
-                'numero_radiation' => 'RAD-SUCC-' . $compte->id,
+                'numero_radiation' => Radiation::PREFIXE_SUCCESSION . $compte->id,
                 'date_radiation' => '2026-07-04',
                 'nombre_actions_radiees' => $actions,
                 'prix_unitaire_action' => $prix,

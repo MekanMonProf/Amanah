@@ -65,11 +65,7 @@ class AttestationController extends Controller
         $radiation->load('compte.investisseur');
         $this->verifierAcces($radiation->compte);
 
-        $montantVerse = (float) EcritureCompteFinancier::where('reference_type', 'radiations')
-            ->where('reference_id', $radiation->id)
-            ->where('type_ecriture', 'paiement')
-            ->sum('montant');
-        $montantVerse = abs($montantVerse);
+        $montantVerse = $this->montantVerse($radiation);
 
         $pdf = Pdf::loadView('pdf.attestation-radiation', [
             'radiation' => $radiation,
@@ -80,7 +76,45 @@ class AttestationController extends Controller
             'dateGeneration' => now(),
         ])->setPaper('a4', 'portrait');
 
-        return $this->rendrePdf($pdf, 'Attestation_Radiation_' . $radiation->numero_radiation . '.pdf');
+        $prefixe = $radiation->estUneSuccession()
+            ? 'Attestation_Liquidation_Succession_'
+            : 'Attestation_Radiation_';
+
+        return $this->rendrePdf($pdf, $prefixe . $radiation->numero_radiation . '.pdf');
+    }
+
+    /**
+     * Ce qui a déjà été versé au titre d'une radiation.
+     *
+     * Une radiation ordinaire est payée depuis l'écran des versements, qui rattache
+     * l'écriture à la radiation elle-même. Une succession, non : le règlement passe
+     * par PaiementSuccessionCreate, qui vide le compte du défunt d'un seul geste et
+     * rattache l'écriture au défunt (`succession_deces`). Chercher uniquement des
+     * paiements `radiations` faisait donc toujours conclure « Non payé » sur une
+     * succession pourtant réglée.
+     *
+     * Ce versement unique solde aussi la trésorerie qui dormait sur le compte avant
+     * la liquidation : on ne retient donc que ce qui est imputable à la radiation,
+     * plafonné à son montant, plutôt que la somme brute qui la dépasserait.
+     */
+    private function montantVerse(Radiation $radiation): float
+    {
+        $requete = EcritureCompteFinancier::where('type_ecriture', 'paiement');
+
+        if ($radiation->estUneSuccession()) {
+            $requete->where('compte_id', $radiation->compte_id)
+                ->where('reference_type', 'succession_deces')
+                ->whereDate('date_ecriture', '>=', $radiation->date_radiation);
+        } else {
+            $requete->where('reference_type', 'radiations')
+                ->where('reference_id', $radiation->id);
+        }
+
+        $verse = abs((float) $requete->sum('montant'));
+
+        return $radiation->estUneSuccession()
+            ? min($verse, (float) $radiation->montant_total)
+            : $verse;
     }
 
     public function paiement(EcritureCompteFinancier $ecriture)

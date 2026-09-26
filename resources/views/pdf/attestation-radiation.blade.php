@@ -26,20 +26,42 @@
         @include('pdf.partials.en-tete')
     </div>
 
-    <h1>Attestation de radiation d'actions</h1>
+    @php
+        $succession = $radiation->estUneSuccession();
+    @endphp
 
-    <p class="texte">
-        AND DOX S.A. atteste que <strong>{{ $investisseur->nom }} {{ $investisseur->prenom }}</strong>
-        (identifiant {{ $investisseur->identifiant_externe }}) a procédé à la radiation de
-        <strong>{{ number_format($radiation->nombre_actions_radiees, 0, ',', ' ') }} action(s)</strong>
-        de catégorie <strong>{{ \App\Support\Libelles::categorie($compte->categorie) }}</strong>, le
-        {{ $radiation->date_radiation->translatedFormat('d F Y') }}, donnant droit à un capital de
-        {{ number_format($radiation->montant_total, 0, ',', ' ') }} CFA.
-    </p>
+    <h1>{{ $succession ? 'Attestation de liquidation de succession' : "Attestation de radiation d'actions" }}</h1>
+
+    @if ($succession)
+        <p class="texte">
+            AND DOX S.A. atteste que la succession de
+            <strong>{{ $investisseur->nom }} {{ $investisseur->prenom }}</strong>
+            (identifiant {{ $investisseur->identifiant_externe }}), déclaré décédé{{ $investisseur->date_deces ? ' le ' . $investisseur->date_deces->translatedFormat('d F Y') : '' }},
+            a donné lieu à la liquidation de
+            <strong>{{ number_format($radiation->nombre_actions_radiees, 0, ',', ' ') }} action(s)</strong>
+            de catégorie <strong>{{ \App\Support\Libelles::categorie($compte->categorie) }}</strong>, le
+            {{ $radiation->date_radiation->translatedFormat('d F Y') }}, dégageant un capital de
+            {{ number_format($radiation->montant_total, 0, ',', ' ') }} CFA.
+        </p>
+        <p class="texte">
+            Cette liquidation n'a pas été demandée par le titulaire : elle procède du
+            règlement de sa succession. Le capital dégagé a été porté au compte du
+            défunt, d'où il est versé à son mandataire selon la procédure en vigueur.
+        </p>
+    @else
+        <p class="texte">
+            AND DOX S.A. atteste que <strong>{{ $investisseur->nom }} {{ $investisseur->prenom }}</strong>
+            (identifiant {{ $investisseur->identifiant_externe }}) a procédé à la radiation de
+            <strong>{{ number_format($radiation->nombre_actions_radiees, 0, ',', ' ') }} action(s)</strong>
+            de catégorie <strong>{{ \App\Support\Libelles::categorie($compte->categorie) }}</strong>, le
+            {{ $radiation->date_radiation->translatedFormat('d F Y') }}, donnant droit à un capital de
+            {{ number_format($radiation->montant_total, 0, ',', ' ') }} CFA.
+        </p>
+    @endif
 
     <table class="details">
         <tr>
-            <td class="label">N° de radiation</td>
+            <td class="label">{{ $succession ? 'N° de liquidation' : 'N° de radiation' }}</td>
             <td>{{ $radiation->numero_radiation }}</td>
         </tr>
         <tr>
@@ -47,7 +69,7 @@
             <td>{{ $compte->numero_compte }} ({{ \App\Support\Libelles::categorie($compte->categorie) }})</td>
         </tr>
         <tr>
-            <td class="label">Actions radiées</td>
+            <td class="label">{{ $succession ? 'Actions liquidées' : 'Actions radiées' }}</td>
             <td>{{ number_format($radiation->nombre_actions_radiees, 0, ',', ' ') }}</td>
         </tr>
         <tr>
@@ -59,7 +81,7 @@
             <td class="montant-total">{{ number_format($radiation->montant_total, 0, ',', ' ') }} CFA</td>
         </tr>
         <tr>
-            <td class="label">Montant déjà versé</td>
+            <td class="label">{{ $succession ? 'Montant déjà versé à la succession' : 'Montant déjà versé' }}</td>
             <td>{{ number_format($montantVerse, 0, ',', ' ') }} CFA</td>
         </tr>
         <tr>

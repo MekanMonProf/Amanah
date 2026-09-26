@@ -53,7 +53,7 @@
         </tr>
         <tr>
             <td class="label">Compte concerné</td>
-            <td>{{ $compte->numero_compte }} ({{ ucfirst($compte->categorie) }})</td>
+            <td>{{ $compte->numero_compte }} ({{ \App\Support\Libelles::categorie($compte->categorie) }})</td>
         </tr>
     </table>
 

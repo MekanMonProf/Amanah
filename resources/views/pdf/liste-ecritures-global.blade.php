@@ -40,7 +40,7 @@
                     <td>{{ $e->compte->investisseur->nom }} {{ $e->compte->investisseur->prenom }}</td>
                     <td>{{ $e->compte->investisseur->identifiant_externe }}</td>
                     <td>{{ $e->compte->numero_compte }}</td>
-                    <td>{{ ucfirst($e->compte->categorie) }}</td>
+                    <td>{{ \App\Support\Libelles::categorie($e->compte->categorie) }}</td>
                     <td>{{ $e->date_ecriture->format('d/m/Y') }}</td>
                     <td>{{ str_replace('_', ' ', $e->type_ecriture) }}</td>
                     <td class="text-right {{ $e->montant >= 0 ? 'text-vert' : 'text-rouge' }}">

@@ -70,7 +70,7 @@
     @forelse ($comptes as $item)
         <h2 class="compte-titre">
             <span class="badge {{ $item['compte']->categorie === 'commercial' ? 'badge-commercial' : 'badge-waqf' }}">
-                {{ ucfirst($item['compte']->categorie) }}
+                {{ \App\Support\Libelles::categorie($item['compte']->categorie) }}
             </span>
             Compte {{ $item['compte']->numero_compte }}
         </h2>
@@ -110,7 +110,7 @@
                         <tr>
                             <td>{{ $achat->numero_achat }}</td>
                             <td>{{ $achat->date_achat->format('d/m/Y') }}</td>
-                            <td>{{ ucfirst($achat->type_achat) }}</td>
+                            <td>{{ \App\Support\Libelles::typeAchat($achat->type_achat) }}</td>
                             <td class="text-right">{{ number_format($achat->nombre_actions, 0, ',', ' ') }}</td>
                             <td class="text-right">{{ number_format($achat->montant, 0, ',', ' ') }}</td>
                         </tr>

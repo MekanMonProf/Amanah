@@ -48,7 +48,7 @@
             AND DOX S.A. atteste que <strong>{{ $investisseur->nom }} {{ $investisseur->prenom }}</strong>
             (identifiant {{ $investisseur->identifiant_externe }}) a acquis
             <strong>{{ number_format($achat->nombre_actions, 0, ',', ' ') }} action(s)</strong>
-            de catégorie <strong>{{ ucfirst($compte->categorie) }}</strong>,
+            de catégorie <strong>{{ \App\Support\Libelles::categorie($compte->categorie) }}</strong>,
             au prix unitaire de {{ number_format($achat->prix_unitaire, 0, ',', ' ') }} CFA par action,
             le {{ $achat->date_achat->translatedFormat('d F Y') }}.
         </p>
@@ -77,11 +77,11 @@
         </tr>
         <tr>
             <td class="label">Compte</td>
-            <td>{{ $compte->numero_compte }} ({{ ucfirst($compte->categorie) }})</td>
+            <td>{{ $compte->numero_compte }} ({{ \App\Support\Libelles::categorie($compte->categorie) }})</td>
         </tr>
         <tr>
             <td class="label">Type d'achat</td>
-            <td>{{ ucfirst($achat->type_achat) }}</td>
+            <td>{{ \App\Support\Libelles::typeAchat($achat->type_achat) }}</td>
         </tr>
         <tr>
             <td class="label">Nombre d'actions</td>

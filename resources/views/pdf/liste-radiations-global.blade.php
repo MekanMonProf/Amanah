@@ -39,7 +39,7 @@
                     <td>{{ $r->compte->investisseur->nom }} {{ $r->compte->investisseur->prenom }}</td>
                     <td>{{ $r->compte->investisseur->identifiant_externe }}</td>
                     <td>{{ $r->compte->numero_compte }}</td>
-                    <td>{{ ucfirst($r->compte->categorie) }}</td>
+                    <td>{{ \App\Support\Libelles::categorie($r->compte->categorie) }}</td>
                     <td>{{ $r->numero_radiation }}</td>
                     <td>{{ $r->date_radiation->format('d/m/Y') }}</td>
                     <td class="text-right">{{ number_format($r->nombre_actions_radiees, 0, ',', ' ') }}</td>

@@ -39,10 +39,10 @@
                     <td>{{ $a->compte->investisseur->nom }} {{ $a->compte->investisseur->prenom }}</td>
                     <td>{{ $a->compte->investisseur->identifiant_externe }}</td>
                     <td>{{ $a->compte->numero_compte }}</td>
-                    <td>{{ ucfirst($a->compte->categorie) }}</td>
+                    <td>{{ \App\Support\Libelles::categorie($a->compte->categorie) }}</td>
                     <td>{{ $a->numero_achat }}</td>
                     <td>{{ $a->date_achat->format('d/m/Y') }}</td>
-                    <td>{{ ucfirst($a->type_achat) }}</td>
+                    <td>{{ \App\Support\Libelles::typeAchat($a->type_achat) }}</td>
                     <td class="text-right">{{ number_format($a->nombre_actions, 0, ',', ' ') }}</td>
                     <td class="text-right">{{ number_format($a->prix_unitaire, 0, ',', ' ') }}</td>
                     <td class="text-right">{{ number_format($a->montant, 0, ',', ' ') }}</td>

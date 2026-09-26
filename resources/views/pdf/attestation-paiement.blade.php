@@ -30,13 +30,13 @@
         (identifiant {{ $investisseur->identifiant_externe }}) la somme de
         <strong>{{ number_format(abs($ecriture->montant), 0, ',', ' ') }} CFA</strong>,
         le {{ $ecriture->date_ecriture->translatedFormat('d F Y') }},
-        sur le compte {{ $compte->numero_compte }} ({{ ucfirst($compte->categorie) }}).
+        sur le compte {{ $compte->numero_compte }} ({{ \App\Support\Libelles::categorie($compte->categorie) }}).
     </p>
 
     <table class="details">
         <tr>
             <td class="label">Compte</td>
-            <td>{{ $compte->numero_compte }} ({{ ucfirst($compte->categorie) }})</td>
+            <td>{{ $compte->numero_compte }} ({{ \App\Support\Libelles::categorie($compte->categorie) }})</td>
         </tr>
         <tr>
             <td class="label">Date du versement</td>

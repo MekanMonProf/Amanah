@@ -32,7 +32,7 @@
         AND DOX S.A. atteste que <strong>{{ $investisseur->nom }} {{ $investisseur->prenom }}</strong>
         (identifiant {{ $investisseur->identifiant_externe }}) a procédé à la radiation de
         <strong>{{ number_format($radiation->nombre_actions_radiees, 0, ',', ' ') }} action(s)</strong>
-        de catégorie <strong>{{ ucfirst($compte->categorie) }}</strong>, le
+        de catégorie <strong>{{ \App\Support\Libelles::categorie($compte->categorie) }}</strong>, le
         {{ $radiation->date_radiation->translatedFormat('d F Y') }}, donnant droit à un capital de
         {{ number_format($radiation->montant_total, 0, ',', ' ') }} CFA.
     </p>
@@ -44,7 +44,7 @@
         </tr>
         <tr>
             <td class="label">Compte</td>
-            <td>{{ $compte->numero_compte }} ({{ ucfirst($compte->categorie) }})</td>
+            <td>{{ $compte->numero_compte }} ({{ \App\Support\Libelles::categorie($compte->categorie) }})</td>
         </tr>
         <tr>
             <td class="label">Actions radiées</td>

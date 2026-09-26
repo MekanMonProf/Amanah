@@ -25,11 +25,13 @@
                 </div>
             </div>
 
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    <livewire:profile.delete-user-form />
-                </div>
-            </div>
+            {{-- La suppression de compte par l'intéressé a été retirée le 26/09/2026.
+                 Elle venait du gabarit Breeze et ne convenait pas ici : un compte est
+                 créé par un gestionnaire, et l'effacer ne supprimait rien de ce que
+                 l'écran promettait — la clé étrangère est en ON DELETE SET NULL, donc
+                 les parts, le solde et l'historique de l'actionnaire restaient en base.
+                 Seul l'accès disparaissait, sans trace au journal d'audit. La
+                 désactivation d'un compte se fait depuis la fiche, par un gestionnaire. --}}
         </div>
     </div>
 </x-app-layout>

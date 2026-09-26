@@ -21,7 +21,7 @@ class ProfileTest extends TestCase
             ->assertOk()
             ->assertSeeVolt('profile.update-profile-information-form')
             ->assertSeeVolt('profile.update-password-form')
-            ->assertSeeVolt('profile.delete-user-form');
+            ->assertDontSeeVolt('profile.delete-user-form');
     }
 
     public function test_profile_information_can_be_updated(): void
@@ -64,38 +64,19 @@ class ProfileTest extends TestCase
         $this->assertNotNull($user->refresh()->email_verified_at);
     }
 
-    public function test_user_can_delete_their_account(): void
+    /**
+     * La suppression de compte par l'intéressé a été retirée : sur cette plateforme
+     * un compte est créé par un gestionnaire, et c'est à lui de le désactiver. Le
+     * test vérifie que le module ne revient pas par un copier-coller du gabarit.
+     */
+    public function test_le_compte_ne_peut_pas_etre_supprime_par_son_titulaire(): void
     {
+        $this->assertFileDoesNotExist(
+            resource_path('views/livewire/profile/delete-user-form.blade.php'),
+        );
+
         $user = User::factory()->create();
 
-        $this->actingAs($user);
-
-        $component = Volt::test('profile.delete-user-form')
-            ->set('password', 'password')
-            ->call('deleteUser');
-
-        $component
-            ->assertHasNoErrors()
-            ->assertRedirect('/');
-
-        $this->assertGuest();
-        $this->assertNull($user->fresh());
-    }
-
-    public function test_correct_password_must_be_provided_to_delete_account(): void
-    {
-        $user = User::factory()->create();
-
-        $this->actingAs($user);
-
-        $component = Volt::test('profile.delete-user-form')
-            ->set('password', 'wrong-password')
-            ->call('deleteUser');
-
-        $component
-            ->assertHasErrors('password')
-            ->assertNoRedirect();
-
-        $this->assertNotNull($user->fresh());
+        $this->actingAs($user)->get('/profile')->assertDontSee(__('Supprimer le compte'));
     }
 }

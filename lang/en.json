@@ -778,5 +778,15 @@
     "En mémoire de": "In memory of",
     "En l'honneur de": "In honour of",
     "Don d'actions": "Gift of shares",
-    "Don sur solde": "Gift from balance"
+    "Don sur solde": "Gift from balance",
+    "Révocation d'un accès au portail": "Portal access revoked",
+    "Rétablissement d'un accès au portail": "Portal access restored",
+    "Révoquer l'accès": "Revoke access",
+    "Rétablir l'accès": "Restore access",
+    "Accès portail révoqué (:identifiant)": "Portal access revoked (:identifiant)",
+    "Révoquer l'accès de :identifiant ? L'investisseur ne pourra plus se connecter et sa session en cours sera coupée. Le dossier, les parts et l'historique ne sont pas touchés, et l'accès pourra être rétabli.": "Revoke access for :identifiant? The investor will no longer be able to sign in and any open session will be ended. The record, the shares and the history are untouched, and access can be restored.",
+    "Rétablir l'accès de :identifiant ? Le mot de passe reste celui qu'il avait avant la révocation.": "Restore access for :identifiant? The password stays the one it had before the revocation.",
+    "L'accès au portail est révoqué. L'investisseur ne peut plus se connecter ; une session en cours est coupée immédiatement.": "Portal access has been revoked. The investor can no longer sign in; any open session is ended immediately.",
+    "L'accès au portail est rétabli avec le même identifiant et le même mot de passe qu'avant.": "Portal access has been restored with the same login and the same password as before.",
+    "Ce compte a été désactivé. Contactez votre gestionnaire.": "This account has been deactivated. Contact your manager."
 }

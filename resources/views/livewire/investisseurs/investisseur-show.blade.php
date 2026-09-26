@@ -100,30 +100,58 @@
         </div>
     @endif
 
-    @if (auth()->user()->role !== 'lecture' && ! $investisseur->estDecede())
-        <div class="mb-6">
-            @if ($investisseur->user_id)
-                <span class="inline-block text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg px-4 py-2">
-                    ✓ {{ __("Accès portail activé (:identifiant)", ["identifiant" => $investisseur->user->email ?? $investisseur->user->telephone]) }}
-                </span>
-                <button wire:click="reinitialiserMotDePasse" wire:confirm="{{ __("Générer un nouveau mot de passe temporaire pour :identifiant ?", ["identifiant" => $investisseur->user->email ?? $investisseur->user->telephone]) }}"
-                        class="ms-2 text-sm text-blue-600 border border-blue-300 rounded-lg px-4 py-2 hover:bg-blue-50">
-                    {{ __("Réinitialiser le mot de passe") }}
-                </button>
-            @else
+    @if (session('message_acces'))
+        <div class="mb-4 text-sm text-blue-800 bg-blue-50 border border-blue-200 rounded-lg px-4 py-3">
+            {{ session('message_acces') }}
+        </div>
+    @endif
+
+    @php($identifiantConnexion = $investisseur->user?->email ?? $investisseur->user?->telephone)
+    @php($peutAgirSurLAcces = auth()->user()->role !== 'lecture')
+
+    {{-- Trois états, et non deux : un accès peut être révoqué sans être effacé.
+         La révocation reste offerte sur le dossier d'un défunt — c'est là qu'elle
+         sert le plus — alors que la création, la réinitialisation et le
+         rétablissement n'y ont pas leur place. --}}
+    <div class="mb-6 flex flex-wrap items-center gap-2">
+        @if (! $investisseur->user_id)
+            @if ($peutAgirSurLAcces && ! $investisseur->estDecede())
                 <button wire:click="creerAcces" wire:confirm="{{ __("Créer un accès de connexion pour cet investisseur ?") }}"
                         class="text-sm text-blue-700 border border-blue-300 rounded-lg px-4 py-2 hover:bg-blue-50">
                     {{ __("Créer un accès au portail investisseur") }}
                 </button>
             @endif
-        </div>
-    @elseif ($investisseur->user_id)
-        <div class="mb-6">
+        @elseif ($investisseur->user->actif)
             <span class="inline-block text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg px-4 py-2">
-                {{ __("✓ Accès portail activé") }}
+                ✓ {{ __("Accès portail activé (:identifiant)", ["identifiant" => $identifiantConnexion]) }}
             </span>
-        </div>
-    @endif
+
+            @if ($peutAgirSurLAcces && ! $investisseur->estDecede())
+                <button wire:click="reinitialiserMotDePasse" wire:confirm="{{ __("Générer un nouveau mot de passe temporaire pour :identifiant ?", ["identifiant" => $identifiantConnexion]) }}"
+                        class="text-sm text-blue-600 border border-blue-300 rounded-lg px-4 py-2 hover:bg-blue-50">
+                    {{ __("Réinitialiser le mot de passe") }}
+                </button>
+            @endif
+
+            @if ($peutAgirSurLAcces)
+                <button wire:click="revoquerAcces" wire:confirm="{{ __("Révoquer l'accès de :identifiant ? L'investisseur ne pourra plus se connecter et sa session en cours sera coupée. Le dossier, les parts et l'historique ne sont pas touchés, et l'accès pourra être rétabli.", ["identifiant" => $identifiantConnexion]) }}"
+                        class="text-sm text-red-700 border border-red-300 rounded-lg px-4 py-2 hover:bg-red-50">
+                    {{ __("Révoquer l'accès") }}
+                </button>
+            @endif
+        @else
+            <span class="inline-block text-sm text-gray-600 bg-gray-50 border border-gray-300 rounded-lg px-4 py-2">
+                {{ __("Accès portail révoqué (:identifiant)", ["identifiant" => $identifiantConnexion]) }}
+            </span>
+
+            @if ($peutAgirSurLAcces && ! $investisseur->estDecede())
+                <button wire:click="retablirAcces" wire:confirm="{{ __("Rétablir l'accès de :identifiant ? Le mot de passe reste celui qu'il avait avant la révocation.", ["identifiant" => $identifiantConnexion]) }}"
+                        class="text-sm text-emerald-700 border border-emerald-300 rounded-lg px-4 py-2 hover:bg-emerald-50">
+                    {{ __("Rétablir l'accès") }}
+                </button>
+            @endif
+        @endif
+    </div>
 
     @php($manquants = $investisseur->champsManquants())
     @if ($manquants)

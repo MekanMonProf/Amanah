@@ -61,6 +61,8 @@ class Libelles
         'transfert_gestionnaire' => 'Transfert de gestionnaire',
         'reassignation_masse' => 'Réassignation en masse',
         'creation_acces_portail' => "Création d'un accès au portail",
+        'revocation_acces_portail' => "Révocation d'un accès au portail",
+        'retablissement_acces_portail' => "Rétablissement d'un accès au portail",
         'reinitialisation_mdp' => 'Réinitialisation du mot de passe',
         'activation_2fa' => 'Activation de la double authentification',
         'desactivation_2fa' => 'Désactivation de la double authentification',

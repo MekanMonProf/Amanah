@@ -1,7 +1,9 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
@@ -38,8 +40,25 @@ new #[Layout('layouts.guest')] class extends Component {
         if ($valeur === null || ! Auth::attempt([$champ => $valeur, 'password' => $this->password, 'actif' => true], $this->remember)) {
             RateLimiter::hit($this->throttleKey());
 
+            // Distinguer les deux échecs, mais seulement quand le mot de passe est bon :
+            // un compte révoqué qui s'entend dire que ses identifiants sont inconnus
+            // rappelle son gestionnaire pour un problème qui n'existe pas, et celui-ci
+            // voit pourtant « Accès portail révoqué » sur la fiche. EnsureCompteActif
+            // tient déjà ce discours à une session ouverte au moment de la révocation ;
+            // les deux chemins disent maintenant la même chose.
+            //
+            // Rien n'est divulgué au passage : sans le bon mot de passe, le message
+            // reste celui d'identifiants inconnus.
+            $compte = $valeur === null ? null : User::where($champ, $valeur)->first();
+
+            $revoque = $compte
+                && ! $compte->actif
+                && Hash::check($this->password, $compte->password);
+
             throw ValidationException::withMessages([
-                'identifiant' => __("Ces identifiants ne correspondent à aucun compte."),
+                'identifiant' => $revoque
+                    ? __("Ce compte a été désactivé. Contactez votre gestionnaire.")
+                    : __("Ces identifiants ne correspondent à aucun compte."),
             ]);
         }
 

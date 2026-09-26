@@ -146,7 +146,10 @@ class InvestisseurShow extends Component
         $this->interdireSiLectureSeule();
         $this->interdireSiDecede();
 
-        if (! $this->investisseur->user_id) {
+        // Un accès révoqué ne se réinitialise pas : il se rétablit d'abord. Sans
+        // cela on remettrait un mot de passe à un compte qui ne peut pas se connecter,
+        // et le gestionnaire croirait l'avoir réouvert.
+        if (! $this->investisseur->user_id || ! $this->investisseur->user->actif) {
             return;
         }
 
@@ -171,6 +174,79 @@ class InvestisseurShow extends Component
             entiteId: $this->investisseur->id,
             apres: ['email' => $this->investisseur->user->email, 'telephone' => $this->investisseur->user->telephone],
         );
+    }
+
+    /**
+     * Retire l'accès au portail sans supprimer le compte.
+     *
+     * Le compte utilisateur est désactivé, pas effacé. L'effacer romprait le journal
+     * d'audit — audit_logs.user_id est en ON DELETE RESTRICT, et un investisseur y
+     * figure dès qu'il a activé sa double authentification — et ferait perdre la
+     * trace de qui avait accès. Désactivé, le compte ne peut plus se connecter, et
+     * EnsureCompteActif coupe même une session déjà ouverte au prochain écran.
+     *
+     * Contrairement à la création et à la réinitialisation, la révocation reste
+     * permise sur le dossier d'un défunt : c'est précisément le moment où l'accès
+     * doit tomber, pour que personne ne se connecte en son nom pendant la succession.
+     */
+    public function revoquerAcces(): void
+    {
+        $this->interdireSiLectureSeule();
+
+        $utilisateur = $this->investisseur->user;
+
+        if (! $utilisateur || ! $utilisateur->actif) {
+            return;
+        }
+
+        $utilisateur->update(['actif' => false]);
+
+        $this->dernierMotDePasseGenere = null;
+
+        \App\Models\AuditLog::enregistrer(
+            action: 'revocation_acces_portail',
+            entite: 'investisseur',
+            entiteId: $this->investisseur->id,
+            avant: ['actif' => true],
+            apres: [
+                'actif' => false,
+                'identifiant_connexion' => $utilisateur->email ?? $utilisateur->telephone,
+            ],
+        );
+
+        session()->flash('message_acces', __("L'accès au portail est révoqué. L'investisseur ne peut plus se connecter ; une session en cours est coupée immédiatement."));
+    }
+
+    /**
+     * Rend un accès révoqué, sans toucher au mot de passe — comme la réactivation
+     * d'un gestionnaire. Si les identifiants doivent changer, le bouton de
+     * réinitialisation est juste à côté.
+     */
+    public function retablirAcces(): void
+    {
+        $this->interdireSiLectureSeule();
+        $this->interdireSiDecede();
+
+        $utilisateur = $this->investisseur->user;
+
+        if (! $utilisateur || $utilisateur->actif) {
+            return;
+        }
+
+        $utilisateur->update(['actif' => true]);
+
+        \App\Models\AuditLog::enregistrer(
+            action: 'retablissement_acces_portail',
+            entite: 'investisseur',
+            entiteId: $this->investisseur->id,
+            avant: ['actif' => false],
+            apres: [
+                'actif' => true,
+                'identifiant_connexion' => $utilisateur->email ?? $utilisateur->telephone,
+            ],
+        );
+
+        session()->flash('message_acces', __("L'accès au portail est rétabli avec le même identifiant et le même mot de passe qu'avant."));
     }
 
     /**

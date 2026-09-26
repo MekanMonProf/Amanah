@@ -778,5 +778,15 @@
     "En mémoire de": "في ذكرى",
     "En l'honneur de": "تكريماً لـ",
     "Don d'actions": "هبة أسهم",
-    "Don sur solde": "هبة من الرصيد"
+    "Don sur solde": "هبة من الرصيد",
+    "Révocation d'un accès au portail": "إلغاء الوصول إلى البوابة",
+    "Rétablissement d'un accès au portail": "استعادة الوصول إلى البوابة",
+    "Révoquer l'accès": "إلغاء الوصول",
+    "Rétablir l'accès": "استعادة الوصول",
+    "Accès portail révoqué (:identifiant)": "تم إلغاء الوصول إلى البوابة (:identifiant)",
+    "Révoquer l'accès de :identifiant ? L'investisseur ne pourra plus se connecter et sa session en cours sera coupée. Le dossier, les parts et l'historique ne sont pas touchés, et l'accès pourra être rétabli.": "إلغاء وصول :identifiant؟ لن يتمكن المستثمر من تسجيل الدخول وستُنهى جلسته الحالية. لا يتأثر الملف ولا الأسهم ولا السجل، ويمكن استعادة الوصول لاحقاً.",
+    "Rétablir l'accès de :identifiant ? Le mot de passe reste celui qu'il avait avant la révocation.": "استعادة وصول :identifiant؟ تبقى كلمة المرور كما كانت قبل الإلغاء.",
+    "L'accès au portail est révoqué. L'investisseur ne peut plus se connecter ; une session en cours est coupée immédiatement.": "تم إلغاء الوصول إلى البوابة. لم يعد بإمكان المستثمر تسجيل الدخول، وتُنهى أي جلسة مفتوحة فوراً.",
+    "L'accès au portail est rétabli avec le même identifiant et le même mot de passe qu'avant.": "تمت استعادة الوصول إلى البوابة بنفس المعرّف وكلمة المرور السابقين.",
+    "Ce compte a été désactivé. Contactez votre gestionnaire.": "تم إلغاء تفعيل هذا الحساب. يرجى الاتصال بالمسؤول عنك."
 }

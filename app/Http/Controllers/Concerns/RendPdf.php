@@ -7,23 +7,44 @@ use Barryvdh\DomPDF\PDF;
 /**
  * Un seul endroit décide si un PDF s'affiche ou se télécharge.
  *
- * Par défaut il s'affiche dans l'onglet. Le lecteur du navigateur propose déjà
- * l'enregistrement et l'impression : on voit avant de garder, au lieu de garder
- * pour voir. C'est surtout vrai d'une attestation, qu'on relit avant de la
- * remettre à quelqu'un.
+ * Les deux usages ne se ressemblent pas. Une attestation ou un relevé se relit
+ * avant d'être remis à quelqu'un : ils s'ouvrent dans le lecteur du navigateur,
+ * qui offre déjà l'enregistrement et l'impression. Un export, lui, est un fichier
+ * qu'on veut sur son disque — l'afficher d'abord ne ferait qu'ajouter un clic.
  *
- * Tous les liens portent déjà target="_blank" : jusqu'ici ils ouvraient un onglet
- * qui se vidait aussitôt le fichier poussé. L'aperçu lui donne enfin un contenu.
+ * D'où un défaut par type de document, que chaque appel exprime, plutôt qu'une
+ * règle unique qui conviendrait mal à l'un des deux.
  *
- * `?telecharger=1` force le téléchargement, pour qui veut le fichier sans passer
- * par le lecteur — et pour les cas où ce dernier fait défaut.
+ * Les deux comportements restent accessibles à la demande : `?telecharger=1` sur
+ * un document, `?apercu=1` sur un export.
  */
 trait RendPdf
 {
-    protected function rendrePdf(PDF $pdf, string $nomFichier)
+    protected function rendrePdf(PDF $pdf, string $nomFichier, bool $apercuParDefaut = true)
     {
-        return request()->boolean('telecharger')
-            ? $pdf->download($nomFichier)
-            : $pdf->stream($nomFichier);
+        return $this->veutUnApercu($apercuParDefaut)
+            ? $pdf->stream($nomFichier)
+            : $pdf->download($nomFichier);
+    }
+
+    /** Un export : le fichier d'abord, l'aperçu seulement si on le demande. */
+    protected function telechargerPdf(PDF $pdf, string $nomFichier)
+    {
+        return $this->rendrePdf($pdf, $nomFichier, apercuParDefaut: false);
+    }
+
+    private function veutUnApercu(bool $defaut): bool
+    {
+        $requete = request();
+
+        if ($requete->has('telecharger')) {
+            return ! $requete->boolean('telecharger');
+        }
+
+        if ($requete->has('apercu')) {
+            return $requete->boolean('apercu');
+        }
+
+        return $defaut;
     }
 }

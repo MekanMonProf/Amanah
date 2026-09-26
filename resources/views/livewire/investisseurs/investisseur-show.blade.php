@@ -70,7 +70,7 @@
                 <input type="date" name="date_fin" class="border rounded px-2 py-1.5 text-sm">
             </div>
             <button type="submit" class="text-sm text-gray-700 border border-gray-300 rounded-lg px-4 py-1.5 hover:bg-gray-50 whitespace-nowrap">
-                {{ __("📄 Télécharger le relevé (PDF)") }}
+                {{ __("📄 Relevé de compte (PDF)") }}
             </button>
         </form>
         <p class="text-xs text-gray-400 mt-1">{{ __("Laissez vide pour l'historique complet.") }}</p>

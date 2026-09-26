@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 
 class AttestationController extends Controller
 {
+    use \App\Http\Controllers\Concerns\RendPdf;
+
     /**
      * Un investisseur ne peut voir que les attestations de son propre compte.
      * Le personnel (tous les autres rôles) peut voir n'importe laquelle — l'accès aux
@@ -51,7 +53,7 @@ class AttestationController extends Controller
         // attestation d'achat ordinaire, et le destinataire le classe sous ce nom.
         $prefixe = $achat->estUnPresent() ? 'Certificat_Hommage_Generosite_' : 'Attestation_Achat_';
 
-        return $pdf->download($prefixe . $achat->numero_achat . '.pdf');
+        return $this->rendrePdf($pdf, $prefixe . $achat->numero_achat . '.pdf');
     }
 
     public function radiation(Radiation $radiation)
@@ -74,7 +76,7 @@ class AttestationController extends Controller
             'dateGeneration' => now(),
         ])->setPaper('a4', 'portrait');
 
-        return $pdf->download('Attestation_Radiation_' . $radiation->numero_radiation . '.pdf');
+        return $this->rendrePdf($pdf, 'Attestation_Radiation_' . $radiation->numero_radiation . '.pdf');
     }
 
     public function paiement(EcritureCompteFinancier $ecriture)
@@ -91,6 +93,6 @@ class AttestationController extends Controller
             'dateGeneration' => now(),
         ])->setPaper('a4', 'portrait');
 
-        return $pdf->download('Attestation_Versement_' . $ecriture->id . '_' . $ecriture->date_ecriture->format('Y-m-d') . '.pdf');
+        return $this->rendrePdf($pdf, 'Attestation_Versement_' . $ecriture->id . '_' . $ecriture->date_ecriture->format('Y-m-d') . '.pdf');
     }
 }

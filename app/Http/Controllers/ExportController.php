@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Auth;
 
 class ExportController extends Controller
 {
+    use \App\Http\Controllers\Concerns\RendPdf;
+
     use RestreintAuPortefeuilleGestionnaire;
 
     /**
@@ -77,7 +79,7 @@ class ExportController extends Controller
             'achats' => $achats, 'compte' => $compte->load('investisseur'), 'dateGeneration' => now(),
         ])->setPaper('a4', 'portrait');
 
-        return $pdf->download('Achats_' . $compte->numero_compte . '_' . now()->format('Y-m-d') . '.pdf');
+        return $this->rendrePdf($pdf, 'Achats_' . $compte->numero_compte . '_' . now()->format('Y-m-d') . '.pdf');
     }
 
     // --- Écritures d'un compte -------------------------------------------
@@ -138,7 +140,7 @@ class ExportController extends Controller
             'ecritures' => $ecritures, 'compte' => $compte->load('investisseur'), 'dateGeneration' => now(),
         ])->setPaper('a4', 'portrait');
 
-        return $pdf->download('Ecritures_' . $compte->numero_compte . '_' . now()->format('Y-m-d') . '.pdf');
+        return $this->rendrePdf($pdf, 'Ecritures_' . $compte->numero_compte . '_' . now()->format('Y-m-d') . '.pdf');
     }
 
     // --- Radiations d'un compte -------------------------------------------
@@ -188,7 +190,7 @@ class ExportController extends Controller
             'radiations' => $radiations, 'compte' => $compte->load('investisseur'), 'dateGeneration' => now(),
         ])->setPaper('a4', 'portrait');
 
-        return $pdf->download('Radiations_' . $compte->numero_compte . '_' . now()->format('Y-m-d') . '.pdf');
+        return $this->rendrePdf($pdf, 'Radiations_' . $compte->numero_compte . '_' . now()->format('Y-m-d') . '.pdf');
     }
 
     // --- Exports globaux (tous les comptes, tous les investisseurs) -----
@@ -236,7 +238,7 @@ class ExportController extends Controller
 
         $pdf = Pdf::loadView('pdf.liste-achats-global', ['achats' => $achats, 'dateGeneration' => now()])->setPaper('a4', 'landscape');
 
-        return $pdf->download('Achats_Tous_' . now()->format('Y-m-d') . '.pdf');
+        return $this->rendrePdf($pdf, 'Achats_Tous_' . now()->format('Y-m-d') . '.pdf');
     }
 
     public function ecrituresGlobalCsv(Request $request)
@@ -269,7 +271,7 @@ class ExportController extends Controller
 
         $pdf = Pdf::loadView('pdf.liste-ecritures-global', ['ecritures' => $ecritures, 'dateGeneration' => now()])->setPaper('a4', 'landscape');
 
-        return $pdf->download('Ecritures_Toutes_' . now()->format('Y-m-d') . '.pdf');
+        return $this->rendrePdf($pdf, 'Ecritures_Toutes_' . now()->format('Y-m-d') . '.pdf');
     }
 
     public function radiationsGlobalCsv(Request $request)
@@ -303,7 +305,7 @@ class ExportController extends Controller
 
         $pdf = Pdf::loadView('pdf.liste-radiations-global', ['radiations' => $radiations, 'dateGeneration' => now()])->setPaper('a4', 'landscape');
 
-        return $pdf->download('Radiations_Toutes_' . now()->format('Y-m-d') . '.pdf');
+        return $this->rendrePdf($pdf, 'Radiations_Toutes_' . now()->format('Y-m-d') . '.pdf');
     }
 
     // --- Investisseurs (liste globale) -----------------------------------
@@ -373,7 +375,7 @@ class ExportController extends Controller
             'dateGeneration' => now(),
         ])->setPaper('a4', 'landscape');
 
-        return $pdf->download('Liste_Investisseurs_' . now()->format('Y-m-d') . '.pdf');
+        return $this->rendrePdf($pdf, 'Liste_Investisseurs_' . now()->format('Y-m-d') . '.pdf');
     }
 
     protected function auditFiltre(Request $request)
@@ -448,6 +450,6 @@ class ExportController extends Controller
             'dateGeneration' => now(),
         ])->setPaper('a4', 'landscape');
 
-        return $pdf->download('Journal_Audit_' . now()->format('Y-m-d') . '.pdf');
+        return $this->rendrePdf($pdf, 'Journal_Audit_' . now()->format('Y-m-d') . '.pdf');
     }
 }

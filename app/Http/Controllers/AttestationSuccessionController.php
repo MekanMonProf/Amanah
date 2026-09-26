@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 
 class AttestationSuccessionController extends Controller
 {
+    use \App\Http\Controllers\Concerns\RendPdf;
+
     /**
      * Attestation dédiée pour un versement effectué dans le cadre d'un règlement de succession
      * (mode "Paiement direct") — reprend la date de décès, le détail des actions liquidées et
@@ -51,6 +53,6 @@ class AttestationSuccessionController extends Controller
             'dateGeneration' => now(),
         ])->setPaper('a4', 'portrait');
 
-        return $pdf->download('Attestation_Deces_' . $defunt->identifiant_externe . '_' . now()->format('Y-m-d') . '.pdf');
+        return $this->rendrePdf($pdf, 'Attestation_Deces_' . $defunt->identifiant_externe . '_' . now()->format('Y-m-d') . '.pdf');
     }
 }

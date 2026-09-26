@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 
 class ReleveController extends Controller
 {
+    use \App\Http\Controllers\Concerns\RendPdf;
+
     use RestreintAuPortefeuilleGestionnaire;
 
     public function pourGestionnaire(Request $request, Investisseur $investisseur)
@@ -101,6 +103,6 @@ class ReleveController extends Controller
         $suffixe = $dateDebut || $dateFin ? '_periode' : '';
         $nomFichier = 'Releve_' . $investisseur->identifiant_externe . $suffixe . '_' . now()->format('Y-m-d') . '.pdf';
 
-        return $pdf->download($nomFichier);
+        return $this->rendrePdf($pdf, $nomFichier);
     }
 }

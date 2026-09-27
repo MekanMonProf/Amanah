@@ -801,5 +801,9 @@
     "Assalamou aleykoum :nom, votre mot de passe AMANAH (AND DOX S.A.) vient d'être réinitialisé.": "Assalamu alaykum :nom, your AMANAH (AND DOX S.A.) password has just been reset.",
     "Barak'ALLAH Fikoum": "BarakAllahu fikum",
     "Langue": "Language",
-    "Langue des messages qui lui sont adressés, et de son portail s'il en a un.": "The language of the messages sent to them, and of their portal if they have one."
+    "Langue des messages qui lui sont adressés, et de son portail s'il en a un.": "The language of the messages sent to them, and of their portal if they have one.",
+    "Langue de l'application": "Application language",
+    "C'est la langue dans laquelle l'application s'ouvrira, sur n'importe quel poste.": "This is the language the application will open in, on any device.",
+    "Mettez à jour vos informations de compte et la langue de l'application.": "Update your account details and the application language.",
+    "Vous pouvez aussi vous connecter avec ce numéro. Pour le changer, contactez votre gestionnaire.": "You can also sign in with this number. To change it, contact your manager."
 }

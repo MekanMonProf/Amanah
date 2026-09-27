@@ -283,6 +283,7 @@ class PresentationSeeder extends Seeder
                     'ville' => $d['ville'] ?? null,
                     'gestionnaire_id' => isset($d['gestionnaire']) ? $this->gestionnaires[$d['gestionnaire']]->id : null,
                     'statut' => $d['statut'] ?? 'actif',
+                    'langue' => $d['langue'] ?? \App\Support\Langue::DEFAUT,
                 ];
 
                 if ($complet) {
@@ -326,7 +327,8 @@ class PresentationSeeder extends Seeder
                         $identifiant + [
                             'nom' => $d['nom'], 'prenom' => $d['prenom'] ?? '',
                             'password' => Hash::make(self::MOT_DE_PASSE),
-                            'role' => 'investisseur', 'actif' => true, 'langue' => 'fr',
+                            'role' => 'investisseur', 'actif' => true,
+                            'langue' => $d['langue'] ?? \App\Support\Langue::DEFAUT,
                             'doit_changer_mot_de_passe' => false,
                             'whatsapp' => Telephone::normaliser($d['whatsapp'] ?? $d['tel']),
                         ],
@@ -1032,8 +1034,10 @@ class PresentationSeeder extends Seeder
              'naissance' => '1975-09-30', 'gestionnaire' => 'diallo', 'inscrit' => '2025-11-06',
              'achats' => [['date' => '2025-11-10', 'categorie' => 'commercial', 'actions' => 12, 'mode' => 'Wave']]],
 
+            // Arabophone, et sans accès au portail : c'est sur elle que se montre le
+            // message WhatsApp d'identifiants dans une autre langue que le français.
             ['nom' => 'Bâ', 'prenom' => 'Aïssatou', 'tel' => '771100003', 'pays' => 'Sénégal', 'ville' => 'Dakar',
-             'naissance' => '1990-01-22', 'gestionnaire' => 'sarr', 'inscrit' => '2025-11-12',
+             'naissance' => '1990-01-22', 'gestionnaire' => 'sarr', 'inscrit' => '2025-11-12', 'langue' => 'ar',
              'achats' => [
                  ['date' => '2025-11-15', 'categorie' => 'commercial', 'actions' => 8, 'mode' => 'Orange Money'],
                  ['date' => '2026-02-03', 'categorie' => 'waqf', 'actions' => 5, 'mode' => 'Wave'],
@@ -1125,9 +1129,11 @@ class PresentationSeeder extends Seeder
              'complet' => false,
              'achats' => [['date' => '2026-05-25', 'categorie' => 'commercial', 'actions' => 5, 'mode' => 'Espèces']]],
 
+            // Arabophone avec un accès au portail : en se connectant sous son compte,
+            // c'est tout le portail investisseur qui s'affiche en arabe.
             ['nom' => 'Sy', 'prenom' => 'Mame Diarra', 'tel' => '771100023', 'pays' => 'Sénégal', 'ville' => 'Dakar',
              'naissance' => '1994-04-09', 'gestionnaire' => 'sarr', 'inscrit' => '2026-06-02',
-             'acces' => 'telephone',
+             'acces' => 'telephone', 'langue' => 'ar',
              'achats' => [['date' => '2026-06-04', 'categorie' => 'waqf', 'actions' => 7, 'mode' => 'Orange Money']]],
 
             ['nom' => 'Badji', 'prenom' => 'Ansoumana', 'tel' => '771100024', 'pays' => 'Sénégal', 'ville' => 'Ziguinchor',

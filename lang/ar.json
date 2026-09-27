@@ -790,13 +790,14 @@
     "L'accès au portail est rétabli avec le même identifiant et le même mot de passe qu'avant.": "تمت استعادة الوصول إلى البوابة بنفس المعرّف وكلمة المرور السابقين.",
     "Ce compte a été désactivé. Contactez votre gestionnaire.": "تم إلغاء تفعيل هذا الحساب. يرجى الاتصال بالمسؤول عنك.",
     "Afficher": "إظهار",
-    "Bonjour :nom, un accès vient d'être créé pour vous sur AMANAH (AND DOX S.A.).": "مرحباً :nom، تم إنشاء حساب لك على منصة أمانة (AND DOX S.A.).",
-    "Bonjour :nom, votre mot de passe AMANAH (AND DOX S.A.) vient d'être réinitialisé.": "مرحباً :nom، تمت إعادة تعيين كلمة مرورك على منصة أمانة (AND DOX S.A.).",
     "Identifiant : :identifiant": "المعرّف: :identifiant",
     "Mot de passe temporaire : :motdepasse": "كلمة المرور المؤقتة: :motdepasse",
     "Connexion : :lien": "تسجيل الدخول: :lien",
     "Il vous sera demandé de choisir un nouveau mot de passe dès votre première connexion. Ne communiquez ce message à personne.": "سيُطلب منك اختيار كلمة مرور جديدة عند أول تسجيل دخول. لا تشارك هذه الرسالة مع أي شخص.",
     "Une question ? Écrivez-nous au :contact.": "هل لديك سؤال؟ راسلنا على :contact.",
     "Envoyer par WhatsApp": "إرسال عبر واتساب",
-    "WhatsApp s'ouvre avec le message déjà écrit pour :numero — il vous reste à l'envoyer.": "سيُفتح واتساب والرسالة جاهزة إلى :numero — لم يبق سوى إرسالها."
+    "WhatsApp s'ouvre avec le message déjà écrit pour :numero — il vous reste à l'envoyer.": "سيُفتح واتساب والرسالة جاهزة إلى :numero — لم يبق سوى إرسالها.",
+    "Assalamou aleykoum :nom, un accès vient d'être créé pour vous sur AMANAH (AND DOX S.A.).": "السلام عليكم :nom، تم إنشاء حساب لك على منصة أمانة (AND DOX S.A.).",
+    "Assalamou aleykoum :nom, votre mot de passe AMANAH (AND DOX S.A.) vient d'être réinitialisé.": "السلام عليكم :nom، تمت إعادة تعيين كلمة مرورك على منصة أمانة (AND DOX S.A.).",
+    "Barak'ALLAH Fikoum": "بارك الله فيكم"
 }

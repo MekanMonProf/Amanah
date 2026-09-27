@@ -790,13 +790,14 @@
     "L'accès au portail est rétabli avec le même identifiant et le même mot de passe qu'avant.": "Portal access has been restored with the same login and the same password as before.",
     "Ce compte a été désactivé. Contactez votre gestionnaire.": "This account has been deactivated. Contact your manager.",
     "Afficher": "Show",
-    "Bonjour :nom, un accès vient d'être créé pour vous sur AMANAH (AND DOX S.A.).": "Hello :nom, an account has just been created for you on AMANAH (AND DOX S.A.).",
-    "Bonjour :nom, votre mot de passe AMANAH (AND DOX S.A.) vient d'être réinitialisé.": "Hello :nom, your AMANAH (AND DOX S.A.) password has just been reset.",
     "Identifiant : :identifiant": "Login: :identifiant",
     "Mot de passe temporaire : :motdepasse": "Temporary password: :motdepasse",
     "Connexion : :lien": "Sign in: :lien",
     "Il vous sera demandé de choisir un nouveau mot de passe dès votre première connexion. Ne communiquez ce message à personne.": "You will be asked to choose a new password the first time you sign in. Do not share this message with anyone.",
     "Une question ? Écrivez-nous au :contact.": "Any question? Write to us on :contact.",
     "Envoyer par WhatsApp": "Send via WhatsApp",
-    "WhatsApp s'ouvre avec le message déjà écrit pour :numero — il vous reste à l'envoyer.": "WhatsApp opens with the message already written for :numero — all that is left is to send it."
+    "WhatsApp s'ouvre avec le message déjà écrit pour :numero — il vous reste à l'envoyer.": "WhatsApp opens with the message already written for :numero — all that is left is to send it.",
+    "Assalamou aleykoum :nom, un accès vient d'être créé pour vous sur AMANAH (AND DOX S.A.).": "Assalamu alaykum :nom, an account has just been created for you on AMANAH (AND DOX S.A.).",
+    "Assalamou aleykoum :nom, votre mot de passe AMANAH (AND DOX S.A.) vient d'être réinitialisé.": "Assalamu alaykum :nom, your AMANAH (AND DOX S.A.) password has just been reset.",
+    "Barak'ALLAH Fikoum": "BarakAllahu fikum"
 }

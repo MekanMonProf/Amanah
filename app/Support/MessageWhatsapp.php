@@ -67,8 +67,8 @@ class MessageWhatsapp
         $identifiant = $investisseur->user?->email ?? $investisseur->user?->telephone ?? $investisseur->telephone;
 
         $salutation = $nouveauCompte
-            ? "Bonjour :nom, un accès vient d'être créé pour vous sur AMANAH (AND DOX S.A.)."
-            : "Bonjour :nom, votre mot de passe AMANAH (AND DOX S.A.) vient d'être réinitialisé.";
+            ? "Assalamou aleykoum :nom, un accès vient d'être créé pour vous sur AMANAH (AND DOX S.A.)."
+            : "Assalamou aleykoum :nom, votre mot de passe AMANAH (AND DOX S.A.) vient d'être réinitialisé.";
 
         return __($salutation, ['nom' => trim($investisseur->prenom . ' ' . $investisseur->nom)], $langue)
             . "\n\n"
@@ -77,12 +77,18 @@ class MessageWhatsapp
             . __("Connexion : :lien", ['lien' => route('login')], $langue)
             . "\n\n"
             . __("Il vous sera demandé de choisir un nouveau mot de passe dès votre première connexion. Ne communiquez ce message à personne.", [], $langue)
-            . self::ligneContact($langue);
+            . self::ligneContact($langue)
+            . "
+
+" . __("Barak'ALLAH Fikoum", [], $langue);
     }
 
     /**
      * La ligne de contact, absente tant qu'aucun numéro de support n'est réglé :
      * mieux vaut pas de contact du tout qu'un numéro que personne ne décroche.
+     *
+     * La formule de clôture, elle, vient juste après mais ne dépend pas d'elle :
+     * un message sans numéro de contact se termine quand même.
      */
     private static function ligneContact(string $langue): string
     {

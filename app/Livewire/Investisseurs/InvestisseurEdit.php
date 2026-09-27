@@ -50,6 +50,14 @@ class InvestisseurEdit extends Component
     #[Validate('nullable|string|max:100')]
     public string $nationalite = '';
 
+    /**
+     * La langue dans laquelle l'investisseur reçoit ce que la plateforme lui
+     * adresse — aujourd'hui le message WhatsApp qui transmet ses identifiants,
+     * et l'interface du portail s'il en a un.
+     */
+    #[Validate('required|in:fr,en,ar')]
+    public string $langue = \App\Support\Langue::DEFAUT;
+
     #[Validate('nullable|date')]
     public ?string $date_naissance = null;
 
@@ -257,6 +265,10 @@ class InvestisseurEdit extends Component
         $this->representantWhatsappIdentique = \App\Support\Telephone::memeNumero($investisseur->representant_legal_telephone, $investisseur->representant_legal_whatsapp);
         $this->beneficiaireWhatsappIdentique = \App\Support\Telephone::memeNumero($investisseur->beneficiaire_telephone, $investisseur->beneficiaire_whatsapp);
 
+        // Hors de $champsTexte : une valeur vide n'a pas de sens ici, et un code
+        // inconnu retombe sur le français plutôt que de vider le sélecteur.
+        $this->langue = \App\Support\Langue::normaliser($investisseur->langue);
+
         $this->date_naissance = $investisseur->date_naissance?->toDateString();
         $this->date_delivrance_piece = $investisseur->date_delivrance_piece?->toDateString();
         $this->date_expiration_piece = $investisseur->date_expiration_piece?->toDateString();
@@ -300,6 +312,7 @@ class InvestisseurEdit extends Component
             'ville' => $this->ville ?: null,
             'pays' => $this->pays ?: null,
             'nationalite' => $this->nationalite ?: null,
+            'langue' => \App\Support\Langue::normaliser($this->langue),
             'date_naissance' => $this->date_naissance ?: null,
             'lieu_naissance' => $this->lieu_naissance ?: null,
             'type_identification' => $this->type_identification ?: null,

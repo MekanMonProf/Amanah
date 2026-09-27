@@ -13,7 +13,7 @@ class Investisseur extends Model
         'user_id',
         'identifiant_externe', 'type_personne', 'nom', 'prenom', 'telephone', 'whatsapp', 'email',
         'type_identification', 'numero_identification', 'date_delivrance_piece', 'lieu_delivrance_piece', 'date_expiration_piece',
-        'pays', 'adresse', 'ville', 'date_naissance', 'lieu_naissance', 'nationalite',
+        'pays', 'adresse', 'ville', 'date_naissance', 'lieu_naissance', 'nationalite', 'langue',
         'raison_sociale', 'rccm', 'ninea', 'representant_legal_nom', 'representant_legal_telephone', 'representant_legal_whatsapp',
         'beneficiaire_nom', 'beneficiaire_lien', 'beneficiaire_telephone', 'beneficiaire_whatsapp',
         'piece_identite_path', 'convention_engagement_path', 'date_signature_convention', 'notes_internes',

@@ -57,12 +57,15 @@ class MessageWhatsapp
      * Le corps du message, dans la langue de l'investisseur.
      *
      * Le destinataire n'est pas l'exploitant : le message suit la langue du
-     * compte de l'investisseur quand il en a un, et non celle du gestionnaire qui
-     * a l'écran sous les yeux.
+     * dossier, et non celle du gestionnaire qui a l'écran sous les yeux.
+     *
+     * C'est bien le dossier qui fait foi, et non `users.langue` : le message part
+     * au moment où l'accès se crée, quand le compte vient tout juste de naître, et
+     * la plupart des investisseurs n'auront jamais de compte du tout.
      */
     public static function texteAcces(Investisseur $investisseur, string $motDePasse, bool $nouveauCompte): string
     {
-        $langue = $investisseur->user?->langue ?? app()->getLocale();
+        $langue = Langue::normaliser($investisseur->langue);
 
         $identifiant = $investisseur->user?->email ?? $investisseur->user?->telephone ?? $investisseur->telephone;
 

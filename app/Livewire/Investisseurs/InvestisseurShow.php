@@ -149,6 +149,10 @@ class InvestisseurShow extends Component
             'password' => Hash::make($motDePasse),
             'role' => 'investisseur',
             'actif' => true,
+            // Le portail s'ouvre dans la langue notée au dossier : l'investisseur
+            // n'a pas à la chercher à sa première connexion. Il reste libre d'en
+            // changer ensuite, et c'est alors son compte qui fait foi pour l'interface.
+            'langue' => \App\Support\Langue::normaliser($this->investisseur->langue),
             'doit_changer_mot_de_passe' => true,
         ]);
 

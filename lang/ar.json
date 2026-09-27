@@ -799,5 +799,7 @@
     "WhatsApp s'ouvre avec le message déjà écrit pour :numero — il vous reste à l'envoyer.": "سيُفتح واتساب والرسالة جاهزة إلى :numero — لم يبق سوى إرسالها.",
     "Assalamou aleykoum :nom, un accès vient d'être créé pour vous sur AMANAH (AND DOX S.A.).": "السلام عليكم :nom، تم إنشاء حساب لك على منصة أمانة (AND DOX S.A.).",
     "Assalamou aleykoum :nom, votre mot de passe AMANAH (AND DOX S.A.) vient d'être réinitialisé.": "السلام عليكم :nom، تمت إعادة تعيين كلمة مرورك على منصة أمانة (AND DOX S.A.).",
-    "Barak'ALLAH Fikoum": "بارك الله فيكم"
+    "Barak'ALLAH Fikoum": "بارك الله فيكم",
+    "Langue": "اللغة",
+    "Langue des messages qui lui sont adressés, et de son portail s'il en a un.": "لغة الرسائل المرسلة إليه، ولغة بوابته إن كان لديه واحدة."
 }

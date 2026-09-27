@@ -40,6 +40,18 @@
                     <label class="text-sm text-gray-600">{{ __("Nationalité") }}</label>
                     <input type="text" wire:model="nationalite" class="w-full border rounded px-3 py-2">
                 </div>
+                <div>
+                    <label class="text-sm text-gray-600">{{ __("Langue") }}</label>
+                    <select wire:model="langue" class="w-full border rounded px-3 py-2">
+                        @foreach (\App\Support\Langue::DISPONIBLES as $code => $langueDisponible)
+                            <option value="{{ $code }}">{{ $langueDisponible['libelle'] }}</option>
+                        @endforeach
+                    </select>
+                    <p class="mt-1 text-xs text-gray-500">
+                        {{ __("Langue des messages qui lui sont adressés, et de son portail s'il en a un.") }}
+                    </p>
+                    <x-input-error :messages="$errors->get('langue')" class="mt-1" />
+                </div>
             </div>
         </div>
 

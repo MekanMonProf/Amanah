@@ -227,6 +227,12 @@
             <div class="text-xs text-gray-500 uppercase">{{ __("Lieu de naissance") }}</div>
             <div class="mt-1">{{ $investisseur->lieu_naissance ?: '—' }}</div>
         </div>
+        <div class="bg-white border rounded-lg p-4">
+            <div class="text-xs text-gray-500 uppercase">{{ __("Langue") }}</div>
+            {{-- Dans la langue elle-même : « Français », « English », « العربية »,
+                 comme dans le sélecteur de la barre supérieure. --}}
+            <div class="mt-1">{{ \App\Support\Langue::DISPONIBLES[\App\Support\Langue::normaliser($investisseur->langue)]['libelle'] }}</div>
+        </div>
     </div>
 
     @if ($afficherFormulaireTransfert)

@@ -805,5 +805,9 @@
     "Langue de l'application": "لغة التطبيق",
     "C'est la langue dans laquelle l'application s'ouvrira, sur n'importe quel poste.": "هذه هي اللغة التي سيُفتح بها التطبيق، على أي جهاز.",
     "Mettez à jour vos informations de compte et la langue de l'application.": "حدّث معلومات حسابك ولغة التطبيق.",
-    "Vous pouvez aussi vous connecter avec ce numéro. Pour le changer, contactez votre gestionnaire.": "يمكنك أيضاً تسجيل الدخول بهذا الرقم. لتغييره، اتصل بالمسؤول عنك."
+    "Vous pouvez aussi vous connecter avec ce numéro. Pour le changer, contactez votre gestionnaire.": "يمكنك أيضاً تسجيل الدخول بهذا الرقم. لتغييره، اتصل بالمسؤول عنك.",
+    "Email (facultatif)": "البريد الإلكتروني (اختياري)",
+    "C'est le numéro avec lequel vous vous connectez. Pour le changer, contactez votre gestionnaire.": "هذا هو الرقم الذي تسجّل به الدخول. لتغييره، اتصل بالمسؤول عنك.",
+    "<strong>:nombre</strong> compte(s) de succession déjà réglée n'ont pas été ajustés : le dossier est soldé et le mandataire payé. L'ajustement qui leur revient doit être traité à part.": "لم تُعدَّل <strong>:nombre</strong> من حسابات التركات المسوّاة: الملف مغلق وقد دُفع للوكيل. يجب معالجة التسوية المستحقة لها على حدة.",
+    "Traitement...": "جارٍ المعالجة..."
 }

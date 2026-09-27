@@ -805,5 +805,9 @@
     "Langue de l'application": "Application language",
     "C'est la langue dans laquelle l'application s'ouvrira, sur n'importe quel poste.": "This is the language the application will open in, on any device.",
     "Mettez à jour vos informations de compte et la langue de l'application.": "Update your account details and the application language.",
-    "Vous pouvez aussi vous connecter avec ce numéro. Pour le changer, contactez votre gestionnaire.": "You can also sign in with this number. To change it, contact your manager."
+    "Vous pouvez aussi vous connecter avec ce numéro. Pour le changer, contactez votre gestionnaire.": "You can also sign in with this number. To change it, contact your manager.",
+    "Email (facultatif)": "Email (optional)",
+    "C'est le numéro avec lequel vous vous connectez. Pour le changer, contactez votre gestionnaire.": "This is the number you sign in with. To change it, contact your manager.",
+    "<strong>:nombre</strong> compte(s) de succession déjà réglée n'ont pas été ajustés : le dossier est soldé et le mandataire payé. L'ajustement qui leur revient doit être traité à part.": "<strong>:nombre</strong> account(s) from an already settled estate were not adjusted: the file is closed and the representative paid. The adjustment owed to them must be handled separately.",
+    "Traitement...": "Processing..."
 }

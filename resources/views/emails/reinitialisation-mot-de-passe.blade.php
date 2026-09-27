@@ -19,6 +19,8 @@
                                 Réinitialisation de votre mot de passe
                             </h2>
 
+                            <p style="color:#374151; font-size:14px; line-height:1.6;">Assalamou aleykoum,</p>
+
                             <p style="color:#374151; font-size:14px; line-height:1.6;">
                                 Vous avez demandé la réinitialisation de votre mot de passe sur la plateforme AMANAH.
                                 Cliquez sur le bouton ci-dessous pour en choisir un nouveau.
@@ -40,7 +42,7 @@
                             </p>
 
                             <p style="color:#374151; font-size:14px; margin-top:20px;">
-                                Cordialement,<br>AND DOX S.A.
+                                Barak'ALLAH Fikoum,<br>AND DOX S.A.
                             </p>
                         </td>
                     </tr>

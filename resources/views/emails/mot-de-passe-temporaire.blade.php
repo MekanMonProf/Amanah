@@ -19,7 +19,7 @@
                                 {{ $estNouveauCompte ? 'Bienvenue sur AMANAH' : 'Réinitialisation de votre mot de passe' }}
                             </h2>
 
-                            <p style="color:#374151; font-size:14px; line-height:1.6;">Bonjour {{ $nomDestinataire }},</p>
+                            <p style="color:#374151; font-size:14px; line-height:1.6;">Assalamou aleykoum {{ $nomDestinataire }},</p>
 
                             <p style="color:#374151; font-size:14px; line-height:1.6;">
                                 @if ($estNouveauCompte)
@@ -59,7 +59,7 @@
                             </p>
 
                             <p style="color:#374151; font-size:14px; margin-top:20px;">
-                                Cordialement,<br>AND DOX S.A.
+                                Barak'ALLAH Fikoum,<br>AND DOX S.A.
                             </p>
                         </td>
                     </tr>

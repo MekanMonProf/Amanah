@@ -21,6 +21,13 @@ class InvestisseurShow extends Component
     public ?string $dernierMotDePasseGenere = null;
 
     /**
+     * Distingue une création d'accès d'une réinitialisation : le message WhatsApp
+     * ne dit pas la même chose selon le cas — « un accès vient d'être créé pour
+     * vous » ou « votre mot de passe vient d'être réinitialisé ».
+     */
+    public bool $accesVientDEtreCree = false;
+
+    /**
      * Les sections d'historique repliées, par nature et non par compte : replier
      * « Historique des achats » sur une fiche le replie sur toutes les autres,
      * parce que c'est cette section-là qu'on ne veut plus voir.
@@ -148,6 +155,7 @@ class InvestisseurShow extends Component
         $this->investisseur->update(['user_id' => $user->id]);
 
         $this->dernierMotDePasseGenere = $motDePasse;
+        $this->accesVientDEtreCree = true;
 
         if ($aUnEmail) {
             \Illuminate\Support\Facades\Mail::to($this->investisseur->email)->send(
@@ -191,6 +199,7 @@ class InvestisseurShow extends Component
         ]);
 
         $this->dernierMotDePasseGenere = $nouveauMotDePasse;
+        $this->accesVientDEtreCree = false;
 
         if ($this->investisseur->user->email) {
             \Illuminate\Support\Facades\Mail::to($this->investisseur->user->email)->send(

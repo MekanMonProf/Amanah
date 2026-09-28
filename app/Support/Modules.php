@@ -135,6 +135,36 @@ class Modules
         ];
     }
 
+    /**
+     * Les libellés des niveaux et des rôles.
+     *
+     * ucfirst() ne saurait pas les produire : le code stocké est « ecriture », sans
+     * accent, et aucune mise en majuscule ne fait apparaître le É de « Écriture ».
+     */
+    public const LIBELLES_NIVEAUX = [
+        self::AUCUN => 'Aucun',
+        self::LECTURE => 'Lecture',
+        self::ECRITURE => 'Écriture',
+    ];
+
+    public const LIBELLES_ROLES = [
+        'direction' => 'Direction',
+        'administrateur' => 'Administrateur',
+        'gestionnaire' => 'Gestionnaire',
+        'lecture' => 'Lecture',
+        'investisseur' => 'Investisseur',
+    ];
+
+    public static function libelleNiveau(string $niveau): string
+    {
+        return self::LIBELLES_NIVEAUX[$niveau] ?? $niveau;
+    }
+
+    public static function libelleRole(string $role): string
+    {
+        return self::LIBELLES_ROLES[$role] ?? $role;
+    }
+
     /** Les niveaux proposables pour ce module, du plus faible au plus fort. */
     public static function niveauxPossibles(string $module): array
     {

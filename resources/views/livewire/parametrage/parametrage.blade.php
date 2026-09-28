@@ -21,6 +21,10 @@
                 class="px-4 py-2 text-sm -mb-px border-b-2 {{ $onglet === 'droits' ? 'border-emerald-600 text-emerald-700 font-medium' : 'border-transparent text-gray-500 hover:text-gray-700' }}">
             {{ __("Accès aux modules") }}
         </button>
+        <button type="button" wire:click="changerOnglet('comptes')"
+                class="px-4 py-2 text-sm -mb-px border-b-2 {{ $onglet === 'comptes' ? 'border-emerald-600 text-emerald-700 font-medium' : 'border-transparent text-gray-500 hover:text-gray-700' }}">
+            {{ __("Comptes utilisateurs") }}
+        </button>
         <button type="button" wire:click="changerOnglet('champs')"
                 class="px-4 py-2 text-sm -mb-px border-b-2 {{ $onglet === 'champs' ? 'border-emerald-600 text-emerald-700 font-medium' : 'border-transparent text-gray-500 hover:text-gray-700' }}">
             {{ __("Champs du dossier") }}
@@ -44,7 +48,7 @@
                         <tr class="bg-gray-50 text-xs text-gray-500 uppercase">
                             <th class="text-start font-medium p-3 min-w-56">{{ __("Module") }}</th>
                             @foreach ($roles as $role)
-                                <th class="text-start font-medium p-3 min-w-36">{{ __(ucfirst($role)) }}</th>
+                                <th class="text-start font-medium p-3 min-w-36">{{ __(\App\Support\Modules::libelleRole($role)) }}</th>
                             @endforeach
                         </tr>
                     </thead>
@@ -66,7 +70,7 @@
                                             <select wire:model="grille.{{ $role }}.{{ $code }}"
                                                     class="w-full border rounded px-2 py-1.5 text-sm">
                                                 @foreach (\App\Support\Modules::niveauxPossibles($code) as $niveau)
-                                                    <option value="{{ $niveau }}">{{ __(ucfirst($niveau)) }}</option>
+                                                    <option value="{{ $niveau }}">{{ __(\App\Support\Modules::libelleNiveau($niveau)) }}</option>
                                                 @endforeach
                                             </select>
                                         @endif
@@ -87,6 +91,8 @@
                 </span>
             </div>
         </form>
+    @elseif ($onglet === 'comptes')
+        <livewire:parametrage.comptes-utilisateurs />
     @else
         <div class="bg-white border rounded-lg shadow-sm p-8 text-center text-gray-400">
             {{ __("Les champs du dossier se règlent bientôt ici.") }}

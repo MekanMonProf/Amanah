@@ -16,7 +16,8 @@ class Investisseur extends Model
         'pays', 'adresse', 'ville', 'date_naissance', 'lieu_naissance', 'nationalite', 'langue',
         'raison_sociale', 'rccm', 'ninea', 'representant_legal_nom', 'representant_legal_telephone', 'representant_legal_whatsapp',
         'beneficiaire_nom', 'beneficiaire_lien', 'beneficiaire_telephone', 'beneficiaire_whatsapp',
-        'piece_identite_path', 'convention_engagement_path', 'date_signature_convention', 'notes_internes',
+        'piece_identite_path', 'convention_engagement_path',
+        'piece_procuration_path', 'piece_justificatif_domicile_path', 'piece_rib_path', 'date_signature_convention', 'notes_internes',
         'gestionnaire_id', 'statut', 'date_deces', 'piece_acte_deces_path', 'succession_reglee',
     ];
 

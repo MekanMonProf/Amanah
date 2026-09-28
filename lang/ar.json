@@ -871,5 +871,10 @@
     "Nom du bénéficiaire désigné": "اسم المستفيد المعيَّن",
     "Téléphone du bénéficiaire": "هاتف المستفيد",
     "Nom du représentant légal": "اسم الممثل القانوني",
-    "Téléphone du représentant légal": "هاتف الممثل القانوني"
+    "Téléphone du représentant légal": "هاتف الممثل القانوني",
+    "Réclamé en plus, et seulement, quand l'investisseur est déclaré décédé. La procuration du mandataire et le certificat d'hérédité se joignent à l'héritier, depuis l'écran de succession.": "مطلوب إضافةً، وفقط، عندما يُعلَن عن وفاة المستثمر. تُرفق وكالة الوكيل وشهادة الوراثة بالوريث من شاشة التركة.",
+    "Procuration": "الوكالة",
+    "Justificatif de domicile": "إثبات محل الإقامة",
+    "RIB ou coordonnées bancaires": "بيانات الحساب المصرفي",
+    "Acte de décès": "شهادة الوفاة"
 }

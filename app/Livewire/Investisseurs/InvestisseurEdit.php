@@ -113,6 +113,15 @@ class InvestisseurEdit extends Component
     #[Validate('nullable|file|mimes:jpg,jpeg,png,pdf|max:10240')]
     public $convention_engagement_upload = null;
 
+    #[Validate('nullable|file|mimes:jpg,jpeg,png,pdf|max:10240')]
+    public $piece_procuration_upload = null;
+
+    #[Validate('nullable|file|mimes:jpg,jpeg,png,pdf|max:10240')]
+    public $piece_justificatif_domicile_upload = null;
+
+    #[Validate('nullable|file|mimes:jpg,jpeg,png,pdf|max:10240')]
+    public $piece_rib_upload = null;
+
     // Personne morale
     #[Validate('nullable|string|max:255')]
     public string $raison_sociale = '';
@@ -346,6 +355,27 @@ class InvestisseurEdit extends Component
                 Storage::disk('public')->delete($this->investisseur->convention_engagement_path);
             }
             $donnees['convention_engagement_path'] = $this->convention_engagement_upload->store('conventions-engagement', 'public');
+        }
+
+        if ($this->piece_procuration_upload) {
+            if ($this->investisseur->piece_procuration_path) {
+                Storage::disk('public')->delete($this->investisseur->piece_procuration_path);
+            }
+            $donnees['piece_procuration_path'] = $this->piece_procuration_upload->store('procurations', 'public');
+        }
+
+        if ($this->piece_justificatif_domicile_upload) {
+            if ($this->investisseur->piece_justificatif_domicile_path) {
+                Storage::disk('public')->delete($this->investisseur->piece_justificatif_domicile_path);
+            }
+            $donnees['piece_justificatif_domicile_path'] = $this->piece_justificatif_domicile_upload->store('justificatifs-domicile', 'public');
+        }
+
+        if ($this->piece_rib_upload) {
+            if ($this->investisseur->piece_rib_path) {
+                Storage::disk('public')->delete($this->investisseur->piece_rib_path);
+            }
+            $donnees['piece_rib_path'] = $this->piece_rib_upload->store('coordonnees-bancaires', 'public');
         }
 
         $donneesAvant = $this->investisseur->only(array_keys($donnees));

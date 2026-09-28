@@ -213,6 +213,42 @@
                         <a href="{{ \Illuminate\Support\Facades\Storage::url($investisseur->convention_engagement_path) }}" target="_blank" class="text-xs text-emerald-700 hover:underline">{{ __("Voir le document actuel") }}</a>
                     @endif
                 </div>
+
+                {{-- Pièce facultative par défaut : c'est le paramétrage qui décide
+                     si son absence signale le dossier comme incomplet. --}}
+                <div>
+                    <label class="text-sm text-gray-600">{{ __("Procuration") }}</label>
+                    <x-champ-fichier model="piece_procuration_upload" accept="image/*,.pdf" />
+                    @error('piece_procuration_upload') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+                    <div wire:loading wire:target="piece_procuration_upload" class="text-xs text-gray-400 mt-1">{{ __("Envoi en cours...") }}</div>
+                    @if ($investisseur->piece_procuration_path)
+                        <a href="{{ \Illuminate\Support\Facades\Storage::url($investisseur->piece_procuration_path) }}" target="_blank" class="text-xs text-emerald-700 hover:underline">{{ __("Voir le document actuel") }}</a>
+                    @endif
+                </div>
+
+                {{-- Pièce facultative par défaut : c'est le paramétrage qui décide
+                     si son absence signale le dossier comme incomplet. --}}
+                <div>
+                    <label class="text-sm text-gray-600">{{ __("Justificatif de domicile") }}</label>
+                    <x-champ-fichier model="piece_justificatif_domicile_upload" accept="image/*,.pdf" />
+                    @error('piece_justificatif_domicile_upload') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+                    <div wire:loading wire:target="piece_justificatif_domicile_upload" class="text-xs text-gray-400 mt-1">{{ __("Envoi en cours...") }}</div>
+                    @if ($investisseur->piece_justificatif_domicile_path)
+                        <a href="{{ \Illuminate\Support\Facades\Storage::url($investisseur->piece_justificatif_domicile_path) }}" target="_blank" class="text-xs text-emerald-700 hover:underline">{{ __("Voir le document actuel") }}</a>
+                    @endif
+                </div>
+
+                {{-- Pièce facultative par défaut : c'est le paramétrage qui décide
+                     si son absence signale le dossier comme incomplet. --}}
+                <div>
+                    <label class="text-sm text-gray-600">{{ __("RIB ou coordonnées bancaires") }}</label>
+                    <x-champ-fichier model="piece_rib_upload" accept="image/*,.pdf" />
+                    @error('piece_rib_upload') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+                    <div wire:loading wire:target="piece_rib_upload" class="text-xs text-gray-400 mt-1">{{ __("Envoi en cours...") }}</div>
+                    @if ($investisseur->piece_rib_path)
+                        <a href="{{ \Illuminate\Support\Facades\Storage::url($investisseur->piece_rib_path) }}" target="_blank" class="text-xs text-emerald-700 hover:underline">{{ __("Voir le document actuel") }}</a>
+                    @endif
+                </div>
             </div>
         </div>
 

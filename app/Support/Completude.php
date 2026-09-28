@@ -45,6 +45,9 @@ class Completude
         'whatsapp' => 'Numéro WhatsApp',
         'convention_engagement_path' => "Convention d'engagement signée",
         'date_signature_convention' => "Date de signature de la convention",
+        'piece_procuration_path' => "Procuration",
+        'piece_justificatif_domicile_path' => "Justificatif de domicile",
+        'piece_rib_path' => "RIB ou coordonnées bancaires",
         'beneficiaire_nom' => "Nom du bénéficiaire désigné",
         'beneficiaire_telephone' => "Téléphone du bénéficiaire",
     ];
@@ -65,7 +68,28 @@ class Completude
         'representant_legal_telephone' => "Téléphone du représentant légal",
         'convention_engagement_path' => "Convention d'engagement signée",
         'date_signature_convention' => "Date de signature de la convention",
+        'piece_procuration_path' => "Procuration",
+        'piece_justificatif_domicile_path' => "Justificatif de domicile",
+        'piece_rib_path' => "RIB ou coordonnées bancaires",
     ];
+
+    /**
+     * Ce qu'on réclame en plus quand l'investisseur est décédé.
+     *
+     * Ces champs s'ajoutent à ceux de son type, ils ne les remplacent pas. Les
+     * réclamer à tout le monde signalerait trente-sept dossiers vivants comme
+     * incomplets faute d'un acte de décès.
+     *
+     * Les autres pièces d'une succession — procuration du mandataire, certificat
+     * d'hérédité, pièce d'identité de l'héritier — ne sont pas ici : elles vivent
+     * sur l'héritier, pas sur le dossier, et l'écran de succession les exige déjà
+     * au moment où elles servent.
+     */
+    public const CATALOGUE_SUCCESSION = [
+        'piece_acte_deces_path' => "Acte de décès",
+    ];
+
+    public const DEFAUTS_SUCCESSION = ['piece_acte_deces_path'];
 
     /**
      * Ce qui était réclamé avant que l'écran n'existe, et donc ce qui l'est encore
@@ -85,14 +109,25 @@ class Completude
     /** @var array<string, array<string, string>>|null type => colonne => libelle */
     private static ?array $attendus = null;
 
-    public static function catalogue(string $typePersonne): array
+    /** Les trois contextes, dans l'ordre où l'écran les présente. */
+    public const CONTEXTES = ['physique', 'morale', 'succession'];
+
+    public static function catalogue(string $contexte): array
     {
-        return $typePersonne === 'morale' ? self::CATALOGUE_MORALE : self::CATALOGUE_PHYSIQUE;
+        return match ($contexte) {
+            'morale' => self::CATALOGUE_MORALE,
+            'succession' => self::CATALOGUE_SUCCESSION,
+            default => self::CATALOGUE_PHYSIQUE,
+        };
     }
 
-    public static function defauts(string $typePersonne): array
+    public static function defauts(string $contexte): array
     {
-        return $typePersonne === 'morale' ? self::DEFAUTS_MORALE : self::DEFAUTS_PHYSIQUE;
+        return match ($contexte) {
+            'morale' => self::DEFAUTS_MORALE,
+            'succession' => self::DEFAUTS_SUCCESSION,
+            default => self::DEFAUTS_PHYSIQUE,
+        };
     }
 
     /**
@@ -105,15 +140,16 @@ class Completude
         if (self::$attendus === null) {
             self::$attendus = [];
 
-            foreach (['physique', 'morale'] as $type) {
-                $actifs = \App\Models\ChampDossier::where('type_personne', $type)
-                    ->where('actif', true)->pluck('champ')->all();
+            foreach (self::CONTEXTES as $type) {
+                $lignes = \App\Models\ChampDossier::where('contexte', $type)->get();
 
-                // Table vide — première installation, ou migration pas encore jouée :
-                // on retombe sur les défauts plutôt que de déclarer tout le monde complet.
-                if ($actifs === []) {
-                    $actifs = self::defauts($type);
-                }
+                // Le repli sur les défauts ne vaut que si le contexte n'a aucune ligne
+                // — première installation, ou migration pas encore jouée. Le déclencher
+                // dès que plus rien n'est coché rendrait le décochage impossible : on
+                // retirerait la dernière case et les anciens champs reviendraient.
+                $actifs = $lignes->isEmpty()
+                    ? self::defauts($type)
+                    : $lignes->where('actif', true)->pluck('champ')->all();
 
                 self::$attendus[$type] = array_intersect_key(
                     self::catalogue($type),
@@ -134,7 +170,15 @@ class Completude
     /** @return array<string, string> colonne => libellé attendu pour ce dossier */
     public static function champsAttendus(Investisseur $investisseur): array
     {
-        return self::reclamees($investisseur->type_personne === 'morale' ? 'morale' : 'physique');
+        $attendus = self::reclamees($investisseur->type_personne === 'morale' ? 'morale' : 'physique');
+
+        // Un défunt cumule : les pièces de son type, et celles que la succession
+        // ajoute par-dessus.
+        if ($investisseur->estDecede()) {
+            $attendus += self::reclamees('succession');
+        }
+
+        return $attendus;
     }
 
     /**
@@ -182,6 +226,19 @@ class Completude
                 });
                 self::auMoinsUnVide($physique, array_keys(self::reclamees('physique')));
             });
+
+            // Les pieces de succession s'ajoutent pour un defunt. Sans cette
+            // troisieme branche, la fiche afficherait l'acte de deces manquant
+            // pendant que la liste le compterait pour complet : c'est exactement
+            // le genre d'ecart que le filtre et l'affichage ne doivent pas avoir.
+            $succession = array_keys(self::reclamees('succession'));
+
+            if ($succession !== []) {
+                $q->orWhere(function (Builder $defunt) use ($succession) {
+                    $defunt->where('statut', 'decede');
+                    self::auMoinsUnVide($defunt, $succession);
+                });
+            }
         });
     }
 

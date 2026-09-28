@@ -14,7 +14,7 @@ class ChampDossier extends Model
 {
     protected $table = 'champs_dossier';
 
-    protected $fillable = ['type_personne', 'champ', 'actif'];
+    protected $fillable = ['contexte', 'champ', 'actif'];
 
     protected function casts(): array
     {

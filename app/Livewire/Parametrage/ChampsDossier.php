@@ -33,8 +33,8 @@ class ChampsDossier extends Component
 
     private function charger(): void
     {
-        foreach (['physique', 'morale'] as $type) {
-            $actifs = Champ::where('type_personne', $type)->where('actif', true)->pluck('champ')->all();
+        foreach (Completude::CONTEXTES as $type) {
+            $actifs = Champ::where('contexte', $type)->where('actif', true)->pluck('champ')->all();
 
             // On parcourt le catalogue, pas la table : un champ ajouté au
             // catalogue apparaît à l'écran sans qu'on écrive une migration pour lui.
@@ -50,11 +50,11 @@ class ChampsDossier extends Component
 
         $modifications = [];
 
-        foreach (['physique', 'morale'] as $type) {
+        foreach (Completude::CONTEXTES as $type) {
             foreach (array_keys(Completude::catalogue($type)) as $champ) {
                 $voulu = (bool) ($this->coches[$type][$champ] ?? false);
 
-                $ligne = Champ::firstOrNew(['type_personne' => $type, 'champ' => $champ]);
+                $ligne = Champ::firstOrNew(['contexte' => $type, 'champ' => $champ]);
 
                 if ($ligne->exists && $ligne->actif === $voulu) {
                     continue;
@@ -102,6 +102,7 @@ class ChampsDossier extends Component
         return view('livewire.parametrage.champs-dossier', [
             'cataloguePhysique' => Completude::CATALOGUE_PHYSIQUE,
             'catalogueMorale' => Completude::CATALOGUE_MORALE,
+            'catalogueSuccession' => Completude::CATALOGUE_SUCCESSION,
         ]);
     }
 }

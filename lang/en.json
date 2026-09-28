@@ -871,5 +871,10 @@
     "Nom du bénéficiaire désigné": "Named beneficiary",
     "Téléphone du bénéficiaire": "Beneficiary phone",
     "Nom du représentant légal": "Legal representative name",
-    "Téléphone du représentant légal": "Legal representative phone"
+    "Téléphone du représentant légal": "Legal representative phone",
+    "Réclamé en plus, et seulement, quand l'investisseur est déclaré décédé. La procuration du mandataire et le certificat d'hérédité se joignent à l'héritier, depuis l'écran de succession.": "Required in addition, and only, when the investor is declared deceased. The representative's power of attorney and the certificate of inheritance are attached to the heir, from the estate screen.",
+    "Procuration": "Power of attorney",
+    "Justificatif de domicile": "Proof of address",
+    "RIB ou coordonnées bancaires": "Bank details",
+    "Acte de décès": "Death certificate"
 }

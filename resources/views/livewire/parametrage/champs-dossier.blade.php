@@ -22,7 +22,7 @@
             </p>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x">
+        <div class="grid grid-cols-1 lg:grid-cols-3 divide-y lg:divide-y-0 lg:divide-x">
             <div class="p-5">
                 <h3 class="text-xs text-gray-500 uppercase mb-3">{{ __("Personne physique") }}</h3>
                 <div class="space-y-2">
@@ -45,6 +45,22 @@
                     @foreach ($catalogueMorale as $champ => $libelle)
                         <label class="flex items-start gap-2 text-sm text-gray-700 cursor-pointer">
                             <input type="checkbox" wire:model="coches.morale.{{ $champ }}"
+                                   class="mt-0.5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
+                            <span>{{ __($libelle) }}</span>
+                        </label>
+                    @endforeach
+                </div>
+            </div>
+
+            <div class="p-5">
+                <h3 class="text-xs text-gray-500 uppercase mb-3">{{ __("Succession") }}</h3>
+                <p class="text-xs text-gray-500 mb-3">
+                    {{ __("Réclamé en plus, et seulement, quand l'investisseur est déclaré décédé. La procuration du mandataire et le certificat d'hérédité se joignent à l'héritier, depuis l'écran de succession.") }}
+                </p>
+                <div class="space-y-2">
+                    @foreach ($catalogueSuccession as $champ => $libelle)
+                        <label class="flex items-start gap-2 text-sm text-gray-700 cursor-pointer">
+                            <input type="checkbox" wire:model="coches.succession.{{ $champ }}"
                                    class="mt-0.5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
                             <span>{{ __($libelle) }}</span>
                         </label>

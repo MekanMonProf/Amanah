@@ -883,5 +883,16 @@
     "Procuration signée par la famille, habilitant ce mandataire": "وكالة موقّعة من العائلة تخوّل هذا الوكيل",
     "Pièce d'identité du mandataire": "وثيقة هوية الوكيل",
     "Certificat d'hérédité ou acte de notoriété": "شهادة الوراثة أو إشهاد",
-    "Procuration signée par la famille": "وكالة موقّعة من العائلة"
+    "Procuration signée par la famille": "وكالة موقّعة من العائلة",
+    "Assalamou aleykoum :nom,": "السلام عليكم :nom،",
+    "Date : :date": "التاريخ: :date",
+    "Envoyer": "إرسال",
+    "🧾 Reçu": "🧾 إيصال",
+    "Nous confirmons l'enregistrement de :montant sur votre compte :compte, au titre de : :nature.": "نؤكد قيد مبلغ :montant في حسابك :compte، بعنوان: :nature.",
+    "Nous confirmons le versement de :montant depuis votre compte :compte, au titre de : :nature.": "نؤكد دفع مبلغ :montant من حسابك :compte، بعنوان: :nature.",
+    "Ouvre WhatsApp avec le message et le lien du reçu déjà écrits": "يفتح واتساب والرسالة ورابط الإيصال جاهزان",
+    "Solde après opération : :solde": "الرصيد بعد العملية: :solde",
+    "Votre reçu : :lien": "إيصالك: :lien",
+    "Reçu d'encaissement": "إيصال قبض",
+    "Reçu de versement": "إيصال صرف"
 }

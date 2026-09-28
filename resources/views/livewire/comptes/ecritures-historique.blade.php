@@ -89,9 +89,23 @@
                                 </a>
                             @endif
                         </td>
+
+                        {{-- Le reçu vaut pour toute opération : c'est l'écriture qui le porte, pas
+                             tel type d'opération. Le second lien ouvre WhatsApp avec le message et
+                             l'adresse du reçu déjà écrits. --}}
+                        <td class="py-1 text-end whitespace-nowrap">
+                            <a href="{{ route('ecritures.recu', $ecriture) }}" target="_blank"
+                               class="text-gray-600 hover:underline text-xs">{{ __("🧾 Reçu") }}</a>
+                            @php($lienRecu = \App\Support\Recu::lienWhatsapp($ecriture))
+                            @if ($lienRecu)
+                                <a href="{{ $lienRecu }}" target="_blank" rel="noopener noreferrer"
+                                   class="ms-2 text-emerald-700 hover:underline text-xs"
+                                   title="{{ __('Ouvre WhatsApp avec le message et le lien du reçu déjà écrits') }}">{{ __("Envoyer") }}</a>
+                            @endif
+                        </td>
                     </tr>
                 @empty
-                    <tr><td colspan="7" class="py-4 text-center text-gray-400">{{ __("Aucune écriture ne correspond aux critères.") }}</td></tr>
+                    <tr><td colspan="8" class="py-4 text-center text-gray-400">{{ __("Aucune écriture ne correspond aux critères.") }}</td></tr>
                 @endforelse
             </tbody>
         </table>

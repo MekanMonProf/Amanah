@@ -23,4 +23,18 @@ return [
 
     'whatsapp_support' => env('AMANAH_WHATSAPP_SUPPORT'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Durée de validité d'un lien de reçu
+    |--------------------------------------------------------------------------
+    |
+    | Le reçu envoyé par WhatsApp s'ouvre sans compte : le lien porte sa propre
+    | signature, et cette durée dit combien de temps elle vaut. Assez long pour
+    | qu'un investisseur retrouve le message une semaine plus tard, assez court
+    | pour qu'un lien qui a fui ne serve pas indéfiniment.
+    |
+    */
+
+    'validite_recu_jours' => (int) env('AMANAH_VALIDITE_RECU_JOURS', 30),
+
 ];

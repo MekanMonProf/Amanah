@@ -883,5 +883,16 @@
     "Procuration signée par la famille, habilitant ce mandataire": "Power of attorney signed by the family, appointing this representative",
     "Pièce d'identité du mandataire": "Representative's ID document",
     "Certificat d'hérédité ou acte de notoriété": "Certificate of inheritance or notarial deed",
-    "Procuration signée par la famille": "Power of attorney signed by the family"
+    "Procuration signée par la famille": "Power of attorney signed by the family",
+    "Assalamou aleykoum :nom,": "Assalamu alaykum :nom,",
+    "Date : :date": "Date: :date",
+    "Envoyer": "Send",
+    "🧾 Reçu": "🧾 Receipt",
+    "Nous confirmons l'enregistrement de :montant sur votre compte :compte, au titre de : :nature.": "We confirm that :montant has been credited to your account :compte, for: :nature.",
+    "Nous confirmons le versement de :montant depuis votre compte :compte, au titre de : :nature.": "We confirm the payment of :montant from your account :compte, for: :nature.",
+    "Ouvre WhatsApp avec le message et le lien du reçu déjà écrits": "Opens WhatsApp with the message and the receipt link already written",
+    "Solde après opération : :solde": "Balance after the operation: :solde",
+    "Votre reçu : :lien": "Your receipt: :lien",
+    "Reçu d'encaissement": "Receipt of payment in",
+    "Reçu de versement": "Receipt of payment out"
 }

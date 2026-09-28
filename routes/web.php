@@ -27,6 +27,7 @@ use App\Livewire\Portail\MonCompte;
 use App\Http\Controllers\ReleveController;
 use App\Http\Controllers\AttestationController;
 use App\Http\Controllers\AttestationSuccessionController;
+use App\Http\Controllers\RecuController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\ModeleImportController;
 use App\Livewire\Import\ImportIndex;
@@ -55,7 +56,16 @@ Route::middleware(['auth', 'doit.changer.mdp', 'deux.fa'])->group(function () {
     Route::get('/radiations/{radiation}/attestation', [AttestationController::class, 'radiation'])->name('radiations.attestation');
     Route::get('/ecritures/{ecriture}/attestation', [AttestationController::class, 'paiement'])->name('ecritures.attestation');
     Route::get('/ecritures/{ecriture}/attestation-deces', [AttestationSuccessionController::class, 'versement'])->name('ecritures.attestation.deces');
+    Route::get('/ecritures/{ecriture}/recu', [RecuController::class, 'interne'])->name('ecritures.recu');
 });
+
+// Le recu ouvert depuis le lien envoye sur WhatsApp : pas d'authentification, mais
+// une signature que le middleware verifie et une expiration reglee dans
+// config/societe.php. La plupart des investisseurs n'ont pas de compte ; leur en
+// demander un pour lire un recu reviendrait a ne pas le leur envoyer.
+Route::get('/recu/{ecriture}', [RecuController::class, 'public'])
+    ->middleware('signed')
+    ->name('recu.public');
 
 // Portail investisseur (libre-service)
 Route::middleware(['auth', 'doit.changer.mdp', 'deux.fa'])->group(function () {

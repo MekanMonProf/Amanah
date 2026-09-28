@@ -876,5 +876,12 @@
     "Procuration": "الوكالة",
     "Justificatif de domicile": "إثبات محل الإقامة",
     "RIB ou coordonnées bancaires": "بيانات الحساب المصرفي",
-    "Acte de décès": "شهادة الوفاة"
+    "Acte de décès": "شهادة الوفاة",
+    "Ces trois pièces peuvent être jointes plus tard : la désignation n'attend pas. Tant qu'elles manquent, le dossier reste signalé incomplet — ce qui est attendu se règle dans Paramétrage, onglet Champs du dossier.": "يمكن إرفاق هذه الوثائق الثلاث لاحقاً: التعيين لا ينتظر. وما دامت ناقصة يبقى الملف مُشاراً إليه كغير مكتمل — وتُضبط الوثائق المطلوبة في الإعدادات، تبويب حقول الملف.",
+    "Pièce d'identité (CNI) du mandataire": "وثيقة هوية الوكيل",
+    "Certificat d'hérédité (ou acte de notoriété)": "شهادة الوراثة (أو إشهاد)",
+    "Procuration signée par la famille, habilitant ce mandataire": "وكالة موقّعة من العائلة تخوّل هذا الوكيل",
+    "Pièce d'identité du mandataire": "وثيقة هوية الوكيل",
+    "Certificat d'hérédité ou acte de notoriété": "شهادة الوراثة أو إشهاد",
+    "Procuration signée par la famille": "وكالة موقّعة من العائلة"
 }

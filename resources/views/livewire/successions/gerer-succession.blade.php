@@ -90,18 +90,24 @@
                         <input type="text" wire:model="lienParente" placeholder="{{ __('Ex :') }} Fils, Épouse, Avocat mandaté..." class="w-full border rounded px-3 py-2">
                         @error('lienParente') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                     </div>
+                    <div class="sm:col-span-2">
+                        <p class="text-xs text-gray-500">
+                            {{ __("Ces trois pièces peuvent être jointes plus tard : la désignation n'attend pas. Tant qu'elles manquent, le dossier reste signalé incomplet — ce qui est attendu se règle dans Paramétrage, onglet Champs du dossier.") }}
+                        </p>
+                    </div>
+
                     <div>
-                        <label class="text-sm text-gray-600">{{ __("Pièce d'identité (CNI) du mandataire — obligatoire") }}</label>
+                        <label class="text-sm text-gray-600">{{ __("Pièce d'identité (CNI) du mandataire") }}</label>
                         <x-champ-fichier model="pieceIdentiteUpload" accept="image/*,.pdf" />
                         @error('pieceIdentiteUpload') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                     </div>
                     <div>
-                        <label class="text-sm text-gray-600">{{ __("Certificat d'hérédité (ou acte de notoriété) — obligatoire") }}</label>
+                        <label class="text-sm text-gray-600">{{ __("Certificat d'hérédité (ou acte de notoriété)") }}</label>
                         <x-champ-fichier model="certificatHeritedeUpload" accept="image/*,.pdf" />
                         @error('certificatHeritedeUpload') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                     </div>
                     <div class="sm:col-span-2">
-                        <label class="text-sm text-gray-600">{{ __("Procuration signée par la famille, habilitant ce mandataire — obligatoire") }}</label>
+                        <label class="text-sm text-gray-600">{{ __("Procuration signée par la famille, habilitant ce mandataire") }}</label>
                         <x-champ-fichier model="procurationUpload" accept="image/*,.pdf" />
                         @error('procurationUpload') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                     </div>

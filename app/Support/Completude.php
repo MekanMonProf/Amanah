@@ -87,9 +87,32 @@ class Completude
      */
     public const CATALOGUE_SUCCESSION = [
         'piece_acte_deces_path' => "Acte de décès",
+        'mandataire:piece_identite_path' => "Pièce d'identité du mandataire",
+        'mandataire:piece_certificat_heredite_path' => "Certificat d'hérédité ou acte de notoriété",
+        'mandataire:piece_justificative_path' => "Procuration signée par la famille",
     ];
 
-    public const DEFAUTS_SUCCESSION = ['piece_acte_deces_path'];
+    /**
+     * Les trois pièces du mandataire étaient exigées à la désignation : le formulaire
+     * refusait d'enregistrer sans elles. Elles restent réclamées par défaut, mais
+     * comme signalement — une succession s'ouvre souvent avant que la famille
+     * n'ait réuni ses papiers, et bloquer la désignation retardait tout le reste.
+     */
+    public const DEFAUTS_SUCCESSION = [
+        'piece_acte_deces_path',
+        'mandataire:piece_identite_path',
+        'mandataire:piece_certificat_heredite_path',
+        'mandataire:piece_justificative_path',
+    ];
+
+    /**
+     * Préfixe des champs qui ne vivent pas sur le dossier mais sur le mandataire.
+     *
+     * Le mandataire est le premier héritier désigné ; ses pièces appartiennent à la
+     * succession sans appartenir à l'investisseur, d'où ce détour plutôt qu'une
+     * recopie de colonnes sur le dossier.
+     */
+    public const PREFIXE_MANDATAIRE = 'mandataire:';
 
     /**
      * Ce qui était réclamé avant que l'écran n'existe, et donc ce qui l'est encore
@@ -191,12 +214,29 @@ class Completude
         $manquants = [];
 
         foreach (self::champsAttendus($investisseur) as $colonne => $libelle) {
-            if (blank($investisseur->$colonne)) {
+            if (blank(self::valeur($investisseur, $colonne))) {
                 $manquants[] = $libelle;
             }
         }
 
         return $manquants;
+    }
+
+    /**
+     * La valeur d'un champ attendu, sur le dossier ou sur son mandataire.
+     *
+     * Une pièce du mandataire est tenue pour fournie dès qu'un héritier la porte :
+     * c'est le dossier de succession qui est complet ou non, pas telle personne.
+     */
+    private static function valeur(Investisseur $investisseur, string $colonne): mixed
+    {
+        if (! str_starts_with($colonne, self::PREFIXE_MANDATAIRE)) {
+            return $investisseur->$colonne;
+        }
+
+        $piece = substr($colonne, strlen(self::PREFIXE_MANDATAIRE));
+
+        return $investisseur->heritiers->pluck($piece)->filter()->first();
     }
 
     public static function estComplet(Investisseur $investisseur): bool
@@ -234,9 +274,39 @@ class Completude
             $succession = array_keys(self::reclamees('succession'));
 
             if ($succession !== []) {
-                $q->orWhere(function (Builder $defunt) use ($succession) {
-                    $defunt->where('statut', 'decede');
-                    self::auMoinsUnVide($defunt, $succession);
+                $surLeDossier = array_values(array_filter(
+                    $succession,
+                    fn (string $c) => ! str_starts_with($c, self::PREFIXE_MANDATAIRE),
+                ));
+
+                $surLeMandataire = array_map(
+                    fn (string $c) => substr($c, strlen(self::PREFIXE_MANDATAIRE)),
+                    array_values(array_filter(
+                        $succession,
+                        fn (string $c) => str_starts_with($c, self::PREFIXE_MANDATAIRE),
+                    )),
+                );
+
+                $q->orWhere(function (Builder $defunt) use ($surLeDossier, $surLeMandataire) {
+                    $defunt->where('statut', 'decede')
+                        ->where(function (Builder $manque) use ($surLeDossier, $surLeMandataire) {
+                            if ($surLeDossier !== []) {
+                                $manque->where(function (Builder $dossier) use ($surLeDossier) {
+                                    self::auMoinsUnVide($dossier, $surLeDossier);
+                                });
+                            }
+
+                            // Une piece du mandataire manque des lors qu'aucun heritier
+                            // ne la porte : c'est le dossier de succession qu'on juge,
+                            // pas telle personne. Un defunt sans aucun heritier les
+                            // manque donc toutes, ce qui est exact.
+                            foreach ($surLeMandataire as $piece) {
+                                $manque->orWhereDoesntHave(
+                                    'heritiers',
+                                    fn (Builder $h) => $h->whereNotNull($piece),
+                                );
+                            }
+                        });
                 });
             }
         });

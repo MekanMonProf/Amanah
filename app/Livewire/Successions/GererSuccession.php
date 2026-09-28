@@ -38,13 +38,17 @@ class GererSuccession extends Component
     #[Validate('required|string|max:100')]
     public string $lienParente = '';
 
-    #[Validate('required|file|mimes:jpg,jpeg,png,pdf|max:5120')]
+    // Les trois pièces du mandataire signalent, elles ne bloquent plus : c'est la
+    // règle de toute la plateforme, et une succession s'ouvre souvent avant que la
+    // famille n'ait réuni ses papiers. Le paramétrage décide lesquelles comptent
+    // dans le signalement « dossier incomplet » ; voir App\Support\Completude.
+    #[Validate('nullable|file|mimes:jpg,jpeg,png,pdf|max:5120')]
     public $pieceIdentiteUpload = null;
 
-    #[Validate('required|file|mimes:jpg,jpeg,png,pdf|max:5120')]
+    #[Validate('nullable|file|mimes:jpg,jpeg,png,pdf|max:5120')]
     public $certificatHeritedeUpload = null;
 
-    #[Validate('required|file|mimes:jpg,jpeg,png,pdf|max:5120')]
+    #[Validate('nullable|file|mimes:jpg,jpeg,png,pdf|max:5120')]
     public $procurationUpload = null;
 
     public string $modeReglementCommercial = 'transfert'; // 'transfert' | 'paiement'
@@ -112,9 +116,9 @@ class GererSuccession extends Component
     {
         $this->validate();
 
-        $cheminIdentite = $this->pieceIdentiteUpload->store('successions', 'public');
-        $cheminCertificat = $this->certificatHeritedeUpload->store('successions', 'public');
-        $cheminProcuration = $this->procurationUpload->store('successions', 'public');
+        $cheminIdentite = $this->pieceIdentiteUpload?->store('successions', 'public');
+        $cheminCertificat = $this->certificatHeritedeUpload?->store('successions', 'public');
+        $cheminProcuration = $this->procurationUpload?->store('successions', 'public');
 
         Heritier::create([
             'investisseur_id' => $this->investisseur->id,

@@ -876,5 +876,12 @@
     "Procuration": "Power of attorney",
     "Justificatif de domicile": "Proof of address",
     "RIB ou coordonnées bancaires": "Bank details",
-    "Acte de décès": "Death certificate"
+    "Acte de décès": "Death certificate",
+    "Ces trois pièces peuvent être jointes plus tard : la désignation n'attend pas. Tant qu'elles manquent, le dossier reste signalé incomplet — ce qui est attendu se règle dans Paramétrage, onglet Champs du dossier.": "These three documents can be attached later: the appointment does not wait. While they are missing, the file stays flagged as incomplete — what is expected is set in Settings, File fields tab.",
+    "Pièce d'identité (CNI) du mandataire": "Representative's ID document",
+    "Certificat d'hérédité (ou acte de notoriété)": "Certificate of inheritance (or notarial deed)",
+    "Procuration signée par la famille, habilitant ce mandataire": "Power of attorney signed by the family, appointing this representative",
+    "Pièce d'identité du mandataire": "Representative's ID document",
+    "Certificat d'hérédité ou acte de notoriété": "Certificate of inheritance or notarial deed",
+    "Procuration signée par la famille": "Power of attorney signed by the family"
 }

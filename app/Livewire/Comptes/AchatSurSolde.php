@@ -21,6 +21,15 @@ class AchatSurSolde extends Component
 
     public ?int $resultatNbAchats = null;
 
+    /**
+     * L'écriture qui vient d'être créée, pour en proposer le reçu aussitôt.
+     *
+     * Ces deux écrans restaient déjà sur place après l'opération ; il leur manquait
+     * seulement de quoi envoyer la pièce à l'investisseur pendant qu'on l'a encore
+     * en face de soi.
+     */
+    public ?int $ecritureDuRecu = null;
+
     public function mount(CompteInvestissement $compte): void
     {
         $this->assurerAccesGestionnairePourCompte($compte);
@@ -48,6 +57,14 @@ class AchatSurSolde extends Component
         );
 
         $this->resultatNbAchats = $nbAchats;
+
+        // acheterActionsAvecSoldeDisponible() rend le nombre d'achats, pas les
+        // écritures : on reprend la dernière posée sur ce compte. Rien ne peut
+        // s'être glissé entre les deux, la méthode vient de rendre la main.
+        $this->ecritureDuRecu = $nbAchats > 0
+            ? $this->compte->ecritures()->reorder('id', 'desc')->value('id')
+            : null;
+
         $this->calculerApercu();
     }
 

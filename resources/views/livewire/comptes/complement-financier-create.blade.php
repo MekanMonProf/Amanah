@@ -32,6 +32,16 @@
         </div>
     @endif
 
+    {{-- Le reçu se propose ici, pendant qu'on tient encore l'investisseur. --}}
+    @if ($ecritureDuRecu)
+        @php($ecritureCreee = \App\Models\EcritureCompteFinancier::find($ecritureDuRecu))
+        <div class="mb-6">
+            <x-invite-recu :ecriture="$ecritureCreee"
+                           :retour="route('investisseurs.show', $compte->investisseur)"
+                           :message="__('Versement enregistré.')" />
+        </div>
+    @endif
+
     <form wire:submit="enregistrer" class="bg-white border rounded-lg p-5 shadow-sm space-y-4">
         <div>
             <label class="text-sm text-gray-600">{{ __("Montant du versement (CFA)") }}</label>

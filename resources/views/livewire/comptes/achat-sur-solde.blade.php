@@ -23,6 +23,16 @@
         </div>
     @endif
 
+    {{-- Le reçu se propose ici, pendant qu'on tient encore l'investisseur. --}}
+    @if ($ecritureDuRecu)
+        @php($ecritureCreee = \App\Models\EcritureCompteFinancier::find($ecritureDuRecu))
+        <div class="mb-6">
+            <x-invite-recu :ecriture="$ecritureCreee"
+                           :retour="route('investisseurs.show', $compte->investisseur)"
+                           :message="__('Actions acquises depuis le solde disponible.')" />
+        </div>
+    @endif
+
     <div class="bg-white border rounded-lg p-5 shadow-sm space-y-4">
         <div class="grid grid-cols-2 gap-4">
             <div>

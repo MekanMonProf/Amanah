@@ -903,5 +903,7 @@
     "Solde du compte après opération : :solde": "Account balance after the operation: :solde",
     "Terminer": "Done",
     "Voir le reçu": "View the receipt",
-    "WhatsApp s'ouvre avec le message et le lien du reçu déjà écrits — il vous reste à l'envoyer.": "WhatsApp opens with the message and the receipt link already written — all that is left is to send it."
+    "WhatsApp s'ouvre avec le message et le lien du reçu déjà écrits — il vous reste à l'envoyer.": "WhatsApp opens with the message and the receipt link already written — all that is left is to send it.",
+    "Versement enregistré.": "Payment recorded.",
+    "Actions acquises depuis le solde disponible.": "Shares acquired from the available balance."
 }

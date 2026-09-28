@@ -37,6 +37,15 @@ class ComplementFinancierCreate extends Component
     public ?float $resultatMontantAvant = null;
     public ?float $resultatMontantApres = null;
 
+    /**
+     * L'écriture qui vient d'être créée, pour en proposer le reçu aussitôt.
+     *
+     * Ces deux écrans restaient déjà sur place après l'opération ; il leur manquait
+     * seulement de quoi envoyer la pièce à l'investisseur pendant qu'on l'a encore
+     * en face de soi.
+     */
+    public ?int $ecritureDuRecu = null;
+
     public function mount(CompteInvestissement $compte): void
     {
         $this->assurerAccesGestionnairePourCompte($compte);
@@ -57,7 +66,7 @@ class ComplementFinancierCreate extends Component
             $cheminPiece = $this->piece_justificative_upload->store('complements-financiers', 'public');
         }
 
-        $this->compte->ajouterEcriture(
+        $ecriture = $this->compte->ajouterEcriture(
             type: 'versement_complementaire',
             montant: $this->montant,
             dateEcriture: $this->date_versement,
@@ -75,6 +84,10 @@ class ComplementFinancierCreate extends Component
         );
 
         $this->resultatNbAchats = $nbAchats;
+
+        // Le reçu porte sur le versement lui-même, pas sur l'achat d'actions qui
+        // s'ensuit : c'est l'argent reçu que l'investisseur veut voir attesté.
+        $this->ecritureDuRecu = $ecriture->id;
 
         \App\Models\AuditLog::enregistrer(
             action: 'complement_financier',

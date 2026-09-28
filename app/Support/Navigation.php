@@ -44,6 +44,48 @@ class Navigation
     }
 
     /**
+     * Au-delà de ce nombre, la barre d'onglets garde les premières entrées et
+     * renvoie le reste au tiroir. Cinq cases est ce qu'un pouce vise sans effort
+     * sur un téléphone ; au-delà les libellés se coupent et plus rien ne se lit.
+     */
+    private const ONGLETS_MAX = 5;
+
+    /**
+     * Les entrées de la barre d'onglets du bas, sur écran étroit.
+     *
+     * Elle ne remplace pas le tiroir, elle met à portée ce qu'on ouvre dix fois
+     * par jour. Quand tout ne tient pas, la dernière case devient « Plus » et
+     * ouvre le tiroir, où le menu complet reste disponible.
+     *
+     * @return array{entrees: array<int, array>, davantage: bool}
+     */
+    public static function onglets(User $utilisateur): array
+    {
+        $toutes = [];
+
+        foreach (self::groupes($utilisateur) as $groupe) {
+            foreach ($groupe['entrees'] as $entree) {
+                $toutes[] = $entree;
+            }
+        }
+
+        // Une seule destination ne fait pas une barre de navigation : l'investisseur
+        // qui n'a que son compte n'a nulle part où aller.
+        if (count($toutes) < 2) {
+            return ['entrees' => [], 'davantage' => false];
+        }
+
+        if (count($toutes) <= self::ONGLETS_MAX) {
+            return ['entrees' => $toutes, 'davantage' => false];
+        }
+
+        return [
+            'entrees' => array_slice($toutes, 0, self::ONGLETS_MAX - 1),
+            'davantage' => true,
+        ];
+    }
+
+    /**
      * Libellé de l'entrée correspondant à la page courante, pour l'afficher
      * dans la barre supérieure. Null si aucune entrée ne correspond.
      */
@@ -77,14 +119,14 @@ class Navigation
                     // pas, il découle du rôle. D'où le module null, toujours visible
                     // pour l'investisseur et pour lui seul.
                     self::entree('Mon compte', 'portail.mon-compte', ['portail.*'], 'compte', null, 'investisseur'),
-                    self::entree('Tableau de bord', 'dashboard', ['dashboard'], 'tableau', null),
+                    self::entree('Tableau de bord', 'dashboard', ['dashboard'], 'tableau', null, null, 'Tableau'),
                 ],
             ],
             [
                 'libelle' => 'Gestion',
                 'entrees' => [
-                    self::entree('Investisseurs', 'investisseurs.index', ['investisseurs.*', 'achats.*', 'comptes.*', 'radiations.*', 'dons.*'], 'investisseurs', 'investisseurs'),
-                    self::entree('Gestionnaires', 'gestionnaires.index', ['gestionnaires.*'], 'gestionnaires', 'gestionnaires'),
+                    self::entree('Investisseurs', 'investisseurs.index', ['investisseurs.*', 'achats.*', 'comptes.*', 'radiations.*', 'dons.*'], 'investisseurs', 'investisseurs', null, 'Dossiers'),
+                    self::entree('Gestionnaires', 'gestionnaires.index', ['gestionnaires.*'], 'gestionnaires', 'gestionnaires', null, 'Gestion.'),
                 ],
             ],
             [
@@ -99,8 +141,8 @@ class Navigation
                 'entrees' => [
                     self::entree('Exports', 'exports.index', ['exports.index'], 'exports', 'exports'),
                     self::entree('Import', 'import.index', ['import.*'], 'import', 'import'),
-                    self::entree("Journal d'audit", 'audit.index', ['audit.*'], 'audit', 'audit'),
-                    self::entree('Paramétrage', 'parametrage.index', ['parametrage.*'], 'parametrage', 'parametrage'),
+                    self::entree("Journal d'audit", 'audit.index', ['audit.*'], 'audit', 'audit', null, 'Journal'),
+                    self::entree('Paramétrage', 'parametrage.index', ['parametrage.*'], 'parametrage', 'parametrage', null, 'Réglages'),
                 ],
             ],
         ];
@@ -110,9 +152,16 @@ class Navigation
      * @param  string|null  $module     Module dont l'accès conditionne l'entrée.
      * @param  string|null  $roleReserve Rôle exclusif, pour ce qui ne relève d'aucun module.
      */
-    private static function entree(string $libelle, string $route, array $motifs, string $icone, ?string $module, ?string $roleReserve = null): array
+    /**
+     * @param  string|null  $module      Module dont l'accès conditionne l'entrée.
+     * @param  string|null  $roleReserve Rôle exclusif, pour ce qui ne relève d'aucun module.
+     * @param  string|null  $libelleCourt Version brève pour la barre d'onglets, où la
+     *                                    case fait un cinquième de l'écran : un
+     *                                    intitulé coupé en son milieu ne se lit pas.
+     */
+    private static function entree(string $libelle, string $route, array $motifs, string $icone, ?string $module, ?string $roleReserve = null, ?string $libelleCourt = null): array
     {
-        return compact('libelle', 'route', 'motifs', 'icone', 'module', 'roleReserve');
+        return compact('libelle', 'route', 'motifs', 'icone', 'module', 'roleReserve', 'libelleCourt');
     }
 
     /** Retire les entrées inaccessibles, puis les groupes devenus vides. */

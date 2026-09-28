@@ -60,10 +60,15 @@
                     </header>
                 @endif
 
-                <main class="flex-1">
+                {{-- La marge basse laisse la place a la barre d'onglets, qui flotte
+                     au-dessus du contenu : sans elle, la derniere ligne d'un tableau
+                     se retrouve dessous et personne ne la voit. --}}
+                <main class="flex-1 pb-20 lg:pb-0">
                     {{ $slot }}
                 </main>
             </div>
+
+            <x-barre-onglets />
         </div>
     </body>
 </html>

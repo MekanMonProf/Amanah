@@ -52,7 +52,7 @@ class VerifierCoherence extends Command
         $this->controle('Aucun versement de bénéfice sur un compte waqf', fn () => $this->waqf());
         $this->controle('Téléphone et gestionnaire renseignés', fn () => $this->coordonnees());
         $this->controle('Comptes de connexion rattachés', fn () => $this->connexions());
-        $this->controle('Aucun compte sans achat', fn () => $this->comptesVides());
+        $this->controle('Aucun compte ouvert resté sans suite', fn () => $this->comptesVides());
         $this->controle('Le filtre « dossiers incomplets » dit vrai', fn () => $this->completude());
 
         $this->newLine();
@@ -382,14 +382,28 @@ class VerifierCoherence extends Command
         return $anomalies;
     }
 
-    /** @return array<int, string> */
+    /**
+     * Un compte ouvert que rien n'a jamais alimente.
+     *
+     * Le controle portait d'abord sur l'absence d'achat, et signalait a tort les
+     * comptes dont toute la valeur vient d'un don : un beneficiaire peut n'avoir
+     * jamais achete une seule action et detenir pourtant des parts et un solde.
+     * C'est le vide reel qu'on cherche — ni achat, ni don recu, ni ecriture —
+     * parce que lui seul trahit une ouverture restee sans suite.
+     *
+     * @return array<int, string>
+     */
     private function comptesVides(): array
     {
         $anomalies = [];
 
         foreach (CompteInvestissement::all() as $compte) {
-            if ($compte->achats()->count() === 0) {
-                $anomalies[] = "compte {$compte->id} ({$compte->numero_compte}) sans aucun achat";
+            $alimente = $compte->achats()->exists()
+                || $compte->donsRecus()->exists()
+                || $compte->ecritures()->exists();
+
+            if (! $alimente) {
+                $anomalies[] = "compte {$compte->id} ({$compte->numero_compte}) ouvert sans achat, sans don ni ecriture";
             }
         }
 

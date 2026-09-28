@@ -857,5 +857,19 @@
     "Tous les rôles": "All roles",
     "Vous ne pouvez pas désactiver votre propre compte.": "You cannot deactivate your own account.",
     "c'est vous": "that's you",
-    "Écran Gestionnaires": "Managers screen"
+    "Écran Gestionnaires": "Managers screen",
+    ":nombre champ(s) modifié(s). :incomplets dossier(s) sont maintenant signalés incomplets.": ":nombre field(s) changed. :incomplets file(s) are now flagged as incomplete.",
+    "Un champ coché compte dans le signalement « dossier incomplet ». Rien n'est bloqué pour autant : un dossier auquel il manque une pièce reste utilisable, et le premier achat affiche un avertissement.": "A ticked field counts towards the “incomplete file” flag. Nothing is blocked by it: a file missing a document stays usable, and the first purchase shows a warning.",
+    "Avec le réglage actuel, :nombre dossier(s) sur :total sont signalés incomplets.": "With the current setting, :nombre file(s) out of :total are flagged as incomplete.",
+    "Personne morale": "Legal entity",
+    "Le registre du commerce et l'identifiant fiscal tiennent lieu de pièce d'identité : une société n'a ni date de naissance, ni nationalité.": "The trade register and the tax identifier stand in for an identity document: a company has neither a date of birth nor a nationality.",
+    "Enregistrer les champs": "Save fields",
+    "Date de délivrance de la pièce": "Document issue date",
+    "Lieu de délivrance de la pièce": "Document issue place",
+    "Date d'expiration de la pièce": "Document expiry date",
+    "Date de signature de la convention": "Agreement signature date",
+    "Nom du bénéficiaire désigné": "Named beneficiary",
+    "Téléphone du bénéficiaire": "Beneficiary phone",
+    "Nom du représentant légal": "Legal representative name",
+    "Téléphone du représentant légal": "Legal representative phone"
 }

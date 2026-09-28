@@ -857,5 +857,19 @@
     "Tous les rôles": "جميع الأدوار",
     "Vous ne pouvez pas désactiver votre propre compte.": "لا يمكنك إلغاء تفعيل حسابك الخاص.",
     "c'est vous": "هذا أنت",
-    "Écran Gestionnaires": "شاشة المسؤولين"
+    "Écran Gestionnaires": "شاشة المسؤولين",
+    ":nombre champ(s) modifié(s). :incomplets dossier(s) sont maintenant signalés incomplets.": "تم تغيير :nombre من الحقول. يوجد الآن :incomplets ملف مُشار إليه كغير مكتمل.",
+    "Un champ coché compte dans le signalement « dossier incomplet ». Rien n'est bloqué pour autant : un dossier auquel il manque une pièce reste utilisable, et le premier achat affiche un avertissement.": "الحقل المؤشَّر يُحتسب ضمن تنبيه «ملف غير مكتمل». ولا يمنع ذلك شيئاً: يبقى الملف الناقص قابلاً للاستخدام، ويظهر تنبيه عند أول شراء.",
+    "Avec le réglage actuel, :nombre dossier(s) sur :total sont signalés incomplets.": "بالإعداد الحالي، يُشار إلى :nombre ملف من أصل :total كغير مكتمل.",
+    "Personne morale": "شخص اعتباري",
+    "Le registre du commerce et l'identifiant fiscal tiennent lieu de pièce d'identité : une société n'a ni date de naissance, ni nationalité.": "يقوم السجل التجاري والمعرّف الضريبي مقام وثيقة الهوية: فالشركة ليس لها تاريخ ميلاد ولا جنسية.",
+    "Enregistrer les champs": "حفظ الحقول",
+    "Date de délivrance de la pièce": "تاريخ إصدار الوثيقة",
+    "Lieu de délivrance de la pièce": "مكان إصدار الوثيقة",
+    "Date d'expiration de la pièce": "تاريخ انتهاء الوثيقة",
+    "Date de signature de la convention": "تاريخ توقيع الاتفاقية",
+    "Nom du bénéficiaire désigné": "اسم المستفيد المعيَّن",
+    "Téléphone du bénéficiaire": "هاتف المستفيد",
+    "Nom du représentant légal": "اسم الممثل القانوني",
+    "Téléphone du représentant légal": "هاتف الممثل القانوني"
 }

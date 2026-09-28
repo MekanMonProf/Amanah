@@ -94,8 +94,6 @@
     @elseif ($onglet === 'comptes')
         <livewire:parametrage.comptes-utilisateurs />
     @else
-        <div class="bg-white border rounded-lg shadow-sm p-8 text-center text-gray-400">
-            {{ __("Les champs du dossier se règlent bientôt ici.") }}
-        </div>
+        <livewire:parametrage.champs-dossier />
     @endif
 </div>

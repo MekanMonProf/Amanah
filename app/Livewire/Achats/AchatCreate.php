@@ -229,7 +229,7 @@ class AchatCreate extends Component
 
         $cheminFacture = null;
         if ($this->facture_upload) {
-            $cheminFacture = $this->facture_upload->store('factures-achats', 'public');
+            $cheminFacture = $this->facture_upload->store('factures-achats', 'local');
         }
 
         $achat = $compte->achats()->create([

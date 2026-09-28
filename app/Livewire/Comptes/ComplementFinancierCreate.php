@@ -63,7 +63,7 @@ class ComplementFinancierCreate extends Component
 
         $cheminPiece = null;
         if ($this->piece_justificative_upload) {
-            $cheminPiece = $this->piece_justificative_upload->store('complements-financiers', 'public');
+            $cheminPiece = $this->piece_justificative_upload->store('complements-financiers', 'local');
         }
 
         $ecriture = $this->compte->ajouterEcriture(

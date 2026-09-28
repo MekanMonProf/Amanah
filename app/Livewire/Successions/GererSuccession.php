@@ -116,9 +116,9 @@ class GererSuccession extends Component
     {
         $this->validate();
 
-        $cheminIdentite = $this->pieceIdentiteUpload?->store('successions', 'public');
-        $cheminCertificat = $this->certificatHeritedeUpload?->store('successions', 'public');
-        $cheminProcuration = $this->procurationUpload?->store('successions', 'public');
+        $cheminIdentite = $this->pieceIdentiteUpload?->store('successions', 'local');
+        $cheminCertificat = $this->certificatHeritedeUpload?->store('successions', 'local');
+        $cheminProcuration = $this->procurationUpload?->store('successions', 'local');
 
         Heritier::create([
             'investisseur_id' => $this->investisseur->id,

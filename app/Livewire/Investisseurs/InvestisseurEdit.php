@@ -345,37 +345,37 @@ class InvestisseurEdit extends Component
 
         if ($this->piece_identite_upload) {
             if ($this->investisseur->piece_identite_path) {
-                Storage::disk('public')->delete($this->investisseur->piece_identite_path);
+                Storage::disk(\App\Support\Document::DISQUE)->delete($this->investisseur->piece_identite_path);
             }
-            $donnees['piece_identite_path'] = $this->piece_identite_upload->store('pieces-identite', 'public');
+            $donnees['piece_identite_path'] = $this->piece_identite_upload->store('pieces-identite', 'local');
         }
 
         if ($this->convention_engagement_upload) {
             if ($this->investisseur->convention_engagement_path) {
-                Storage::disk('public')->delete($this->investisseur->convention_engagement_path);
+                Storage::disk(\App\Support\Document::DISQUE)->delete($this->investisseur->convention_engagement_path);
             }
-            $donnees['convention_engagement_path'] = $this->convention_engagement_upload->store('conventions-engagement', 'public');
+            $donnees['convention_engagement_path'] = $this->convention_engagement_upload->store('conventions-engagement', 'local');
         }
 
         if ($this->piece_procuration_upload) {
             if ($this->investisseur->piece_procuration_path) {
-                Storage::disk('public')->delete($this->investisseur->piece_procuration_path);
+                Storage::disk(\App\Support\Document::DISQUE)->delete($this->investisseur->piece_procuration_path);
             }
-            $donnees['piece_procuration_path'] = $this->piece_procuration_upload->store('procurations', 'public');
+            $donnees['piece_procuration_path'] = $this->piece_procuration_upload->store('procurations', 'local');
         }
 
         if ($this->piece_justificatif_domicile_upload) {
             if ($this->investisseur->piece_justificatif_domicile_path) {
-                Storage::disk('public')->delete($this->investisseur->piece_justificatif_domicile_path);
+                Storage::disk(\App\Support\Document::DISQUE)->delete($this->investisseur->piece_justificatif_domicile_path);
             }
-            $donnees['piece_justificatif_domicile_path'] = $this->piece_justificatif_domicile_upload->store('justificatifs-domicile', 'public');
+            $donnees['piece_justificatif_domicile_path'] = $this->piece_justificatif_domicile_upload->store('justificatifs-domicile', 'local');
         }
 
         if ($this->piece_rib_upload) {
             if ($this->investisseur->piece_rib_path) {
-                Storage::disk('public')->delete($this->investisseur->piece_rib_path);
+                Storage::disk(\App\Support\Document::DISQUE)->delete($this->investisseur->piece_rib_path);
             }
-            $donnees['piece_rib_path'] = $this->piece_rib_upload->store('coordonnees-bancaires', 'public');
+            $donnees['piece_rib_path'] = $this->piece_rib_upload->store('coordonnees-bancaires', 'local');
         }
 
         $donneesAvant = $this->investisseur->only(array_keys($donnees));

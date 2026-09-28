@@ -131,7 +131,7 @@ class DonCreate extends Component
 
         $cheminPiece = null;
         if ($this->pieceJustificativeUpload) {
-            $cheminPiece = $this->pieceJustificativeUpload->store('dons', 'public');
+            $cheminPiece = $this->pieceJustificativeUpload->store('dons', 'local');
         }
 
         DB::transaction(function () use ($compteDestinataire, $cheminPiece) {

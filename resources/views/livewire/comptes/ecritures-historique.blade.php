@@ -77,7 +77,7 @@
                         <td class="py-1 text-end text-gray-500">{{ \App\Support\Montant::format($ecriture->solde_apres) }}</td>
                         <td class="py-1 text-end">
                             @if ($ecriture->piece_justificative_path)
-                                <a href="{{ \Illuminate\Support\Facades\Storage::url($ecriture->piece_justificative_path) }}" target="_blank" class="text-emerald-700 hover:underline text-xs">
+                                <a href="{{ \App\Support\Document::lien($ecriture, 'piece_justificative_path') }}" target="_blank" class="text-emerald-700 hover:underline text-xs">
                                     {{ __("Justificatif →") }}
                                 </a>
                             @endif

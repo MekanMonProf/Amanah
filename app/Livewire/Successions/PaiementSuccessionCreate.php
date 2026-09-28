@@ -60,7 +60,7 @@ class PaiementSuccessionCreate extends Component
             return;
         }
 
-        $cheminPreuve = $this->preuve_upload->store('preuves-paiement', 'public');
+        $cheminPreuve = $this->preuve_upload->store('preuves-paiement', 'local');
 
         $this->compte->ajouterEcriture(
             type: 'paiement',

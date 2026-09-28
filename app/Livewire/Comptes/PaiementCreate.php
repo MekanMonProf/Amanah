@@ -93,7 +93,7 @@ class PaiementCreate extends Component
 
         $cheminPreuve = null;
         if ($this->preuve_upload) {
-            $cheminPreuve = $this->preuve_upload->store('preuves-paiement', 'public');
+            $cheminPreuve = $this->preuve_upload->store('preuves-paiement', 'local');
         }
 
         $cleVersement = $this->source === 'radiation'

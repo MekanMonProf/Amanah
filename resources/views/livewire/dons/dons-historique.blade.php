@@ -73,7 +73,7 @@
                         <td class="py-1 text-gray-500"><bdi>{{ $don->motif ?: '—' }}</bdi></td>
                         <td class="py-1 text-end">
                             @if ($don->piece_justificative_path)
-                                <a href="{{ \Illuminate\Support\Facades\Storage::url($don->piece_justificative_path) }}" target="_blank"
+                                <a href="{{ \App\Support\Document::lien($don, 'piece_justificative_path') }}" target="_blank"
                                    class="text-xs text-emerald-700 hover:underline whitespace-nowrap">
                                     {{ __("📄 Pièce") }}
                                 </a>

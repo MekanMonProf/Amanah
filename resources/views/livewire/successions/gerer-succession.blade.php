@@ -6,7 +6,7 @@
         {{ $investisseur->nom }} {{ $investisseur->prenom }} ({{ $investisseur->identifiant_externe }}) —
         {{ __('décédé(e) le :date', ['date' => $investisseur->date_deces?->format('d/m/Y')]) }}
         @if ($investisseur->piece_acte_deces_path)
-            · <a href="{{ \Illuminate\Support\Facades\Storage::url($investisseur->piece_acte_deces_path) }}" target="_blank" class="text-emerald-700 hover:underline">{{ __("Voir l'acte de décès") }}</a>
+            · <a href="{{ \App\Support\Document::lien($investisseur, 'piece_acte_deces_path') }}" target="_blank" class="text-emerald-700 hover:underline">{{ __("Voir l'acte de décès") }}</a>
         @endif
     </p>
 
@@ -125,9 +125,9 @@
                         <div class="font-medium text-gray-800">{{ $this->mandataire->nom }} {{ $this->mandataire->prenom }}</div>
                         <div class="text-sm text-gray-500">{{ $this->mandataire->lien_parente }} @if($this->mandataire->telephone) · {{ $this->mandataire->telephone }} @endif</div>
                         <div class="mt-2 flex gap-3 text-xs">
-                            <a href="{{ \Illuminate\Support\Facades\Storage::url($this->mandataire->piece_identite_path) }}" target="_blank" class="text-emerald-700 hover:underline">{{ __("CNI →") }}</a>
-                            <a href="{{ \Illuminate\Support\Facades\Storage::url($this->mandataire->piece_certificat_heredite_path) }}" target="_blank" class="text-emerald-700 hover:underline">{{ __("Certificat d'hérédité →") }}</a>
-                            <a href="{{ \Illuminate\Support\Facades\Storage::url($this->mandataire->piece_justificative_path) }}" target="_blank" class="text-emerald-700 hover:underline">{{ __("Procuration →") }}</a>
+                            <a href="{{ \App\Support\Document::lien($this->mandataire, 'piece_identite_path') }}" target="_blank" class="text-emerald-700 hover:underline">{{ __("CNI →") }}</a>
+                            <a href="{{ \App\Support\Document::lien($this->mandataire, 'piece_certificat_heredite_path') }}" target="_blank" class="text-emerald-700 hover:underline">{{ __("Certificat d'hérédité →") }}</a>
+                            <a href="{{ \App\Support\Document::lien($this->mandataire, 'piece_justificative_path') }}" target="_blank" class="text-emerald-700 hover:underline">{{ __("Procuration →") }}</a>
                         </div>
                     </div>
                     <button wire:click="retirerMandataire" wire:confirm="{{ __('Retirer ce mandataire et en désigner un autre ?') }}" class="text-xs text-red-600 hover:underline">

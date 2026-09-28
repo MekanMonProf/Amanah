@@ -27,6 +27,7 @@ use App\Livewire\Portail\MonCompte;
 use App\Http\Controllers\ReleveController;
 use App\Http\Controllers\AttestationController;
 use App\Http\Controllers\AttestationSuccessionController;
+use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\RecuController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\ModeleImportController;
@@ -57,6 +58,12 @@ Route::middleware(['auth', 'doit.changer.mdp', 'deux.fa'])->group(function () {
     Route::get('/ecritures/{ecriture}/attestation', [AttestationController::class, 'paiement'])->name('ecritures.attestation');
     Route::get('/ecritures/{ecriture}/attestation-deces', [AttestationSuccessionController::class, 'versement'])->name('ecritures.attestation.deces');
     Route::get('/ecritures/{ecriture}/recu', [RecuController::class, 'interne'])->name('ecritures.recu');
+
+    // Les pieces jointes ne sont plus servies par le serveur web : elles vivent sur
+    // le disque prive et ne sortent que par ici, apres verification des droits.
+    Route::get('/documents/{type}/{id}/{colonne}', [DocumentController::class, 'ouvrir'])
+        ->whereNumber('id')
+        ->name('documents.ouvrir');
 });
 
 // Le recu ouvert depuis le lien envoye sur WhatsApp : pas d'authentification, mais

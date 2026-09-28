@@ -83,7 +83,7 @@ class RadiationCreate extends Component
 
         $cheminPiece = null;
         if ($this->piece_justificative_upload) {
-            $cheminPiece = $this->piece_justificative_upload->store('radiations', 'public');
+            $cheminPiece = $this->piece_justificative_upload->store('radiations', 'local');
         }
 
         $dernierNumero = Radiation::max('id') + 1;

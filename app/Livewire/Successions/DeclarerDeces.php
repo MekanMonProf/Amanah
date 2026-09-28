@@ -35,7 +35,7 @@ class DeclarerDeces extends Component
     {
         $this->validate();
 
-        $chemin = $this->pieceActeDecesUpload->store('actes-deces', 'public');
+        $chemin = $this->pieceActeDecesUpload->store('actes-deces', 'local');
 
         $this->investisseur->update([
             'statut' => 'decede',

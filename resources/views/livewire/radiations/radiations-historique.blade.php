@@ -79,7 +79,7 @@
                         </td>
                         <td class="py-1 text-end">
                             @if ($radiation->piece_justificative_path)
-                                <a href="{{ \Illuminate\Support\Facades\Storage::url($radiation->piece_justificative_path) }}" target="_blank" class="text-emerald-700 hover:underline text-xs">
+                                <a href="{{ \App\Support\Document::lien($radiation, 'piece_justificative_path') }}" target="_blank" class="text-emerald-700 hover:underline text-xs">
                                     {{ __("Pièce →") }}
                                 </a>
                             @endif

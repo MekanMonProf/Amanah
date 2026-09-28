@@ -29,7 +29,7 @@
             </p>
             <div class="flex gap-2 flex-wrap">
                 @if ($investisseur->piece_acte_deces_path)
-                    <a href="{{ \Illuminate\Support\Facades\Storage::url($investisseur->piece_acte_deces_path) }}" target="_blank" class="text-xs text-gray-300 border border-gray-600 rounded-lg px-3 py-1.5 hover:bg-gray-700">
+                    <a href="{{ \App\Support\Document::lien($investisseur, 'piece_acte_deces_path') }}" target="_blank" class="text-xs text-gray-300 border border-gray-600 rounded-lg px-3 py-1.5 hover:bg-gray-700">
                         {{ __("Voir l'acte de décès") }}
                     </a>
                 @endif
@@ -288,7 +288,7 @@
                 <div><span class="text-gray-500">{{ __("Expire le :") }}</span> {{ $investisseur->date_expiration_piece?->format('d/m/Y') ?? '—' }}</div>
             </div>
             @if ($investisseur->piece_identite_path)
-                <a href="{{ \Illuminate\Support\Facades\Storage::url($investisseur->piece_identite_path) }}" target="_blank" class="inline-block mt-2 text-sm text-emerald-700 hover:underline">
+                <a href="{{ \App\Support\Document::lien($investisseur, 'piece_identite_path') }}" target="_blank" class="inline-block mt-2 text-sm text-emerald-700 hover:underline">
                     {{ __("Voir le scan du document →") }}
                 </a>
             @endif
@@ -300,7 +300,7 @@
             <div class="text-xs text-gray-500 uppercase mb-2">{{ __("Convention d'engagement") }}</div>
             <div class="text-sm">
                 {{ __("Signée le :date", ["date" => $investisseur->date_signature_convention?->format('d/m/Y') ?? '—']) }}
-                <a href="{{ \Illuminate\Support\Facades\Storage::url($investisseur->convention_engagement_path) }}" target="_blank" class="ms-2 text-emerald-700 hover:underline">
+                <a href="{{ \App\Support\Document::lien($investisseur, 'convention_engagement_path') }}" target="_blank" class="ms-2 text-emerald-700 hover:underline">
                     {{ __("Voir le document →") }}
                 </a>
             </div>

@@ -115,7 +115,7 @@
                     @error('piece_identite_upload') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                     <div wire:loading wire:target="piece_identite_upload" class="text-xs text-gray-400 mt-1">{{ __("Envoi en cours...") }}</div>
                     @if ($investisseur->piece_identite_path)
-                        <a href="{{ \Illuminate\Support\Facades\Storage::url($investisseur->piece_identite_path) }}" target="_blank" class="text-xs text-emerald-700 hover:underline">{{ __("Voir le fichier actuel") }}</a>
+                        <a href="{{ \App\Support\Document::lien($investisseur, 'piece_identite_path') }}" target="_blank" class="text-xs text-emerald-700 hover:underline">{{ __("Voir le fichier actuel") }}</a>
                     @endif
 
                     {{-- Lecture de la bande MRZ. Rien n est ecrit d autorite : on propose,
@@ -210,7 +210,7 @@
                     @error('convention_engagement_upload') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                     <div wire:loading wire:target="convention_engagement_upload" class="text-xs text-gray-400 mt-1">{{ __("Envoi en cours...") }}</div>
                     @if ($investisseur->convention_engagement_path)
-                        <a href="{{ \Illuminate\Support\Facades\Storage::url($investisseur->convention_engagement_path) }}" target="_blank" class="text-xs text-emerald-700 hover:underline">{{ __("Voir le document actuel") }}</a>
+                        <a href="{{ \App\Support\Document::lien($investisseur, 'convention_engagement_path') }}" target="_blank" class="text-xs text-emerald-700 hover:underline">{{ __("Voir le document actuel") }}</a>
                     @endif
                 </div>
 
@@ -222,7 +222,7 @@
                     @error('piece_procuration_upload') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                     <div wire:loading wire:target="piece_procuration_upload" class="text-xs text-gray-400 mt-1">{{ __("Envoi en cours...") }}</div>
                     @if ($investisseur->piece_procuration_path)
-                        <a href="{{ \Illuminate\Support\Facades\Storage::url($investisseur->piece_procuration_path) }}" target="_blank" class="text-xs text-emerald-700 hover:underline">{{ __("Voir le document actuel") }}</a>
+                        <a href="{{ \App\Support\Document::lien($investisseur, 'piece_procuration_path') }}" target="_blank" class="text-xs text-emerald-700 hover:underline">{{ __("Voir le document actuel") }}</a>
                     @endif
                 </div>
 
@@ -234,7 +234,7 @@
                     @error('piece_justificatif_domicile_upload') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                     <div wire:loading wire:target="piece_justificatif_domicile_upload" class="text-xs text-gray-400 mt-1">{{ __("Envoi en cours...") }}</div>
                     @if ($investisseur->piece_justificatif_domicile_path)
-                        <a href="{{ \Illuminate\Support\Facades\Storage::url($investisseur->piece_justificatif_domicile_path) }}" target="_blank" class="text-xs text-emerald-700 hover:underline">{{ __("Voir le document actuel") }}</a>
+                        <a href="{{ \App\Support\Document::lien($investisseur, 'piece_justificatif_domicile_path') }}" target="_blank" class="text-xs text-emerald-700 hover:underline">{{ __("Voir le document actuel") }}</a>
                     @endif
                 </div>
 
@@ -246,7 +246,7 @@
                     @error('piece_rib_upload') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                     <div wire:loading wire:target="piece_rib_upload" class="text-xs text-gray-400 mt-1">{{ __("Envoi en cours...") }}</div>
                     @if ($investisseur->piece_rib_path)
-                        <a href="{{ \Illuminate\Support\Facades\Storage::url($investisseur->piece_rib_path) }}" target="_blank" class="text-xs text-emerald-700 hover:underline">{{ __("Voir le document actuel") }}</a>
+                        <a href="{{ \App\Support\Document::lien($investisseur, 'piece_rib_path') }}" target="_blank" class="text-xs text-emerald-700 hover:underline">{{ __("Voir le document actuel") }}</a>
                     @endif
                 </div>
             </div>

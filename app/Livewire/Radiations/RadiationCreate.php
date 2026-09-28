@@ -42,6 +42,15 @@ class RadiationCreate extends Component
     public int $actionsDetenues = 0;
     public bool $radiationAutorisee = true;
 
+    /**
+     * L'écriture qui vient d'être créée, tant que l'écran propose son reçu.
+     *
+     * L'écran ne repart plus tout seul vers la fiche : le moment où l'on
+     * vient d'enregistrer est celui où l'on tient encore l'investisseur, et
+     * donc celui où la question de lui envoyer son reçu se pose.
+     */
+    public ?int $ecritureDuRecu = null;
+
     public function mount(CompteInvestissement $compte): void
     {
         $this->assurerAccesGestionnairePourCompte($compte);
@@ -95,7 +104,7 @@ class RadiationCreate extends Component
         // Le capital radié devient disponible sur le compte financier — il sera ensuite
         // effectivement remis à l'investisseur via le module Paiement (traçabilité complète,
         // même logique que pour les dividendes non réinvestis).
-        $this->compte->ajouterEcriture(
+        $ecriture = $this->compte->ajouterEcriture(
             type: 'radiation',
             montant: $montant,
             dateEcriture: $this->date_radiation,
@@ -118,7 +127,7 @@ class RadiationCreate extends Component
             ],
         );
 
-        $this->redirectRoute('investisseurs.show', $this->compte->investisseur, navigate: true);
+        $this->ecritureDuRecu = $ecriture->id;
     }
 
     public function render()

@@ -1,6 +1,15 @@
 <div class="p-4 sm:p-6 max-w-2xl">
     <a href="{{ route('investisseurs.show', $compte->investisseur) }}" wire:navigate class="text-sm text-gray-500 hover:underline">{{ __("← Retour au dossier") }}</a>
 
+    @if ($ecritureDuRecu)
+        @php($ecritureCreee = \App\Models\EcritureCompteFinancier::find($ecritureDuRecu))
+        <div class="mt-6">
+            <x-invite-recu :ecriture="$ecritureCreee"
+                           :retour="route('investisseurs.show', $compte->investisseur)"
+                           :message="__('Paiement de :montant enregistré pour :nom.', ['montant' => \App\Support\Montant::avecDevise((float) abs($ecritureCreee->montant)), 'nom' => $compte->investisseur->nom])" />
+        </div>
+    @else
+
     <h1 class="text-xl sm:text-2xl font-semibold text-gray-800 mt-2 mb-1">{{ __("Paiement à l'investisseur") }}</h1>
     <p class="text-sm text-gray-500 mb-6">
         {{ $compte->investisseur->nom }} {{ $compte->investisseur->prenom }} ·
@@ -77,4 +86,6 @@
             <span wire:loading wire:target="enregistrer">{{ __("Traitement...") }}</span>
         </button>
     </form>
+
+    @endif
 </div>

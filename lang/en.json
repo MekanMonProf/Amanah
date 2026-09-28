@@ -894,5 +894,14 @@
     "Solde après opération : :solde": "Balance after the operation: :solde",
     "Votre reçu : :lien": "Your receipt: :lien",
     "Reçu d'encaissement": "Receipt of payment in",
-    "Reçu de versement": "Receipt of payment out"
+    "Reçu de versement": "Receipt of payment out",
+    "Aucun numéro sur ce dossier : le reçu ne peut pas être envoyé. Renseignez un téléphone pour l'expédier.": "No number on this file: the receipt cannot be sent. Add a phone number to send it.",
+    "Envoyer le reçu par WhatsApp": "Send the receipt via WhatsApp",
+    "Opération enregistrée.": "Operation saved.",
+    "Paiement de :montant enregistré pour :nom.": "Payment of :montant recorded for :nom.",
+    "Radiation enregistrée. Le capital radié est porté au compte financier.": "Withdrawal recorded. The redeemed capital is credited to the cash account.",
+    "Solde du compte après opération : :solde": "Account balance after the operation: :solde",
+    "Terminer": "Done",
+    "Voir le reçu": "View the receipt",
+    "WhatsApp s'ouvre avec le message et le lien du reçu déjà écrits — il vous reste à l'envoyer.": "WhatsApp opens with the message and the receipt link already written — all that is left is to send it."
 }

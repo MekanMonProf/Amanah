@@ -22,6 +22,15 @@ class AjustementCreate extends Component
     #[Validate('required|string|min:15|max:1000')]
     public string $observations = '';
 
+    /**
+     * L'écriture qui vient d'être créée, tant que l'écran propose son reçu.
+     *
+     * L'écran ne repart plus tout seul vers la fiche : le moment où l'on
+     * vient d'enregistrer est celui où l'on tient encore l'investisseur, et
+     * donc celui où la question de lui envoyer son reçu se pose.
+     */
+    public ?int $ecritureDuRecu = null;
+
     public function mount(CompteInvestissement $compte): void
     {
         $this->compte = $compte;
@@ -32,7 +41,7 @@ class AjustementCreate extends Component
     {
         $this->validate();
 
-        $this->compte->ajouterEcriture(
+        $ecriture = $this->compte->ajouterEcriture(
             type: 'ajustement',
             montant: $this->montant,
             dateEcriture: $this->date_ecriture,
@@ -52,7 +61,7 @@ class AjustementCreate extends Component
             ],
         );
 
-        $this->redirectRoute('investisseurs.show', $this->compte->investisseur, navigate: true);
+        $this->ecritureDuRecu = $ecriture->id;
     }
 
     public function render()

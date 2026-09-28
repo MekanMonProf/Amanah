@@ -894,5 +894,14 @@
     "Solde après opération : :solde": "الرصيد بعد العملية: :solde",
     "Votre reçu : :lien": "إيصالك: :lien",
     "Reçu d'encaissement": "إيصال قبض",
-    "Reçu de versement": "إيصال صرف"
+    "Reçu de versement": "إيصال صرف",
+    "Aucun numéro sur ce dossier : le reçu ne peut pas être envoyé. Renseignez un téléphone pour l'expédier.": "لا يوجد رقم في هذا الملف: لا يمكن إرسال الإيصال. أضف رقم هاتف لإرساله.",
+    "Envoyer le reçu par WhatsApp": "إرسال الإيصال عبر واتساب",
+    "Opération enregistrée.": "تم حفظ العملية.",
+    "Paiement de :montant enregistré pour :nom.": "تم تسجيل دفع :montant لـ :nom.",
+    "Radiation enregistrée. Le capital radié est porté au compte financier.": "تم تسجيل الشطب. يُقيَّد رأس المال المشطوب في الحساب المالي.",
+    "Solde du compte après opération : :solde": "رصيد الحساب بعد العملية: :solde",
+    "Terminer": "إنهاء",
+    "Voir le reçu": "عرض الإيصال",
+    "WhatsApp s'ouvre avec le message et le lien du reçu déjà écrits — il vous reste à l'envoyer.": "سيُفتح واتساب والرسالة ورابط الإيصال جاهزان — لم يبق سوى الإرسال."
 }

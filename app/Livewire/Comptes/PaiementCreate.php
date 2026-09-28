@@ -45,6 +45,15 @@ class PaiementCreate extends Component
      */
     public ?int $radiationId = null;
 
+    /**
+     * L'écriture qui vient d'être créée, tant que l'écran propose son reçu.
+     *
+     * L'écran ne repart plus tout seul vers la fiche : le moment où l'on
+     * vient d'enregistrer est celui où l'on tient encore l'investisseur, et
+     * donc celui où la question de lui envoyer son reçu se pose.
+     */
+    public ?int $ecritureDuRecu = null;
+
     public function mount(CompteInvestissement $compte): void
     {
         $this->assurerAccesGestionnairePourCompte($compte);
@@ -91,7 +100,7 @@ class PaiementCreate extends Component
             ? \App\Support\Observation::selonReference(\App\Support\Observation::VERSEMENT_CAPITAL_RADIE, \App\Support\Observation::VERSEMENT_CAPITAL_RADIE_REF, $this->reference)
             : \App\Support\Observation::selonReference(\App\Support\Observation::VERSEMENT_INVESTISSEUR, \App\Support\Observation::VERSEMENT_INVESTISSEUR_REF, $this->reference);
 
-        $this->compte->ajouterEcriture(
+        $ecriture = $this->compte->ajouterEcriture(
             type: 'paiement',
             montant: -$this->montant,
             dateEcriture: $this->date_paiement,
@@ -115,7 +124,7 @@ class PaiementCreate extends Component
             ],
         );
 
-        $this->redirectRoute('investisseurs.show', $this->compte->investisseur, navigate: true);
+        $this->ecritureDuRecu = $ecriture->id;
     }
 
     public function render()

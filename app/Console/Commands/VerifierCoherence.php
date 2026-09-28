@@ -340,6 +340,12 @@ class VerifierCoherence extends Command
         $anomalies = [];
 
         foreach (Investisseur::all() as $investisseur) {
+            // Le compte institutionnel du Waqf caritatif n'a ni correspondant ni
+            // gestionnaire : il reçoit les présents, il ne se démarche pas.
+            if ($investisseur->estWaqfCaritatif()) {
+                continue;
+            }
+
             if (! $investisseur->telephone) {
                 $anomalies[] = "{$investisseur->identifiant_externe} : sans téléphone";
             }

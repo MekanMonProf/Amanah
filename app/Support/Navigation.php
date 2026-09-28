@@ -8,18 +8,14 @@ use Illuminate\Support\Facades\Route;
 /**
  * Arborescence de la barre latérale.
  *
- * Les rôles listés ici ne servent qu'à masquer les entrées inutiles : la vraie
- * autorisation reste le middleware `role:` posé dans routes/web.php. Les deux
- * listes doivent rester alignées — d'où les constantes reprises telles quelles.
+ * Chaque entrée nomme le module qu'elle ouvre, et c'est la table des permissions
+ * qui décide si elle s'affiche — la même table que le middleware des routes.
+ * Auparavant deux listes de rôles devaient rester alignées à la main, l'une ici,
+ * l'autre dans routes/web.php ; elles n'avaient aucun moyen de se contredire
+ * bruyamment, seulement celui de dériver en silence.
  */
 class Navigation
 {
-    /** Niveau 1 de routes/web.php — consultation. */
-    public const CONSULTATION = ['direction', 'administrateur', 'gestionnaire', 'lecture'];
-
-    /** Niveau 3 de routes/web.php — administration. */
-    public const ADMINISTRATION = ['direction', 'administrateur'];
-
     /**
      * En dessous de ce nombre d'entrées visibles, les intitulés de groupe
      * coûtent plus de place qu'ils n'apportent de repères : la liste est
@@ -33,7 +29,7 @@ class Navigation
      */
     public static function groupes(User $utilisateur): array
     {
-        $groupes = self::filtrer(self::arborescence(), $utilisateur->role);
+        $groupes = self::filtrer(self::arborescence(), $utilisateur);
 
         $total = array_sum(array_map(fn ($g) => count($g['entrees']), $groupes));
 
@@ -77,49 +73,57 @@ class Navigation
             [
                 'libelle' => null,
                 'entrees' => [
-                    self::entree('Mon compte', 'portail.mon-compte', ['portail.*'], 'compte', ['investisseur']),
-                    self::entree('Tableau de bord', 'dashboard', ['dashboard'], 'tableau', self::CONSULTATION),
+                    // Le portail n'est pas un module : son accès ne se paramètre
+                    // pas, il découle du rôle. D'où le module null, toujours visible
+                    // pour l'investisseur et pour lui seul.
+                    self::entree('Mon compte', 'portail.mon-compte', ['portail.*'], 'compte', null, 'investisseur'),
+                    self::entree('Tableau de bord', 'dashboard', ['dashboard'], 'tableau', null),
                 ],
             ],
             [
                 'libelle' => 'Gestion',
                 'entrees' => [
-                    self::entree('Investisseurs', 'investisseurs.index', ['investisseurs.*', 'achats.*', 'comptes.*', 'radiations.*', 'dons.*'], 'investisseurs', self::CONSULTATION),
-                    self::entree('Gestionnaires', 'gestionnaires.index', ['gestionnaires.*'], 'gestionnaires', self::ADMINISTRATION),
+                    self::entree('Investisseurs', 'investisseurs.index', ['investisseurs.*', 'achats.*', 'comptes.*', 'radiations.*', 'dons.*'], 'investisseurs', 'investisseurs'),
+                    self::entree('Gestionnaires', 'gestionnaires.index', ['gestionnaires.*'], 'gestionnaires', 'gestionnaires'),
                 ],
             ],
             [
                 'libelle' => 'Finance',
                 'entrees' => [
-                    self::entree('Dividendes', 'dividendes.calculer', ['dividendes.*', 'baremes.*'], 'dividendes', self::ADMINISTRATION),
-                    self::entree('Successions', 'successions.index', ['successions.*', 'deces.*'], 'successions', self::ADMINISTRATION),
+                    self::entree('Dividendes', 'dividendes.calculer', ['dividendes.*', 'baremes.*'], 'dividendes', 'dividendes'),
+                    self::entree('Successions', 'successions.index', ['successions.*', 'deces.*'], 'successions', 'successions'),
                 ],
             ],
             [
                 'libelle' => 'Administration',
                 'entrees' => [
-                    self::entree('Exports', 'exports.index', ['exports.index'], 'exports', self::CONSULTATION),
-                    self::entree('Import', 'import.index', ['import.*'], 'import', self::ADMINISTRATION),
-                    self::entree("Journal d'audit", 'audit.index', ['audit.*'], 'audit', self::ADMINISTRATION),
+                    self::entree('Exports', 'exports.index', ['exports.index'], 'exports', 'exports'),
+                    self::entree('Import', 'import.index', ['import.*'], 'import', 'import'),
+                    self::entree("Journal d'audit", 'audit.index', ['audit.*'], 'audit', 'audit'),
+                    self::entree('Paramétrage', 'parametrage.index', ['parametrage.*'], 'parametrage', 'parametrage'),
                 ],
             ],
         ];
     }
 
-    private static function entree(string $libelle, string $route, array $motifs, string $icone, array $roles): array
+    /**
+     * @param  string|null  $module     Module dont l'accès conditionne l'entrée.
+     * @param  string|null  $roleReserve Rôle exclusif, pour ce qui ne relève d'aucun module.
+     */
+    private static function entree(string $libelle, string $route, array $motifs, string $icone, ?string $module, ?string $roleReserve = null): array
     {
-        return compact('libelle', 'route', 'motifs', 'icone', 'roles');
+        return compact('libelle', 'route', 'motifs', 'icone', 'module', 'roleReserve');
     }
 
-    /** Retire les entrées interdites à ce rôle, puis les groupes devenus vides. */
-    private static function filtrer(array $groupes, string $role): array
+    /** Retire les entrées inaccessibles, puis les groupes devenus vides. */
+    private static function filtrer(array $groupes, User $utilisateur): array
     {
         $retenus = [];
 
         foreach ($groupes as $groupe) {
             $entrees = array_values(array_filter(
                 $groupe['entrees'],
-                fn ($entree) => in_array($role, $entree['roles'], true),
+                fn ($entree) => self::estVisible($entree, $utilisateur),
             ));
 
             if ($entrees !== []) {
@@ -128,5 +132,23 @@ class Navigation
         }
 
         return $retenus;
+    }
+
+    /**
+     * Une entrée réservée à un rôle s'affiche pour lui seul ; une entrée qui
+     * porte un module s'affiche dès que ce module est lisible ; le tableau de
+     * bord, qui n'est ni l'un ni l'autre, s'affiche pour tout le personnel.
+     */
+    private static function estVisible(array $entree, User $utilisateur): bool
+    {
+        if ($entree['roleReserve'] !== null) {
+            return $utilisateur->role === $entree['roleReserve'];
+        }
+
+        if ($entree['module'] !== null) {
+            return Droits::peutLire($entree['module'], $utilisateur);
+        }
+
+        return in_array($utilisateur->role, Modules::ROLES, true);
     }
 }

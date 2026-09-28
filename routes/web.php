@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Livewire\TableauDeBord;
 use App\Livewire\Investisseurs\InvestisseurIndex;
+use App\Livewire\Parametrage\Parametrage;
 use App\Livewire\Investisseurs\InvestisseurShow;
 use App\Livewire\Investisseurs\InvestisseurEdit;
 use App\Livewire\Achats\AchatCreate;
@@ -64,12 +65,17 @@ Route::middleware(['auth', 'doit.changer.mdp', 'deux.fa'])->group(function () {
 
 Route::middleware(['auth', 'doit.changer.mdp', 'deux.fa'])->group(function () {
 
-    // ---- Niveau 1 : CONSULTATION (Direction, Administrateur, Gestionnaire, Lecture) ----
-    Route::middleware(['role:direction,administrateur,gestionnaire,lecture'])->group(function () {
+    // ---- Consultation des dossiers ----
+    // Les listes de roles ont laisse place aux modules : qui accede a quoi se
+    // regle desormais depuis Parametrage, sans toucher a ce fichier.
+    Route::middleware(['module:investisseurs'])->group(function () {
         Route::get('/investisseurs', InvestisseurIndex::class)->name('investisseurs.index');
         Route::get('/investisseurs/{investisseur}', InvestisseurShow::class)->name('investisseurs.show');
         Route::get('/investisseurs/{investisseur}/releve', [ReleveController::class, 'pourGestionnaire'])->name('investisseurs.releve');
+    });
 
+    // ---- Exports ----
+    Route::middleware(['module:exports'])->group(function () {
         // Point d'entree unique vers les exports globaux listes juste apres
         Route::get('/exports', ExportIndex::class)->name('exports.index');
 
@@ -89,8 +95,8 @@ Route::middleware(['auth', 'doit.changer.mdp', 'deux.fa'])->group(function () {
         Route::get('/comptes/{compte}/radiations/export/pdf', [ExportController::class, 'radiationsPdf'])->name('export.radiations.pdf');
     });
 
-    // ---- Niveau 2 : OPÉRATIONS COURANTES (Direction, Administrateur, Gestionnaire) ----
-    Route::middleware(['role:direction,administrateur,gestionnaire'])->group(function () {
+    // ---- Operations sur les dossiers ----
+    Route::middleware(['module:investisseurs,ecriture'])->group(function () {
         Route::get('/investisseurs/{investisseur}/modifier', InvestisseurEdit::class)->name('investisseurs.modifier');
         Route::get('/investisseurs/{investisseur}/achats/creer', AchatCreate::class)->name('achats.creer');
         Route::get('/comptes/{compte}/complement', ComplementFinancierCreate::class)->name('comptes.complement');
@@ -100,25 +106,46 @@ Route::middleware(['auth', 'doit.changer.mdp', 'deux.fa'])->group(function () {
         Route::get('/comptes/{compte}/dons/creer', DonCreate::class)->name('dons.creer');
     });
 
-    // ---- Niveau 3 : ADMINISTRATION (Direction, Administrateur uniquement) ----
-    Route::middleware(['role:direction,administrateur'])->group(function () {
+    // ---- Dividendes ----
+    // L'ajustement manuel d'un compte tient du pilotage financier, pas de la
+    // tenue de dossier : il suit les baremes plutot que les investisseurs.
+    Route::middleware(['module:dividendes,ecriture'])->group(function () {
         Route::get('/dividendes/calculer', DividendeCalcul::class)->name('dividendes.calculer');
         Route::get('/baremes/{bareme}/corriger', BaremeCorrection::class)->name('baremes.corriger');
         Route::get('/comptes/{compte}/ajustement', AjustementCreate::class)->name('comptes.ajustement');
+    });
+
+    // ---- Gestionnaires ----
+    Route::middleware(['module:gestionnaires,ecriture'])->group(function () {
         Route::get('/gestionnaires', GestionnaireIndex::class)->name('gestionnaires.index');
+    });
+
+    // ---- Journal d'audit ----
+    Route::middleware(['module:audit'])->group(function () {
         Route::get('/audit', JournalAudit::class)->name('audit.index');
         Route::get('/audit/export/csv', [ExportController::class, 'auditCsv'])->name('export.audit.csv');
         Route::get('/audit/export/pdf', [ExportController::class, 'auditPdf'])->name('export.audit.pdf');
+    });
 
-        // Reprise de l'existant depuis un fichier Excel/CSV — création en masse, donc réservée
+    // ---- Import ----
+    // Reprise de l'existant depuis un fichier Excel/CSV — création en masse
+    Route::middleware(['module:import,ecriture'])->group(function () {
         Route::get('/import', ImportIndex::class)->name('import.index');
         Route::get('/import/modele/{type}', [ModeleImportController::class, 'telecharger'])->name('import.modele');
+    });
 
-        // Succession (décès, héritiers, répartition) — action sensible, réservée
+    // ---- Successions ----
+    // Décès, héritiers, liquidation, versement au mandataire
+    Route::middleware(['module:successions,ecriture'])->group(function () {
         Route::get('/successions', SuccessionIndex::class)->name('successions.index');
         Route::get('/investisseurs/{investisseur}/deces/declarer', DeclarerDeces::class)->name('deces.declarer');
         Route::get('/investisseurs/{investisseur}/succession', GererSuccession::class)->name('successions.gerer');
         Route::get('/comptes/{compte}/paiement-succession', PaiementSuccessionCreate::class)->name('successions.paiement');
+    });
+
+    // ---- Paramétrage ----
+    Route::middleware(['module:parametrage,ecriture'])->group(function () {
+        Route::get('/parametrage', Parametrage::class)->name('parametrage.index');
     });
 });
 

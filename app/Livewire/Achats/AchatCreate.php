@@ -5,6 +5,7 @@ namespace App\Livewire\Achats;
 use App\Models\Investisseur;
 use App\Models\PolitiqueInvestissement;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Layout;
@@ -196,6 +197,19 @@ class AchatCreate extends Component
 
         $defunt = $this->faireUnPresent ? $this->validerDefunt() : null;
 
+        // Le compte est créé avant l'achat, et l'envoi de la facture se glisse entre
+        // les deux : un disque plein ou un lien de stockage absent laissait jusqu'ici
+        // un compte ouvert sans le moindre achat, que plus rien ne venait fermer. Les
+        // deux tiennent maintenant ou tombent ensemble.
+        DB::transaction(function () use ($defunt) {
+            $this->creerLAchat($defunt);
+        });
+
+        $this->redirectRoute('investisseurs.show', $this->investisseur, navigate: true);
+    }
+
+    private function creerLAchat(?Investisseur $defunt): void
+    {
         if ($this->faireUnPresent) {
             // Les actions sont versées au Waqf caritatif, pas au donateur. La date d'ouverture
             // du compte institutionnel n'est pas réalignée : elle ne dépend pas d'un don reçu.
@@ -256,7 +270,6 @@ class AchatCreate extends Component
             ], fn ($valeur) => $valeur !== null),
         );
 
-        $this->redirectRoute('investisseurs.show', $this->investisseur, navigate: true);
     }
 
     public function render()

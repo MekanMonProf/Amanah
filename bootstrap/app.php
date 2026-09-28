@@ -13,6 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
     'role' => \App\Http\Middleware\EnsureRole::class,
+    'module' => \App\Http\Middleware\ExigeModule::class,
     'doit.changer.mdp' => \App\Http\Middleware\ForceChangementMotDePasse::class,
     'deux.fa' => \App\Http\Middleware\VerifierDeuxFa::class,
 

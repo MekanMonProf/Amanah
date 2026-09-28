@@ -170,6 +170,17 @@ class Investisseur extends Model
      * des successions (inaliénabilité du Waqf) et les achats offerts à la mémoire d'un défunt.
      * Créé à la volée pour ne pas dépendre d'un seeder.
      */
+    /**
+     * L'œuvre caritative Waqf n'est pas un investisseur comme les autres : c'est
+     * le compte institutionnel qui reçoit les présents. Elle n'a ni téléphone, ni
+     * gestionnaire attitré, et les contrôles de cohérence doivent la laisser
+     * tranquille plutôt que de réclamer des coordonnées qui n'existeront jamais.
+     */
+    public function estWaqfCaritatif(): bool
+    {
+        return $this->nom === self::NOM_WAQF_CARITATIF;
+    }
+
     public static function waqfCaritatif(): self
     {
         return static::firstOrCreate(

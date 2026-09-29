@@ -374,8 +374,6 @@
     "Langue de l'interface": "Interface language",
     "Langue non prise en charge.": "Unsupported language.",
     "La pièce ne dit pas la même chose que le formulaire": "The document and the form do not agree",
-    "La radiation n'est pas autorisée pour cette catégorie de compte.": "Redemption is not allowed for this account category.",
-    "La radiation n'est pas autorisée pour la catégorie <strong>:categorie</strong>, selon la politique d'investissement en vigueur.": "Redemption is not allowed for the <strong>:categorie</strong> category, under the investment policy in force.",
     "La succession a déjà été réglée.": "The estate has already been settled.",
     "Le capital correspondant sera crédité sur le compte financier, en attente de versement effectif via le module Paiement — rien n'est payé automatiquement ici.": "The corresponding capital will be credited to the cash account, awaiting actual payment through the Payment module — nothing is paid automatically here.",
     "Le contrôle du fichier a expiré. Redéposez le fichier pour relancer l'analyse.": "The file check has expired. Upload the file again to run the analysis.",
@@ -928,5 +926,6 @@
     "Versement des bénéfices": "Profit payout",
     "Éligibilité aux dividendes": "Dividend eligibility",
     "Éligible aux dividendes": "Eligible for dividends",
-    "La catégorie :categorie n'autorise pas la cession : le capital y est immobilisé, ni les parts ni le solde ne peuvent être donnés.": "The :categorie category does not allow transfers: its capital is locked, so neither shares nor balance can be given away."
+    "La catégorie :categorie n'autorise pas la cession : le capital y est immobilisé, ni les parts ni le solde ne peuvent être donnés.": "The :categorie category does not allow transfers: its capital is locked, so neither shares nor balance can be given away.",
+    "La catégorie :categorie n'autorise pas la radiation : le capital y est immobilisé, les parts ne se reprennent pas.": "The :categorie category does not allow redemption: its capital is locked, and shares once given are not taken back."
 }

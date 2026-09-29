@@ -29,7 +29,7 @@ class DonneesTestSeeder extends Seeder
             [
                 'eligible_dividendes' => true,
                 'versement_dividendes_possible' => false, 'versement_capital_radiation_possible' => true,
-                'cession_autorisee' => false, 'radiation_autorisee' => true, 'prix_unitaire_action' => 25000,
+                'cession_autorisee' => false, 'radiation_autorisee' => false, 'prix_unitaire_action' => 25000,
             ]
         );
 

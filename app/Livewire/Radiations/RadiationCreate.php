@@ -60,6 +60,28 @@ class RadiationCreate extends Component
         $this->actionsDetenues = $compte->nombreActions();
         $this->prix_unitaire = (float) ($compte->politique()?->prix_unitaire_action ?? 25000);
         $this->radiationAutorisee = (bool) ($compte->politique()?->radiation_autorisee ?? true);
+
+        $this->interdireSiRadiationRefusee();
+    }
+
+    /**
+     * Une categorie qui interdit la radiation ferme l'ecran, elle ne se contente
+     * pas de refuser l'enregistrement.
+     *
+     * L'ecran s'ouvrait par son URL et ne disait non qu'au moment d'envoyer le
+     * formulaire : on saisissait un nombre d'actions, une date, une piece
+     * justificative, pour s'entendre repondre a la fin que l'operation n'existe
+     * pas. Autant le dire a la porte.
+     *
+     * Le waqf est le cas vise : des parts qui lui ont ete donnees sont sorties
+     * du patrimoine du donateur, elles ne se reprennent pas.
+     */
+    protected function interdireSiRadiationRefusee(): void
+    {
+        abort_unless($this->radiationAutorisee, 403, __(
+            "La catégorie :categorie n'autorise pas la radiation : le capital y est immobilisé, les parts ne se reprennent pas.",
+            ['categorie' => \App\Support\Libelles::categorie($this->compte->categorie)],
+        ));
     }
 
     public function getMontantTotalProperty(): float
@@ -69,10 +91,11 @@ class RadiationCreate extends Component
 
     public function enregistrer(): void
     {
-        if (! $this->radiationAutorisee) {
-            $this->addError('nombre_actions_radiees', __("La radiation n'est pas autorisée pour cette catégorie de compte."));
-            return;
-        }
+        // Relu ici et pas seulement au chargement : rien n'empeche une requete
+        // forgee d'appeler directement cette methode, et $radiationAutorisee est
+        // une propriete Livewire, donc falsifiable.
+        $this->radiationAutorisee = (bool) ($this->compte->politique()?->radiation_autorisee ?? true);
+        $this->interdireSiRadiationRefusee();
 
         $this->validate();
 

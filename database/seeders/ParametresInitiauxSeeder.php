@@ -45,8 +45,9 @@ class ParametresInitiauxSeeder extends Seeder
      * Les deux natures de compte.
      *
      * Le waqf se distingue sur trois points, qui ne relèvent pas du réglage mais
-     * du principe : son capital est immobilisé, donc il ne se cède pas et ses
-     * bénéfices ne se versent pas. Ils restent au compte et s'y réinvestissent.
+     * du principe : son capital est immobilisé, donc il ne se cède ni ne se
+     * radie, et ses bénéfices ne se versent pas — ils restent au compte et s'y
+     * réinvestissent. Des parts données au waqf ne se reprennent pas.
      */
     private function politiques(): void
     {
@@ -64,7 +65,7 @@ class ParametresInitiauxSeeder extends Seeder
             'versement_dividendes_possible' => false,
             'cession_autorisee' => false,
             'versement_capital_radiation_possible' => true,
-            'radiation_autorisee' => true,
+            'radiation_autorisee' => false,
             'prix_unitaire_action' => self::PRIX_ACTION,
         ]);
 

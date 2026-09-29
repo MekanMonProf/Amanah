@@ -374,8 +374,6 @@
     "Langue de l'interface": "لغة الواجهة",
     "Langue non prise en charge.": "لغة غير مدعومة.",
     "La pièce ne dit pas la même chose que le formulaire": "الوثيقة لا تطابق ما في النموذج",
-    "La radiation n'est pas autorisée pour cette catégorie de compte.": "الاسترداد غير مسموح به لهذه الفئة من الحسابات.",
-    "La radiation n'est pas autorisée pour la catégorie <strong>:categorie</strong>, selon la politique d'investissement en vigueur.": "الاسترداد غير مسموح به لفئة <strong>:categorie</strong>، وفقًا لسياسة الاستثمار السارية.",
     "La succession a déjà été réglée.": "تمت تسوية التركة بالفعل.",
     "Le capital correspondant sera crédité sur le compte financier, en attente de versement effectif via le module Paiement — rien n'est payé automatiquement ici.": "سيُقيَّد رأس المال المقابل في الحساب المالي، بانتظار الصرف الفعلي عبر وحدة الدفع — لا يُدفع شيء تلقائيًا هنا.",
     "Le contrôle du fichier a expiré. Redéposez le fichier pour relancer l'analyse.": "انتهت صلاحية فحص الملف. أعد رفع الملف لإعادة التحليل.",
@@ -928,5 +926,6 @@
     "Versement des bénéfices": "صرف الأرباح",
     "Éligibilité aux dividendes": "استحقاق الأرباح",
     "Éligible aux dividendes": "مستحق للأرباح",
-    "La catégorie :categorie n'autorise pas la cession : le capital y est immobilisé, ni les parts ni le solde ne peuvent être donnés.": "لا تسمح فئة :categorie بالتنازل: رأس المال فيها محبوس، فلا يمكن التبرع بالأسهم ولا بالرصيد."
+    "La catégorie :categorie n'autorise pas la cession : le capital y est immobilisé, ni les parts ni le solde ne peuvent être donnés.": "لا تسمح فئة :categorie بالتنازل: رأس المال فيها محبوس، فلا يمكن التبرع بالأسهم ولا بالرصيد.",
+    "La catégorie :categorie n'autorise pas la radiation : le capital y est immobilisé, les parts ne se reprennent pas.": "لا تسمح فئة :categorie بالاسترداد: رأس المال فيها محبوس، والأسهم الموهوبة لا تستردّ."
 }

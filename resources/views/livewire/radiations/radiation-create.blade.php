@@ -16,22 +16,18 @@
         <span class="font-mono">{{ $compte->numero_compte }}</span> ({{ __(\App\Support\Libelles::categorie($compte->categorie)) }})
     </p>
 
-    @if (!$radiationAutorisee)
-        <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 text-sm text-red-800">
-            ⛔ {!! __("La radiation n'est pas autorisée pour la catégorie <strong>:categorie</strong>, selon la politique d'investissement en vigueur.", ['categorie' => e(__(\App\Support\Libelles::categorie($compte->categorie)))]) !!}
-        </div>
-    @else
-        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-sm text-blue-800">
-            ℹ️ {{ __("Le capital correspondant sera crédité sur le compte financier, en attente de versement effectif via le module Paiement — rien n'est payé automatiquement ici.") }}
-        </div>
-    @endif
+    {{-- Plus de bandeau « radiation interdite » : l'écran ne s'ouvre plus du tout
+         pour une catégorie qui l'interdit, il répond 403 dès le chargement. --}}
+    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-sm text-blue-800">
+        ℹ️ {{ __("Le capital correspondant sera crédité sur le compte financier, en attente de versement effectif via le module Paiement — rien n'est payé automatiquement ici.") }}
+    </div>
 
     <div class="bg-white border rounded-lg p-4 mb-6">
         <div class="text-xs text-gray-500 uppercase">{{ __("Actions actuellement détenues") }}</div>
         <div class="text-2xl font-semibold text-gray-800">{{ $actionsDetenues }}</div>
     </div>
 
-    <form wire:submit="enregistrer" class="bg-white border rounded-lg p-5 shadow-sm space-y-4 {{ !$radiationAutorisee ? 'opacity-50 pointer-events-none' : '' }}">
+    <form wire:submit="enregistrer" class="bg-white border rounded-lg p-5 shadow-sm space-y-4">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
                 <label class="text-sm text-gray-600">{{ __("Nombre d'actions à radier") }}</label>

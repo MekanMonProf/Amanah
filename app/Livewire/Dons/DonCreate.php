@@ -48,6 +48,30 @@ class DonCreate extends Component
         $this->dateDon = now()->toDateString();
 
         abort_if($compte->investisseur->estDecede(), 403, __("Ce compte est gelé — l'investisseur est déclaré décédé. Gérez la succession depuis sa fiche."));
+
+        $this->interdireSiCessionRefusee();
+    }
+
+    /**
+     * Un compte dont la catégorie interdit la cession ne donne rien, ni parts ni
+     * solde.
+     *
+     * La règle était affichée depuis toujours — « Cession autorisée : Non » sur
+     * un waqf — mais aucun code ne la lisait : un compte waqf pouvait donner ses
+     * actions à un autre compte waqf. Annoncer l'inaliénabilité du capital sans
+     * l'appliquer est pire que de ne rien annoncer.
+     *
+     * Le solde suit les parts : les bénéfices d'un waqf ne se versent pas à son
+     * titulaire, ils ne se donnent pas davantage.
+     */
+    protected function interdireSiCessionRefusee(): void
+    {
+        $autorisee = (bool) ($this->compteSource->politique()?->cession_autorisee ?? true);
+
+        abort_unless($autorisee, 403, __(
+            "La catégorie :categorie n'autorise pas la cession : le capital y est immobilisé, ni les parts ni le solde ne peuvent être donnés.",
+            ['categorie' => \App\Support\Libelles::categorie($this->compteSource->categorie)],
+        ));
     }
 
     public function getResultatsRechercheProperty()
@@ -91,6 +115,10 @@ class DonCreate extends Component
 
     public function enregistrer(): void
     {
+        // Revalidé ici et pas seulement au chargement : rien n'empêche une requête
+        // forgée d'appeler directement cette méthode.
+        $this->interdireSiCessionRefusee();
+
         $this->validate();
 
         if (! $this->compteDestinataireId) {

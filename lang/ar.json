@@ -927,5 +927,6 @@
     "Un changement de prix ne vaut que pour la suite : chaque achat déjà enregistré garde le prix auquel il a été conclu, et aucun historique n'est réécrit.": "تغيير السعر يسري على المستقبل فقط: يحتفظ كل شراء مسجّل بالسعر الذي أُبرم به، ولا يُعاد كتابة أي سجل.",
     "Versement des bénéfices": "صرف الأرباح",
     "Éligibilité aux dividendes": "استحقاق الأرباح",
-    "Éligible aux dividendes": "مستحق للأرباح"
+    "Éligible aux dividendes": "مستحق للأرباح",
+    "La catégorie :categorie n'autorise pas la cession : le capital y est immobilisé, ni les parts ni le solde ne peuvent être donnés.": "لا تسمح فئة :categorie بالتنازل: رأس المال فيها محبوس، فلا يمكن التبرع بالأسهم ولا بالرصيد."
 }

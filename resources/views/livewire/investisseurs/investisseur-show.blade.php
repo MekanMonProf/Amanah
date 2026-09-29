@@ -436,10 +436,14 @@
                                 {{ __("Paiement") }}
                             </a>
                         @endif
-                        <a href="{{ route('dons.creer', $item['compte']) }}" wire:navigate
-                           class="text-xs text-indigo-700 border border-indigo-300 rounded-lg px-3 py-1 hover:bg-indigo-50">
-                            {{ __("Don") }}
-                        </a>
+                        {{-- Le bouton disparaît quand la catégorie interdit la cession :
+                             mieux vaut ne pas le proposer que de refuser après coup. --}}
+                        @if ($item['compte']->politique()?->cession_autorisee ?? true)
+                            <a href="{{ route('dons.creer', $item['compte']) }}" wire:navigate
+                               class="text-xs text-indigo-700 border border-indigo-300 rounded-lg px-3 py-1 hover:bg-indigo-50">
+                                {{ __("Don") }}
+                            </a>
+                        @endif
                         @if ($item['compte']->politique()?->radiation_autorisee)
                             <a href="{{ route('radiations.creer', $item['compte']) }}" wire:navigate
                                class="text-xs text-red-700 border border-red-300 rounded-lg px-3 py-1 hover:bg-red-50">

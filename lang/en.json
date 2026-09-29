@@ -927,5 +927,6 @@
     "Un changement de prix ne vaut que pour la suite : chaque achat déjà enregistré garde le prix auquel il a été conclu, et aucun historique n'est réécrit.": "A price change applies going forward only: every purchase already recorded keeps the price at which it was concluded, and no history is rewritten.",
     "Versement des bénéfices": "Profit payout",
     "Éligibilité aux dividendes": "Dividend eligibility",
-    "Éligible aux dividendes": "Eligible for dividends"
+    "Éligible aux dividendes": "Eligible for dividends",
+    "La catégorie :categorie n'autorise pas la cession : le capital y est immobilisé, ni les parts ni le solde ne peuvent être donnés.": "The :categorie category does not allow transfers: its capital is locked, so neither shares nor balance can be given away."
 }

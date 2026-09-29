@@ -912,5 +912,20 @@
     "Dossiers": "Files",
     "Gestion.": "Managers",
     "Journal": "Log",
-    "Réglages": "Settings"
+    "Réglages": "Settings",
+    ":nombre réglage(s) modifié(s). Les opérations déjà enregistrées gardent leur prix d'origine.": ":nombre setting(s) changed. Operations already recorded keep their original price.",
+    "Actuellement :prix CFA": "Currently :prix CFA",
+    "Ces quatre règles tiennent à la nature du compte et ne se règlent pas ici.": "These four rules follow from the nature of the account and are not set here.",
+    "Cession autorisée": "Transfer allowed",
+    "Compte :categorie": "Account :categorie",
+    "Délai de carence, en jours avant la fin du mois": "Qualifying delay, in days before month end",
+    "Enregistrer les paramètres": "Save settings",
+    "Paramètres financiers": "Financial settings",
+    "Prix unitaire de l'action (CFA)": "Unit share price (CFA)",
+    "Radiation autorisée": "Withdrawal allowed",
+    "Un achat effectué dans ces derniers jours ne compte pas pour le dividende du mois : il n'a rien financé. À 0, toute souscription du mois donne droit à la distribution.": "A purchase made within these last days does not count towards the month's dividend: it financed nothing. At 0, any subscription in the month qualifies for the distribution.",
+    "Un changement de prix ne vaut que pour la suite : chaque achat déjà enregistré garde le prix auquel il a été conclu, et aucun historique n'est réécrit.": "A price change applies going forward only: every purchase already recorded keeps the price at which it was concluded, and no history is rewritten.",
+    "Versement des bénéfices": "Profit payout",
+    "Éligibilité aux dividendes": "Dividend eligibility",
+    "Éligible aux dividendes": "Eligible for dividends"
 }

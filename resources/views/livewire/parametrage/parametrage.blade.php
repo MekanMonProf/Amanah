@@ -25,6 +25,10 @@
                 class="px-4 py-2 text-sm -mb-px border-b-2 {{ $onglet === 'comptes' ? 'border-emerald-600 text-emerald-700 font-medium' : 'border-transparent text-gray-500 hover:text-gray-700' }}">
             {{ __("Comptes utilisateurs") }}
         </button>
+        <button type="button" wire:click="changerOnglet('financiers')"
+                class="px-4 py-2 text-sm -mb-px border-b-2 {{ $onglet === 'financiers' ? 'border-emerald-600 text-emerald-700 font-medium' : 'border-transparent text-gray-500 hover:text-gray-700' }}">
+            {{ __("Paramètres financiers") }}
+        </button>
         <button type="button" wire:click="changerOnglet('champs')"
                 class="px-4 py-2 text-sm -mb-px border-b-2 {{ $onglet === 'champs' ? 'border-emerald-600 text-emerald-700 font-medium' : 'border-transparent text-gray-500 hover:text-gray-700' }}">
             {{ __("Champs du dossier") }}
@@ -93,6 +97,8 @@
         </form>
     @elseif ($onglet === 'comptes')
         <livewire:parametrage.comptes-utilisateurs />
+    @elseif ($onglet === 'financiers')
+        <livewire:parametrage.parametres-financiers />
     @else
         <livewire:parametrage.champs-dossier />
     @endif

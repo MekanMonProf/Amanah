@@ -912,5 +912,20 @@
     "Dossiers": "الملفات",
     "Gestion.": "المسؤولون",
     "Journal": "السجل",
-    "Réglages": "الإعدادات"
+    "Réglages": "الإعدادات",
+    ":nombre réglage(s) modifié(s). Les opérations déjà enregistrées gardent leur prix d'origine.": "تم تغيير :nombre من الإعدادات. تحتفظ العمليات المسجّلة مسبقاً بسعرها الأصلي.",
+    "Actuellement :prix CFA": "حالياً :prix فرنك",
+    "Ces quatre règles tiennent à la nature du compte et ne se règlent pas ici.": "هذه القواعد الأربع نابعة من طبيعة الحساب ولا تُضبط هنا.",
+    "Cession autorisée": "التنازل مسموح",
+    "Compte :categorie": "حساب :categorie",
+    "Délai de carence, en jours avant la fin du mois": "مهلة الاستحقاق، بالأيام قبل نهاية الشهر",
+    "Enregistrer les paramètres": "حفظ الإعدادات",
+    "Paramètres financiers": "الإعدادات المالية",
+    "Prix unitaire de l'action (CFA)": "سعر السهم الواحد (فرنك)",
+    "Radiation autorisée": "الشطب مسموح",
+    "Un achat effectué dans ces derniers jours ne compte pas pour le dividende du mois : il n'a rien financé. À 0, toute souscription du mois donne droit à la distribution.": "الشراء الذي يتم خلال هذه الأيام الأخيرة لا يُحتسب في أرباح الشهر: فهو لم يموّل شيئاً. وعند 0، يستحق أي اكتتاب في الشهر التوزيع.",
+    "Un changement de prix ne vaut que pour la suite : chaque achat déjà enregistré garde le prix auquel il a été conclu, et aucun historique n'est réécrit.": "تغيير السعر يسري على المستقبل فقط: يحتفظ كل شراء مسجّل بالسعر الذي أُبرم به، ولا يُعاد كتابة أي سجل.",
+    "Versement des bénéfices": "صرف الأرباح",
+    "Éligibilité aux dividendes": "استحقاق الأرباح",
+    "Éligible aux dividendes": "مستحق للأرباح"
 }

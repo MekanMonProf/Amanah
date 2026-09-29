@@ -73,16 +73,36 @@ class ParametresInitiauxSeeder extends Seeder
             . number_format(self::PRIX_ACTION, 0, ',', ' ') . ' CFA).');
     }
 
+    /**
+     * Le délai de carence, posé seulement s'il n'a jamais été réglé.
+     *
+     * La ligne de paramétrage n'est pas créée ici : la migration la pose déjà,
+     * avec un délai de zéro. Un firstOrCreate la trouvait donc toujours et
+     * n'écrivait rien — une installation neuve démarrait à zéro jour, où tout
+     * achat du mois ouvre droit à la distribution, y compris celui de la veille
+     * du versement.
+     *
+     * On ne peut pas distinguer un zéro voulu d'un zéro jamais touché en
+     * regardant la valeur seule. L'horodatage le dit : tant que la ligne n'a pas
+     * été modifiée depuis sa création, personne ne l'a réglée. Dès que
+     * l'écran de paramétrage l'enregistre, ce semeur n'y touche plus.
+     */
     private function parametresDividendes(): void
     {
-        // firstOrCreate et non updateOrCreate : sur une base déjà réglée, ce
-        // semeur ne doit pas ramener le délai à sa valeur d'origine.
-        ParametreDividende::firstOrCreate([], [
-            'delai_eligibilite_jours' => self::DELAI_ELIGIBILITE_JOURS,
-        ]);
+        $parametre = ParametreDividende::first();
+
+        if ($parametre === null) {
+            $parametre = ParametreDividende::create([
+                'delai_eligibilite_jours' => self::DELAI_ELIGIBILITE_JOURS,
+            ]);
+        } elseif ($parametre->created_at?->equalTo($parametre->updated_at)) {
+            $parametre->update(['delai_eligibilite_jours' => self::DELAI_ELIGIBILITE_JOURS]);
+        } else {
+            $this->command?->line('  Délai de carence déjà réglé — laissé tel quel.');
+        }
 
         $this->command?->line('  Délai de carence : '
-            . ParametreDividende::first()->delai_eligibilite_jours . ' jour(s).');
+            . $parametre->fresh()->delai_eligibilite_jours . ' jour(s).');
     }
 
     /**

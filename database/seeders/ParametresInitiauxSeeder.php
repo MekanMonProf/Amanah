@@ -64,7 +64,7 @@ class ParametresInitiauxSeeder extends Seeder
             'eligible_dividendes' => true,
             'versement_dividendes_possible' => false,
             'cession_autorisee' => false,
-            'versement_capital_radiation_possible' => true,
+            'versement_capital_radiation_possible' => false,
             'radiation_autorisee' => false,
             'prix_unitaire_action' => self::PRIX_ACTION,
         ]);

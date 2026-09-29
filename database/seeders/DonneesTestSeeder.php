@@ -28,7 +28,7 @@ class DonneesTestSeeder extends Seeder
             ['categorie' => 'waqf'],
             [
                 'eligible_dividendes' => true,
-                'versement_dividendes_possible' => false, 'versement_capital_radiation_possible' => true,
+                'versement_dividendes_possible' => false, 'versement_capital_radiation_possible' => false,
                 'cession_autorisee' => false, 'radiation_autorisee' => false, 'prix_unitaire_action' => 25000,
             ]
         );

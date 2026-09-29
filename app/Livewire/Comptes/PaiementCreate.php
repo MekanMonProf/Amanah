@@ -79,6 +79,15 @@ class PaiementCreate extends Component
 
     public function enregistrer(): void
     {
+        // Relu en base, et non repris de la propriete : $versementAutorise et
+        // $source sont deux proprietes Livewire, donc falsifiables. Sans cette
+        // relecture, il suffisait d'annoncer « source = radiation » pour sortir
+        // l'argent d'un compte dont la categorie l'interdit.
+        $politique = $this->compte->politique();
+        $this->versementAutorise = $this->source === 'radiation'
+            ? (bool) ($politique?->versement_capital_radiation_possible ?? true)
+            : (bool) ($politique?->versement_dividendes_possible ?? true);
+
         if (! $this->versementAutorise) {
             $this->addError('montant', __("Ce versement n'est pas autorisé pour cette catégorie de compte (voir la politique d'investissement)."));
             return;

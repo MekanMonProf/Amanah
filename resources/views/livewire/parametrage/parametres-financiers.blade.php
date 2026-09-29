@@ -60,9 +60,13 @@
                             <dt>{{ __("Radiation autorisée") }}</dt>
                             <dd class="font-medium text-gray-700">{{ $politique->radiation_autorisee ? __('Oui') : __('Non') }}</dd>
                         </div>
+                        <div class="flex justify-between border-b py-1">
+                            <dt>{{ __("Versement du capital radié") }}</dt>
+                            <dd class="font-medium text-gray-700">{{ $politique->versement_capital_radiation_possible ? __('Oui') : __('Non') }}</dd>
+                        </div>
                     </dl>
                     <p class="mt-2 text-xs text-gray-400">
-                        {{ __("Ces quatre règles tiennent à la nature du compte et ne se règlent pas ici.") }}
+                        {{ __("Ces cinq règles tiennent à la nature du compte et ne se règlent pas ici.") }}
                     </p>
                 </div>
             @endforeach

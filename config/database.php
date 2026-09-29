@@ -67,6 +67,31 @@ return [
             ]) : [],
         ],
 
+        /*
+         * L'ancienne application, en lecture seule.
+         *
+         * Sert uniquement a la commande de reprise : elle s'y connecte pour
+         * lire ce qui existe deja et l'ecrire dans la base d'AMANAH. Les deux
+         * bases restent separees et ne se melangent jamais.
+         *
+         * Sans ANCIENNE_DB_DATABASE renseigne, cette connexion n'existe que
+         * sur le papier et rien ne l'ouvre.
+         */
+        'ancienne' => [
+            'driver' => 'mysql',
+            'host' => env('ANCIENNE_DB_HOST', '127.0.0.1'),
+            'port' => env('ANCIENNE_DB_PORT', '3306'),
+            'database' => env('ANCIENNE_DB_DATABASE', ''),
+            'username' => env('ANCIENNE_DB_USERNAME', ''),
+            'password' => env('ANCIENNE_DB_PASSWORD', ''),
+            'charset' => env('ANCIENNE_DB_CHARSET', 'utf8mb4'),
+            'collation' => env('ANCIENNE_DB_COLLATION', 'utf8mb4_unicode_ci'),
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => false,
+            'engine' => null,
+        ],
+
         'mariadb' => [
             'driver' => 'mariadb',
             'url' => env('DB_URL'),

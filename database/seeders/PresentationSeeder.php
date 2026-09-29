@@ -203,7 +203,7 @@ class PresentationSeeder extends Seeder
     private function politiques(): void
     {
         PolitiqueInvestissement::updateOrCreate(['categorie' => 'commercial'], [
-            'eligible_dividendes' => true, 'reinvestissement_par_defaut' => true,
+            'eligible_dividendes' => true,
             'versement_dividendes_possible' => true, 'versement_capital_radiation_possible' => true,
             'cession_autorisee' => true, 'radiation_autorisee' => true, 'prix_unitaire_action' => 25000,
         ]);
@@ -211,7 +211,7 @@ class PresentationSeeder extends Seeder
         // Le waqf ne verse pas de dividendes et ne se cède pas : le capital est
         // immobilisé par nature. C'est la règle qui distingue les deux comptes.
         PolitiqueInvestissement::updateOrCreate(['categorie' => 'waqf'], [
-            'eligible_dividendes' => true, 'reinvestissement_par_defaut' => true,
+            'eligible_dividendes' => true,
             'versement_dividendes_possible' => false, 'versement_capital_radiation_possible' => true,
             'cession_autorisee' => false, 'radiation_autorisee' => true, 'prix_unitaire_action' => 25000,
         ]);

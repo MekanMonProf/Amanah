@@ -132,6 +132,38 @@ class Libelles
     }
 
     /**
+     * Le contenu d'une entree du journal, en une ligne lisible.
+     *
+     * Les ecrans de parametrage enregistrent des valeurs imbriquees : la liste
+     * des champs rendus obligatoires, le prix par categorie. L'export PDF les
+     * interpolait directement et imprimait le mot « Array » a la place du
+     * detail — soit exactement la ligne qu'un controleur vient y chercher.
+     */
+    public static function detailsAudit(mixed $donnees): string
+    {
+        if (blank($donnees)) {
+            return '';
+        }
+
+        return collect((array) $donnees)
+            ->map(fn ($valeur, $cle) => is_int($cle)
+                ? self::valeurAudit($valeur)
+                : $cle . ': ' . self::valeurAudit($valeur))
+            ->implode(' · ');
+    }
+
+    /** Une valeur seule : les listes sont mises a plat, les booleens dits en toutes lettres. */
+    private static function valeurAudit(mixed $valeur): string
+    {
+        return match (true) {
+            is_bool($valeur) => $valeur ? __('Oui') : __('Non'),
+            $valeur === null => '—',
+            is_array($valeur) => '[' . self::detailsAudit($valeur) . ']',
+            default => (string) $valeur,
+        };
+    }
+
+    /**
      * Une valeur inconnue — colonne enrichie plus tard, reprise d'un import —
      * est rendue lisible plutôt que masquée : mieux vaut « Nouveau type » à
      * l'écran qu'une case vide qui ferait croire à une donnée manquante.

@@ -47,9 +47,7 @@
                     <td>{{ \App\Support\Libelles::actionAudit($e->action) }}</td>
                     <td>{{ str_replace('_', ' ', $e->entite) }} @if($e->entite_id) #{{ $e->entite_id }} @endif</td>
                     <td>
-                        @if ($e->donnees_apres)
-                            {{ collect($e->donnees_apres)->map(fn($v, $k) => "$k: $v")->implode(' · ') }}
-                        @endif
+                        {{ \App\Support\Libelles::detailsAudit($e->donnees_apres) }}
                     </td>
                 </tr>
             @endforeach

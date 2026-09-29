@@ -52,7 +52,6 @@ class ParametresInitiauxSeeder extends Seeder
     {
         PolitiqueInvestissement::updateOrCreate(['categorie' => 'commercial'], [
             'eligible_dividendes' => true,
-            'reinvestissement_par_defaut' => true,
             'versement_dividendes_possible' => true,
             'versement_capital_radiation_possible' => true,
             'cession_autorisee' => true,
@@ -62,7 +61,6 @@ class ParametresInitiauxSeeder extends Seeder
 
         PolitiqueInvestissement::updateOrCreate(['categorie' => 'waqf'], [
             'eligible_dividendes' => true,
-            'reinvestissement_par_defaut' => true,
             'versement_dividendes_possible' => false,
             'cession_autorisee' => false,
             'versement_capital_radiation_possible' => true,

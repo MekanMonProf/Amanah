@@ -19,7 +19,7 @@ class DonneesTestSeeder extends Seeder
         PolitiqueInvestissement::updateOrCreate(
             ['categorie' => 'commercial'],
             [
-                'eligible_dividendes' => true, 'reinvestissement_par_defaut' => true,
+                'eligible_dividendes' => true,
                 'versement_dividendes_possible' => true, 'versement_capital_radiation_possible' => true,
                 'cession_autorisee' => true, 'radiation_autorisee' => true, 'prix_unitaire_action' => 25000,
             ]
@@ -27,7 +27,7 @@ class DonneesTestSeeder extends Seeder
         PolitiqueInvestissement::updateOrCreate(
             ['categorie' => 'waqf'],
             [
-                'eligible_dividendes' => true, 'reinvestissement_par_defaut' => true,
+                'eligible_dividendes' => true,
                 'versement_dividendes_possible' => false, 'versement_capital_radiation_possible' => true,
                 'cession_autorisee' => false, 'radiation_autorisee' => true, 'prix_unitaire_action' => 25000,
             ]

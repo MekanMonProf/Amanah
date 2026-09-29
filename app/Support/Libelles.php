@@ -52,6 +52,7 @@ class Libelles
         'modification' => 'Modification',
         'suppression' => 'Suppression',
         'import' => 'Import',
+        'reprise_ancienne_application' => "Reprise de l'ancienne application",
         'ajustement' => 'Ajustement',
         'paiement' => 'Paiement',
         'complement_financier' => 'Versement complémentaire',

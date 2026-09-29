@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Support\AncienneBase;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 use Throwable;
 
 /**
@@ -27,9 +27,6 @@ class InspecterAncienneBase extends Command
                             {--table= : Détailler une seule table}';
 
     protected $description = "Inventorie la structure de l'ancienne base, sans lire les données";
-
-    /** Les tables qui signent l'ancienne application. */
-    private const TEMOINS = ['utilisateurs', 'releves', 'antennes'];
 
     private string $connexion = 'ancienne';
 
@@ -62,56 +59,33 @@ class InspecterAncienneBase extends Command
         return self::SUCCESS;
     }
 
-    /**
-     * Ou sont les anciennes tables ?
-     *
-     * Deux cas, selon l'hebergement. Quand le forfait n'autorise qu'une seule
-     * base, AMANAH pose ses tables a cote de celles qui existaient deja : les
-     * anciennes sont alors dans la connexion ordinaire, et il n'y a rien a
-     * configurer. Quand deux bases sont possibles, ANCIENNE_DB_DATABASE dit ou
-     * chercher.
-     *
-     * On ne devine pas : on verifie que les tables temoins sont bien la, sinon
-     * on le dit plutot que d'inventorier la mauvaise base.
-     */
     private function choisirConnexion(): bool
     {
-        if (filled(config('database.connections.ancienne.database'))) {
-            $this->connexion = 'ancienne';
-            $this->line("Connexion : base separee « " . $this->base() . " ».");
+        $manquantes = [];
+        $connexion = AncienneBase::connexion($manquantes);
 
-            return true;
-        }
-
-        $this->connexion = config('database.default');
-
-        try {
-            $presentes = array_filter(self::TEMOINS, fn ($t) => Schema::connection($this->connexion)->hasTable($t));
-        } catch (Throwable $e) {
-            $this->error("Connexion impossible : " . $e->getMessage());
-
-            return false;
-        }
-
-        if ($presentes === []) {
-            $this->error("Aucune ancienne table trouvee.");
-            $this->line("Attendu dans la base « " . $this->base() . " » : " . implode(', ', self::TEMOINS) . ".");
+        if ($connexion === null) {
+            $this->error('Aucune ancienne table trouvee.');
+            $this->line('Attendu dans la base « ' . AncienneBase::base(AncienneBase::connexionEssayee())
+                . ' » : ' . implode(', ', $manquantes) . '.');
             $this->newLine();
             $this->line("Si l'ancienne application vit dans une AUTRE base, renseignez");
-            $this->line("ANCIENNE_DB_DATABASE, ANCIENNE_DB_USERNAME et ANCIENNE_DB_PASSWORD.");
+            $this->line('ANCIENNE_DB_DATABASE, ANCIENNE_DB_USERNAME et ANCIENNE_DB_PASSWORD.');
 
             return false;
         }
 
-        $this->line("Connexion : base partagee « " . $this->base() . " » ("
-            . count($presentes) . "/" . count(self::TEMOINS) . " tables temoins presentes).");
+        $this->connexion = $connexion;
+        $this->line(AncienneBase::estSeparee()
+            ? 'Connexion : base separee « ' . $this->base() . ' ».'
+            : 'Connexion : base partagee « ' . $this->base() . ' ».');
 
         return true;
     }
 
     private function base(): string
     {
-        return (string) config("database.connections.{$this->connexion}.database");
+        return AncienneBase::base($this->connexion);
     }
 
     /**

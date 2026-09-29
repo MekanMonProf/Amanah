@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Contracts\EnvoyeurSms;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -29,6 +30,22 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        /*
+         * Interdit en production les commandes qui vident la base.
+         *
+         * AMANAH partage sa base avec l'application qui existait avant elle :
+         * les deux jeux de tables cohabitent sans se chevaucher, mais
+         * `migrate:fresh`, `migrate:refresh`, `migrate:reset` et `db:wipe` ne
+         * font pas le tri — ils suppriment TOUTES les tables de la base, y
+         * compris les quatorze qui ne nous appartiennent pas.
+         *
+         * Une seule commande lancée par reflexe, et l'autre application n'a
+         * plus ni utilisateurs ni releves. La barriere coute une ligne ; la
+         * remise en etat coûterait une restauration de sauvegarde, en esperant
+         * qu'il y en ait une.
+         *
+         * En local, rien n'est bloque : c'est la que ces commandes servent.
+         */
+        DB::prohibitDestructiveCommands($this->app->isProduction());
     }
 }

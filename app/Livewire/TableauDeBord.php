@@ -41,6 +41,10 @@ class TableauDeBord extends Component
     protected function statsGlobales(): array
     {
         $nbInvestisseursActifs = Investisseur::where('statut', 'actif')->count();
+        // Le total accompagne l'effectif actif : « 367 » seul se lit comme le
+        // nombre d'investisseurs, et les inactifs disparaissent sans que rien
+        // ne le signale.
+        $nbInvestisseurs = Investisseur::count();
         $nbInvestisseursSansGestionnaire = Investisseur::whereNull('gestionnaire_id')->where('statut', 'actif')->count();
         $nbGestionnairesActifs = Gestionnaire::where('actif', true)->count();
         $nbDossiersIncomplets = Investisseur::where('statut', 'actif')->incomplets()->count();
@@ -82,6 +86,7 @@ class TableauDeBord extends Component
 
         return [
             'nbInvestisseursActifs' => $nbInvestisseursActifs,
+            'nbInvestisseurs' => $nbInvestisseurs,
             'nbInvestisseursSansGestionnaire' => $nbInvestisseursSansGestionnaire,
             'nbDossiersIncomplets' => $nbDossiersIncomplets,
             'nbGestionnairesActifs' => $nbGestionnairesActifs,

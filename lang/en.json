@@ -356,6 +356,7 @@
     "Investisseurs": "Investors",
     "investisseurs": "investors",
     "Investisseurs actifs": "Active investors",
+    "sur :total": "of :total",
     "Investisseurs récents": "Recent investors",
     "J'ai lu le tableau : importer les <strong>:valides</strong> ligne(s) valide(s) et ignorer les <strong>:erreurs</strong> ligne(s) en erreur.": "I have read the table: import the <strong>:valides</strong> valid row(s) and skip the <strong>:erreurs</strong> row(s) in error.",
     "Je confirme que ce décès est avéré et documenté, et je comprends que le compte sera immédiatement gelé.": "I confirm that this death is established and documented, and I understand that the account will be frozen immediately.",

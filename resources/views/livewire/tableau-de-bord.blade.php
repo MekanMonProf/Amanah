@@ -60,7 +60,14 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             <div class="bg-white border rounded-lg p-4">
                 <div class="text-xs text-gray-500 uppercase">{{ __("Investisseurs actifs") }}</div>
-                <div class="text-2xl font-semibold text-gray-800">{{ $nbInvestisseursActifs }}</div>
+                <div class="text-2xl font-semibold text-gray-800">
+                    {{ $nbInvestisseursActifs }}
+                    {{-- Le total n'apparait que s'il differe : sans inactif, « 37 sur 37 »
+                         n'apprendrait rien et alourdirait la tuile. --}}
+                    @if ($nbInvestisseurs > $nbInvestisseursActifs)
+                        <span class="text-base font-normal text-gray-500">{{ __("sur :total", ["total" => $nbInvestisseurs]) }}</span>
+                    @endif
+                </div>
                 @if ($nbInvestisseursSansGestionnaire > 0)
                     <div class="text-xs text-amber-600 mt-1">{{ __(":nombre sans gestionnaire", ["nombre" => $nbInvestisseursSansGestionnaire]) }}</div>
                 @endif

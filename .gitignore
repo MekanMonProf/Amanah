@@ -26,3 +26,6 @@ Thumbs.db
 # Donnees de langue Tesseract : trop lourdes pour le depot,
 # voir config/piece.php pour la commande de telechargement.
 /storage/app/tessdata
+
+# Archives et .env de production construits par deploiement/construire-archive.sh
+/deploiement/sortie

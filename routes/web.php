@@ -34,7 +34,9 @@ use App\Http\Controllers\ModeleImportController;
 use App\Livewire\Import\ImportIndex;
 use App\Livewire\Exports\ExportIndex;
 
-Route::view('/', 'welcome');
+// AMANAH n'a pas de page d'accueil à elle : la présentation est sur la vitrine,
+// waqfdolelxamxam.sn. Qui arrive ici vient se connecter.
+Route::redirect('/', '/login');
 
 Route::middleware(['auth'])->get('/mot-de-passe/changer-obligatoire', ChangerMotDePasseObligatoire::class)
     ->name('mot-de-passe.changer-obligatoire');

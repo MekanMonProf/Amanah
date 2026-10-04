@@ -12,6 +12,8 @@ class BaremeDividende extends Model
 
     protected $casts = [
         'periode' => 'date',
-        'benefice_par_action' => 'decimal:4',
+        // Huit décimales : le taux est un quotient (bénéfice de la période / actions
+        // en circulation), il tombe rarement rond — voir la migration du 04/10/2026.
+        'benefice_par_action' => 'decimal:8',
     ];
 }

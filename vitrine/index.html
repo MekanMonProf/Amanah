@@ -2,16 +2,16 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Waqf Dolel Xamxam</title>
-<meta name="description" content="Waqf Dolel Xamxam finance les daaras et l'éducation gratuite, des petites classes jusqu'au doctorat, grâce aux activités de sa filiale AND DOX. Actions Waqf, actions commerciales, offrandes à la mémoire d'un défunt.">
+<meta name="description" data-i18n-content="meta.description" content="Waqf Dolel Xamxam finance les daaras et l'éducation gratuite, des petites classes jusqu'au doctorat, grâce aux activités de sa filiale AND DOX. Actions Waqf, actions commerciales, offrandes à la mémoire d'un défunt.">
 <meta property="og:title" content="Waqf Dolel Xamxam">
 <meta property="og:description" content="Renforcer le savoir, pour aujourd'hui et pour toujours.">
 <meta property="og:image" content="images/logo-waqf.jpg">
 <link rel="icon" type="image/jpeg" href="images/logo-waqf.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Noto+Naskh+Arabic:wght@400;600;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
 <style>
   :root {
     --vert: #0e5e3f;
@@ -49,11 +49,16 @@
   .barre nav a.lien:hover { color: var(--vert); }
   .marque, .bouton { white-space: nowrap; }
   @media (max-width: 1060px) { .barre nav a.lien { display: none; } }
-  @media (max-width: 720px) { .barre .bouton.petit.second { display: none; } }
-  @media (max-width: 420px) {
-    .marque { font-size: .95rem; gap: 8px; }
-    .marque img { height: 38px; }
+  /* Sur téléphone, le nom s'efface derrière le logo pour laisser la place
+     aux deux espaces : l'ancienne application doit rester accessible. */
+  @media (max-width: 720px) {
+    .marque .nom { display: none; }
+    .barre nav { gap: 8px; }
     .barre .bouton.petit { padding: 7px 12px; font-size: .85rem; }
+  }
+  @media (max-width: 400px) {
+    .marque img { height: 36px; }
+    .barre .bouton.petit { padding: 6px 9px; font-size: .78rem; }
   }
 
   .bouton {
@@ -133,6 +138,41 @@
   .carte h3 { font-size: 1.25rem; color: var(--vert-fonce); margin-bottom: 8px; }
   .carte p { margin: 0; color: var(--gris); }
 
+  /* Feuille de route */
+  .route { background: linear-gradient(180deg, var(--creme) 0%, #eef5f1 100%); }
+  .etapes { list-style: none; margin: 0; padding: 0; display: grid; gap: 20px; position: relative; }
+  @media (min-width: 900px) { .etapes { grid-template-columns: 1fr 1.25fr 1fr; align-items: stretch; } }
+  .etape { position: relative; background: #fff; border: 1px solid var(--bord); border-radius: 18px; padding: 28px 24px 24px; }
+  .etape .numero {
+    width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center;
+    font-family: "Fraunces", serif; font-size: 1.3rem; font-weight: 600; color: #fff; background: var(--vert);
+    margin-bottom: 14px;
+  }
+  .etape .quand { font-size: .8rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--gris); }
+  .etape h3 { font-size: 1.3rem; color: var(--vert-fonce); margin: 6px 0 10px; }
+  .etape p { margin: 0 0 10px; color: var(--gris); }
+  .etape p:last-child { margin-bottom: 0; }
+  .etape.passee .numero { background: var(--vert-clair); color: var(--vert); }
+  .etape.avenir .numero { background: var(--or); color: var(--vert-fonce); }
+  .etape.encours { border: 2px solid var(--vert); box-shadow: 0 18px 40px rgba(14,94,63,.16); }
+  .ici {
+    position: absolute; top: -14px; right: 20px;
+    background: var(--vert); color: #fff; font-size: .78rem; font-weight: 600; letter-spacing: .04em;
+    padding: 5px 12px; border-radius: 999px; text-transform: uppercase;
+  }
+  .ici::before { content: "★ "; color: var(--or); }
+  .actionnariat { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0; }
+  .actionnariat span { background: var(--vert-clair); color: var(--vert-fonce); font-weight: 600; font-size: .88rem; padding: 6px 12px; border-radius: 10px; }
+  .actionnariat span.or { background: var(--or-clair); color: #7a5d12; }
+  .objectif { font-weight: 600; color: var(--vert-fonce); }
+  .flux { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px 14px; margin-top: 36px; }
+  .flux div { display: flex; align-items: center; gap: 10px; background: var(--vert-fonce); color: #fff; padding: 12px 18px; border-radius: 14px; }
+  .flux svg { width: 26px; height: 26px; flex: none; color: var(--or); }
+  .flux strong { display: block; font-family: "Fraunces", serif; font-weight: 600; }
+  .flux small { color: #c9d8cf; }
+  .flux .fleche { color: var(--vert); font-size: 1.4rem; font-weight: 600; }
+  @media (max-width: 640px) { .flux { flex-direction: column; } .flux div { width: 100%; } .flux .fleche { transform: rotate(90deg); } }
+
   /* Activités */
   .activites { background: #fff; border-bottom: 1px solid var(--bord); }
   .activites .carte { background: var(--creme); }
@@ -177,44 +217,105 @@
   .contact dd { margin: 0; color: var(--gris); overflow-wrap: anywhere; }
   footer { border-top: 1px solid var(--bord); padding: 32px 0; color: var(--gris); font-size: .95rem; }
   footer .conteneur { display: flex; flex-wrap: wrap; gap: 12px 24px; justify-content: space-between; align-items: center; }
+
+  /* Numéro de téléphone : ses groupes restent de gauche à droite, même en arabe */
+  .groupes { display: inline-flex; direction: ltr; gap: .3em; vertical-align: bottom; }
+
+  /* Choix de la langue */
+  .langues { display: inline-flex; border: 1px solid var(--bord); border-radius: 999px; padding: 3px; background: #fff; gap: 2px; }
+  .langues button {
+    border: 0; background: transparent; color: var(--gris); font: inherit; font-size: .85rem; font-weight: 600;
+    padding: 5px 10px; border-radius: 999px; cursor: pointer; line-height: 1.2;
+  }
+  .langues button[aria-pressed="true"] { background: var(--vert); color: #fff; }
+  .langues button[lang="ar"] { font-family: "Noto Naskh Arabic", serif; }
+  .mobile-langues { display: none; margin-bottom: 20px; }
+  @media (max-width: 720px) {
+    .entete-langues { display: none; }
+    .mobile-langues { display: inline-flex; }
+  }
+
+  /* Arabe : de droite à gauche */
+  html[dir="rtl"] body { font-family: "Noto Naskh Arabic", "Source Sans 3", system-ui, sans-serif; line-height: 1.8; }
+  html[dir="rtl"] h1, html[dir="rtl"] h2, html[dir="rtl"] h3, html[dir="rtl"] .mot strong, html[dir="rtl"] .parcours li strong,
+  html[dir="rtl"] .hadith blockquote, html[dir="rtl"] .flux strong, html[dir="rtl"] .sous-titre, html[dir="rtl"] .prix {
+    font-family: "Noto Naskh Arabic", "Fraunces", serif; line-height: 1.5;
+  }
+  html[dir="rtl"] .surtitre, html[dir="rtl"] .etiquette, html[dir="rtl"] .quand, html[dir="rtl"] .ici { letter-spacing: 0; }
+  html[dir="rtl"] .mot { border-left: 0; border-right: 4px solid var(--or); padding: 8px 20px 8px 0; }
+  html[dir="rtl"] .offre ul { padding-left: 0; padding-right: 20px; }
+  html[dir="rtl"] .ici { right: auto; left: 20px; }
+  html[dir="rtl"] .flux .fleche { transform: scaleX(-1); }
+  @media (max-width: 640px) { html[dir="rtl"] .flux .fleche { transform: rotate(90deg); } }
+  html[dir="rtl"] .hadith blockquote { font-size: clamp(1.35rem, 2.8vw, 1.8rem); }
+
+  /* Barre d'icônes en bas d'écran, sur téléphone */
+  .onglets { display: none; }
+  @media (max-width: 760px) {
+    body { padding-bottom: calc(64px + env(safe-area-inset-bottom)); }
+    section[id], .entete { scroll-margin-top: 72px; }
+    .onglets {
+      display: grid; grid-template-columns: repeat(5, 1fr);
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+      background: rgba(255,255,255,.97); backdrop-filter: blur(8px);
+      border-top: 1px solid var(--bord);
+      padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
+      box-shadow: 0 -6px 20px rgba(10,69,48,.08);
+    }
+    .onglets a {
+      display: flex; flex-direction: column; align-items: center; gap: 3px;
+      padding: 6px 2px; border-radius: 12px; text-decoration: none;
+      color: var(--gris); font-size: .72rem; font-weight: 600; line-height: 1.1;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .onglets a svg { width: 24px; height: 24px; }
+    .onglets a.actif { color: var(--vert); background: var(--vert-clair); }
+    .onglets a.espace { color: var(--vert-fonce); }
+  }
 </style>
 </head>
 <body>
 
 <header class="barre">
   <div class="conteneur">
-    <a class="marque" href="#">
-      <img src="images/logo-waqf.jpg" alt="">
-      Waqf Dolel Xamxam
+    <a class="marque" href="#accueil">
+      <img src="images/logo-waqf.jpg" alt="Waqf Dolel Xamxam">
+      <span class="nom">Waqf Dolel Xamxam</span>
     </a>
     <nav>
-      <a class="lien" href="#mission">Notre mission</a>
-      <a class="lien" href="#activites">Nos activités</a>
-      <a class="lien" href="#contribuer">Nos actions</a>
-      <a class="lien" href="#contact">Contact</a>
-      <a class="bouton contour petit" href="https://amanah.waqfdolelxamxam.sn/login">Espace AMANAH</a>
-      <a class="bouton plein petit second lien-actionnaire" href="https://waqfdolelxamxam.sn/login.php">Espace actionnaire</a>
+      <a class="lien" href="#mission" data-i18n="nav.mission">Notre mission</a>
+      <a class="lien" href="#activites" data-i18n="nav.activites">Nos activités</a>
+      <a class="lien" href="#contribuer" data-i18n="nav.actions">Nos actions</a>
+      <a class="lien" href="#contact" data-i18n="nav.contact">Contact</a>
+      <div class="langues entete-langues" role="group" aria-label="Langue" data-i18n-aria-label="langue.groupe">
+        <button type="button" data-lang="fr">FR</button><button type="button" data-lang="en">EN</button><button type="button" data-lang="ar" lang="ar">عربي</button>
+      </div>
+      <a class="bouton contour petit" href="https://amanah.waqfdolelxamxam.sn/login" data-i18n="btn.amanah">Espace AMANAH</a>
+      <a class="bouton plein petit second lien-actionnaire" href="https://waqfdolelxamxam.sn/login.php" data-i18n="btn.actionnaire">Espace actionnaire</a>
     </nav>
   </div>
 </header>
 
 <main>
 
-  <section class="entete">
+  <section class="entete" id="accueil">
     <div class="conteneur">
       <div>
+        <div class="langues mobile-langues" role="group" aria-label="Langue" data-i18n-aria-label="langue.groupe">
+          <button type="button" data-lang="fr">Français</button><button type="button" data-lang="en">English</button><button type="button" data-lang="ar" lang="ar">العربية</button>
+        </div>
         <div class="surtitre">Waqf Dolel Xamxam</div>
-        <h1>Renforcer le savoir,<em>pour aujourd'hui et pour toujours.</em></h1>
-        <p>Un waqf est un bien qu'on immobilise pour toujours au service du bien commun. Le capital confié n'est jamais dépensé : il est investi dans des activités qui rapportent, et ces revenus financent les daaras et l'éducation gratuite, des petites classes jusqu'au doctorat.</p>
+        <h1 data-i18n="hero.titre">Renforcer le savoir,<em>pour aujourd'hui et pour toujours.</em></h1>
+        <p data-i18n="hero.texte">Un waqf est un bien qu'on immobilise pour toujours au service du bien commun. Le capital confié n'est jamais dépensé : il est investi dans des activités qui rapportent, et ces revenus financent les daaras et l'éducation gratuite, des petites classes jusqu'au doctorat.</p>
         <div class="actions">
-          <a class="bouton plein" href="#contribuer">Devenir actionnaire</a>
-          <a class="bouton contour" href="#espaces">Accéder à mon espace →</a>
+          <a class="bouton plein" href="#contribuer" data-i18n="hero.cta">Devenir actionnaire</a>
+          <a class="bouton contour" href="#espaces" data-i18n="hero.espace">Accéder à mon espace →</a>
         </div>
       </div>
       <div class="embleme">
         <div class="cadre">
-          <img src="images/logo-waqf.jpg" width="165" height="200" alt="Logo du Waqf Dolel Xamxam : un arbre qui pousse d'un livre ouvert, sous une arche">
-          <p>Activités gérées par <img src="images/logo-anddox.png" width="480" height="338" alt="AND DOX"></p>
+          <img src="images/logo-waqf.jpg" width="165" height="200" data-i18n-alt="hero.logo" alt="Logo du Waqf Dolel Xamxam : un arbre qui pousse d'un livre ouvert, sous une arche">
+          <p><span data-i18n="hero.gere">Activités gérées par</span> <img src="images/logo-anddox.png" width="480" height="338" alt="AND DOX"></p>
         </div>
       </div>
     </div>
@@ -222,98 +323,147 @@
 
   <section class="mission" id="mission">
     <div class="conteneur">
-      <h2 class="titre-section">Notre nom, notre mission</h2>
+      <h2 class="titre-section" data-i18n="mission.titre">Notre nom, notre mission</h2>
       <div class="mots">
-        <div class="mot"><strong>Dolel</strong><span>renforcer, soutenir</span></div>
-        <div class="mot"><strong>Xamxam</strong><span>le savoir</span></div>
+        <div class="mot"><strong>Dolel</strong><span data-i18n="mission.dolel">renforcer, soutenir</span></div>
+        <div class="mot"><strong>Xamxam</strong><span data-i18n="mission.xamxam">le savoir</span></div>
       </div>
-      <p>Waqf Dolel Xamxam rassemble les contributions de ceux qui veulent que la connaissance se transmette au Sénégal et au-delà. Le capital confié n'est jamais dépensé : il est investi par AND DOX, filiale du Waqf, dans des activités qui génèrent des revenus. Ces revenus financent les daaras et l'éducation gratuite, à chaque étape du parcours.</p>
+      <p data-i18n="mission.texte">Waqf Dolel Xamxam rassemble les contributions de ceux qui veulent que la connaissance se transmette au Sénégal et au-delà. Le capital confié n'est jamais dépensé : il est investi par AND DOX, filiale du Waqf, dans des activités qui génèrent des revenus. Ces revenus financent les daaras et l'éducation gratuite, à chaque étape du parcours.</p>
       <ol class="parcours">
-        <li><strong>Daaras</strong><span>L'apprentissage du Coran et des sciences religieuses</span></li>
-        <li><strong>Petites classes</strong><span>Le préscolaire et l'élémentaire</span></li>
-        <li><strong>Collège et lycée</strong><span>Le moyen et le secondaire</span></li>
-        <li><strong>Université</strong><span>De la licence jusqu'au doctorat</span></li>
+        <li><strong data-i18n="parcours.daaras">Daaras</strong><span data-i18n="parcours.daaras.texte">L'apprentissage du Coran et des sciences religieuses</span></li>
+        <li><strong data-i18n="parcours.petites">Petites classes</strong><span data-i18n="parcours.petites.texte">Le préscolaire et l'élémentaire</span></li>
+        <li><strong data-i18n="parcours.secondaire">Collège et lycée</strong><span data-i18n="parcours.secondaire.texte">Le moyen et le secondaire</span></li>
+        <li><strong data-i18n="parcours.universite">Université</strong><span data-i18n="parcours.universite.texte">De la licence jusqu'au doctorat</span></li>
       </ol>
-      <p class="gratuit">Un enseignement gratuit, pour que le savoir ne dépende pas des moyens d'une famille.</p>
+      <p class="gratuit" data-i18n="mission.gratuit">Un enseignement gratuit, pour que le savoir ne dépende pas des moyens d'une famille.</p>
+    </div>
+  </section>
+
+  <section class="route" id="feuille-de-route">
+    <div class="conteneur">
+      <h2 class="titre-section" data-i18n="route.titre">Notre feuille de route</h2>
+      <p class="chapeau" data-i18n="route.chapeau">De la générosité d'aujourd'hui à l'éducation de demain, en trois étapes.</p>
+      <ol class="etapes">
+        <li class="etape passee">
+          <div class="numero" data-nombre="1">1</div>
+          <div class="quand" data-i18n="route.etape1">Étape 1</div>
+          <h3 data-i18n="route.e1.titre">Sensibilisation au waqf</h3>
+          <p data-i18n="route.e1.texte">Encourager chacun à contribuer au waqf : un acte de générosité durable, qui profite à la communauté sur le long terme.</p>
+        </li>
+        <li class="etape encours">
+          <span class="ici" data-i18n="route.ici">Nous sommes ici</span>
+          <div class="numero" data-nombre="2">2</div>
+          <div class="quand" data-i18n="route.etape2">Étape 2</div>
+          <h3 data-i18n="route.e2.titre">Création et croissance du capital</h3>
+          <p data-i18n="route.e2.texte">Constituer un capital à partir des fonds du waqf et créer la société AND DOX, dans laquelle les investisseurs participent au capital.</p>
+          <div class="actionnariat">
+            <span data-i18n="route.e2.waqf">Le Waqf, premier actionnaire</span>
+            <span class="or" data-i18n="route.e2.autres">Actionnaires et investisseurs</span>
+          </div>
+          <p class="objectif" data-i18n="route.e2.objectif">Objectif : développer ce capital jusqu'à plusieurs milliards de FCFA.</p>
+        </li>
+        <li class="etape avenir">
+          <div class="numero" data-nombre="3">3</div>
+          <div class="quand" data-i18n="route.etape3">Étape 3</div>
+          <h3 data-i18n="route.e3.titre">Construction d'écoles</h3>
+          <p data-i18n="route.e3.texte">Consacrer une partie des bénéfices que le Waqf reçoit d'AND DOX à construire et développer des écoles, et à offrir un enseignement de qualité.</p>
+        </li>
+      </ol>
+      <div class="flux" data-i18n-aria-label="route.flux" aria-label="Waqf, puis investissement, puis éducation">
+        <div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21V11"/><path d="M12 11c0-4 3-7 8-7 0 5-3 7-8 7z"/><path d="M12 14c0-3-2.5-6-7-6 0 4 2.5 6 7 6z"/></svg>
+          <span><strong data-i18n="flux.waqf">Waqf</strong><small data-i18n="flux.waqf.texte">Impact durable</small></span>
+        </div>
+        <span class="fleche" aria-hidden="true">→</span>
+        <div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>
+          <span><strong data-i18n="flux.invest">Investissement</strong><small data-i18n="flux.invest.texte">Croissance du capital</small></span>
+        </div>
+        <span class="fleche" aria-hidden="true">→</span>
+        <div>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/></svg>
+          <span><strong data-i18n="flux.education">Éducation</strong><small data-i18n="flux.education.texte">Un avenir meilleur</small></span>
+        </div>
+      </div>
     </div>
   </section>
 
   <section class="activites" id="activites">
     <div class="conteneur">
-      <h2 class="titre-section">Un capital qui travaille</h2>
+      <h2 class="titre-section" data-i18n="activites.titre">Un capital qui travaille</h2>
       <div class="gere-par">
         <img src="images/logo-anddox.png" width="480" height="338" alt="AND DOX">
-        <p>AND DOX, filiale du Waqf, gère les activités dans lesquelles le capital est investi. Ce sont des projets concrets, qui génèrent des revenus ici, au Sénégal.</p>
+        <p data-i18n="activites.gere">AND DOX, filiale du Waqf, gère les activités dans lesquelles le capital est investi. Ce sont des projets concrets, qui génèrent des revenus ici, au Sénégal.</p>
       </div>
-      <div class="sous-titre">Aujourd'hui <span class="etiquette waqf">En activité</span></div>
+      <div class="sous-titre"><span data-i18n="activites.aujourdhui">Aujourd'hui</span> <span class="etiquette waqf" data-i18n="activites.enactivite">En activité</span></div>
       <div class="cartes">
         <article class="carte">
           <div class="pastille" aria-hidden="true">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M3 10h18"/><circle cx="7.5" cy="19" r="1.5"/><circle cx="16.5" cy="19" r="1.5"/></svg>
           </div>
-          <h3>Transport</h3>
-          <p>Des véhicules mis en service pour transporter personnes et marchandises.</p>
+          <h3 data-i18n="act.transport">Transport</h3>
+          <p data-i18n="act.transport.texte">Des véhicules mis en service pour transporter personnes et marchandises.</p>
         </article>
         <article class="carte">
           <div class="pastille" aria-hidden="true">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="17" r="3.5"/><circle cx="18.5" cy="17" r="3.5"/><path d="M5.5 17l4-7h5l4 7"/><path d="M14 6h3l1.5 4"/></svg>
           </div>
-          <h3>Vente de motos</h3>
-          <p>La vente de motos, un outil de travail et de mobilité pour beaucoup.</p>
+          <h3 data-i18n="act.motos">Vente de motos</h3>
+          <p data-i18n="act.motos.texte">La vente de motos, un outil de travail et de mobilité pour beaucoup.</p>
         </article>
         <article class="carte">
           <div class="pastille" aria-hidden="true">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V11"/><path d="M12 11c0-4 3-7 8-7 0 5-3 7-8 7z"/><path d="M12 14c0-3-2.5-6-7-6 0 4 2.5 6 7 6z"/><path d="M4 21h16"/></svg>
           </div>
-          <h3>Agrobusiness</h3>
-          <p>Des projets agricoles qui produisent, nourrissent et génèrent des revenus.</p>
+          <h3 data-i18n="act.agro">Agrobusiness</h3>
+          <p data-i18n="act.agro.texte">Des projets agricoles qui produisent, nourrissent et génèrent des revenus.</p>
         </article>
       </div>
 
-      <div class="sous-titre">Demain <span class="etiquette commerciale">En développement</span></div>
-      <p class="chapeau">D'autres secteurs porteurs, choisis pour leurs revenus durables et conformes à l'éthique du waqf, viendront élargir le financement des daaras et de l'éducation gratuite.</p>
+      <div class="sous-titre"><span data-i18n="activites.demain">Demain</span> <span class="etiquette commerciale" data-i18n="activites.endeveloppement">En développement</span></div>
+      <p class="chapeau" data-i18n="activites.demain.texte">D'autres secteurs porteurs, choisis pour leurs revenus durables et conformes à l'éthique du waqf, viendront élargir le financement des daaras et de l'éducation gratuite.</p>
       <div class="cartes compactes">
         <article class="carte">
           <div class="pastille" aria-hidden="true">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/></svg>
           </div>
-          <h3>Immobilier locatif</h3>
-          <p>Logements, bureaux et locaux commerciaux qui procurent des loyers réguliers.</p>
+          <h3 data-i18n="act.immobilier">Immobilier locatif</h3>
+          <p data-i18n="act.immobilier.texte">Logements, bureaux et locaux commerciaux qui procurent des loyers réguliers.</p>
         </article>
         <article class="carte">
           <div class="pastille" aria-hidden="true">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18c0-4 3-7 7-7h2c4 0 7 3 7 7"/><circle cx="12" cy="6" r="3"/><path d="M4 18h16v3H4z"/></svg>
           </div>
-          <h3>Élevage</h3>
-          <p>Aviculture, embouche bovine et ovine, notamment pour la Tabaski.</p>
+          <h3 data-i18n="act.elevage">Élevage</h3>
+          <p data-i18n="act.elevage.texte">Aviculture, embouche bovine et ovine, notamment pour la Tabaski.</p>
         </article>
         <article class="carte">
           <div class="pastille" aria-hidden="true">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h16l-1 11H5z"/><path d="M8 9V6a4 4 0 0 1 8 0v3"/></svg>
           </div>
-          <h3>Transformation agroalimentaire</h3>
-          <p>Céréales locales, jus, huiles et conditionnement des produits de nos champs.</p>
+          <h3 data-i18n="act.transformation">Transformation agroalimentaire</h3>
+          <p data-i18n="act.transformation.texte">Céréales locales, jus, huiles et conditionnement des produits de nos champs.</p>
         </article>
         <article class="carte">
           <div class="pastille" aria-hidden="true">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
           </div>
-          <h3>Énergie solaire</h3>
-          <p>Installation et vente de kits solaires pour les foyers, les commerces et les daaras.</p>
+          <h3 data-i18n="act.solaire">Énergie solaire</h3>
+          <p data-i18n="act.solaire.texte">Installation et vente de kits solaires pour les foyers, les commerces et les daaras.</p>
         </article>
         <article class="carte">
           <div class="pastille" aria-hidden="true">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1-5h16l1 5"/><path d="M4 9v11h16V9"/><path d="M3 9h18"/><path d="M10 20v-5h4v5"/></svg>
           </div>
-          <h3>Commerce et distribution</h3>
-          <p>Approvisionnement en produits de première nécessité à prix justes.</p>
+          <h3 data-i18n="act.commerce">Commerce et distribution</h3>
+          <p data-i18n="act.commerce.texte">Approvisionnement en produits de première nécessité à prix justes.</p>
         </article>
         <article class="carte">
           <div class="pastille" aria-hidden="true">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/></svg>
           </div>
-          <h3>Édition et fournitures scolaires</h3>
-          <p>Manuels, Corans et fournitures, au service des élèves comme des revenus du Waqf.</p>
+          <h3 data-i18n="act.edition">Édition et fournitures scolaires</h3>
+          <p data-i18n="act.edition.texte">Manuels, Corans et fournitures, au service des élèves comme des revenus du Waqf.</p>
         </article>
       </div>
     </div>
@@ -322,37 +472,37 @@
   <section class="hadith">
     <div class="conteneur">
       <blockquote>
-        « Lorsque l'homme meurt, ses œuvres s'interrompent, sauf trois : une aumône continue, une science dont on tire profit, ou un enfant vertueux qui invoque Allah pour lui. »
-        <cite>Rapporté par Muslim</cite>
+        <span data-i18n="hadith.texte">« Lorsque l'homme meurt, ses œuvres s'interrompent, sauf trois : une aumône continue, une science dont on tire profit, ou un enfant vertueux qui invoque Allah pour lui. »</span>
+        <cite data-i18n="hadith.source">Rapporté par Muslim</cite>
       </blockquote>
-      <p class="lien-hadith">Le Waqf Dolel Xamxam réunit deux de ces trois œuvres : une aumône qui dure et un savoir qui profite.</p>
+      <p class="lien-hadith" data-i18n="hadith.lien">Le Waqf Dolel Xamxam réunit deux de ces trois œuvres : une aumône qui dure et un savoir qui profite.</p>
     </div>
   </section>
 
   <section id="fonctionnement">
     <div class="conteneur">
-      <h2 class="titre-section">Comment fonctionne le Waqf</h2>
+      <h2 class="titre-section" data-i18n="fonct.titre">Comment fonctionne le Waqf</h2>
       <div class="cartes">
         <article class="carte">
           <div class="pastille" aria-hidden="true">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
           </div>
-          <h3>Le capital est préservé</h3>
-          <p>Une action Waqf ne peut être ni cédée, ni radiée, ni retirée. Elle est donnée pour toujours, et son capital est investi, jamais dépensé.</p>
+          <h3 data-i18n="fonct.preserve">Le capital est préservé</h3>
+          <p data-i18n="fonct.preserve.texte">Une action Waqf ne peut être ni cédée, ni radiée, ni retirée. Elle est donnée pour toujours, et son capital est investi, jamais dépensé.</p>
         </article>
         <article class="carte">
           <div class="pastille" aria-hidden="true">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10"/><path d="M12 10c0-4 3-6 7-6 0 4-3 6-7 6z"/><path d="M12 13c0-3-2.5-5-6-5 0 3 2.5 5 6 5z"/></svg>
           </div>
-          <h3>Les revenus servent la cause</h3>
-          <p>Pour les actions Waqf, ce que rapportent les activités ne revient pas au donateur : cela finance la mission.</p>
+          <h3 data-i18n="fonct.revenus">Les revenus servent la cause</h3>
+          <p data-i18n="fonct.revenus.texte">Pour les actions Waqf, ce que rapportent les activités ne revient pas au donateur : cela finance la mission.</p>
         </article>
         <article class="carte">
           <div class="pastille" aria-hidden="true">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 15l2 2 4-4"/></svg>
           </div>
-          <h3>Tout est tracé</h3>
-          <p>Chaque contributeur reçoit une attestation et peut suivre son compte en ligne dans son espace personnel.</p>
+          <h3 data-i18n="fonct.trace">Tout est tracé</h3>
+          <p data-i18n="fonct.trace.texte">Chaque contributeur reçoit une attestation et peut suivre son compte en ligne dans son espace personnel.</p>
         </article>
       </div>
     </div>
@@ -360,36 +510,36 @@
 
   <section class="contribuer" id="contribuer">
     <div class="conteneur">
-      <h2 class="titre-section">Devenir actionnaire</h2>
-      <p class="chapeau">Les deux types d'actions financent les mêmes activités, au même prix. Ce qui change, c'est ce que vous en attendez. Vous pouvez en prendre une seule ou plusieurs, en une fois ou au fil du temps.</p>
+      <h2 class="titre-section" data-i18n="contrib.titre">Devenir actionnaire</h2>
+      <p class="chapeau" data-i18n="contrib.chapeau">Les deux types d'actions financent les mêmes activités, au même prix. Ce qui change, c'est ce que vous en attendez. Vous pouvez en prendre une seule ou plusieurs, en une fois ou au fil du temps.</p>
       <div class="offres">
         <article class="offre">
-          <span class="etiquette waqf">Action Waqf</span>
-          <h3>Donner pour toujours</h3>
-          <div class="prix">25 000 <small>FCFA l'action</small></div>
+          <span class="etiquette waqf" data-i18n="contrib.waqf">Action Waqf</span>
+          <h3 data-i18n="contrib.waqf.titre">Donner pour toujours</h3>
+          <div class="prix"><span data-nombre="25000">25 000</span> <small data-i18n="contrib.prix">FCFA l'action</small></div>
           <ul>
-            <li>L'action est donnée au Waqf, définitivement.</li>
-            <li>Les revenus qu'elle produit financent la mission, sans retour vers le donateur.</li>
-            <li>C'est une aumône continue, qui œuvre après vous.</li>
+            <li data-i18n="contrib.waqf.1">L'action est donnée au Waqf, définitivement.</li>
+            <li data-i18n="contrib.waqf.2">Les revenus qu'elle produit financent la mission, sans retour vers le donateur.</li>
+            <li data-i18n="contrib.waqf.3">C'est une aumône continue, qui œuvre après vous.</li>
           </ul>
         </article>
         <article class="offre">
-          <span class="etiquette commerciale">Action commerciale</span>
-          <h3>Investir et percevoir des dividendes</h3>
-          <div class="prix">25 000 <small>FCFA l'action</small></div>
+          <span class="etiquette commerciale" data-i18n="contrib.comm">Action commerciale</span>
+          <h3 data-i18n="contrib.comm.titre">Investir et percevoir des dividendes</h3>
+          <div class="prix"><span data-nombre="25000">25 000</span> <small data-i18n="contrib.prix">FCFA l'action</small></div>
           <ul>
-            <li>Vous recevez votre part des bénéfices, sous forme de dividendes.</li>
-            <li>Vos actions peuvent être cédées ou radiées, selon les conditions en vigueur.</li>
-            <li>Vous suivez vos dividendes et votre solde dans votre espace.</li>
+            <li data-i18n="contrib.comm.1">Vous recevez votre part des bénéfices, sous forme de dividendes.</li>
+            <li data-i18n="contrib.comm.2">Vos actions peuvent être cédées ou radiées, selon les conditions en vigueur.</li>
+            <li data-i18n="contrib.comm.3">Vous suivez vos dividendes et votre solde dans votre espace.</li>
           </ul>
-          <p class="avertissement">Les dividendes dépendent des résultats des activités et ne sont pas garantis.</p>
+          <p class="avertissement" data-i18n="contrib.avertissement">Les dividendes dépendent des résultats des activités et ne sont pas garantis.</p>
         </article>
       </div>
       <div class="offrande">
-        <h3>Offrir à la mémoire d'un défunt</h3>
-        <p>Vous pouvez dédier des actions Waqf à un proche disparu. Le nom du défunt figure sur l'attestation d'offrande, et le bien continue d'œuvrer en son nom.</p>
+        <h3 data-i18n="contrib.offrande">Offrir à la mémoire d'un défunt</h3>
+        <p data-i18n="contrib.offrande.texte">Vous pouvez dédier des actions Waqf à un proche disparu. Le nom du défunt figure sur l'attestation d'offrande, et le bien continue d'œuvrer en son nom.</p>
       </div>
-      <p class="paiement"><strong>Moyens de paiement :</strong> Wave, Orange Money, Western Union.</p>
+      <p class="paiement" data-i18n="contrib.paiement"><strong>Moyens de paiement :</strong> Wave, Orange Money, Western Union.</p>
     </div>
   </section>
 
@@ -397,12 +547,12 @@
     <div class="conteneur">
       <div class="boite">
         <div>
-          <h2>Votre espace en ligne</h2>
-          <p>Vous êtes déjà actionnaire ou contributeur ? Votre espace vous montre vos actions, l'historique de votre compte, vos relevés et vos attestations, accessibles à tout moment.</p>
+          <h2 data-i18n="espace.titre">Votre espace en ligne</h2>
+          <p data-i18n="espace.texte">Vous êtes déjà actionnaire ou contributeur ? Votre espace vous montre vos actions, l'historique de votre compte, vos relevés et vos attestations, accessibles à tout moment.</p>
         </div>
         <div class="boutons">
-          <a class="bouton or" href="https://amanah.waqfdolelxamxam.sn/login">Espace AMANAH →</a>
-          <a class="bouton blanc lien-actionnaire" href="https://waqfdolelxamxam.sn/login.php">Espace actionnaire →</a>
+          <a class="bouton or" href="https://amanah.waqfdolelxamxam.sn/login" data-i18n="espace.amanah">Espace AMANAH →</a>
+          <a class="bouton blanc lien-actionnaire" href="https://waqfdolelxamxam.sn/login.php" data-i18n="espace.actionnaire">Espace actionnaire →</a>
         </div>
       </div>
     </div>
@@ -410,11 +560,11 @@
 
   <section class="contact" id="contact">
     <div class="conteneur">
-      <h2 class="titre-section">Contact</h2>
+      <h2 class="titre-section" data-i18n="contact.titre">Contact</h2>
       <dl>
-        <dt>Téléphone / WhatsApp</dt><dd><a href="tel:+221781274476">+221 78 127 44 76</a> · <a href="https://wa.me/221781274476">Écrire sur WhatsApp</a></dd>
-        <dt>E-mail</dt><dd><a href="mailto:secretariatwaqf.andedox@gmail.com">secretariatwaqf.andedox@gmail.com</a></dd>
-        <dt>Adresse</dt><dd>Dakar, Sénégal</dd>
+        <dt data-i18n="contact.tel">Téléphone / WhatsApp</dt><dd><a href="tel:+221781274476" dir="ltr" data-chiffres>+221 78 127 44 76</a> · <a href="https://wa.me/221781274476" data-i18n="contact.whatsapp">Écrire sur WhatsApp</a></dd>
+        <dt data-i18n="contact.email">E-mail</dt><dd><a dir="ltr" href="mailto:secretariatwaqf.andedox@gmail.com">secretariatwaqf.andedox@gmail.com</a></dd>
+        <dt data-i18n="contact.adresse">Adresse</dt><dd data-i18n="contact.ville">Dakar, Sénégal</dd>
       </dl>
     </div>
   </section>
@@ -427,12 +577,53 @@
       <img src="images/logo-waqf.jpg" width="165" height="200" alt="Waqf Dolel Xamxam">
       <img src="images/logo-anddox.png" width="480" height="338" alt="AND DOX">
     </div>
-    <span>© <span id="annee">2026</span> Waqf Dolel Xamxam · AND DOX, filiale du Waqf Dolel Xamxam</span>
+    <span>© <span id="annee" data-nombre="2026" data-sans-separateur>2026</span> Waqf Dolel Xamxam · <span data-i18n="pied.filiale">AND DOX, filiale du Waqf Dolel Xamxam</span></span>
+    <div class="langues" role="group" aria-label="Langue" data-i18n-aria-label="langue.groupe">
+      <button type="button" data-lang="fr">Français</button><button type="button" data-lang="en">English</button><button type="button" data-lang="ar" lang="ar">العربية</button>
+    </div>
   </div>
 </footer>
 
+<nav class="onglets" aria-label="Navigation">
+  <a href="#accueil" data-section="accueil">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></svg>
+    <span data-i18n="onglet.accueil">Accueil</span>
+  </a>
+  <a href="#activites" data-section="activites">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21V11"/><path d="M12 11c0-4 3-7 8-7 0 5-3 7-8 7z"/><path d="M12 14c0-3-2.5-6-7-6 0 4 2.5 6 7 6z"/><path d="M4 21h16"/></svg>
+    <span data-i18n="onglet.activites">Activités</span>
+  </a>
+  <a href="#contribuer" data-section="contribuer">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v10"/><path d="M15 9.5c0-1.4-1.3-2.2-3-2.2s-3 .8-3 2.2 1.3 1.9 3 2.3 3 .9 3 2.3-1.3 2.2-3 2.2-3-.8-3-2.2"/></svg>
+    <span data-i18n="onglet.actions">Actions</span>
+  </a>
+  <a href="#contact" data-section="contact">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>
+    <span data-i18n="onglet.contact">Contact</span>
+  </a>
+  <a href="#espaces" data-section="espaces" class="espace">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+    <span data-i18n="onglet.espace">Mon espace</span>
+  </a>
+</nav>
+
+<script src="traductions.js?v=3"></script>
 <script>
-  document.getElementById('annee').textContent = new Date().getFullYear();
+  // Allume l'icône de la section affichée à l'écran.
+  (function () {
+    var liens = document.querySelectorAll('.onglets a');
+    if (!('IntersectionObserver' in window) || !liens.length) { return; }
+    var observateur = new IntersectionObserver(function (entrees) {
+      entrees.forEach(function (entree) {
+        if (!entree.isIntersecting) { return; }
+        liens.forEach(function (a) { a.classList.toggle('actif', a.dataset.section === entree.target.id); });
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    ['accueil', 'activites', 'contribuer', 'espaces', 'contact'].forEach(function (id) {
+      var section = document.getElementById(id);
+      if (section) { observateur.observe(section); }
+    });
+  })();
 </script>
 </body>
 </html>

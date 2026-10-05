@@ -32,12 +32,17 @@ class DividendeCalcul extends Component
     public int $delaiEligibiliteJours = 0;
     public bool $modifierDelai = false;
 
+    public int $delaiRadiationJours = 31;
+    public bool $modifierDelaiRadiation = false;
+
     public function mount(): void
     {
         $this->periode = now()->subMonthNoOverflow()->startOfMonth()->toDateString();
         $this->chargerBaremesExistants();
         $this->chargerHistorique();
-        $this->delaiEligibiliteJours = \App\Models\ParametreDividende::actuel()->delai_eligibilite_jours;
+        $parametre = \App\Models\ParametreDividende::actuel();
+        $this->delaiEligibiliteJours = $parametre->delai_eligibilite_jours;
+        $this->delaiRadiationJours = $parametre->delai_radiation_jours;
     }
 
     public function enregistrerDelai(): void
@@ -48,6 +53,16 @@ class DividendeCalcul extends Component
         $this->modifierDelai = false;
 
         session()->flash('succes_parametre', __("Règle d'éligibilité mise à jour."));
+    }
+
+    public function enregistrerDelaiRadiation(): void
+    {
+        $this->validate(['delaiRadiationJours' => 'required|integer|min:0|max:31']);
+
+        \App\Models\ParametreDividende::actuel()->update(['delai_radiation_jours' => $this->delaiRadiationJours]);
+        $this->modifierDelaiRadiation = false;
+
+        session()->flash('succes_parametre', __('Règle de sortie mise à jour.'));
     }
 
     public function updatedPeriode(): void
@@ -115,7 +130,9 @@ class DividendeCalcul extends Component
         // Rattrapage : on rejoue TOUS les barèmes connus, du plus ancien au plus récent,
         // pour que l'ordre chronologique du solde reste cohérent (voir CompteInvestissement::solde()).
         $tousLesBaremes = BaremeDividende::orderBy('periode')->get();
-        $delaiJours = \App\Models\ParametreDividende::actuel()->delai_eligibilite_jours;
+        $parametre = \App\Models\ParametreDividende::actuel();
+        $delaiJours = $parametre->delai_eligibilite_jours;
+        $delaiRadiation = $parametre->delai_radiation_jours;
 
         $resultats = [
             'commercial' => ['nb_comptes' => 0, 'total_distribue' => 0, 'deja_traites' => 0],
@@ -154,7 +171,23 @@ class DividendeCalcul extends Component
                     continue;
                 }
 
-                $nombreActions = $compte->nombreActions();
+                // Règle de sortie : les actions radiées dans la fenêtre touchent encore le
+                // dividende du mois. nombreActions() les a déjà déduites — on les rend ici,
+                // sinon une radiation en cours de mois ferait perdre un mois déjà couru.
+                $actionsRadieesEncoreDues = 0;
+
+                if ($delaiRadiation > 0) {
+                    $finDeMois = $periodeBareme->copy()->endOfMonth();
+
+                    $actionsRadieesEncoreDues = (int) $compte->radiations()
+                        ->whereBetween('date_radiation', [
+                            $finDeMois->copy()->subDays($delaiRadiation - 1)->toDateString(),
+                            $finDeMois->toDateString(),
+                        ])
+                        ->sum('nombre_actions_radiees');
+                }
+
+                $nombreActions = $compte->nombreActions() + $actionsRadieesEncoreDues;
                 if ($nombreActions <= 0) {
                     continue;
                 }

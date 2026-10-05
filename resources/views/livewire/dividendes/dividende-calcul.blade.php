@@ -41,6 +41,42 @@
             </div>
             @error('delaiEligibiliteJours') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
         @endif
+
+        <div class="border-t mt-4 pt-4">
+            <div class="flex justify-between items-center">
+                <div>
+                    <div class="text-sm font-medium text-gray-700">{{ __('Règle de sortie en cours de mois') }}</div>
+                    @if (!$modifierDelaiRadiation)
+                        <p class="text-sm text-gray-500 mt-1">
+                            @if ($delaiRadiationJours === 0)
+                                {{ __("Une radiation prend effet immédiatement : les actions radiées ne touchent pas le dividende du mois.") }}
+                            @elseif ($delaiRadiationJours >= 31)
+                                {{ __("Une radiation effectuée en cours de mois, quel que soit le jour, laisse les actions toucher le dividende de ce mois.") }}
+                            @else
+                                {!! __("Une radiation effectuée dans les <strong>:jours derniers jours</strong> du mois laisse les actions toucher le dividende de ce mois.", ['jours' => $delaiRadiationJours]) !!}
+                            @endif
+                        </p>
+                    @endif
+                </div>
+                <button type="button" wire:click="$toggle('modifierDelaiRadiation')" class="text-sm text-emerald-700 hover:underline whitespace-nowrap">
+                    {{ $modifierDelaiRadiation ? __('Annuler') : __('Modifier') }}
+                </button>
+            </div>
+
+            @if ($modifierDelaiRadiation)
+                <div class="flex items-end gap-3 mt-3">
+                    <div>
+                        <label class="text-xs text-gray-500">{{ __('Nombre de jours avant la fin du mois') }}</label>
+                        <input type="number" min="0" max="31" wire:model="delaiRadiationJours" class="border rounded px-3 py-1.5 w-24">
+                    </div>
+                    <button type="button" wire:click="enregistrerDelaiRadiation" class="bg-emerald-700 text-white px-4 py-1.5 rounded-lg text-sm">
+                        {{ __('Enregistrer') }}
+                    </button>
+                </div>
+                <p class="text-xs text-gray-500 mt-2">{{ __("0 = effet immédiat. 31 = le mois entier, quel que soit le jour de la radiation.") }}</p>
+                @error('delaiRadiationJours') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+            @endif
+        </div>
     </div>
 
     <form wire:submit="calculerEtDistribuer" class="bg-white border rounded-lg p-5 shadow-sm space-y-4">

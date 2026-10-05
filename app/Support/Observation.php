@@ -49,6 +49,12 @@ class Observation
     // --- Dons ---
     public const DON_SORTANT = 'Don à :beneficiaire — :motif';
     public const DON_ENTRANT = 'Don reçu de :donateur — :motif';
+    /**
+     * L'actionnaire abandonne son solde à l'œuvre, qui l'emploie à son
+     * fonctionnement. Rien n'arrive sur un compte de placement en face : ce
+     * n'est pas un don entre comptes, c'est une sortie définitive.
+     */
+    public const DON_FONCTIONNEMENT_WAQF = 'Don au fonctionnement du Waqf — :periode';
 
     // --- Successions ---
     public const DON_SORTANT_DECES = 'Don sortant par décès — :defunt';
@@ -85,6 +91,7 @@ class Observation
             self::RADIATION_CAPITAL,
             self::DON_SORTANT,
             self::DON_ENTRANT,
+            self::DON_FONCTIONNEMENT_WAQF,
             self::DON_SORTANT_DECES,
             self::DON_ENTRANT_DECES,
             self::LIQUIDATION_SUCCESSION,

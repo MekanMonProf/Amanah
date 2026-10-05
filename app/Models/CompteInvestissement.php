@@ -83,6 +83,24 @@ class CompteInvestissement extends Model
     }
 
     /**
+     * Le même décompte, arrêté à une date : ce que le compte détenait ce jour-là.
+     *
+     * Indispensable dès qu'on calcule en arrière. Le dividende d'un mois ancien se
+     * calcule sur les actions de ce mois-là, pas sur celles d'aujourd'hui : sans
+     * cela, un compte dont le portefeuille a grossi depuis serait crédité sur son
+     * volume actuel, et un compte radié depuis ne toucherait rien.
+     */
+    public function nombreActionsAu(string $date): int
+    {
+        $achetees = $this->achats()->whereDate('date_achat', '<=', $date)->sum('nombre_actions');
+        $radiees = $this->radiations()->whereDate('date_radiation', '<=', $date)->sum('nombre_actions_radiees');
+        $donneesEnActions = $this->donsEmis()->where('type_don', 'actions')->whereDate('date_don', '<=', $date)->sum('nombre_actions');
+        $recuesEnActions = $this->donsRecus()->where('type_don', 'actions')->whereDate('date_don', '<=', $date)->sum('nombre_actions');
+
+        return (int) ($achetees - $radiees - $donneesEnActions + $recuesEnActions);
+    }
+
+    /**
      * Un dossier clos : le titulaire est décédé et sa succession a été réglée.
      *
      * Porter quoi que ce soit sur un tel compte rouvrirait un dossier soldé sans

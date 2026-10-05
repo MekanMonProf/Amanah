@@ -1,0 +1,8 @@
+# Les fichiers de travail de la reprise ne sont pas versionnés : le classeur porte
+# les noms, téléphones et numéros de pièce d'identité des actionnaires, et le grand
+# livre extrait leur situation financière mois par mois. Rien de tout cela n'a sa
+# place dans l'historique d'un dépôt, où il resterait pour toujours.
+*.xlsm
+*.xlsx
+*.csv
+*.json

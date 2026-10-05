@@ -101,6 +101,33 @@ class CompteInvestissement extends Model
     }
 
     /**
+     * Les actions qui ouvrent droit au dividende d'une période : celles détenues à la
+     * fin du mois, plus celles radiées à l'intérieur de la fenêtre de sortie.
+     *
+     * Une seule définition, parce qu'elle sert à deux endroits qui doivent dire la même
+     * chose : le calcul des dividendes, et le contrôle de cohérence qui le vérifie. Les
+     * laisser diverger ferait signaler comme anomalie ce que la règle autorise.
+     *
+     * @param  int  $delaiRadiationJours  voir ParametreDividende::delai_radiation_jours
+     */
+    public function actionsRetenuesPourDividende(\Illuminate\Support\Carbon $periode, int $delaiRadiationJours): int
+    {
+        $finDeMois = $periode->copy()->endOfMonth();
+        $retenues = $this->nombreActionsAu($finDeMois->toDateString());
+
+        if ($delaiRadiationJours > 0) {
+            $retenues += (int) $this->radiations()
+                ->whereBetween('date_radiation', [
+                    $finDeMois->copy()->subDays($delaiRadiationJours - 1)->toDateString(),
+                    $finDeMois->toDateString(),
+                ])
+                ->sum('nombre_actions_radiees');
+        }
+
+        return $retenues;
+    }
+
+    /**
      * Un dossier clos : le titulaire est décédé et sa succession a été réglée.
      *
      * Porter quoi que ce soit sur un tel compte rouvrirait un dossier soldé sans

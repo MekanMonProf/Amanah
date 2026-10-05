@@ -221,6 +221,12 @@ class VerifierCoherence extends Command
     {
         $anomalies = [];
 
+        // La règle de sortie fait partie de ce qui ouvre droit au dividende : un
+        // actionnaire sorti en cours de mois garde le mois quand elle le prévoit. Le
+        // contrôle lit donc le même paramètre que le calcul, sinon il signalerait
+        // comme anomalie ce que la maison a décidé.
+        $delaiRadiation = \App\Models\ParametreDividende::actuel()->delai_radiation_jours;
+
         foreach (Dividende::with('compte')->get() as $dividende) {
             $compte = $dividende->compte;
 
@@ -228,12 +234,7 @@ class VerifierCoherence extends Command
                 continue;
             }
 
-            $limite = $dividende->periode->copy()->endOfMonth();
-
-            $detenues = (int) $compte->achats()->whereDate('date_achat', '<=', $limite)->sum('nombre_actions')
-                - (int) $compte->radiations()->whereDate('date_radiation', '<', $limite)->sum('nombre_actions_radiees')
-                - (int) $compte->donsEmis()->where('type_don', 'actions')->whereDate('date_don', '<=', $limite)->sum('nombre_actions')
-                + (int) $compte->donsRecus()->where('type_don', 'actions')->whereDate('date_don', '<=', $limite)->sum('nombre_actions');
+            $detenues = $compte->actionsRetenuesPourDividende($dividende->periode, $delaiRadiation);
 
             if ((int) $dividende->nombre_actions > $detenues) {
                 $anomalies[] = "compte {$compte->id}, " . $dividende->periode->format('Y-m') . " : dividende sur {$dividende->nombre_actions} actions, {$detenues} détenue(s)";

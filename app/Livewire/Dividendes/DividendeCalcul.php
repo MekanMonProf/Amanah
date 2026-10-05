@@ -171,23 +171,9 @@ class DividendeCalcul extends Component
                     continue;
                 }
 
-                // Le dividende porte sur les actions détenues à la fin de la période, pas
-                // sur celles d'aujourd'hui : un barème fixé après coup ne doit pas créditer
-                // un compte sur un portefeuille constitué depuis.
-                $finDeMois = $periodeBareme->copy()->endOfMonth();
-                $nombreActions = $compte->nombreActionsAu($finDeMois->toDateString());
-
-                // Règle de sortie : les actions radiées dans la fenêtre touchent encore le
-                // dividende du mois. Le décompte ci-dessus les a déduites — on les rend ici,
-                // sinon une radiation en cours de mois ferait perdre un mois déjà couru.
-                if ($delaiRadiation > 0) {
-                    $nombreActions += (int) $compte->radiations()
-                        ->whereBetween('date_radiation', [
-                            $finDeMois->copy()->subDays($delaiRadiation - 1)->toDateString(),
-                            $finDeMois->toDateString(),
-                        ])
-                        ->sum('nombre_actions_radiees');
-                }
+                // Actions de la période, règle de sortie comprise — voir
+                // CompteInvestissement::actionsRetenuesPourDividende().
+                $nombreActions = $compte->actionsRetenuesPourDividende($periodeBareme, $delaiRadiation);
                 if ($nombreActions <= 0) {
                     continue;
                 }

@@ -1,17 +1,17 @@
 <div>
     @if (session('succes_financiers'))
-        <div class="mb-4 text-sm text-emerald-800 bg-emerald-50 border border-emerald-200 rounded-lg px-4 py-3">
+        <div class="mb-4 text-sm text-primaire-800 bg-primaire-50 border border-primaire-200 rounded-champ px-4 py-3">
             ✓ {{ session('succes_financiers') }}
         </div>
     @endif
 
     @if (session('info_financiers'))
-        <div class="mb-4 text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-lg px-4 py-3">
+        <div class="mb-4 text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-champ px-4 py-3">
             {{ session('info_financiers') }}
         </div>
     @endif
 
-    <form wire:submit="enregistrer" class="bg-white border rounded-lg shadow-sm">
+    <form wire:submit="enregistrer" class="bg-white border rounded-carte">
         <div class="p-5 border-b">
             <h2 class="font-semibold text-gray-800">{{ __("Paramètres financiers") }}</h2>
             <p class="mt-1 text-sm text-gray-500">
@@ -21,7 +21,7 @@
 
         <div class="p-5 space-y-5">
             @foreach ($politiques as $politique)
-                <div class="border rounded-lg p-4">
+                <div class="border rounded-champ p-4">
                     <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
                         <h3 class="font-medium text-gray-800">
                             {{ __("Compte :categorie", ['categorie' => __(\App\Support\Libelles::categorie($politique->categorie))]) }}
@@ -71,7 +71,7 @@
                 </div>
             @endforeach
 
-            <div class="border rounded-lg p-4">
+            <div class="border rounded-champ p-4">
                 <h3 class="font-medium text-gray-800 mb-3">{{ __("Éligibilité aux dividendes") }}</h3>
 
                 <label class="text-sm text-gray-600" for="delai">{{ __("Délai de carence, en jours avant la fin du mois") }}</label>
@@ -86,7 +86,7 @@
         </div>
 
         <div class="p-5 border-t">
-            <button type="submit" class="text-sm text-white bg-emerald-600 rounded-lg px-4 py-2 hover:bg-emerald-700">
+            <button type="submit" class="text-sm text-white bg-primaire-600 rounded-champ px-4 py-2 hover:bg-primaire-700">
                 {{ __("Enregistrer les paramètres") }}
             </button>
         </div>

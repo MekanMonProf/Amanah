@@ -25,7 +25,7 @@
 
     <div class="flex items-center gap-3">
         <label for="{{ $identifiant }}"
-               class="cursor-pointer text-sm text-gray-700 border border-gray-300 rounded-lg px-4 py-2 hover:bg-gray-50 whitespace-nowrap">
+               class="cursor-pointer text-sm text-gray-700 border border-gray-300 rounded-champ px-4 py-2 hover:bg-gray-50 whitespace-nowrap">
             {{ __("Choisir un fichier") }}
         </label>
         <span class="text-sm text-gray-500 truncate" x-text="nom || aucun"></span>

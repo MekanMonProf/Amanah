@@ -71,13 +71,13 @@
                                 <div class="text-xs text-gray-400"><bdi>{{ $ecriture->observation_affichee }}</bdi></div>
                             @endif
                         </td>                        
-                        <td class="py-1 text-end {{ $ecriture->montant >= 0 ? 'text-emerald-700' : 'text-red-600' }}">
+                        <td class="py-1 text-end {{ $ecriture->montant >= 0 ? 'text-primaire-700' : 'text-red-600' }}">
                             {{ $ecriture->montant >= 0 ? '+' : '' }}{{ \App\Support\Montant::format($ecriture->montant) }}
                         </td>
                         <td class="py-1 text-end text-gray-500">{{ \App\Support\Montant::format($ecriture->solde_apres) }}</td>
                         <td class="py-1 text-end">
                             @if ($ecriture->piece_justificative_path)
-                                <a href="{{ \App\Support\Document::lien($ecriture, 'piece_justificative_path') }}" target="_blank" class="text-emerald-700 hover:underline text-xs">
+                                <a href="{{ \App\Support\Document::lien($ecriture, 'piece_justificative_path') }}" target="_blank" class="text-primaire-700 hover:underline text-xs">
                                     {{ __("Justificatif →") }}
                                 </a>
                             @endif
@@ -99,7 +99,7 @@
                             @php($lienRecu = \App\Support\Recu::lienWhatsapp($ecriture))
                             @if ($lienRecu)
                                 <a href="{{ $lienRecu }}" target="_blank" rel="noopener noreferrer"
-                                   class="ms-2 text-emerald-700 hover:underline text-xs"
+                                   class="ms-2 text-primaire-700 hover:underline text-xs"
                                    title="{{ __('Ouvre WhatsApp avec le message et le lien du reçu déjà écrits') }}">{{ __("Envoyer") }}</a>
                             @endif
                         </td>

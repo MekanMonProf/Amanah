@@ -1,16 +1,17 @@
 <div class="p-4 sm:p-6">
     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-1">
         <div>
-            <h1 class="text-xl sm:text-2xl font-semibold text-gray-800">{{ __("Journal d'audit") }}</h1>
+            <x-surtitre>{{ __('Administration') }}</x-surtitre>
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">{{ __("Journal d'audit") }}</h1>
             <p class="text-sm text-gray-500">{{ __("Historique des actions sensibles effectuées sur la plateforme.") }}</p>
         </div>
         <div class="flex gap-2 whitespace-nowrap">
             <a href="{{ route('export.audit.csv', ['recherche' => $recherche, 'action' => $filtreAction, 'entite' => $filtreEntite, 'date_debut' => $dateDebut, 'date_fin' => $dateFin]) }}"
-               target="_blank" class="text-sm text-gray-700 border border-gray-300 rounded-lg px-4 py-2 hover:bg-gray-50">
+               target="_blank" class="text-sm text-gray-700 border border-gray-300 rounded-champ px-4 py-2 hover:bg-gray-50">
                 {{ __("Exporter CSV") }}
             </a>
             <a href="{{ route('export.audit.pdf', ['recherche' => $recherche, 'action' => $filtreAction, 'entite' => $filtreEntite, 'date_debut' => $dateDebut, 'date_fin' => $dateFin]) }}"
-               target="_blank" class="text-sm text-gray-700 border border-gray-300 rounded-lg px-4 py-2 hover:bg-gray-50">
+               target="_blank" class="text-sm text-gray-700 border border-gray-300 rounded-champ px-4 py-2 hover:bg-gray-50">
                 {{ __("Exporter PDF") }}
             </a>
         </div>
@@ -46,7 +47,7 @@
         @endif
     </div>
 
-    <div class="bg-white border rounded-lg overflow-hidden">
+    <div class="bg-white border rounded-carte overflow-hidden">
         <table class="w-full text-sm">
             <thead class="bg-gray-50 text-start text-gray-600">
                 <tr>
@@ -73,7 +74,7 @@
                         </td>
                         <td class="p-3 text-end">
                             @if ($entree->donnees_avant || $entree->donnees_apres)
-                                <button wire:click="basculerDetail({{ $entree->id }})" class="text-xs text-emerald-700 hover:underline">
+                                <button wire:click="basculerDetail({{ $entree->id }})" class="text-xs text-primaire-700 hover:underline">
                                     {{ in_array($entree->id, $lignesOuvertes) ? __('Masquer') : __('Détails') }}
                                 </button>
                             @endif

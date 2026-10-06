@@ -1,18 +1,18 @@
 <div>
     @if (session('succes_comptes'))
-        <div class="mb-4 text-sm text-emerald-800 bg-emerald-50 border border-emerald-200 rounded-lg px-4 py-3">
+        <div class="mb-4 text-sm text-primaire-800 bg-primaire-50 border border-primaire-200 rounded-champ px-4 py-3">
             ✓ {{ session('succes_comptes') }}
         </div>
     @endif
 
     @if (session('erreur_comptes'))
-        <div class="mb-4 text-sm text-red-800 bg-red-50 border border-red-200 rounded-lg px-4 py-3">
+        <div class="mb-4 text-sm text-red-800 bg-red-50 border border-red-200 rounded-champ px-4 py-3">
             {{ session('erreur_comptes') }}
         </div>
     @endif
 
     @if ($dernierMotDePasseGenere)
-        <div class="mb-4 text-sm text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-4 py-3">
+        <div class="mb-4 text-sm text-amber-800 bg-amber-50 border border-amber-200 rounded-champ px-4 py-3">
             {{ __("Mot de passe temporaire :") }}
             <span class="font-mono font-semibold text-base">{{ $dernierMotDePasseGenere }}</span>
             <div class="mt-1 text-xs text-amber-600">
@@ -21,7 +21,7 @@
         </div>
     @endif
 
-    <div class="bg-white border rounded-lg shadow-sm">
+    <div class="bg-white border rounded-carte">
         <div class="p-5 border-b flex flex-wrap items-start justify-between gap-3">
             <div>
                 <h2 class="font-semibold text-gray-800">{{ __("Comptes de connexion") }}</h2>
@@ -30,7 +30,7 @@
                 </p>
             </div>
             <button type="button" wire:click="ouvrirFormulaire"
-                    class="text-sm text-white bg-emerald-600 rounded-lg px-4 py-2 hover:bg-emerald-700 whitespace-nowrap">
+                    class="text-sm text-white bg-primaire-600 rounded-champ px-4 py-2 hover:bg-primaire-700 whitespace-nowrap">
                 {{ __("+ Nouveau compte") }}
             </button>
         </div>
@@ -78,10 +78,10 @@
                     </div>
                 </div>
                 <div class="mt-4 flex flex-wrap gap-2">
-                    <button type="submit" class="text-sm text-white bg-emerald-600 rounded-lg px-4 py-2 hover:bg-emerald-700">
+                    <button type="submit" class="text-sm text-white bg-primaire-600 rounded-champ px-4 py-2 hover:bg-primaire-700">
                         {{ __("Créer le compte") }}
                     </button>
-                    <button type="button" wire:click="annuler" class="text-sm text-gray-600 border rounded-lg px-4 py-2 hover:bg-gray-100">
+                    <button type="button" wire:click="annuler" class="text-sm text-gray-600 border rounded-champ px-4 py-2 hover:bg-gray-100">
                         {{ __("Annuler") }}
                     </button>
                 </div>
@@ -117,7 +117,7 @@
                             <td class="p-3">
                                 <div class="font-medium text-gray-800">{{ $compte->nom }} {{ $compte->prenom }}</div>
                                 @if ($compte->id === auth()->id())
-                                    <div class="text-xs text-emerald-700">{{ __("c'est vous") }}</div>
+                                    <div class="text-xs text-primaire-700">{{ __("c'est vous") }}</div>
                                 @endif
                             </td>
                             <td class="p-3 text-gray-600">{{ $compte->email ?: $compte->telephone ?: '—' }}</td>
@@ -141,7 +141,7 @@
                             </td>
                             <td class="p-3">
                                 @if ($compte->actif)
-                                    <span class="text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-full px-2 py-0.5">{{ __("Actif") }}</span>
+                                    <span class="text-xs text-primaire-700 bg-primaire-50 border border-primaire-200 rounded-full px-2 py-0.5">{{ __("Actif") }}</span>
                                 @else
                                     <span class="text-xs text-gray-600 bg-gray-100 border border-gray-300 rounded-full px-2 py-0.5">{{ __("Désactivé") }}</span>
                                 @endif
@@ -158,7 +158,7 @@
                                      colonne du rôle, y conduit. --}}
                                 @if ($compte->id !== auth()->id() && $compte->role !== 'gestionnaire')
                                     <button type="button" wire:click="basculerActif({{ $compte->id }})"
-                                            class="ms-1 text-xs {{ $compte->actif ? 'text-red-700 border-red-300 hover:bg-red-50' : 'text-emerald-700 border-emerald-300 hover:bg-emerald-50' }} border rounded px-2 py-1">
+                                            class="ms-1 text-xs {{ $compte->actif ? 'text-red-700 border-red-300 hover:bg-red-50' : 'text-primaire-700 border-primaire-300 hover:bg-primaire-50' }} border rounded px-2 py-1">
                                         {{ $compte->actif ? __("Désactiver") : __("Réactiver") }}
                                     </button>
                                 @endif

@@ -1,19 +1,20 @@
 <div class="p-4 sm:p-6">
     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
-        <h1 class="text-xl sm:text-2xl font-semibold text-gray-800">{{ __("Investisseurs") }}</h1>
+        <x-surtitre>{{ __('Gestion') }}</x-surtitre>
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">{{ __("Investisseurs") }}</h1>
         {{-- flex-wrap : sur telephone, le bouton principal passe seul a la ligne --}}
         <div class="flex flex-wrap gap-2 w-full sm:w-auto">
             <a href="{{ route('export.investisseurs.csv', ['recherche' => $recherche, 'gestionnaire' => $filtreGestionnaireId, 'statut' => $filtreStatut]) }}"
-               target="_blank" class="text-sm text-gray-700 border border-gray-300 rounded-lg px-4 py-2 hover:bg-gray-50 whitespace-nowrap text-center">
+               target="_blank" class="text-sm text-gray-700 border border-gray-300 rounded-champ px-4 py-2 hover:bg-gray-50 whitespace-nowrap text-center">
                 {{ __("Exporter CSV") }}
             </a>
             <a href="{{ route('export.investisseurs.pdf', ['recherche' => $recherche, 'gestionnaire' => $filtreGestionnaireId, 'statut' => $filtreStatut]) }}"
-               target="_blank" class="text-sm text-gray-700 border border-gray-300 rounded-lg px-4 py-2 hover:bg-gray-50 whitespace-nowrap text-center">
+               target="_blank" class="text-sm text-gray-700 border border-gray-300 rounded-champ px-4 py-2 hover:bg-gray-50 whitespace-nowrap text-center">
                 {{ __("Exporter PDF") }}
             </a>
             @if (auth()->user()->role !== 'lecture')
                 <button wire:click="$toggle('afficherFormulaire')"
-                        class="bg-emerald-700 text-white px-4 py-2 rounded-lg hover:bg-emerald-800 w-full sm:w-auto">
+                        class="bg-primaire-700 text-white px-4 py-2 rounded-champ hover:bg-primaire-800 w-full sm:w-auto">
                     {{ $afficherFormulaire ? __("Annuler") : __("+ Nouvel investisseur") }}
                 </button>
             @endif
@@ -21,7 +22,7 @@
     </div>
 
     @if ($afficherFormulaire)
-        <div class="bg-white border rounded-lg p-5 mb-6 shadow-sm">
+        <div class="bg-white border rounded-carte p-5 mb-6">
             <form wire:submit="creer" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label class="text-sm text-gray-600">{{ __("Identifiant externe") }}</label>
@@ -65,7 +66,7 @@
                     </div>
                 @endif
                 <div class="col-span-1 sm:col-span-2">
-                    <button type="submit" class="bg-emerald-700 text-white px-4 py-2 rounded-lg w-full sm:w-auto">
+                    <button type="submit" class="bg-primaire-700 text-white px-4 py-2 rounded-champ w-full sm:w-auto">
                         {{ __("Créer le dossier") }}
                     </button>
                 </div>
@@ -91,7 +92,7 @@
             <option value="aucun">{{ __("Pas d'accès portail") }}</option>
         </select>
 
-        <select wire:model.live="filtreCompletude" class="border-gray-300 rounded-lg text-sm w-full sm:w-auto">
+        <select wire:model.live="filtreCompletude" class="border-gray-300 rounded-champ text-sm w-full sm:w-auto">
             <option value="">{{ __("Tous les dossiers") }}</option>
             <option value="incomplets">{{ __("Dossiers incomplets") }}</option>
         </select>
@@ -116,13 +117,13 @@
     <div class="sm:hidden space-y-3">
         @forelse ($investisseurs as $inv)
             <a href="{{ route('investisseurs.show', $inv) }}" wire:navigate
-               class="block bg-white border rounded-lg p-4 hover:bg-gray-50">
+               class="block bg-white border rounded-carte p-4 hover:bg-gray-50">
                 <div class="flex justify-between items-start mb-2">
                     <div>
                         <div class="font-medium text-gray-800">{{ $inv->nom }} {{ $inv->prenom }}</div>
                         <div class="text-xs text-gray-500 font-mono">{{ $inv->identifiant_externe }}</div>
                     </div>
-                    <span class="px-2 py-1 text-xs rounded-full {{ $inv->statut === 'actif' ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-600' }}">
+                    <span class="px-2 py-1 text-xs rounded-full {{ $inv->statut === 'actif' ? 'bg-primaire-100 text-primaire-700' : 'bg-gray-100 text-gray-600' }}">
                         {{ __($inv->statut) }}
                     </span>
                 </div>
@@ -141,12 +142,12 @@
                 </div>
             </a>
         @empty
-            <div class="bg-white border rounded-lg p-6 text-center text-gray-400">{{ __("Aucun investisseur ne correspond aux critères.") }}</div>
+            <div class="bg-white border rounded-carte p-6 text-center text-gray-400">{{ __("Aucun investisseur ne correspond aux critères.") }}</div>
         @endforelse
     </div>
 
     {{-- Vue desktop : tableau triable --}}
-    <table class="hidden sm:table w-full bg-white border rounded-lg overflow-hidden">
+    <table class="hidden sm:table w-full bg-white border rounded-carte overflow-hidden">
         <thead class="bg-gray-50 text-start text-sm text-gray-600">
             <tr>
                 <th class="p-3 cursor-pointer select-none" wire:click="trierPar('identifiant_externe')">
@@ -176,7 +177,7 @@
                     </td>
                     <td class="p-3 text-sm text-gray-600">{{ $inv->pays }}</td>
                     <td class="p-3">
-                        <span class="px-2 py-1 text-xs rounded-full {{ $inv->statut === 'actif' ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-600' }}">
+                        <span class="px-2 py-1 text-xs rounded-full {{ $inv->statut === 'actif' ? 'bg-primaire-100 text-primaire-700' : 'bg-gray-100 text-gray-600' }}">
                             {{ __($inv->statut) }}
                         </span>
                     </td>
@@ -190,7 +191,7 @@
                         @endif
                     </td>
                     <td class="p-3 text-end">
-                        <a href="{{ route('investisseurs.show', $inv) }}" class="text-emerald-700 text-sm hover:underline">
+                        <a href="{{ route('investisseurs.show', $inv) }}" class="text-primaire-700 text-sm hover:underline">
                             {{ __("Voir le dossier →") }}
                         </a>
                     </td>
@@ -206,6 +207,6 @@
     {{-- Les exports globaux ont leur propre ecran, atteignable depuis la barre laterale --}}
     <p class="mt-8 text-sm text-gray-500">
         {{ __("Les exports portant sur l'ensemble des comptes se trouvent sur la page Exports.") }}
-        <a href="{{ route('exports.index') }}" wire:navigate class="text-emerald-700 hover:underline">{{ __("Y aller") }} &rarr;</a>
+        <a href="{{ route('exports.index') }}" wire:navigate class="text-primaire-700 hover:underline">{{ __("Y aller") }} &rarr;</a>
     </p>
 </div>

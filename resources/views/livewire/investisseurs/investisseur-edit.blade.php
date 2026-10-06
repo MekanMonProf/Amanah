@@ -1,14 +1,14 @@
 <div class="p-4 sm:p-6 max-w-3xl">
     <a href="{{ route('investisseurs.show', $investisseur) }}" wire:navigate class="text-sm text-gray-500 hover:underline">{{ __("← Retour au dossier") }}</a>
 
-    <h1 class="text-xl sm:text-2xl font-semibold text-gray-800 mt-2 mb-6">
+    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mt-2 mb-6">
         {{ __("Modifier le dossier") }} — {{ $investisseur->identifiant_externe }}
     </h1>
 
     <form wire:submit="enregistrer" class="space-y-6">
 
         {{-- Identité --}}
-        <div class="bg-white border rounded-lg p-5 shadow-sm">
+        <div class="bg-white border rounded-carte p-5">
             <h2 class="font-semibold text-gray-800 mb-4">{{ __("Identité") }}</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
@@ -56,7 +56,7 @@
         </div>
 
         {{-- Contact --}}
-        <div class="bg-white border rounded-lg p-5 shadow-sm">
+        <div class="bg-white border rounded-carte p-5">
             <h2 class="font-semibold text-gray-800 mb-4">{{ __("Contact") }}</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
@@ -86,7 +86,7 @@
         </div>
 
         {{-- Pièce d'identité --}}
-        <div class="bg-white border rounded-lg p-5 shadow-sm">
+        <div class="bg-white border rounded-carte p-5">
             <h2 class="font-semibold text-gray-800 mb-4">{{ __("Pièce d'identité") }}</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
@@ -115,7 +115,7 @@
                     @error('piece_identite_upload') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                     <div wire:loading wire:target="piece_identite_upload" class="text-xs text-gray-400 mt-1">{{ __("Envoi en cours...") }}</div>
                     @if ($investisseur->piece_identite_path)
-                        <a href="{{ \App\Support\Document::lien($investisseur, 'piece_identite_path') }}" target="_blank" class="text-xs text-emerald-700 hover:underline">{{ __("Voir le fichier actuel") }}</a>
+                        <a href="{{ \App\Support\Document::lien($investisseur, 'piece_identite_path') }}" target="_blank" class="text-xs text-primaire-700 hover:underline">{{ __("Voir le fichier actuel") }}</a>
                     @endif
 
                     {{-- Lecture de la bande MRZ. Rien n est ecrit d autorite : on propose,
@@ -132,18 +132,18 @@
                     ])
 
                     @if ($propositionsPiece)
-                        <div class="mt-3 bg-emerald-50 border border-emerald-200 rounded-lg p-3">
-                            <p class="text-sm font-semibold text-emerald-900">
+                        <div class="mt-3 bg-primaire-50 border border-primaire-200 rounded-champ p-3">
+                            <p class="text-sm font-semibold text-primaire-900">
                                 {{ __("Pièce lue — :nombre valeur(s) proposée(s)", ['nombre' => count($propositionsPiece)]) }}
                             </p>
-                            <ul class="mt-2 text-sm text-emerald-900 space-y-0.5">
+                            <ul class="mt-2 text-sm text-primaire-900 space-y-0.5">
                                 @foreach ($propositionsPiece as $champ => $valeur)
-                                    <li><span class="text-emerald-700">{{ $libelles[$champ] ?? $champ }} :</span> <strong>{{ $valeur }}</strong></li>
+                                    <li><span class="text-primaire-700">{{ $libelles[$champ] ?? $champ }} :</span> <strong>{{ $valeur }}</strong></li>
                                 @endforeach
                             </ul>
                             <div class="mt-3 flex gap-2">
                                 <button type="button" wire:click="appliquerPropositionsPiece"
-                                        class="text-sm bg-emerald-700 text-white rounded-lg px-3 py-1.5 hover:bg-emerald-800">
+                                        class="text-sm bg-primaire-700 text-white rounded-champ px-3 py-1.5 hover:bg-primaire-800">
                                     {{ __("Remplir les champs") }}
                                 </button>
                                 <button type="button" wire:click="ignorerPropositionsPiece"
@@ -155,7 +155,7 @@
                     @endif
 
                     @if ($divergencesPiece)
-                        <div class="mt-3 bg-amber-50 border border-amber-200 rounded-lg p-3">
+                        <div class="mt-3 bg-amber-50 border border-amber-200 rounded-champ p-3">
                             <p class="text-sm font-semibold text-amber-800">{{ __("La pièce ne dit pas la même chose que le formulaire") }}</p>
                             <ul class="mt-2 text-sm text-amber-800 space-y-0.5">
                                 @foreach ($divergencesPiece as $champ => $valeur)
@@ -167,7 +167,7 @@
                     @endif
 
                     @if ($nonConfirmesPiece)
-                        <div class="mt-3 bg-sky-50 border border-sky-200 rounded-lg p-3">
+                        <div class="mt-3 bg-sky-50 border border-sky-200 rounded-champ p-3">
                             <p class="text-sm font-semibold text-sky-900">{{ __("Lu, mais non confirmé") }}</p>
                             <p class="mt-1 text-xs text-sky-800">
                                 {{ __("La clé de contrôle de la pièce n'a pas validé ces valeurs. Comparez-les au document avant de les reprendre.") }}
@@ -196,7 +196,7 @@
         </div>
 
         {{-- Convention d'engagement --}}
-        <div class="bg-white border rounded-lg p-5 shadow-sm">
+        <div class="bg-white border rounded-carte p-5">
             <h2 class="font-semibold text-gray-800 mb-1">{{ __("Convention d'engagement") }}</h2>
             <p class="text-xs text-gray-400 mb-4">{{ __("Le formulaire d'adhésion signé par l'investisseur.") }}</p>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -210,7 +210,7 @@
                     @error('convention_engagement_upload') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                     <div wire:loading wire:target="convention_engagement_upload" class="text-xs text-gray-400 mt-1">{{ __("Envoi en cours...") }}</div>
                     @if ($investisseur->convention_engagement_path)
-                        <a href="{{ \App\Support\Document::lien($investisseur, 'convention_engagement_path') }}" target="_blank" class="text-xs text-emerald-700 hover:underline">{{ __("Voir le document actuel") }}</a>
+                        <a href="{{ \App\Support\Document::lien($investisseur, 'convention_engagement_path') }}" target="_blank" class="text-xs text-primaire-700 hover:underline">{{ __("Voir le document actuel") }}</a>
                     @endif
                 </div>
 
@@ -222,7 +222,7 @@
                     @error('piece_procuration_upload') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                     <div wire:loading wire:target="piece_procuration_upload" class="text-xs text-gray-400 mt-1">{{ __("Envoi en cours...") }}</div>
                     @if ($investisseur->piece_procuration_path)
-                        <a href="{{ \App\Support\Document::lien($investisseur, 'piece_procuration_path') }}" target="_blank" class="text-xs text-emerald-700 hover:underline">{{ __("Voir le document actuel") }}</a>
+                        <a href="{{ \App\Support\Document::lien($investisseur, 'piece_procuration_path') }}" target="_blank" class="text-xs text-primaire-700 hover:underline">{{ __("Voir le document actuel") }}</a>
                     @endif
                 </div>
 
@@ -234,7 +234,7 @@
                     @error('piece_justificatif_domicile_upload') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                     <div wire:loading wire:target="piece_justificatif_domicile_upload" class="text-xs text-gray-400 mt-1">{{ __("Envoi en cours...") }}</div>
                     @if ($investisseur->piece_justificatif_domicile_path)
-                        <a href="{{ \App\Support\Document::lien($investisseur, 'piece_justificatif_domicile_path') }}" target="_blank" class="text-xs text-emerald-700 hover:underline">{{ __("Voir le document actuel") }}</a>
+                        <a href="{{ \App\Support\Document::lien($investisseur, 'piece_justificatif_domicile_path') }}" target="_blank" class="text-xs text-primaire-700 hover:underline">{{ __("Voir le document actuel") }}</a>
                     @endif
                 </div>
 
@@ -246,14 +246,14 @@
                     @error('piece_rib_upload') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                     <div wire:loading wire:target="piece_rib_upload" class="text-xs text-gray-400 mt-1">{{ __("Envoi en cours...") }}</div>
                     @if ($investisseur->piece_rib_path)
-                        <a href="{{ \App\Support\Document::lien($investisseur, 'piece_rib_path') }}" target="_blank" class="text-xs text-emerald-700 hover:underline">{{ __("Voir le document actuel") }}</a>
+                        <a href="{{ \App\Support\Document::lien($investisseur, 'piece_rib_path') }}" target="_blank" class="text-xs text-primaire-700 hover:underline">{{ __("Voir le document actuel") }}</a>
                     @endif
                 </div>
             </div>
         </div>
 
         {{-- Comptes d'investissement --}}
-        <div class="bg-white border rounded-lg p-5 shadow-sm">
+        <div class="bg-white border rounded-carte p-5">
             <h2 class="font-semibold text-gray-800 mb-1">{{ __("Réinvestissement automatique") }}</h2>
             <p class="text-xs text-gray-400 mb-4">
                 {{ __("Réglable par compte (Commercial et Waqf sont indépendants). Activé par défaut à l'ouverture d'un compte.") }}
@@ -294,7 +294,7 @@
 
         {{-- Personne morale --}}
         @if ($type_personne === 'morale')
-            <div class="bg-white border rounded-lg p-5 shadow-sm">
+            <div class="bg-white border rounded-carte p-5">
                 <h2 class="font-semibold text-gray-800 mb-4">{{ __("Informations entreprise") }}</h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div class="sm:col-span-2">
@@ -323,7 +323,7 @@
         @endif
 
         {{-- Bénéficiaire désigné --}}
-        <div class="bg-white border rounded-lg p-5 shadow-sm">
+        <div class="bg-white border rounded-carte p-5">
             <h2 class="font-semibold text-gray-800 mb-1">{{ __("Bénéficiaire désigné") }}</h2>
             <p class="text-xs text-gray-400 mb-4">{{ __("Personne à contacter en cas de décès, notamment pour les comptes Waqf.") }}</p>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -344,14 +344,14 @@
         </div>
 
         {{-- Notes internes --}}
-        <div class="bg-white border rounded-lg p-5 shadow-sm">
+        <div class="bg-white border rounded-carte p-5">
             <h2 class="font-semibold text-gray-800 mb-1">{{ __("Notes internes") }}</h2>
             <p class="text-xs text-gray-400 mb-3">{{ __("Visibles uniquement par les gestionnaires et administrateurs.") }}</p>
             <textarea wire:model="notes_internes" rows="3" class="w-full border rounded px-3 py-2"></textarea>
         </div>
 
         <button type="submit" wire:loading.attr="disabled" wire:target="enregistrer"
-                class="bg-emerald-700 text-white px-5 py-2 rounded-lg w-full sm:w-auto disabled:opacity-50 disabled:cursor-not-allowed">
+                class="bg-primaire-700 text-white px-5 py-2 rounded-champ w-full sm:w-auto disabled:opacity-50 disabled:cursor-not-allowed">
             <span wire:loading.remove wire:target="enregistrer">{{ __("Enregistrer les modifications") }}</span>
             <span wire:loading wire:target="enregistrer">{{ __("Enregistrement...") }}</span>
         </button>

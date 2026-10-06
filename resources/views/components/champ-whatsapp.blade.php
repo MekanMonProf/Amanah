@@ -14,7 +14,7 @@
 <div class="mt-1">
     <label class="inline-flex items-center gap-2 text-sm text-gray-600">
         <input type="checkbox" wire:model.live="{{ $drapeau }}"
-               class="rounded border-gray-300 text-emerald-700 focus:ring-emerald-700">
+               class="rounded border-gray-300 text-primaire-700 focus:ring-primaire-700">
         {{ __("Même numéro sur WhatsApp") }}
     </label>
 

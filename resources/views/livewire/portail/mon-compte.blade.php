@@ -1,15 +1,16 @@
 <div class="p-4 sm:p-6">
     @if (! $investisseur)
-        <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm text-amber-800">
+        <div class="bg-amber-50 border border-amber-200 rounded-champ p-4 text-sm text-amber-800">
             {{ __("Votre compte n'est relié à aucun dossier investisseur. Contactez votre gestionnaire.") }}
         </div>
     @else
-        <h1 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-1">
+        <x-surtitre>{{ __('Mon espace') }}</x-surtitre>
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">
             {{ __("Bonjour :prenom", ["prenom" => $investisseur->prenom ?: $investisseur->nom]) }}
         </h1>
         <p class="text-sm text-gray-500 mb-4 font-mono">{{ $investisseur->identifiant_externe }}</p>
 
-        <div class="bg-white border rounded-lg p-4 mb-6 inline-block">
+        <div class="bg-white border rounded-carte p-4 mb-6 inline-block">
             <form action="{{ route('portail.releve') }}" method="GET" target="_blank" class="flex flex-wrap items-end gap-2">
                 <div>
                     <label class="text-xs text-gray-500 block mb-1">{{ __("Du (optionnel)") }}</label>
@@ -19,7 +20,7 @@
                     <label class="text-xs text-gray-500 block mb-1">{{ __("Au (optionnel)") }}</label>
                     <input type="date" name="date_fin" class="border rounded px-2 py-1.5 text-sm">
                 </div>
-                <button type="submit" class="text-sm text-emerald-700 border border-emerald-700 rounded-lg px-4 py-1.5 hover:bg-emerald-50 whitespace-nowrap">
+                <button type="submit" class="text-sm text-primaire-700 border border-primaire-700 rounded-champ px-4 py-1.5 hover:bg-primaire-50 whitespace-nowrap">
                     {{ __("📄 Télécharger mon relevé (PDF)") }}
                 </button>
             </form>
@@ -27,12 +28,12 @@
         </div>
 
         @forelse ($comptesEnrichis as $item)
-            <div class="bg-white border rounded-lg p-5 mb-4 shadow-sm">
+            <div class="bg-white border rounded-carte p-5 mb-4">
                 <div class="flex justify-between items-center mb-4">
                     <span class="px-2 py-1 text-xs font-semibold rounded {{ $item['compte']->categorie === 'commercial' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700' }}">
                         {{ __(\App\Support\Libelles::categorie($item['compte']->categorie)) }}
                     </span>
-                    <span class="text-xs px-2 py-1 rounded-full {{ $item['compte']->reinvestissement_auto ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-600' }}">
+                    <span class="text-xs px-2 py-1 rounded-full {{ $item['compte']->reinvestissement_auto ? 'bg-primaire-100 text-primaire-700' : 'bg-gray-100 text-gray-600' }}">
                         {{ __("Réinvestissement auto") }} : {{ $item['compte']->reinvestissement_auto ? __('Oui') : __('Non') }}
                     </span>
                 </div>
@@ -44,7 +45,7 @@
                     </div>
                     <div>
                         <div class="text-xs text-gray-500 uppercase">{{ __("Solde du compte") }}</div>
-                        <div class="text-2xl font-semibold text-emerald-700">{{ \App\Support\Montant::format($item['solde']) }}&#8239;CFA</div>
+                        <div class="text-2xl font-semibold text-primaire-700">{{ \App\Support\Montant::format($item['solde']) }}&#8239;CFA</div>
                     </div>
                 </div>
 
@@ -97,7 +98,7 @@
                                     <tr>
                                         <td class="py-1">{{ $ecriture->date_ecriture->format('d/m/Y') }}</td>
                                         <td class="py-1">{{ __(\App\Support\Libelles::typeEcriture($ecriture->type_ecriture)) }}</td>
-                                        <td class="py-1 text-end {{ $ecriture->montant >= 0 ? 'text-emerald-700' : 'text-red-600' }}">
+                                        <td class="py-1 text-end {{ $ecriture->montant >= 0 ? 'text-primaire-700' : 'text-red-600' }}">
                                             {{ $ecriture->montant >= 0 ? '+' : '' }}{{ \App\Support\Montant::format($ecriture->montant) }}
                                         </td>
                                         <td class="py-1 text-end">
@@ -115,7 +116,7 @@
                 @endif
             </div>
         @empty
-            <div class="bg-white border rounded-lg p-8 text-center text-gray-400">
+            <div class="bg-white border rounded-carte p-8 text-center text-gray-400">
                 {{ __("Aucun compte d'investissement pour l'instant.") }}
             </div>
         @endforelse

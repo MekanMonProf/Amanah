@@ -141,7 +141,7 @@ new class extends Component {
 
         <div>
             <x-input-label for="langue" :value="__('Langue de l\'application')" />
-            <select wire:model="langue" id="langue" name="langue" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+            <select wire:model="langue" id="langue" name="langue" class="mt-1 block w-full border-gray-300 focus:border-primaire-600 focus:ring-primaire-600 rounded-md shadow-sm">
                 @foreach (\App\Support\Langue::DISPONIBLES as $code => $langueDisponible)
                     <option value="{{ $code }}">{{ $langueDisponible['libelle'] }}</option>
                 @endforeach
@@ -162,13 +162,13 @@ new class extends Component {
                     <p class="text-sm mt-2 text-gray-800">
                         {{ __("Votre adresse email n'est pas vérifiée.") }}
 
-                        <button wire:click.prevent="sendVerification" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <button wire:click.prevent="sendVerification" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primaire-600">
                             {{ __("Cliquez ici pour renvoyer l'email de vérification.") }}
                         </button>
                     </p>
 
                     @if (session('status') === 'verification-link-sent')
-                        <p class="mt-2 font-medium text-sm text-green-600">
+                        <p class="mt-2 font-medium text-sm text-primaire-700">
                             {{ __("Un nouveau lien de vérification a été envoyé à votre adresse email.") }}
                         </p>
                     @endif

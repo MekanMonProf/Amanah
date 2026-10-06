@@ -10,7 +10,7 @@
         </div>
     @else
 
-    <h1 class="text-xl sm:text-2xl font-semibold text-gray-800 mt-2 mb-1">{{ __("Radiation d'actions") }}</h1>
+    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mt-2 mb-1">{{ __("Radiation d'actions") }}</h1>
     <p class="text-sm text-gray-500 mb-6">
         {{ $compte->investisseur->nom }} {{ $compte->investisseur->prenom }} ·
         <span class="font-mono">{{ $compte->numero_compte }}</span> ({{ __(\App\Support\Libelles::categorie($compte->categorie)) }})
@@ -18,16 +18,16 @@
 
     {{-- Plus de bandeau « radiation interdite » : l'écran ne s'ouvre plus du tout
          pour une catégorie qui l'interdit, il répond 403 dès le chargement. --}}
-    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-sm text-blue-800">
+    <div class="bg-blue-50 border border-blue-200 rounded-champ p-4 mb-6 text-sm text-blue-800">
         ℹ️ {{ __("Le capital correspondant sera crédité sur le compte financier, en attente de versement effectif via le module Paiement — rien n'est payé automatiquement ici.") }}
     </div>
 
-    <div class="bg-white border rounded-lg p-4 mb-6">
+    <div class="bg-white border rounded-carte p-4 mb-6">
         <div class="text-xs text-gray-500 uppercase">{{ __("Actions actuellement détenues") }}</div>
         <div class="text-2xl font-semibold text-gray-800">{{ $actionsDetenues }}</div>
     </div>
 
-    <form wire:submit="enregistrer" class="bg-white border rounded-lg p-5 shadow-sm space-y-4">
+    <form wire:submit="enregistrer" class="bg-white border rounded-carte p-5 space-y-4">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
                 <label class="text-sm text-gray-600">{{ __("Nombre d'actions à radier") }}</label>
@@ -42,9 +42,9 @@
         </div>
 
         @if ($this->montantTotal > 0)
-            <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-3 text-center">
-                <span class="text-sm text-emerald-700">{{ __("Montant total à créditer :") }}</span>
-                <span class="text-lg font-semibold text-emerald-800">{{ \App\Support\Montant::format($this->montantTotal) }}&#8239;CFA</span>
+            <div class="bg-primaire-50 border border-primaire-200 rounded-champ p-3 text-center">
+                <span class="text-sm text-primaire-700">{{ __("Montant total à créditer :") }}</span>
+                <span class="text-lg font-semibold text-primaire-800">{{ \App\Support\Montant::format($this->montantTotal) }}&#8239;CFA</span>
             </div>
         @endif
 
@@ -78,7 +78,7 @@
         </div>
 
         <button type="submit" wire:loading.attr="disabled" wire:target="enregistrer"
-                class="bg-red-600 text-white px-5 py-2 rounded-lg w-full sm:w-auto hover:bg-red-700 disabled:opacity-50">
+                class="bg-red-600 text-white px-5 py-2 rounded-champ w-full sm:w-auto hover:bg-red-700 disabled:opacity-50">
             <span wire:loading.remove wire:target="enregistrer">{{ __("Enregistrer la radiation") }}</span>
             <span wire:loading wire:target="enregistrer">{{ __("Traitement...") }}</span>
         </button>

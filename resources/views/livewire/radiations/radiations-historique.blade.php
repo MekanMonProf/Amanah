@@ -68,7 +68,7 @@
                         <td class="py-1 text-end">{{ \App\Support\Montant::format($radiation->montant_total) }}</td>
                         <td class="py-1">
                             @if ($restant <= 0)
-                                <span class="px-2 py-0.5 text-xs rounded-full bg-emerald-100 text-emerald-700">{{ __("Payé") }}</span>
+                                <span class="px-2 py-0.5 text-xs rounded-full bg-primaire-100 text-primaire-700">{{ __("Payé") }}</span>
                             @elseif ($verse > 0)
                                 <span class="px-2 py-0.5 text-xs rounded-full bg-amber-100 text-amber-700" title="Reste {{ \App\Support\Montant::format($restant) }}&#8239;CFA">
                                     {{ __("Partiel") }}
@@ -79,7 +79,7 @@
                         </td>
                         <td class="py-1 text-end">
                             @if ($radiation->piece_justificative_path)
-                                <a href="{{ \App\Support\Document::lien($radiation, 'piece_justificative_path') }}" target="_blank" class="text-emerald-700 hover:underline text-xs">
+                                <a href="{{ \App\Support\Document::lien($radiation, 'piece_justificative_path') }}" target="_blank" class="text-primaire-700 hover:underline text-xs">
                                     {{ __("Pièce →") }}
                                 </a>
                             @endif
@@ -87,7 +87,7 @@
                         <td class="py-1 text-end">
                             @if (auth()->user()->role !== 'lecture' && $restant > 0 && $compte->politique()?->versement_capital_radiation_possible)
                                 <a href="{{ route('comptes.paiement', $compte) }}?source=radiation&radiation_id={{ $radiation->id }}&montant={{ $restant }}&reference={{ $radiation->numero_radiation }}"
-                                   wire:navigate class="text-teal-700 hover:underline text-xs whitespace-nowrap">
+                                   wire:navigate class="text-primaire-700 hover:underline text-xs whitespace-nowrap">
                                     {{ __("Verser →") }}
                                 </a>
                             @endif

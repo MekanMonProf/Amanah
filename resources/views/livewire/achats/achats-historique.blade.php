@@ -76,7 +76,7 @@
                         <td class="py-1 text-xs text-gray-500">{{ $achat->mode_paiement ?: '—' }}</td>
                         <td class="py-1 text-end">
                             @if ($achat->photo_facture_path)
-                                <a href="{{ \App\Support\Document::lien($achat, 'photo_facture_path') }}" target="_blank" class="text-emerald-700 hover:underline text-xs">
+                                <a href="{{ \App\Support\Document::lien($achat, 'photo_facture_path') }}" target="_blank" class="text-primaire-700 hover:underline text-xs">
                                     {{ __("Facture →") }}
                                 </a>
                             @endif

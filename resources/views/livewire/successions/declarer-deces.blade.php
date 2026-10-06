@@ -1,15 +1,15 @@
 <div class="p-4 sm:p-6 max-w-2xl">
     <a href="{{ route('investisseurs.show', $investisseur) }}" wire:navigate class="text-sm text-gray-500 hover:underline">{{ __("← Retour au dossier") }}</a>
 
-    <h1 class="text-xl sm:text-2xl font-semibold text-gray-800 mt-2 mb-1">{{ __("Déclarer un décès") }}</h1>
+    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mt-2 mb-1">{{ __("Déclarer un décès") }}</h1>
     <p class="text-sm text-gray-500 mb-6">{{ $investisseur->nom }} {{ $investisseur->prenom }} ({{ $investisseur->identifiant_externe }})</p>
 
-    <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 text-sm text-red-800">
+    <div class="bg-red-50 border border-red-200 rounded-champ p-4 mb-6 text-sm text-red-800">
         ⚠️ {!! __("Cette action est <strong>irréversible depuis l'interface</strong> et gèle immédiatement tous les comptes de cet investisseur : plus aucun achat, complément, paiement, don ou radiation ne sera possible.") !!}
         {{ __("Seule la répartition de succession (étape suivante) reste accessible.") }}
     </div>
 
-    <form wire:submit="declarer" class="bg-white border rounded-lg p-5 shadow-sm space-y-4">
+    <form wire:submit="declarer" class="bg-white border rounded-carte p-5 space-y-4">
         <div>
             <label class="text-sm text-gray-600">{{ __("Date du décès") }}</label>
             <input type="date" wire:model="dateDeces" class="w-full border rounded px-3 py-2">
@@ -32,7 +32,7 @@
         @error('confirmation') <span class="text-red-600 text-sm block">{{ $message }}</span> @enderror
 
         <button type="submit" wire:loading.attr="disabled" wire:target="declarer"
-                class="bg-red-600 text-white px-5 py-2 rounded-lg w-full sm:w-auto hover:bg-red-700 disabled:opacity-50">
+                class="bg-red-600 text-white px-5 py-2 rounded-champ w-full sm:w-auto hover:bg-red-700 disabled:opacity-50">
             <span wire:loading.remove wire:target="declarer">{{ __("Déclarer le décès") }}</span>
             <span wire:loading wire:target="declarer">{{ __("Traitement...") }}</span>
         </button>

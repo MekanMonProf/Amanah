@@ -21,7 +21,7 @@
             `replie` : barre latérale en mode icônes, retenue d'une page à l'autre.
             `ouvert` : tiroir de la barre latérale, sur les écrans étroits seulement.
         --}}
-        <div class="min-h-screen bg-gray-100"
+        <div class="min-h-screen bg-gray-50"
              x-data="{ replie: $persist(false).as('amanah-barre-repliee'), ouvert: false }"
              x-on:keydown.escape.window="ouvert = false">
 
@@ -37,7 +37,7 @@
                 <!-- Barre supérieure : ouverture du tiroir, section courante, langue -->
                 <div class="sticky top-0 z-20 flex h-16 shrink-0 items-center gap-3 border-b border-gray-200 bg-white px-4 sm:px-6">
                     <button type="button" x-on:click="ouvert = true"
-                            class="-ms-2 rounded-lg p-2 text-gray-500 hover:bg-gray-100 lg:hidden"
+                            class="-ms-2 rounded-champ p-2 text-gray-500 hover:bg-gray-100 lg:hidden"
                             aria-label="{{ __("Ouvrir le menu") }}">
                         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />

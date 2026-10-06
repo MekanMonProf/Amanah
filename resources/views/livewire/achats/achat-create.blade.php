@@ -1,30 +1,30 @@
 <div class="p-4 sm:p-6 max-w-2xl">
     <a href="{{ route('investisseurs.show', $investisseur) }}" wire:navigate class="text-sm text-gray-500 hover:underline">{{ __("← Retour au dossier") }}</a>
 
-    <h1 class="text-xl sm:text-2xl font-semibold text-gray-800 mt-2 mb-1">{{ __("Nouvel achat d'actions") }}</h1>
+    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mt-2 mb-1">{{ __("Nouvel achat d'actions") }}</h1>
     <p class="text-sm text-gray-500 mb-6">{{ $investisseur->nom }} {{ $investisseur->prenom }} · {{ $investisseur->identifiant_externe }}</p>
 
     @php($manquants = $investisseur->champsManquants())
     @if ($manquants)
         {{-- Avertissement et non blocage : arreter la souscription pour une piece
              manquante couterait plus cher que le risque qu on cherche a reduire. --}}
-        <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4 text-sm text-amber-800">
+        <div class="bg-amber-50 border border-amber-200 rounded-champ p-4 mb-4 text-sm text-amber-800">
             <p class="font-semibold">{{ __("Le dossier de cet investisseur est incomplet.") }}</p>
             <p class="mt-1">{{ __("Manquent : :liste.", ['liste' => collect($manquants)->map(fn ($m) => __($m))->implode(', ')]) }}</p>
             <p class="mt-1">{{ __("L'achat reste possible, mais le dossier devra être complété.") }}</p>
         </div>
     @endif
 
-    <form wire:submit="enregistrer" class="bg-white border rounded-lg p-5 shadow-sm space-y-4">
+    <form wire:submit="enregistrer" class="bg-white border rounded-carte p-5 space-y-4">
 
         <div>
             <label class="text-sm text-gray-600">{{ __("Catégorie de compte") }}</label>
             <div class="flex gap-3 mt-1">
-                <label class="flex-1 flex items-center justify-center gap-2 border rounded-lg px-3 py-2 cursor-pointer {{ $categorie === 'commercial' ? 'border-blue-500 bg-blue-50' : '' }}">
+                <label class="flex-1 flex items-center justify-center gap-2 border rounded-champ px-3 py-2 cursor-pointer {{ $categorie === 'commercial' ? 'border-blue-500 bg-blue-50' : '' }}">
                     <input type="radio" wire:model.live="categorie" value="commercial" class="hidden">
                     <span class="text-sm font-medium">{{ __("Commercial") }}</span>
                 </label>
-                <label class="flex-1 flex items-center justify-center gap-2 border rounded-lg px-3 py-2 cursor-pointer {{ $categorie === 'waqf' ? 'border-purple-500 bg-purple-50' : '' }}">
+                <label class="flex-1 flex items-center justify-center gap-2 border rounded-champ px-3 py-2 cursor-pointer {{ $categorie === 'waqf' ? 'border-purple-500 bg-purple-50' : '' }}">
                     <input type="radio" wire:model.live="categorie" value="waqf" class="hidden">
                     <span class="text-sm font-medium">{{ __("Waqf") }}</span>
                 </label>
@@ -39,7 +39,7 @@
         </div>
 
         @if ($categorie === 'waqf')
-            <div class="border rounded-lg p-4 {{ $faireUnPresent ? 'border-purple-300 bg-purple-50' : 'bg-gray-50' }}">
+            <div class="border rounded-champ p-4 {{ $faireUnPresent ? 'border-purple-300 bg-purple-50' : 'bg-gray-50' }}">
                 <label class="flex items-start gap-3 cursor-pointer">
                     <input type="checkbox" wire:model.live="faireUnPresent" class="mt-1 rounded border-gray-300 text-purple-600">
                     <span>
@@ -56,11 +56,11 @@
                         <div>
                             <label class="text-sm text-gray-600">{{ __("Motif du présent") }}</label>
                             <div class="flex gap-3 mt-1">
-                                <label class="flex-1 flex items-center justify-center gap-2 border rounded-lg px-3 py-2 cursor-pointer bg-white {{ $typePresent === 'memoire' ? 'border-purple-500' : '' }}">
+                                <label class="flex-1 flex items-center justify-center gap-2 border rounded-champ px-3 py-2 cursor-pointer bg-white {{ $typePresent === 'memoire' ? 'border-purple-500' : '' }}">
                                     <input type="radio" wire:model.live="typePresent" value="memoire" class="hidden">
                                     <span class="text-sm">{{ __("À la mémoire d'un défunt") }}</span>
                                 </label>
-                                <label class="flex-1 flex items-center justify-center gap-2 border rounded-lg px-3 py-2 cursor-pointer bg-white {{ $typePresent === 'honneur' ? 'border-purple-500' : '' }}">
+                                <label class="flex-1 flex items-center justify-center gap-2 border rounded-champ px-3 py-2 cursor-pointer bg-white {{ $typePresent === 'honneur' ? 'border-purple-500' : '' }}">
                                     <input type="radio" wire:model.live="typePresent" value="honneur" class="hidden">
                                     <span class="text-sm">{{ __("Cadeau à une personne vivante") }}</span>
                                 </label>
@@ -70,11 +70,11 @@
                         <div>
                             <label class="text-sm text-gray-600">{{ $typePresent === 'memoire' ? __("Défunt honoré") : __("Bénéficiaire du cadeau") }}</label>
                             <div class="flex gap-3 mt-1">
-                                <label class="flex-1 flex items-center justify-center gap-2 border rounded-lg px-3 py-2 cursor-pointer bg-white {{ $defuntSource === 'interne' ? 'border-purple-500' : '' }}">
+                                <label class="flex-1 flex items-center justify-center gap-2 border rounded-champ px-3 py-2 cursor-pointer bg-white {{ $defuntSource === 'interne' ? 'border-purple-500' : '' }}">
                                     <input type="radio" wire:model.live="defuntSource" value="interne" class="hidden">
                                     <span class="text-sm">{{ __("Investisseur de la plateforme") }}</span>
                                 </label>
-                                <label class="flex-1 flex items-center justify-center gap-2 border rounded-lg px-3 py-2 cursor-pointer bg-white {{ $defuntSource === 'externe' ? 'border-purple-500' : '' }}">
+                                <label class="flex-1 flex items-center justify-center gap-2 border rounded-champ px-3 py-2 cursor-pointer bg-white {{ $defuntSource === 'externe' ? 'border-purple-500' : '' }}">
                                     <input type="radio" wire:model.live="defuntSource" value="externe" class="hidden">
                                     <span class="text-sm">{{ __("Personne extérieure") }}</span>
                                 </label>
@@ -171,9 +171,9 @@
         </div>
 
         @if ($montantCalcule)
-            <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-3 text-center">
-                <span class="text-sm text-emerald-700">{{ __("Montant total :") }}</span>
-                <span class="text-lg font-semibold text-emerald-800">{{ \App\Support\Montant::format($montantCalcule) }}&#8239;CFA</span>
+            <div class="bg-primaire-50 border border-primaire-200 rounded-champ p-3 text-center">
+                <span class="text-sm text-primaire-700">{{ __("Montant total :") }}</span>
+                <span class="text-lg font-semibold text-primaire-800">{{ \App\Support\Montant::format($montantCalcule) }}&#8239;CFA</span>
             </div>
         @endif
 
@@ -201,7 +201,7 @@
             @error('facture_upload') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
             <div wire:loading wire:target="facture_upload" class="text-xs text-gray-400 mt-1">{{ __("Envoi en cours...") }}</div>
             @if ($facture_upload)
-                <p class="text-xs text-emerald-700 mt-1">✓ {{ __("Fichier prêt : :fichier", ["fichier" => $facture_upload->getClientOriginalName()]) }}</p>
+                <p class="text-xs text-primaire-700 mt-1">✓ {{ __("Fichier prêt : :fichier", ["fichier" => $facture_upload->getClientOriginalName()]) }}</p>
             @endif
         </div>
 
@@ -211,7 +211,7 @@
         </div>
 
         <button type="submit" wire:loading.attr="disabled" wire:target="enregistrer"
-                class="bg-emerald-700 text-white px-5 py-2 rounded-lg w-full sm:w-auto disabled:opacity-50 disabled:cursor-not-allowed">
+                class="bg-primaire-700 text-white px-5 py-2 rounded-champ w-full sm:w-auto disabled:opacity-50 disabled:cursor-not-allowed">
             <span wire:loading.remove wire:target="enregistrer">{{ __("Enregistrer l'achat") }}</span>
             <span wire:loading wire:target="enregistrer">{{ __("Enregistrement...") }}</span>
         </button>

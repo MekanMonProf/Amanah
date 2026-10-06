@@ -33,7 +33,7 @@
     <button type="button"
             wire:click="basculerBloc('{{ $cle }}')"
             aria-expanded="{{ $replie ? 'false' : 'true' }}"
-            class="inline-flex items-center gap-2 text-start text-xs text-gray-500 uppercase mb-2 px-2 py-1 -ms-2 rounded hover:text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+            class="inline-flex items-center gap-2 text-start text-xs text-gray-500 uppercase mb-2 px-2 py-1 -ms-2 rounded hover:text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primaire-500">
         {{-- width/height en attributs, et pas seulement en classes : si le CSS
              compilé devance d'une version le gabarit, une icône sans taille
              s'étire à son conteneur et dévore la page. --}}

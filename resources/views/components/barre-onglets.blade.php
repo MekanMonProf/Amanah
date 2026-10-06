@@ -23,7 +23,7 @@
                 @php($active = \App\Support\Navigation::estActive($entree))
                 <a href="{{ route($entree['route']) }}" wire:navigate
                    @if ($active) aria-current="page" @endif
-                   class="flex min-w-0 flex-1 flex-col items-center gap-1 px-1 py-2 text-center {{ $active ? 'text-emerald-700' : 'text-gray-500 hover:text-gray-700' }}">
+                   class="flex min-w-0 flex-1 flex-col items-center gap-1 px-1 py-2 text-center {{ $active ? 'text-primaire-700' : 'text-gray-500 hover:text-gray-700' }}">
                     <x-icone :nom="$entree['icone']" class="h-6 w-6 shrink-0" />
                     <span class="w-full truncate text-[11px] leading-tight">{{ __($entree['libelleCourt'] ?? $entree['libelle']) }}</span>
                 </a>

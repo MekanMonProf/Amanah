@@ -1,3 +1,8 @@
-<button {{ $attributes->merge(['type' => 'submit', 'class' => 'inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150']) }}>
+{{--
+    Bouton d'action principale. Hauteur 44 px et texte en casse normale, comme
+    partout ailleurs : les petites capitales héritées du gabarit de départ ne
+    ressemblaient à aucun autre bouton de l'application.
+--}}
+<button {{ $attributes->merge(['type' => 'submit', 'class' => 'inline-flex items-center justify-center gap-2 rounded-champ bg-primaire-700 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-primaire-800 focus:outline-none focus:ring-2 focus:ring-primaire-600 focus:ring-offset-2 active:bg-primaire-900 disabled:opacity-50']) }}>
     {{ $slot }}
 </button>

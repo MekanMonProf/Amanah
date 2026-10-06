@@ -1,10 +1,11 @@
 <div class="p-4 sm:p-6">
-    <h1 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-1">{{ __("Importation de données") }}</h1>
+    <x-surtitre>{{ __('Administration') }}</x-surtitre>
+    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">{{ __("Importation de données") }}</h1>
     <p class="text-sm text-gray-500 mb-6">
         {{ __("Reprise de l'existant depuis un fichier Excel (.xlsx) ou CSV. Rien n'est enregistré avant que vous ayez validé le tableau de contrôle.") }}
     </p>
 
-    <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-6 text-sm text-blue-800">
+    <div class="bg-blue-50 border border-blue-200 rounded-champ p-3 mb-6 text-sm text-blue-800">
         ℹ️ {!! __("Ordre à respecter : <strong>gestionnaires</strong> → <strong>investisseurs</strong> → <strong>achats</strong> → <strong>écritures financières</strong>. Chaque étape s'appuie sur la précédente (un achat a besoin de son investisseur, un investisseur peut être rattaché à son gestionnaire).") !!}
     </div>
 
@@ -12,15 +13,15 @@
     <div class="flex flex-wrap gap-2 mb-6">
         @foreach ($types as $cle => $libelle)
             <button type="button" wire:click="changerType('{{ $cle }}')"
-                    class="px-4 py-2 rounded-lg text-sm border transition
-                           {{ $type === $cle ? 'bg-emerald-700 text-white border-emerald-700' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50' }}">
+                    class="px-4 py-2 rounded-champ text-sm border transition
+                           {{ $type === $cle ? 'bg-primaire-700 text-white border-primaire-700' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50' }}">
                 {{ $libelle }}
             </button>
         @endforeach
     </div>
 
     <!-- Étape 1 : le modèle -->
-    <div class="bg-white border rounded-lg p-5 mb-6 shadow-sm" x-data="{ colonnes: false }">
+    <div class="bg-white border rounded-carte p-5 mb-6" x-data="{ colonnes: false }">
         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
             <div>
                 <h2 class="font-semibold text-gray-800">{{ __('1. Préparer le fichier — :type', ['type' => $types[$type]]) }}</h2>
@@ -29,12 +30,12 @@
                 </p>
             </div>
             <a href="{{ route('import.modele', ['type' => $type]) }}"
-               class="bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm hover:bg-emerald-800 text-center whitespace-nowrap">
+               class="bg-primaire-700 text-white px-4 py-2 rounded-champ text-sm hover:bg-primaire-800 text-center whitespace-nowrap">
                 ⬇ {{ __("Télécharger le modèle CSV") }}
             </a>
         </div>
 
-        <button type="button" @click="colonnes = ! colonnes" class="text-sm text-emerald-700 hover:underline mt-3">
+        <button type="button" @click="colonnes = ! colonnes" class="text-sm text-primaire-700 hover:underline mt-3">
             {{-- style="display:none" évite le clignotement avant l'initialisation d'Alpine --}}
             <span x-show="! colonnes">{{ __('Voir les :nombre colonnes attendues', ['nombre' => count($schema)]) }}</span>
             <span x-show="colonnes" style="display: none">{{ __("Masquer les colonnes") }}</span>
@@ -76,7 +77,7 @@
     </div>
 
     <!-- Étape 2 : le fichier -->
-    <div class="bg-white border rounded-lg p-5 mb-6 shadow-sm">
+    <div class="bg-white border rounded-carte p-5 mb-6">
         <h2 class="font-semibold text-gray-800 mb-3">{{ __("2. Déposer le fichier") }}</h2>
 
         <x-champ-fichier model="fichier" accept=".xlsx,.xlsm,.csv,.txt,.tsv" />
@@ -93,7 +94,7 @@
     </div>
 
     @if ($erreurLecture)
-        <div class="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 mb-6 text-sm">
+        <div class="bg-red-50 border border-red-200 text-red-700 rounded-champ p-4 mb-6 text-sm">
             <strong>{{ __("Fichier non exploitable") }}</strong>
             <p class="mt-1">{{ $erreurLecture }}</p>
         </div>
@@ -101,37 +102,37 @@
 
     <!-- Étape 3 : contrôle avant enregistrement -->
     @if ($resume)
-        <div class="bg-white border rounded-lg p-5 mb-6 shadow-sm">
+        <div class="bg-white border rounded-carte p-5 mb-6">
             <h2 class="font-semibold text-gray-800 mb-4">{{ __("3. Contrôle avant enregistrement") }}</h2>
 
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
-                <div class="border rounded-lg p-3">
+                <div class="border rounded-champ p-3">
                     <div class="text-xs text-gray-500">{{ __("Lignes lues") }}</div>
                     <div class="text-xl font-semibold text-gray-800">{{ $resume['total'] }}</div>
                 </div>
-                <div class="border border-emerald-200 bg-emerald-50 rounded-lg p-3">
-                    <div class="text-xs text-emerald-700">{{ __("À importer") }}</div>
-                    <div class="text-xl font-semibold text-emerald-800">{{ $resume['valides'] }}</div>
+                <div class="border border-primaire-200 bg-primaire-50 rounded-champ p-3">
+                    <div class="text-xs text-primaire-700">{{ __("À importer") }}</div>
+                    <div class="text-xl font-semibold text-primaire-800">{{ $resume['valides'] }}</div>
                 </div>
-                <div class="border border-red-200 bg-red-50 rounded-lg p-3">
+                <div class="border border-red-200 bg-red-50 rounded-champ p-3">
                     <div class="text-xs text-red-700">{{ __("En erreur") }}</div>
                     <div class="text-xl font-semibold text-red-800">{{ $resume['erreurs'] }}</div>
                 </div>
-                <div class="border border-amber-200 bg-amber-50 rounded-lg p-3">
+                <div class="border border-amber-200 bg-amber-50 rounded-champ p-3">
                     <div class="text-xs text-amber-700">{{ __("Doublons ignorés") }}</div>
                     <div class="text-xl font-semibold text-amber-800">{{ $resume['doublons'] }}</div>
                 </div>
             </div>
 
             @if ($colonnesInconnues)
-                <div class="bg-amber-50 border border-amber-200 text-amber-800 rounded-lg p-3 mb-4 text-sm">
+                <div class="bg-amber-50 border border-amber-200 text-amber-800 rounded-champ p-3 mb-4 text-sm">
                     {{ __("Colonne(s) du fichier non reconnue(s), donc non importée(s) :") }}
                     <span class="font-mono text-xs">{{ implode(', ', $colonnesInconnues) }}</span>.
                     {{ __("Vérifiez l'orthographe des en-têtes si l'une d'elles devait être reprise.") }}
                 </div>
             @endif
 
-            <div class="overflow-x-auto border rounded-lg">
+            <div class="overflow-x-auto border rounded-champ">
                 <table class="min-w-full text-sm">
                     <thead class="bg-gray-50 text-gray-600">
                         <tr>
@@ -149,7 +150,7 @@
                                 <td class="px-3 py-2 text-gray-500">{{ $ligne['numero'] }}</td>
                                 <td class="px-3 py-2 whitespace-nowrap">
                                     @if ($ligne['statut'] === 'valide')
-                                        <span class="px-2 py-0.5 text-xs font-semibold rounded bg-emerald-100 text-emerald-700">{{ __("À importer") }}</span>
+                                        <span class="px-2 py-0.5 text-xs font-semibold rounded bg-primaire-100 text-primaire-700">{{ __("À importer") }}</span>
                                     @elseif ($ligne['statut'] === 'doublon')
                                         <span class="px-2 py-0.5 text-xs font-semibold rounded bg-amber-100 text-amber-700">{{ __("Doublon") }}</span>
                                     @else
@@ -178,13 +179,13 @@
             @endif
 
             @if ($type === 'achats')
-                <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-4 text-sm text-blue-800">
+                <div class="bg-blue-50 border border-blue-200 rounded-champ p-3 mt-4 text-sm text-blue-800">
                     ℹ️ {!! __("L'import n'enregistre que les achats. Les dividendes des mois passés se rattrapent ensuite en lançant <strong>:module</strong>, qui rejoue tout l'historique des barèmes déjà fixés.", ['module' => __('Dividendes → Calculer et distribuer')]) !!}
                 </div>
             @endif
 
             @if ($type === 'ecritures')
-                <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-4 text-sm text-blue-800">
+                <div class="bg-blue-50 border border-blue-200 rounded-champ p-3 mt-4 text-sm text-blue-800">
                     ℹ️ {{ __("Les écritures sont enregistrées dans l'ordre des lignes du fichier, chacune recalculant le solde du compte. Aucun réinvestissement automatique n'est déclenché : les achats correspondants doivent être repris par l'import « Achats d'actions ».") }}
                 </div>
             @endif
@@ -192,7 +193,7 @@
             <div class="mt-5 border-t pt-4">
                 @if ($resume['erreurs'] > 0)
                     <label class="flex items-start gap-2 text-sm text-gray-700 mb-3">
-                        <input type="checkbox" wire:model="confirmeIgnorerErreurs" class="mt-0.5 rounded border-gray-300 text-emerald-700">
+                        <input type="checkbox" wire:model="confirmeIgnorerErreurs" class="mt-0.5 rounded border-gray-300 text-primaire-700">
                         <span>
                             {!! __("J'ai lu le tableau : importer les <strong>:valides</strong> ligne(s) valide(s) et ignorer les <strong>:erreurs</strong> ligne(s) en erreur.", ['valides' => $resume['valides'], 'erreurs' => $resume['erreurs']]) !!}
                             {{ __("Je pourrai corriger le fichier et réimporter ces lignes ensuite.") }}
@@ -204,7 +205,7 @@
                 <div class="flex flex-col sm:flex-row gap-2">
                     <button type="button" wire:click="importer" wire:loading.attr="disabled" wire:target="importer"
                             @disabled($resume['valides'] === 0)
-                            class="bg-emerald-700 text-white px-5 py-2 rounded-lg hover:bg-emerald-800 disabled:opacity-50 disabled:cursor-not-allowed">
+                            class="bg-primaire-700 text-white px-5 py-2 rounded-champ hover:bg-primaire-800 disabled:opacity-50 disabled:cursor-not-allowed">
                         <span wire:loading.remove wire:target="importer">{{ __('Importer les :nombre ligne(s) valide(s)', ['nombre' => $resume['valides']]) }}</span>
                         <span wire:loading wire:target="importer">{{ __("Enregistrement en cours…") }}</span>
                     </button>
@@ -218,9 +219,9 @@
 
     <!-- Rapport final -->
     @if ($rapport)
-        <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-5 mb-6">
-            <h2 class="font-semibold text-emerald-800 mb-2">{{ __('Import terminé — :type', ['type' => $types[$rapport['type']]]) }}</h2>
-            <ul class="text-sm text-emerald-800 space-y-1">
+        <div class="bg-primaire-50 border border-primaire-200 rounded-champ p-5 mb-6">
+            <h2 class="font-semibold text-primaire-800 mb-2">{{ __('Import terminé — :type', ['type' => $types[$rapport['type']]]) }}</h2>
+            <ul class="text-sm text-primaire-800 space-y-1">
                 <li>✓ {!! __('<strong>:nombre</strong> ligne(s) enregistrée(s) depuis :fichier', ['nombre' => $rapport['importees'], 'fichier' => e($rapport['fichier'])]) !!}</li>
                 @if ($rapport['doublons'] > 0)
                     <li>• {{ __(':nombre doublon(s) ignoré(s) — déjà présents en base', ['nombre' => $rapport['doublons']]) }}</li>
@@ -229,12 +230,12 @@
                     <li>• {{ __(':nombre ligne(s) en erreur non importée(s) — corrigez-les dans le fichier puis relancez un import', ['nombre' => $rapport['erreurs']]) }}</li>
                 @endif
             </ul>
-            <p class="text-xs text-emerald-700 mt-3">{{ __("L'opération est tracée dans le journal d'audit.") }}</p>
+            <p class="text-xs text-primaire-700 mt-3">{{ __("L'opération est tracée dans le journal d'audit.") }}</p>
         </div>
     @endif
 
     @if ($motsDePasse)
-        <div class="bg-amber-50 border border-amber-200 rounded-lg p-5 mb-6">
+        <div class="bg-amber-50 border border-amber-200 rounded-champ p-5 mb-6">
             <h2 class="font-semibold text-amber-800 mb-1">{{ __("Mots de passe temporaires") }}</h2>
             <p class="text-sm text-amber-800 mb-3">
                 {{ __("Aucun email n'a été envoyé (un import crée plusieurs comptes d'un coup).") }}
@@ -244,7 +245,7 @@
                 {{ __('sur la page') }} <a href="{{ route('gestionnaires.index') }}" class="underline" wire:navigate>{{ __("Gestionnaires") }}</a>.
             </p>
             <div class="overflow-x-auto">
-                <table class="min-w-full text-sm bg-white rounded-lg">
+                <table class="min-w-full text-sm bg-white rounded-champ">
                     <thead class="bg-amber-100 text-amber-900">
                         <tr>
                             <th class="text-start px-3 py-2 font-medium">{{ __("Nom") }}</th>

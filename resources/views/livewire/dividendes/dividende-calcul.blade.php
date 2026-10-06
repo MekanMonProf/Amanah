@@ -1,16 +1,17 @@
 <div class="p-4 sm:p-6 max-w-2xl">
-    <h1 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-1">{{ __("Calcul des dividendes") }}</h1>
+    <x-surtitre>{{ __('Finance') }}</x-surtitre>
+    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">{{ __("Calcul des dividendes") }}</h1>
     <p class="text-sm text-gray-500 mb-6">
         {{ __("Fixe le taux de la période choisie (une seule fois, définitif), puis rejoue automatiquement tout l'historique connu pour que chaque compte reçoive tout ce qu'il n'a pas encore perçu.") }}
     </p>
 
     @if (session('succes_parametre'))
-        <div class="bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-lg p-3 mb-4 text-sm">
+        <div class="bg-primaire-50 border border-primaire-200 text-primaire-700 rounded-champ p-3 mb-4 text-sm">
             {{ session('succes_parametre') }}
         </div>
     @endif
 
-    <div class="bg-gray-50 border rounded-lg p-4 mb-6">
+    <div class="bg-gray-50 border rounded-champ p-4 mb-6">
         <div class="flex justify-between items-center">
             <div>
                 <div class="text-sm font-medium text-gray-700">{{ __("Règle d'éligibilité en fin de mois") }}</div>
@@ -24,7 +25,7 @@
                     </p>
                 @endif
             </div>
-            <button type="button" wire:click="$toggle('modifierDelai')" class="text-sm text-emerald-700 hover:underline whitespace-nowrap">
+            <button type="button" wire:click="$toggle('modifierDelai')" class="text-sm text-primaire-700 hover:underline whitespace-nowrap">
                 {{ $modifierDelai ? __('Annuler') : __('Modifier') }}
             </button>
         </div>
@@ -35,7 +36,7 @@
                     <label class="text-xs text-gray-500">{{ __("Nombre de jours avant la fin du mois") }}</label>
                     <input type="number" min="0" max="30" wire:model="delaiEligibiliteJours" class="border rounded px-3 py-1.5 w-24">
                 </div>
-                <button type="button" wire:click="enregistrerDelai" class="bg-emerald-700 text-white px-4 py-1.5 rounded-lg text-sm">
+                <button type="button" wire:click="enregistrerDelai" class="bg-primaire-700 text-white px-4 py-1.5 rounded-champ text-sm">
                     {{ __("Enregistrer") }}
                 </button>
             </div>
@@ -58,7 +59,7 @@
                         </p>
                     @endif
                 </div>
-                <button type="button" wire:click="$toggle('modifierDelaiRadiation')" class="text-sm text-emerald-700 hover:underline whitespace-nowrap">
+                <button type="button" wire:click="$toggle('modifierDelaiRadiation')" class="text-sm text-primaire-700 hover:underline whitespace-nowrap">
                     {{ $modifierDelaiRadiation ? __('Annuler') : __('Modifier') }}
                 </button>
             </div>
@@ -69,7 +70,7 @@
                         <label class="text-xs text-gray-500">{{ __('Nombre de jours avant la fin du mois') }}</label>
                         <input type="number" min="0" max="31" wire:model="delaiRadiationJours" class="border rounded px-3 py-1.5 w-24">
                     </div>
-                    <button type="button" wire:click="enregistrerDelaiRadiation" class="bg-emerald-700 text-white px-4 py-1.5 rounded-lg text-sm">
+                    <button type="button" wire:click="enregistrerDelaiRadiation" class="bg-primaire-700 text-white px-4 py-1.5 rounded-champ text-sm">
                         {{ __('Enregistrer') }}
                     </button>
                 </div>
@@ -79,7 +80,7 @@
         </div>
     </div>
 
-    <form wire:submit="calculerEtDistribuer" class="bg-white border rounded-lg p-5 shadow-sm space-y-4">
+    <form wire:submit="calculerEtDistribuer" class="bg-white border rounded-carte p-5 space-y-4">
         <div>
             <label class="text-sm text-gray-600">{{ __("Période (mois concerné)") }}</label>
             <input type="month" wire:model.live="periode"
@@ -111,12 +112,12 @@
             </div>
         </div>
 
-        <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-800">
+        <div class="bg-blue-50 border border-blue-200 rounded-champ p-3 text-sm text-blue-800">
             ℹ️ {!! __("Chaque lancement rejoue automatiquement <strong>tout l'historique</strong> des barèmes déjà fixés, pas seulement cette période. Un compte ouvert après coup rattrape ainsi tous les mois qu'il a manqués, avec le taux qui était en vigueur à chaque période.") !!}
         </div>
 
         <button type="submit" wire:loading.attr="disabled" wire:target="calculerEtDistribuer"
-                class="bg-emerald-700 text-white px-5 py-2 rounded-lg w-full sm:w-auto disabled:opacity-50 disabled:cursor-not-allowed">
+                class="bg-primaire-700 text-white px-5 py-2 rounded-champ w-full sm:w-auto disabled:opacity-50 disabled:cursor-not-allowed">
             <span wire:loading.remove wire:target="calculerEtDistribuer">{{ __("Calculer et distribuer") }}</span>
             <span wire:loading wire:target="calculerEtDistribuer">{{ __("Calcul en cours...") }}</span>
         </button>
@@ -127,7 +128,7 @@
             <h2 class="font-semibold text-gray-800">{{ __("Résultat de ce passage (toutes périodes confondues)") }}</h2>
 
             @foreach (['commercial' => 'Commercial', 'waqf' => 'Waqf'] as $cle => $label)
-                <div class="bg-white border rounded-lg p-4">
+                <div class="bg-white border rounded-carte p-4">
                     <div class="flex justify-between items-center mb-2">
                         <span class="px-2 py-1 text-xs font-semibold rounded {{ $cle === 'commercial' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700' }}">
                             {{ $label }}
@@ -144,7 +145,7 @@
                         </div>
                         <div>
                             <div class="text-xs text-gray-500">{{ __("Total distribué") }}</div>
-                            <div class="text-lg font-semibold text-emerald-700">{{ \App\Support\Montant::format($resultats[$cle]['total_distribue']) }}&#8239;CFA</div>
+                            <div class="text-lg font-semibold text-primaire-700">{{ \App\Support\Montant::format($resultats[$cle]['total_distribue']) }}&#8239;CFA</div>
                         </div>
                     </div>
                 </div>
@@ -155,7 +156,7 @@
     @if (!empty($baremesHistorique))
         <div class="mt-8">
             <h2 class="font-semibold text-gray-800 mb-3">{{ __("Historique des barèmes fixés") }}</h2>
-            <table class="w-full bg-white border rounded-lg text-sm">
+            <table class="w-full bg-white border rounded-carte text-sm">
                 <thead class="bg-gray-50 text-start text-gray-600">
                     <tr>
                         <th class="p-2">{{ __("Période") }}</th>

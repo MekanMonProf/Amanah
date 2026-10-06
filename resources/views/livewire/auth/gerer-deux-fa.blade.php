@@ -8,7 +8,7 @@
 
     <div class="mt-6">
         @if ($codesRecuperationGeneres)
-            <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4">
+            <div class="bg-amber-50 border border-amber-200 rounded-champ p-4 mb-4">
                 <p class="text-sm font-semibold text-amber-800 mb-2">
                     {{ __("✓ 2FA activé. Notez ces codes de récupération dans un endroit sûr — ils ne s'afficheront plus jamais. Chacun ne fonctionne qu'une seule fois, en cas de perte de votre téléphone.") }}
                 </p>
@@ -21,10 +21,10 @@
         @endif
 
         @if (auth()->user()->deux_fa_actif)
-            <div class="flex items-center justify-between bg-emerald-50 border border-emerald-200 rounded-lg p-4">
+            <div class="flex items-center justify-between bg-primaire-50 border border-primaire-200 rounded-champ p-4">
                 <div>
-                    <p class="text-sm font-medium text-emerald-800">{{ __("2FA activé") }}</p>
-                    <p class="text-xs text-emerald-600">{{ __('Depuis le :date', ['date' => auth()->user()->deux_fa_confirme_le?->format('d/m/Y')]) }}</p>
+                    <p class="text-sm font-medium text-primaire-800">{{ __("2FA activé") }}</p>
+                    <p class="text-xs text-primaire-600">{{ __('Depuis le :date', ['date' => auth()->user()->deux_fa_confirme_le?->format('d/m/Y')]) }}</p>
                 </div>
                 @if (! $confirmerDesactivation)
                     <button wire:click="demanderDesactivation" class="text-sm text-red-600 hover:underline">
@@ -34,7 +34,7 @@
             </div>
 
             @if ($confirmerDesactivation)
-                <form wire:submit="desactiver" class="mt-4 bg-white border rounded-lg p-4">
+                <form wire:submit="desactiver" class="mt-4 bg-white border rounded-carte p-4">
                     <label class="text-sm text-gray-600">{{ __("Confirmez avec votre mot de passe pour désactiver le 2FA") }}</label>
                     <x-text-input wire:model="motDePasseDesactivation" type="password" class="block mt-1 w-full" />
                     <x-input-error :messages="$errors->get('motDePasseDesactivation')" class="mt-2" />
@@ -46,12 +46,12 @@
             @endif
 
         @elseif ($enCoursActivation)
-            <div class="bg-white border rounded-lg p-4">
+            <div class="bg-white border rounded-carte p-4">
                 <p class="text-sm text-gray-700 mb-3">
                     {{ __("Scannez ce QR code avec votre application d'authentification, puis entrez le code à 6 chiffres généré.") }}
                 </p>
                 <div class="flex justify-center mb-4">
-                    <img src="{{ $qrCodeSvg }}" alt="{{ __("QR Code d'activation 2FA") }}" class="border rounded-lg p-2" width="200" height="200">
+                    <img src="{{ $qrCodeSvg }}" alt="{{ __("QR Code d'activation 2FA") }}" class="border rounded-champ p-2" width="200" height="200">
                 </div>
                 <p class="text-xs text-gray-400 text-center mb-4">
                     {{ __("Impossible de scanner ? Clé manuelle :") }} <span class="font-mono">{{ $secretTemporaire }}</span>
@@ -65,7 +65,7 @@
                 </form>
             </div>
         @else
-            <button wire:click="demarrerActivation" class="bg-emerald-700 text-white px-4 py-2 rounded-lg hover:bg-emerald-800 text-sm">
+            <button wire:click="demarrerActivation" class="bg-primaire-700 text-white px-4 py-2 rounded-champ hover:bg-primaire-800 text-sm">
                 {{ __("Activer le 2FA") }}
             </button>
         @endif

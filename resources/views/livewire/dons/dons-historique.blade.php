@@ -47,7 +47,7 @@
                             @if ($emis)
                                 <span class="px-2 py-0.5 text-xs rounded-full bg-amber-100 text-amber-800 whitespace-nowrap">{{ __("Donné") }}</span>
                             @else
-                                <span class="px-2 py-0.5 text-xs rounded-full bg-emerald-100 text-emerald-700 whitespace-nowrap">{{ __("Reçu") }}</span>
+                                <span class="px-2 py-0.5 text-xs rounded-full bg-primaire-100 text-primaire-700 whitespace-nowrap">{{ __("Reçu") }}</span>
                             @endif
                             @if ($don->type_operation === 'succession')
                                 <span class="ms-1 px-2 py-0.5 text-xs rounded-full bg-gray-100 text-gray-600 whitespace-nowrap">{{ __("Succession") }}</span>
@@ -55,7 +55,7 @@
                         </td>
                         <td class="py-1">
                             @if ($autre?->investisseur)
-                                <a href="{{ route('investisseurs.show', $autre->investisseur) }}" wire:navigate class="text-emerald-700 hover:underline">
+                                <a href="{{ route('investisseurs.show', $autre->investisseur) }}" wire:navigate class="text-primaire-700 hover:underline">
                                     <bdi>{{ $autre->investisseur->nom }} {{ $autre->investisseur->prenom }}</bdi>
                                 </a>
                                 <span class="block text-xs text-gray-400 font-mono">{{ $autre->numero_compte }}</span>
@@ -74,7 +74,7 @@
                         <td class="py-1 text-end">
                             @if ($don->piece_justificative_path)
                                 <a href="{{ \App\Support\Document::lien($don, 'piece_justificative_path') }}" target="_blank"
-                                   class="text-xs text-emerald-700 hover:underline whitespace-nowrap">
+                                   class="text-xs text-primaire-700 hover:underline whitespace-nowrap">
                                     {{ __("📄 Pièce") }}
                                 </a>
                             @endif

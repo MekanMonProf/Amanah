@@ -10,22 +10,22 @@
         </div>
     @else
 
-    <h1 class="text-xl sm:text-2xl font-semibold text-gray-800 mt-2 mb-1">{{ __("Ajustement du compte financier") }}</h1>
+    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mt-2 mb-1">{{ __("Ajustement du compte financier") }}</h1>
     <p class="text-sm text-gray-500 mb-6">
         {{ $compte->investisseur->nom }} {{ $compte->investisseur->prenom }} ·
         <span class="font-mono">{{ $compte->numero_compte }}</span> ({{ __(\App\Support\Libelles::categorie($compte->categorie)) }})
     </p>
 
-    <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6 text-sm text-amber-800">
+    <div class="bg-amber-50 border border-amber-200 rounded-champ p-4 mb-6 text-sm text-amber-800">
         ⚠️ {!! __("Un ajustement <strong>ne modifie ni ne supprime</strong> aucune opération existante — il ajoute une nouvelle écriture qui corrige le solde, en gardant une trace complète de l'erreur et de sa correction (traçabilité totale, conformément aux règles de gestion).") !!}
     </div>
 
-    <div class="bg-white border rounded-lg p-4 mb-6">
+    <div class="bg-white border rounded-carte p-4 mb-6">
         <div class="text-xs text-gray-500 uppercase">{{ __("Solde actuel du compte") }}</div>
         <div class="text-2xl font-semibold text-gray-800">{{ \App\Support\Montant::format($compte->solde()) }}&#8239;CFA</div>
     </div>
 
-    <form wire:submit="enregistrer" class="bg-white border rounded-lg p-5 shadow-sm space-y-4">
+    <form wire:submit="enregistrer" class="bg-white border rounded-carte p-5 space-y-4">
         <div>
             <label class="text-sm text-gray-600">{{ __("Montant de l'ajustement (CFA)") }}</label>
             <input type="number" step="0.01" wire:model="montant" class="w-full border rounded px-3 py-2"
@@ -50,13 +50,13 @@
         </div>
 
         @if ($montant !== null)
-            <div class="bg-gray-50 border rounded-lg p-3 text-sm">
+            <div class="bg-gray-50 border rounded-champ p-3 text-sm">
                 {{ __("Nouveau solde après ajustement :") }}
                 <strong>{{ \App\Support\Montant::format($compte->solde() + $montant) }}&#8239;CFA</strong>
             </div>
         @endif
 
-        <button type="submit" class="bg-amber-600 text-white px-5 py-2 rounded-lg w-full sm:w-auto hover:bg-amber-700">
+        <button type="submit" class="bg-amber-600 text-white px-5 py-2 rounded-champ w-full sm:w-auto hover:bg-amber-700">
             {{ __("Enregistrer l'ajustement") }}
         </button>
     </form>

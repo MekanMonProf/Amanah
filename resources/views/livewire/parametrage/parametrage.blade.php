@@ -1,42 +1,43 @@
 <div class="max-w-6xl">
     <div class="mb-6">
-        <h1 class="text-2xl font-semibold text-gray-800">{{ __("Paramétrage") }}</h1>
+        <x-surtitre>{{ __('Administration') }}</x-surtitre>
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">{{ __("Paramétrage") }}</h1>
         <p class="text-sm text-gray-500">{{ __("Ce que chaque rôle peut faire, et ce qu'un dossier doit contenir.") }}</p>
     </div>
 
     @if (session('succes_parametrage'))
-        <div class="mb-4 text-sm text-emerald-800 bg-emerald-50 border border-emerald-200 rounded-lg px-4 py-3">
+        <div class="mb-4 text-sm text-primaire-800 bg-primaire-50 border border-primaire-200 rounded-champ px-4 py-3">
             ✓ {{ session('succes_parametrage') }}
         </div>
     @endif
 
     @if (session('info_parametrage'))
-        <div class="mb-4 text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-lg px-4 py-3">
+        <div class="mb-4 text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-champ px-4 py-3">
             {{ session('info_parametrage') }}
         </div>
     @endif
 
     <div class="flex flex-wrap gap-2 mb-5 border-b">
         <button type="button" wire:click="changerOnglet('droits')"
-                class="px-4 py-2 text-sm -mb-px border-b-2 {{ $onglet === 'droits' ? 'border-emerald-600 text-emerald-700 font-medium' : 'border-transparent text-gray-500 hover:text-gray-700' }}">
+                class="px-4 py-2 text-sm -mb-px border-b-2 {{ $onglet === 'droits' ? 'border-primaire-600 text-primaire-700 font-medium' : 'border-transparent text-gray-500 hover:text-gray-700' }}">
             {{ __("Accès aux modules") }}
         </button>
         <button type="button" wire:click="changerOnglet('comptes')"
-                class="px-4 py-2 text-sm -mb-px border-b-2 {{ $onglet === 'comptes' ? 'border-emerald-600 text-emerald-700 font-medium' : 'border-transparent text-gray-500 hover:text-gray-700' }}">
+                class="px-4 py-2 text-sm -mb-px border-b-2 {{ $onglet === 'comptes' ? 'border-primaire-600 text-primaire-700 font-medium' : 'border-transparent text-gray-500 hover:text-gray-700' }}">
             {{ __("Comptes utilisateurs") }}
         </button>
         <button type="button" wire:click="changerOnglet('financiers')"
-                class="px-4 py-2 text-sm -mb-px border-b-2 {{ $onglet === 'financiers' ? 'border-emerald-600 text-emerald-700 font-medium' : 'border-transparent text-gray-500 hover:text-gray-700' }}">
+                class="px-4 py-2 text-sm -mb-px border-b-2 {{ $onglet === 'financiers' ? 'border-primaire-600 text-primaire-700 font-medium' : 'border-transparent text-gray-500 hover:text-gray-700' }}">
             {{ __("Paramètres financiers") }}
         </button>
         <button type="button" wire:click="changerOnglet('champs')"
-                class="px-4 py-2 text-sm -mb-px border-b-2 {{ $onglet === 'champs' ? 'border-emerald-600 text-emerald-700 font-medium' : 'border-transparent text-gray-500 hover:text-gray-700' }}">
+                class="px-4 py-2 text-sm -mb-px border-b-2 {{ $onglet === 'champs' ? 'border-primaire-600 text-primaire-700 font-medium' : 'border-transparent text-gray-500 hover:text-gray-700' }}">
             {{ __("Champs du dossier") }}
         </button>
     </div>
 
     @if ($onglet === 'droits')
-        <form wire:submit="enregistrerDroits" class="bg-white border rounded-lg shadow-sm">
+        <form wire:submit="enregistrerDroits" class="bg-white border rounded-carte">
             <div class="p-5 border-b">
                 <h2 class="font-semibold text-gray-800">{{ __("Accès aux modules") }}</h2>
                 <p class="mt-1 text-sm text-gray-500">
@@ -87,7 +88,7 @@
             </div>
 
             <div class="p-5 border-t flex flex-wrap items-center gap-3">
-                <button type="submit" class="text-sm text-white bg-emerald-600 rounded-lg px-4 py-2 hover:bg-emerald-700">
+                <button type="submit" class="text-sm text-white bg-primaire-600 rounded-champ px-4 py-2 hover:bg-primaire-700">
                     {{ __("Enregistrer les droits") }}
                 </button>
                 <span class="text-xs text-gray-500">

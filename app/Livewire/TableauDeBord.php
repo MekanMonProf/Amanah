@@ -76,7 +76,13 @@ class TableauDeBord extends Component
         });
 
         $totalDividendesDistribues = Dividende::sum('montant_calcule');
-        $dividendesCeMois = Dividende::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->sum('montant_calcule');
+        // Sur la période, pas sur la date d'enregistrement. Les deux coïncidaient tant
+        // qu'un mois était distribué dans le mois ; la reprise de l'historique les a
+        // séparés d'un coup — vingt mois de dividendes enregistrés le même jour, et la
+        // tuile annonçait alors tout l'historique comme perçu ce mois-ci.
+        $dividendesCeMois = Dividende::whereMonth('periode', now()->month)
+            ->whereYear('periode', now()->year)
+            ->sum('montant_calcule');
 
         $totalRadiationsMontant = Radiation::sum('montant_total');
         $totalRadiationsVersees = EcritureCompteFinancier::where('reference_type', 'radiations')

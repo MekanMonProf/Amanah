@@ -1,17 +1,36 @@
-<div class="p-4 sm:p-6">
+<div class="p-4 sm:p-6 lg:p-8">
     <a href="{{ route('investisseurs.index') }}" wire:navigate class="text-sm text-gray-500 hover:underline">{{ __("← Retour à la liste") }}</a>
 
-    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mt-2 mb-6">
-        <div>
-            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">
+    <div class="mt-2 mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div class="min-w-0">
+            <x-surtitre>{{ __("Dossier investisseur") }}</x-surtitre>
+            <h1 class="mt-1 text-2xl sm:text-3xl font-bold text-gray-900">
                 {{ $investisseur->nom }} {{ $investisseur->prenom }}
             </h1>
-            <p class="text-sm text-gray-500 font-mono">{{ $investisseur->identifiant_externe }}</p>
+            <div class="mt-1 flex flex-wrap items-center gap-2">
+                <span class="font-mono text-sm text-gray-500">{{ $investisseur->identifiant_externe }}</span>
+                <span class="rounded-full px-2.5 py-0.5 text-xs font-medium
+                    {{ $investisseur->statut === 'actif' ? 'bg-primaire-100 text-primaire-800' : ($investisseur->statut === 'decede' ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-600') }}">
+                    {{ $investisseur->statut === 'decede' ? __("Décédé(e)") : __($investisseur->statut) }}
+                </span>
+            </div>
         </div>
-        <span class="self-start px-3 py-1 text-sm rounded-full
-            {{ $investisseur->statut === 'actif' ? 'bg-primaire-100 text-primaire-700' : ($investisseur->statut === 'decede' ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-600') }}">
-            {{ $investisseur->statut === 'decede' ? __("Décédé(e)") : __($investisseur->statut) }}
-        </span>
+
+        {{-- Les deux gestes du quotidien, à portée. Le reste — décès, désactivation —
+             descend plus bas : ce sont des actes rares, qui ne doivent pas se trouver
+             sous la main de qui vient simplement consulter un dossier. --}}
+        @if (auth()->user()->role !== 'lecture' && ! $investisseur->estDecede())
+            <div class="flex shrink-0 flex-wrap gap-2">
+                <a href="{{ route('investisseurs.modifier', $investisseur) }}" wire:navigate
+                   class="inline-flex items-center gap-2 rounded-champ border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 transition hover:bg-gray-50">
+                    {{ __("Modifier le dossier") }}
+                </a>
+                <a href="{{ route('achats.creer', $investisseur) }}" wire:navigate
+                   class="inline-flex items-center gap-2 rounded-champ bg-primaire-700 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-primaire-800">
+                    {{ __("+ Nouvel achat") }}
+                </a>
+            </div>
+        @endif
     </div>
 
     @if ($investisseur->estDecede())
@@ -42,38 +61,61 @@
         </div>
     @endif
 
-    @if (auth()->user()->role !== 'lecture' && ! $investisseur->estDecede())
-        <a href="{{ route('investisseurs.modifier', $investisseur) }}" wire:navigate
-           class="inline-block mb-6 text-sm text-primaire-700 border border-primaire-700 rounded-champ px-4 py-2 hover:bg-primaire-50">
-            {{ __("Modifier le dossier") }}
-        </a>
-        @if (in_array(auth()->user()->role, ['direction', 'administrateur']))
-            <a href="{{ route('deces.declarer', $investisseur) }}" wire:navigate
-               class="inline-block mb-6 ms-2 text-sm text-gray-700 border border-gray-300 rounded-champ px-4 py-2 hover:bg-gray-50">
-                {{ __("Déclarer un décès") }}
-            </a>
-            <button wire:click="basculerActifInvestisseur" wire:confirm="{{ $investisseur->statut === 'actif' ? __("Désactiver ce dossier ? L'accès portail sera coupé s'il en a un.") : __("Réactiver ce dossier ?") }}"
-                    class="inline-block mb-6 ms-2 text-sm text-gray-700 border border-gray-300 rounded-champ px-4 py-2 hover:bg-gray-50">
-                {{ $investisseur->statut === 'actif' ? __("Désactiver") : __("Réactiver") }}
-            </button>
-        @endif
-    @endif
+    @php($manquants = $investisseur->champsManquants())
+    @php($actionsCommerciales = $comptesEnrichis->firstWhere('compte.categorie', 'commercial')['nombre_actions'] ?? 0)
+    @php($actionsWaqf = $comptesEnrichis->firstWhere('compte.categorie', 'waqf')['nombre_actions'] ?? 0)
+    @php($soldeTotal = $comptesEnrichis->sum('solde'))
 
-    <div class="bg-white border rounded-carte p-4 mb-6 inline-block">
-        <form action="{{ route('investisseurs.releve', $investisseur) }}" method="GET" target="_blank" class="flex flex-wrap items-end gap-2">
-            <div>
-                <label class="text-xs text-gray-500 block mb-1">{{ __("Du (optionnel)") }}</label>
-                <input type="date" name="date_debut" class="border rounded px-2 py-1.5 text-sm">
+    {{--
+        Ce qu'il détient, avant qui il est. Un gestionnaire qui ouvre un dossier
+        cherche d'abord la position — ces chiffres étaient jusqu'ici tout en bas de
+        la page, sous l'état civil et les pièces jointes.
+    --}}
+    <div class="mb-6 overflow-hidden rounded-carte bg-nuit-900 shadow-sm">
+        <div class="flex flex-col gap-6 p-6 lg:flex-row lg:items-center lg:gap-10">
+            <div class="lg:w-56 lg:shrink-0">
+                <x-surtitre class="text-white/40">{{ __("Position") }}</x-surtitre>
+                <p class="mt-1 text-lg font-bold text-white">{{ __("Ce qu'il détient") }}</p>
+                <p class="mt-1 text-sm text-white/60">
+                    {{ __(":nombre compte(s)", ['nombre' => $comptesEnrichis->count()]) }}
+                </p>
             </div>
-            <div>
-                <label class="text-xs text-gray-500 block mb-1">{{ __("Au (optionnel)") }}</label>
-                <input type="date" name="date_fin" class="border rounded px-2 py-1.5 text-sm">
+
+            <div class="grid flex-1 grid-cols-1 gap-5 sm:grid-cols-3 lg:gap-6 lg:divide-x lg:divide-white/10 rtl:lg:divide-x-reverse">
+                @foreach ([
+                    ['etiquette' => __("Actions commerciales"), 'valeur' => \App\Support\Montant::format($actionsCommerciales), 'accent' => false],
+                    ['etiquette' => __("Actions waqf"), 'valeur' => \App\Support\Montant::format($actionsWaqf), 'accent' => false],
+                    ['etiquette' => __("Solde total"), 'valeur' => \App\Support\Montant::avecDevise($soldeTotal), 'accent' => true],
+                ] as $i => $chiffre)
+                    <div class="{{ $i > 0 ? 'lg:ps-6' : '' }}">
+                        <p class="text-xs font-medium uppercase tracking-wide text-white/50">{{ $chiffre['etiquette'] }}</p>
+                        <p class="mt-1 text-xl font-bold sm:text-2xl {{ $chiffre['accent'] ? 'text-primaire-400' : 'text-white' }}">
+                            {{ $chiffre['valeur'] }}
+                        </p>
+                    </div>
+                @endforeach
             </div>
-            <button type="submit" class="text-sm text-gray-700 border border-gray-300 rounded-champ px-4 py-1.5 hover:bg-gray-50 whitespace-nowrap">
-                {{ __("📄 Relevé de compte (PDF)") }}
-            </button>
-        </form>
-        <p class="text-xs text-gray-400 mt-1">{{ __("Laissez vide pour l'historique complet.") }}</p>
+        </div>
+
+        @if ($manquants && auth()->user()->role !== 'lecture')
+            <a href="{{ route('investisseurs.modifier', $investisseur) }}" wire:navigate
+               class="flex items-center gap-4 border-t border-white/10 px-6 py-4 transition hover:bg-white/5">
+                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-champ bg-or-500/15 text-or-300">
+                    <x-icone nom="alerte" class="h-5 w-5" />
+                </span>
+                <span class="min-w-0 flex-1">
+                    <span class="block text-sm font-semibold text-white">
+                        {{ __("Dossier incomplet — :nombre élément(s) manquant(s)", ['nombre' => count($manquants)]) }}
+                    </span>
+                    <span class="block truncate text-xs text-white/50">
+                        {{ collect($manquants)->map(fn ($m) => __($m))->implode(' · ') }}
+                    </span>
+                </span>
+                <svg class="h-5 w-5 shrink-0 text-white/40 rtl:-scale-x-100" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                </svg>
+            </a>
+        @endif
     </div>
 
     @if (session('erreur_acces'))
@@ -173,24 +215,19 @@
         @endif
     </div>
 
-    @php($manquants = $investisseur->champsManquants())
-    @if ($manquants)
-        {{-- Signale sans bloquer : le dossier reste utilisable, mais l ecart se voit. --}}
-        <div class="bg-amber-50 border border-amber-200 rounded-champ p-4 mb-4">
-            <p class="text-sm font-semibold text-amber-800">
+    {{-- Le dossier incomplet est annoncé dans le bandeau, en haut : signalé une fois,
+         là où on regarde, plutôt que deux fois au milieu de la page. Un lecteur, qui
+         ne peut rien compléter, voit tout de même la liste ici. --}}
+    @if ($manquants && auth()->user()->role === 'lecture')
+        <div class="bg-or-50 border border-or-300 rounded-carte p-4 mb-4">
+            <p class="text-sm font-semibold text-or-700">
                 {{ __("Dossier incomplet — :nombre élément(s) manquant(s)", ['nombre' => count($manquants)]) }}
             </p>
-            <ul class="mt-2 text-sm text-amber-800 list-disc list-inside space-y-0.5">
+            <ul class="mt-2 text-sm text-or-700 list-disc list-inside space-y-0.5">
                 @foreach ($manquants as $manquant)
                     <li>{{ __($manquant) }}</li>
                 @endforeach
             </ul>
-            @if (auth()->user()->role !== 'lecture')
-                <a href="{{ route('investisseurs.modifier', $investisseur) }}" wire:navigate
-                   class="mt-3 inline-block text-sm text-amber-900 underline">
-                    {{ __("Compléter le dossier") }} &rarr;
-                </a>
-            @endif
         </div>
     @endif
 
@@ -397,13 +434,9 @@
     @endif
 
     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-3">
-        <h2 class="text-lg font-semibold text-gray-800">{{ __("Comptes d'investissement") }}</h2>
-        @if (auth()->user()->role !== 'lecture' && ! $investisseur->estDecede())
-            <a href="{{ route('achats.creer', $investisseur) }}" wire:navigate
-               class="bg-primaire-700 text-white px-4 py-2 rounded-champ hover:bg-primaire-800 text-sm text-center w-full sm:w-auto">
-                {{ __("+ Nouvel achat") }}
-            </a>
-        @endif
+        {{-- Le bouton d'achat vit en haut de page, avec les autres gestes du quotidien :
+             le répéter ici ferait deux fois le même bouton sur un seul écran. --}}
+        <h2 class="text-lg font-bold text-gray-900">{{ __("Comptes d'investissement") }}</h2>
     </div>
 
     @forelse ($comptesEnrichis as $item)
@@ -508,4 +541,51 @@
             {{ __("Aucun compte pour l'instant. Un compte sera créé automatiquement au premier achat d'actions (Commercial ou Waqf selon le type d'achat).") }}
         </div>
     @endforelse
+
+    {{--
+        Le bas de page : emporter un document, puis les actes rares.
+
+        Le relevé occupait le haut de la fiche, avant même l'identité. C'est une
+        sortie — on le prend en partant — et la déclaration de décès comme la
+        désactivation n'ont rien à faire sous la main de qui vient consulter.
+    --}}
+    <div class="mt-8 border-t border-gray-200 pt-6">
+        <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+            <div>
+                <x-surtitre>{{ __("Relevé de compte") }}</x-surtitre>
+                <form action="{{ route('investisseurs.releve', $investisseur) }}" method="GET" target="_blank"
+                      class="mt-2 flex flex-wrap items-end gap-2">
+                    <div>
+                        <label class="mb-1 block text-xs text-gray-500">{{ __("Du (optionnel)") }}</label>
+                        <input type="date" name="date_debut" class="rounded-champ border-gray-300 px-3 py-2 text-sm">
+                    </div>
+                    <div>
+                        <label class="mb-1 block text-xs text-gray-500">{{ __("Au (optionnel)") }}</label>
+                        <input type="date" name="date_fin" class="rounded-champ border-gray-300 px-3 py-2 text-sm">
+                    </div>
+                    <button type="submit"
+                            class="whitespace-nowrap rounded-champ border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-50">
+                        {{ __("📄 Relevé de compte (PDF)") }}
+                    </button>
+                </form>
+                <p class="mt-1 text-xs text-gray-400">{{ __("Laissez vide pour l'historique complet.") }}</p>
+            </div>
+
+            @if (auth()->user()->role !== 'lecture' && ! $investisseur->estDecede() && in_array(auth()->user()->role, ['direction', 'administrateur']))
+                <div class="lg:text-end">
+                    <x-surtitre>{{ __("Actes rares") }}</x-surtitre>
+                    <div class="mt-2 flex flex-wrap gap-2 lg:justify-end">
+                        <a href="{{ route('deces.declarer', $investisseur) }}" wire:navigate
+                           class="rounded-champ border border-gray-300 bg-white px-4 py-2 text-sm text-gray-700 transition hover:bg-gray-50">
+                            {{ __("Déclarer un décès") }}
+                        </a>
+                        <button wire:click="basculerActifInvestisseur" wire:confirm="{{ $investisseur->statut === 'actif' ? __("Désactiver ce dossier ? L'accès portail sera coupé s'il en a un.") : __("Réactiver ce dossier ?") }}"
+                                class="rounded-champ border border-gray-300 bg-white px-4 py-2 text-sm text-gray-700 transition hover:bg-gray-50">
+                            {{ $investisseur->statut === 'actif' ? __("Désactiver") : __("Réactiver") }}
+                        </button>
+                    </div>
+                </div>
+            @endif
+        </div>
+    </div>
 </div>

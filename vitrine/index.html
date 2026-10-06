@@ -49,6 +49,8 @@
   .barre nav a.lien:hover { color: var(--vert); }
   .marque, .bouton { white-space: nowrap; }
   @media (max-width: 1060px) { .barre nav a.lien { display: none; } }
+  /* Quand les cinq liens sont affichés, le nom laisse la place : le logo le porte déjà. */
+  @media (min-width: 1061px) { .marque .nom { display: none; } }
   /* Sur téléphone, le nom s'efface derrière le logo pour laisser la place
      aux deux espaces : l'ancienne application doit rester accessible. */
   @media (max-width: 720px) {
@@ -287,6 +289,7 @@
       <a class="lien" href="#activites" data-i18n="nav.activites">Nos activités</a>
       <a class="lien" href="#contribuer" data-i18n="nav.actions">Nos actions</a>
       <a class="lien" href="#contact" data-i18n="nav.contact">Contact</a>
+      <a class="lien" href="actualites.html" data-i18n="nav.actualites">Actualités</a>
       <div class="langues entete-langues" role="group" aria-label="Langue" data-i18n-aria-label="langue.groupe">
         <button type="button" data-lang="fr">FR</button><button type="button" data-lang="en">EN</button><button type="button" data-lang="ar" lang="ar">عربي</button>
       </div>
@@ -577,6 +580,7 @@
       <img src="images/logo-waqf.jpg" width="165" height="200" alt="Waqf Dolel Xamxam">
       <img src="images/logo-anddox.png" width="480" height="338" alt="AND DOX">
     </div>
+    <a href="actualites.html" data-i18n="nav.actualites">Actualités</a>
     <span>© <span id="annee" data-nombre="2026" data-sans-separateur>2026</span> Waqf Dolel Xamxam · <span data-i18n="pied.filiale">AND DOX, filiale du Waqf Dolel Xamxam</span></span>
     <div class="langues" role="group" aria-label="Langue" data-i18n-aria-label="langue.groupe">
       <button type="button" data-lang="fr">Français</button><button type="button" data-lang="en">English</button><button type="button" data-lang="ar" lang="ar">العربية</button>
@@ -607,7 +611,7 @@
   </a>
 </nav>
 
-<script src="traductions.js?v=3"></script>
+<script src="traductions.js?v=4"></script>
 <script>
   // Allume l'icône de la section affichée à l'écran.
   (function () {

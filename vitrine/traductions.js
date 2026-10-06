@@ -140,7 +140,16 @@ var TRADUCTIONS = {
     'onglet.activites': 'Activities',
     'onglet.actions': 'Shares',
     'onglet.contact': 'Contact',
-    'onglet.espace': 'My space'
+    'onglet.espace': 'My space',
+
+    'nav.actualites': 'News',
+    'actu.meta.titre': 'News — Waqf Dolel Xamxam',
+    'actu.meta.description': 'The latest news from Waqf Dolel Xamxam: announcements, life of the Waqf, activities.',
+    'actu.surtitre': 'Waqf Dolel Xamxam',
+    'actu.titre': 'News',
+    'actu.chapeau': 'Announcements, progress of the Waqf and news of our activities.',
+    'actu.retour': '← All news',
+    'actu.accueil': '← Back to home'
   },
 
   ar: {
@@ -272,7 +281,16 @@ var TRADUCTIONS = {
     'onglet.activites': 'الأنشطة',
     'onglet.actions': 'الأسهم',
     'onglet.contact': 'اتصل',
-    'onglet.espace': 'فضائي'
+    'onglet.espace': 'فضائي',
+
+    'nav.actualites': 'الأخبار',
+    'actu.meta.titre': 'الأخبار — وقف Dolel Xamxam',
+    'actu.meta.description': 'آخر أخبار وقف Dolel Xamxam: إعلانات، وحياة الوقف، وأنشطته.',
+    'actu.surtitre': 'وقف Dolel Xamxam',
+    'actu.titre': 'الأخبار',
+    'actu.chapeau': 'إعلانات، ومراحل تقدّم الوقف، وأخبار أنشطتنا.',
+    'actu.retour': 'كل الأخبار →',
+    'actu.accueil': 'العودة إلى الصفحة الرئيسية →'
   }
 };
 
@@ -281,8 +299,15 @@ var TRADUCTIONS = {
   var racine = document.documentElement;
   var meta = document.querySelector('meta[name="description"]');
 
+  // Chaque page peut nommer ses propres clés de titre et de description
+  // (<html data-cle-titre="…">) ; par défaut, celles de l'accueil.
+  var cleTitre = racine.dataset.cleTitre || 'meta.titre';
+  var cleDescription = racine.dataset.cleDescription || 'meta.description';
+
   // Le français, relevé dans la page telle qu'elle est écrite.
-  var francais = { 'meta.titre': document.title, 'meta.description': meta ? meta.content : '' };
+  var francais = {};
+  francais[cleTitre] = document.title;
+  francais[cleDescription] = meta ? meta.content : '';
   document.querySelectorAll('[data-i18n]').forEach(function (el) { francais[el.dataset.i18n] = el.innerHTML; });
   document.querySelectorAll('[data-i18n-alt]').forEach(function (el) { francais[el.dataset.i18nAlt] = el.alt; });
   document.querySelectorAll('[data-i18n-aria-label]').forEach(function (el) { francais[el.dataset.i18nAriaLabel] = el.getAttribute('aria-label'); });
@@ -335,8 +360,8 @@ var TRADUCTIONS = {
     document.querySelectorAll('[data-i18n]').forEach(function (el) { el.innerHTML = texte(langue, el.dataset.i18n); });
     document.querySelectorAll('[data-i18n-alt]').forEach(function (el) { el.alt = texte(langue, el.dataset.i18nAlt); });
     document.querySelectorAll('[data-i18n-aria-label]').forEach(function (el) { el.setAttribute('aria-label', texte(langue, el.dataset.i18nAriaLabel)); });
-    document.title = texte(langue, 'meta.titre');
-    if (meta) { meta.content = texte(langue, 'meta.description'); }
+    document.title = texte(langue, cleTitre);
+    if (meta) { meta.content = texte(langue, cleDescription); }
 
     racine.lang = langue;
     racine.dir = langue === 'ar' ? 'rtl' : 'ltr';
@@ -345,6 +370,9 @@ var TRADUCTIONS = {
     });
 
     try { localStorage.setItem('vitrine-langue', langue); } catch (e) {}
+
+    // Ce qui est écrit par script (les actualités) se redessine dans la langue.
+    document.dispatchEvent(new CustomEvent('vitrine:langue', { detail: langue }));
   }
 
   var demandee = new URLSearchParams(location.search).get('lang');

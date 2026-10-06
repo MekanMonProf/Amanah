@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="fr" data-cle-titre="actu.meta.titre" data-cle-description="actu.meta.description">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Actualités — Waqf Dolel Xamxam</title>
+<meta name="description" content="Les dernières nouvelles de Waqf Dolel Xamxam : annonces, vie du Waqf, activités.">
+<meta property="og:title" content="Actualités — Waqf Dolel Xamxam">
+<meta property="og:image" content="images/logo-waqf.jpg">
+<link rel="icon" type="image/jpeg" href="images/logo-waqf.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Noto+Naskh+Arabic:wght@400;600;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  /* Mêmes couleurs et mêmes polices que la page d'accueil (index.html). */
+  :root {
+    --vert: #0e5e3f;
+    --vert-fonce: #0a4530;
+    --vert-clair: #e7f1ec;
+    --or: #d6b86a;
+    --or-clair: #f6eed6;
+    --creme: #fbf9f4;
+    --encre: #1d2a24;
+    --gris: #56645d;
+    --bord: #dfe5e1;
+    --max: 1080px;
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body {
+    margin: 0;
+    background: var(--creme);
+    color: var(--encre);
+    font: 400 1.0625rem/1.65 "Source Sans 3", system-ui, sans-serif;
+  }
+  h1, h2, h3 { font-family: "Fraunces", Georgia, serif; font-weight: 600; line-height: 1.2; margin: 0; }
+  a { color: inherit; }
+  .conteneur { max-width: var(--max); margin: 0 auto; padding: 0 16px; }
+  @media (min-width: 720px) { .conteneur { padding: 0 32px; } }
+
+  /* Barre du haut */
+  .barre { position: sticky; top: 0; z-index: 10; background: rgba(251,249,244,.92); backdrop-filter: blur(6px); border-bottom: 1px solid var(--bord); }
+  .barre .conteneur { display: flex; align-items: center; justify-content: space-between; height: 64px; gap: 16px; }
+  .marque { display: flex; align-items: center; gap: 10px; text-decoration: none; font-family: "Fraunces", serif; font-weight: 600; color: var(--vert); white-space: nowrap; }
+  .marque img { height: 44px; width: auto; mix-blend-mode: multiply; }
+  .barre nav { display: flex; align-items: center; gap: 20px; }
+  .barre nav a.lien { white-space: nowrap; text-decoration: none; color: var(--gris); font-weight: 600; font-size: .95rem; }
+  .barre nav a.lien:hover, .barre nav a.lien[aria-current] { color: var(--vert); }
+  @media (max-width: 1060px) { .barre nav a.lien { display: none; } }
+  /* Quand les cinq liens sont affichés, le nom laisse la place : le logo le porte déjà. */
+  @media (min-width: 1061px) { .marque .nom { display: none; } }
+  @media (max-width: 720px) {
+    .marque .nom { display: none; }
+    .barre nav { gap: 8px; }
+    .barre .bouton.petit { padding: 7px 12px; font-size: .85rem; }
+  }
+  @media (max-width: 400px) {
+    .marque img { height: 36px; }
+    .barre .bouton.petit { padding: 6px 9px; font-size: .78rem; }
+  }
+
+  .bouton {
+    display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;
+    padding: 12px 22px; border-radius: 999px; font-weight: 600; text-decoration: none;
+    border: 2px solid var(--vert); transition: background .2s, color .2s;
+  }
+  .bouton.plein { background: var(--vert); color: #fff; }
+  .bouton.plein:hover { background: var(--vert-fonce); border-color: var(--vert-fonce); }
+  .bouton.contour { color: var(--vert); background: transparent; }
+  .bouton.contour:hover { background: var(--vert-clair); }
+  .bouton.petit { padding: 8px 16px; font-size: .95rem; }
+
+  /* En-tête de la page */
+  .entete { padding: 48px 0 24px; }
+  .surtitre { color: var(--vert); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; font-size: .85rem; }
+  .entete h1 { font-size: clamp(2rem, 4.5vw, 3rem); color: var(--vert-fonce); margin: 10px 0 12px; }
+  .chapeau { color: var(--gris); max-width: 40em; margin: 0; font-size: 1.1rem; }
+
+  /* Filtres par catégorie */
+  .filtres { display: flex; flex-wrap: wrap; gap: 8px; margin: 28px 0 0; }
+  .filtres button {
+    border: 1px solid var(--bord); background: #fff; color: var(--gris); font: inherit; font-size: .9rem; font-weight: 600;
+    padding: 6px 14px; border-radius: 999px; cursor: pointer;
+  }
+  .filtres button[aria-pressed="true"] { background: var(--vert); border-color: var(--vert); color: #fff; }
+
+  /* Liste des articles */
+  .liste { padding: 24px 0 72px; }
+  .grille { display: grid; gap: 20px; }
+  @media (min-width: 720px) { .grille { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1000px) { .grille { grid-template-columns: repeat(3, 1fr); } }
+  .carte {
+    background: #fff; border: 1px solid var(--bord); border-radius: 16px; overflow: hidden;
+    display: flex; flex-direction: column; text-decoration: none; color: inherit;
+    transition: box-shadow .2s, transform .2s;
+  }
+  .carte:hover { box-shadow: 0 14px 34px rgba(14,94,63,.14); transform: translateY(-2px); }
+  .carte img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: var(--vert-clair); }
+  .carte .corps { padding: 22px 24px 24px; display: flex; flex-direction: column; flex: 1; }
+  .carte h2 { font-size: 1.25rem; color: var(--vert-fonce); margin: 8px 0 10px; }
+  .carte p { margin: 0 0 16px; color: var(--gris); }
+  .carte .lire { margin-top: auto; color: var(--vert); font-weight: 600; }
+  /* La première actualité, la plus récente, prend toute la largeur. */
+  @media (min-width: 720px) {
+    .carte.une { grid-column: 1 / -1; }
+    .carte.une h2 { font-size: 1.7rem; }
+  }
+  .infos { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; font-size: .88rem; color: var(--gris); }
+  .etiquette { font-size: .78rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; background: var(--vert-clair); color: var(--vert); }
+  .message { background: #fff; border: 1px dashed var(--bord); border-radius: 16px; padding: 32px; color: var(--gris); text-align: center; }
+
+  /* Un article */
+  .article { padding: 40px 0 72px; }
+  .article .conteneur { max-width: 760px; }
+  .retour { display: inline-block; margin-bottom: 28px; color: var(--vert); font-weight: 600; text-decoration: none; }
+  .retour:hover { text-decoration: underline; }
+  .article h1 { font-size: clamp(1.9rem, 4.5vw, 2.7rem); color: var(--vert-fonce); margin: 14px 0 24px; }
+  .article img.illustration { display: block; width: 100%; height: auto; border-radius: 16px; margin: 0 0 28px; }
+  .article .texte p { margin: 0 0 1.1em; font-size: 1.12rem; }
+  .article .texte p:first-child { font-size: 1.22rem; color: var(--vert-fonce); }
+
+  /* Pied */
+  footer { border-top: 1px solid var(--bord); padding: 32px 0; color: var(--gris); font-size: .95rem; }
+  footer .conteneur { display: flex; flex-wrap: wrap; gap: 12px 24px; justify-content: space-between; align-items: center; }
+  .pied-logos { display: flex; align-items: center; gap: 16px; }
+  .pied-logos img { height: 48px; width: auto; mix-blend-mode: multiply; }
+
+  /* Choix de la langue */
+  .langues { display: inline-flex; border: 1px solid var(--bord); border-radius: 999px; padding: 3px; background: #fff; gap: 2px; }
+  .langues button {
+    border: 0; background: transparent; color: var(--gris); font: inherit; font-size: .85rem; font-weight: 600;
+    padding: 5px 10px; border-radius: 999px; cursor: pointer; line-height: 1.2;
+  }
+  .langues button[aria-pressed="true"] { background: var(--vert); color: #fff; }
+  .langues button[lang="ar"] { font-family: "Noto Naskh Arabic", serif; }
+  .mobile-langues { display: none; margin-bottom: 20px; }
+  @media (max-width: 720px) {
+    .entete-langues { display: none; }
+    .mobile-langues { display: inline-flex; }
+  }
+
+  /* Arabe : de droite à gauche */
+  html[dir="rtl"] body { font-family: "Noto Naskh Arabic", "Source Sans 3", system-ui, sans-serif; line-height: 1.8; }
+  html[dir="rtl"] h1, html[dir="rtl"] h2, html[dir="rtl"] h3 { font-family: "Noto Naskh Arabic", "Fraunces", serif; line-height: 1.5; }
+  html[dir="rtl"] .surtitre, html[dir="rtl"] .etiquette { letter-spacing: 0; }
+</style>
+</head>
+<body>
+
+<header class="barre">
+  <div class="conteneur">
+    <a class="marque" href="index.html">
+      <img src="images/logo-waqf.jpg" alt="Waqf Dolel Xamxam">
+      <span class="nom">Waqf Dolel Xamxam</span>
+    </a>
+    <nav>
+      <a class="lien" href="index.html#mission" data-i18n="nav.mission">Notre mission</a>
+      <a class="lien" href="index.html#activites" data-i18n="nav.activites">Nos activités</a>
+      <a class="lien" href="index.html#contribuer" data-i18n="nav.actions">Nos actions</a>
+      <a class="lien" href="actualites.html" aria-current="page" data-i18n="nav.actualites">Actualités</a>
+      <div class="langues entete-langues" role="group" aria-label="Langue" data-i18n-aria-label="langue.groupe">
+        <button type="button" data-lang="fr">FR</button><button type="button" data-lang="en">EN</button><button type="button" data-lang="ar" lang="ar">عربي</button>
+      </div>
+      <a class="bouton contour petit" href="https://amanah.waqfdolelxamxam.sn/login" data-i18n="btn.amanah">Espace AMANAH</a>
+      <a class="bouton plein petit" href="https://waqfdolelxamxam.sn/login.php" data-i18n="btn.actionnaire">Espace actionnaire</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- La liste des actualités -->
+  <div id="vue-liste">
+    <section class="entete">
+      <div class="conteneur">
+        <div class="langues mobile-langues" role="group" aria-label="Langue" data-i18n-aria-label="langue.groupe">
+          <button type="button" data-lang="fr">Français</button><button type="button" data-lang="en">English</button><button type="button" data-lang="ar" lang="ar">العربية</button>
+        </div>
+        <div class="surtitre" data-i18n="actu.surtitre">Waqf Dolel Xamxam</div>
+        <h1 data-i18n="actu.titre">Actualités</h1>
+        <p class="chapeau" data-i18n="actu.chapeau">Annonces, avancées du Waqf et nouvelles de nos activités.</p>
+        <div class="filtres" id="filtres" role="group"></div>
+      </div>
+    </section>
+    <section class="liste">
+      <div class="conteneur">
+        <div class="grille" id="grille"></div>
+        <noscript><p class="message">Activez JavaScript pour afficher les actualités.</p></noscript>
+      </div>
+    </section>
+  </div>
+
+  <!-- Un article, quand l'adresse se termine par ?article=… -->
+  <article class="article" id="vue-article" hidden>
+    <div class="conteneur">
+      <a class="retour" href="actualites.html" data-i18n="actu.retour">← Toutes les actualités</a>
+      <div class="infos"><span class="etiquette" id="article-categorie"></span><time id="article-date"></time></div>
+      <h1 id="article-titre"></h1>
+      <img class="illustration" id="article-image" alt="" hidden>
+      <div class="texte" id="article-texte"></div>
+    </div>
+  </article>
+</main>
+
+<footer>
+  <div class="conteneur">
+    <div class="pied-logos">
+      <img src="images/logo-waqf.jpg" width="165" height="200" alt="Waqf Dolel Xamxam">
+      <img src="images/logo-anddox.png" width="480" height="338" alt="AND DOX">
+    </div>
+    <a href="index.html" data-i18n="actu.accueil">← Retour à l'accueil</a>
+    <div class="langues" role="group" aria-label="Langue" data-i18n-aria-label="langue.groupe">
+      <button type="button" data-lang="fr">Français</button><button type="button" data-lang="en">English</button><button type="button" data-lang="ar" lang="ar">العربية</button>
+    </div>
+  </div>
+</footer>
+
+<script src="articles.js?v=1"></script>
+<script>
+  // Affiche les actualités de articles.js, dans la langue choisie.
+  // Ce script passe avant traductions.js : il doit écouter le changement de
+  // langue avant que traductions.js n'applique la première.
+  (function () {
+    var LOCALES = { fr: 'fr-FR', en: 'en-GB', ar: 'ar-u-nu-arab' };
+    var MOTS = {
+      fr: { toutes: 'Toutes', lire: "Lire l'article →", vide: "Aucune actualité pour l'instant. Revenez bientôt.", introuvable: "Cet article n'existe pas ou a été retiré." },
+      en: { toutes: 'All', lire: 'Read the article →', vide: 'No news yet. Come back soon.', introuvable: 'This article does not exist or has been removed.' },
+      ar: { toutes: 'الكل', lire: 'اقرأ المقال ←', vide: 'لا توجد أخبار بعد. عودوا قريبًا.', introuvable: 'هذا المقال غير موجود أو تم حذفه.' }
+    };
+
+    var articles = (window.ARTICLES || []).slice().sort(function (a, b) { return a.date < b.date ? 1 : a.date > b.date ? -1 : 0; });
+    var params = new URLSearchParams(location.search);
+    var idArticle = params.get('article');
+    var categorie = null; // filtre choisi ; null = toutes
+
+    // Le champ d'un article dans la langue demandée, sinon en français.
+    function traduit(article, nom, langue) {
+      var t = article[langue];
+      return !!(t && t[nom]);
+    }
+    function champ(article, nom, langue) {
+      return traduit(article, nom, langue) ? article[langue][nom] : article[nom];
+    }
+
+    // Écrit un champ dans un élément. Resté en français, il est marqué comme
+    // tel : en arabe, il garde son sens de lecture et sa ponctuation.
+    function remplir(e, article, nom, langue) {
+      e.textContent = champ(article, nom, langue);
+      if (langue !== 'fr' && !traduit(article, nom, langue)) {
+        e.lang = 'fr';
+        e.dir = 'ltr';
+      } else {
+        e.removeAttribute('lang');
+        e.removeAttribute('dir');
+      }
+      return e;
+    }
+
+    function dateLisible(iso, langue) {
+      var d = new Date(iso + 'T12:00:00');
+      if (isNaN(d)) { return iso; }
+      return new Intl.DateTimeFormat(LOCALES[langue], { day: 'numeric', month: 'long', year: 'numeric' }).format(d);
+    }
+
+    function lien(article, langue) {
+      return 'actualites.html?article=' + encodeURIComponent(article.id) + '&lang=' + langue;
+    }
+
+    function el(balise, classe, texte) {
+      var e = document.createElement(balise);
+      if (classe) { e.className = classe; }
+      if (texte != null) { e.textContent = texte; }
+      return e;
+    }
+
+    function infos(article, langue) {
+      var div = el('div', 'infos');
+      div.append(remplir(el('span', 'etiquette'), article, 'categorie', langue));
+      var time = el('time', null, dateLisible(article.date, langue));
+      time.dateTime = article.date;
+      div.append(time);
+      return div;
+    }
+
+    function afficherListe(langue) {
+      var mots = MOTS[langue];
+
+      // Un bouton par catégorie, dans l'ordre où elles apparaissent.
+      var categories = [];
+      articles.forEach(function (a) { if (categories.indexOf(a.categorie) < 0) { categories.push(a.categorie); } });
+      var filtres = document.getElementById('filtres');
+      filtres.replaceChildren();
+      if (categories.length > 1) {
+        [null].concat(categories).forEach(function (c) {
+          // Le nom traduit de la catégorie, pris au premier article qui le donne.
+          var memes = articles.filter(function (a) { return a.categorie === c; });
+          var exemple = memes.filter(function (a) { return traduit(a, 'categorie', langue); })[0] || memes[0];
+          var b = c === null ? el('button', null, mots.toutes) : remplir(el('button'), exemple, 'categorie', langue);
+          b.type = 'button';
+          b.setAttribute('aria-pressed', c === categorie ? 'true' : 'false');
+          b.addEventListener('click', function () { categorie = c; afficherListe(langue); });
+          filtres.append(b);
+        });
+      }
+
+      var grille = document.getElementById('grille');
+      grille.replaceChildren();
+      var visibles = articles.filter(function (a) { return categorie === null || a.categorie === categorie; });
+      if (!visibles.length) {
+        grille.append(el('p', 'message', mots.vide));
+        return;
+      }
+      visibles.forEach(function (a, i) {
+        var carte = el('a', 'carte' + (i === 0 ? ' une' : ''));
+        carte.href = lien(a, langue);
+        if (a.image) {
+          var img = el('img');
+          img.src = a.image;
+          img.alt = '';
+          img.loading = 'lazy';
+          carte.append(img);
+        }
+        var corps = el('div', 'corps');
+        corps.append(infos(a, langue), remplir(el('h2'), a, 'titre', langue), remplir(el('p'), a, 'resume', langue), el('span', 'lire', mots.lire));
+        carte.append(corps);
+        grille.append(carte);
+      });
+    }
+
+    function afficherArticle(langue) {
+      var article = articles.filter(function (a) { return a.id === idArticle; })[0];
+      document.getElementById('vue-liste').hidden = true;
+      document.getElementById('vue-article').hidden = false;
+      var titre = document.getElementById('article-titre');
+      var texte = document.getElementById('article-texte');
+      var infosArticle = document.querySelector('#vue-article .infos');
+
+      if (!article) {
+        infosArticle.hidden = true;
+        titre.textContent = MOTS[langue].introuvable;
+        texte.replaceChildren();
+        return;
+      }
+
+      remplir(document.getElementById('article-categorie'), article, 'categorie', langue);
+      var time = document.getElementById('article-date');
+      time.textContent = dateLisible(article.date, langue);
+      time.dateTime = article.date;
+      remplir(titre, article, 'titre', langue);
+      document.title = champ(article, 'titre', langue) + ' — Waqf Dolel Xamxam';
+
+      var image = document.getElementById('article-image');
+      image.hidden = !article.image;
+      if (article.image) { image.src = article.image; }
+
+      // Une ligne vide sépare deux paragraphes.
+      remplir(texte, article, 'texte', langue);
+      texte.replaceChildren.apply(texte, texte.textContent.split(/\n\s*\n/).map(function (p) {
+        return el('p', null, p.trim());
+      }));
+    }
+
+    document.addEventListener('vitrine:langue', function (e) {
+      var langue = MOTS[e.detail] ? e.detail : 'fr';
+      if (idArticle) { afficherArticle(langue); } else { afficherListe(langue); }
+    });
+  })();
+</script>
+<script src="traductions.js?v=4"></script>
+</body>
+</html>

@@ -160,7 +160,10 @@
         <tbody class="divide-y">
             @forelse ($gestionnaires as $g)
                 <tr class="hover:bg-gray-50">
-                    <td class="p-3">
+                    {{-- Le nom ne se coupe plus en trois lignes : les trois actions
+                         de droite tenaient en toutes lettres et lui prenaient la
+                         moitié de la largeur. --}}
+                    <td class="p-3 whitespace-nowrap">
                         {{ $g->nomComplet() }}
                         @if ($g->estOrphelin())
                             <span class="ms-1 px-2 py-0.5 text-xs rounded-full bg-red-100 text-red-700 whitespace-nowrap">{{ __("Compte de connexion supprimé") }}</span>
@@ -187,17 +190,32 @@
                                  il n y a plus de nom a changer ni d adresse ou ecrire. --}}
                             <span class="text-sm text-gray-400">{{ __("Aucune action possible") }}</span>
                         @else
-                            <button wire:click="modifier({{ $g->id }})" class="text-sm text-gray-600 hover:underline me-3">
-                                {{ __("Modifier") }}
-                            </button>
-                            <button wire:click="reinitialiserMotDePasse({{ $g->id }})" wire:confirm="{{ __('Générer un nouveau mot de passe temporaire pour :identifiant ?', ['identifiant' => $g->user->email]) }}"
-                                    class="text-sm text-primaire-700 hover:underline me-3">
-                                {{ __("Réinitialiser le mot de passe") }}
-                            </button>
-                            <button wire:click="basculerActif({{ $g->id }})" wire:confirm="{{ __('Confirmer le changement de statut ?') }}"
-                                    class="text-sm text-gray-500 hover:underline">
-                                {{ $g->actif ? __('Désactiver') : __('Réactiver') }}
-                            </button>
+                            {{-- Une icône et un mot court, en gris, comme la colonne
+                                 Téléphone. « Réinitialiser le mot de passe » écrit
+                                 en entier sur chaque ligne occupait à lui seul plus
+                                 de place que le nom qu'il concerne. Le libellé
+                                 complet reste dans l'infobulle. --}}
+                            <div class="flex items-center justify-end gap-3">
+                                <button wire:click="modifier({{ $g->id }})" title="{{ __('Modifier le profil du gestionnaire') }}"
+                                        class="inline-flex items-center gap-1.5 text-sm text-gray-600 hover:text-primaire-700">
+                                    <x-icone nom="modifier" class="h-4 w-4 shrink-0" />
+                                    <span class="hidden xl:inline">{{ __("Modifier") }}</span>
+                                </button>
+
+                                <button wire:click="reinitialiserMotDePasse({{ $g->id }})" title="{{ __('Réinitialiser le mot de passe') }}"
+                                        wire:confirm="{{ __('Générer un nouveau mot de passe temporaire pour :identifiant ?', ['identifiant' => $g->user->email]) }}"
+                                        class="inline-flex items-center gap-1.5 text-sm text-gray-600 hover:text-primaire-700">
+                                    <x-icone nom="cle" class="h-4 w-4 shrink-0" />
+                                    <span class="hidden xl:inline">{{ __("Mot de passe") }}</span>
+                                </button>
+
+                                <button wire:click="basculerActif({{ $g->id }})" title="{{ $g->actif ? __('Désactiver') : __('Réactiver') }}"
+                                        wire:confirm="{{ __('Confirmer le changement de statut ?') }}"
+                                        class="inline-flex items-center gap-1.5 text-sm text-gray-600 hover:text-red-700">
+                                    <x-icone nom="desactiver" class="h-4 w-4 shrink-0" />
+                                    <span class="hidden xl:inline">{{ $g->actif ? __('Désactiver') : __('Réactiver') }}</span>
+                                </button>
+                            </div>
                         @endif
                     </td>
                 </tr>

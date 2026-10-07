@@ -197,9 +197,15 @@
                             <span class="text-gray-400">—</span>
                         @endif
                     </td>
+                    {{-- Même sobriété que la colonne d'accès à côté : une icône et
+                         un mot, en gris. Le lien vert tirait l'œil sur chaque ligne
+                         d'une liste qui en compte quatre cents, pour une action
+                         qu'on fait de toute façon en cliquant la ligne. --}}
                     <td class="p-3 text-end">
-                        <a href="{{ route('investisseurs.show', $inv) }}" class="text-primaire-700 text-sm hover:underline">
-                            {{ __("Voir le dossier →") }}
+                        <a href="{{ route('investisseurs.show', $inv) }}" wire:navigate
+                           class="inline-flex items-center gap-1.5 text-sm text-gray-600 hover:text-primaire-700">
+                            <x-icone nom="dossier" class="h-4 w-4" />
+                            {{ __("Le dossier") }}
                         </a>
                     </td>
                 </tr>

@@ -255,6 +255,14 @@
         <div class="bg-white border rounded-carte p-4">
             <div class="text-xs text-gray-500 uppercase">{{ __("Localisation") }}</div>
             <div class="mt-1">{{ collect([$investisseur->ville, $investisseur->pays])->filter()->implode(', ') ?: '—' }}</div>
+            {{-- La langue tient dans la même carte que le lieu : l'une et l'autre
+                 disent comment s'adresser à la personne. Elle s'écrit dans la langue
+                 elle-même — « Français », « English », « العربية » — comme dans le
+                 sélecteur de la barre supérieure. --}}
+            <div class="mt-2 text-sm text-gray-500">
+                {{ __("Langue") }} ·
+                <span class="text-gray-700">{{ \App\Support\Langue::DISPONIBLES[\App\Support\Langue::normaliser($investisseur->langue)]['libelle'] }}</span>
+            </div>
         </div>
         <div class="bg-white border rounded-carte p-4">
             <div class="text-xs text-gray-500 uppercase">{{ __("Date de naissance") }}</div>
@@ -263,12 +271,6 @@
         <div class="bg-white border rounded-carte p-4">
             <div class="text-xs text-gray-500 uppercase">{{ __("Lieu de naissance") }}</div>
             <div class="mt-1">{{ $investisseur->lieu_naissance ?: '—' }}</div>
-        </div>
-        <div class="bg-white border rounded-carte p-4">
-            <div class="text-xs text-gray-500 uppercase">{{ __("Langue") }}</div>
-            {{-- Dans la langue elle-même : « Français », « English », « العربية »,
-                 comme dans le sélecteur de la barre supérieure. --}}
-            <div class="mt-1">{{ \App\Support\Langue::DISPONIBLES[\App\Support\Langue::normaliser($investisseur->langue)]['libelle'] }}</div>
         </div>
     </div>
 

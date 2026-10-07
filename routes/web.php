@@ -33,6 +33,9 @@ use App\Http\Controllers\ExportController;
 use App\Http\Controllers\ModeleImportController;
 use App\Livewire\Import\ImportIndex;
 use App\Livewire\Exports\ExportIndex;
+use App\Livewire\Aide\AideIndex;
+use App\Livewire\Aide\AidePage;
+use App\Livewire\Support\ContacterSupport;
 
 // AMANAH n'a pas de page d'accueil à elle : la présentation est sur la vitrine,
 // waqfdolelxamxam.sn. Qui arrive ici vient se connecter.
@@ -80,6 +83,16 @@ Route::get('/recu/{ecriture}', [RecuController::class, 'public'])
 Route::middleware(['auth', 'doit.changer.mdp', 'deux.fa'])->group(function () {
     Route::get('/mon-compte', MonCompte::class)->name('portail.mon-compte');
     Route::get('/mon-compte/releve', [ReleveController::class, 'pourInvestisseur'])->name('portail.releve');
+});
+
+// Aide et support : ouverts a tout compte connecte, investisseur compris. Ils
+// ne passent par aucun module — refuser le mode d'emploi a quelqu'un qui peut
+// ouvrir l'ecran n'aurait pas de sens, et le filtrage par role se fait page
+// par page dans App\Support\Aide.
+Route::middleware(['auth', 'doit.changer.mdp', 'deux.fa'])->group(function () {
+    Route::get('/aide', AideIndex::class)->name('aide.index');
+    Route::get('/aide/{sujet}', AidePage::class)->name('aide.sujet');
+    Route::get('/support', ContacterSupport::class)->name('support.contacter');
 });
 
 Route::middleware(['auth', 'doit.changer.mdp', 'deux.fa'])->group(function () {

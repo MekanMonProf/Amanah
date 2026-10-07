@@ -137,6 +137,17 @@ class Navigation
                 ],
             ],
             [
+                'libelle' => 'Aide',
+                'entrees' => [
+                    // Ouvertes a tout le monde, investisseur compris : un mode
+                    // d'emploi reserve a ceux qui savent deja s'en passer ne
+                    // sert personne. Le detail de ce qu'on y lit se filtre page
+                    // par page, dans App\Support\Aide.
+                    self::entree("Mode d'emploi", 'aide.index', ['aide.*'], 'aide', null, null, 'Aide', true),
+                    self::entree('Contacter le support', 'support.contacter', ['support.*'], 'support', null, null, 'Support', true),
+                ],
+            ],
+            [
                 'libelle' => 'Administration',
                 'entrees' => [
                     self::entree('Exports', 'exports.index', ['exports.index'], 'exports', 'exports'),
@@ -159,9 +170,9 @@ class Navigation
      *                                    case fait un cinquième de l'écran : un
      *                                    intitulé coupé en son milieu ne se lit pas.
      */
-    private static function entree(string $libelle, string $route, array $motifs, string $icone, ?string $module, ?string $roleReserve = null, ?string $libelleCourt = null): array
+    private static function entree(string $libelle, string $route, array $motifs, string $icone, ?string $module, ?string $roleReserve = null, ?string $libelleCourt = null, bool $pourTous = false): array
     {
-        return compact('libelle', 'route', 'motifs', 'icone', 'module', 'roleReserve', 'libelleCourt');
+        return compact('libelle', 'route', 'motifs', 'icone', 'module', 'roleReserve', 'libelleCourt', 'pourTous');
     }
 
     /** Retire les entrées inaccessibles, puis les groupes devenus vides. */
@@ -184,12 +195,20 @@ class Navigation
     }
 
     /**
-     * Une entrée réservée à un rôle s'affiche pour lui seul ; une entrée qui
+     * Une entrée marquée « pour tous » s'affiche pour quiconque est connecté ;
+     * une entrée réservée à un rôle s'affiche pour lui seul ; une entrée qui
      * porte un module s'affiche dès que ce module est lisible ; le tableau de
-     * bord, qui n'est ni l'un ni l'autre, s'affiche pour tout le personnel.
+     * bord, qui n'est rien de tout cela, s'affiche pour tout le personnel.
      */
     private static function estVisible(array $entree, User $utilisateur): bool
     {
+        // Le quatrieme cas : ni module ni role, visible par quiconque est
+        // connecte. Sans lui, l'aide aurait suivi la regle du tableau de bord
+        // et aurait disparu pour l'investisseur, qui en a le plus besoin.
+        if ($entree['pourTous'] ?? false) {
+            return true;
+        }
+
         if ($entree['roleReserve'] !== null) {
             return $utilisateur->role === $entree['roleReserve'];
         }

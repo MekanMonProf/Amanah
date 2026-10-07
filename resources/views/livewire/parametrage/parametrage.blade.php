@@ -34,6 +34,10 @@
                 class="px-4 py-2 text-sm -mb-px border-b-2 {{ $onglet === 'champs' ? 'border-primaire-600 text-primaire-700 font-medium' : 'border-transparent text-gray-500 hover:text-gray-700' }}">
             {{ __("Champs du dossier") }}
         </button>
+        <button type="button" wire:click="changerOnglet('aide')"
+                class="px-4 py-2 text-sm -mb-px border-b-2 {{ $onglet === 'aide' ? 'border-primaire-600 text-primaire-700 font-medium' : 'border-transparent text-gray-500 hover:text-gray-700' }}">
+            {{ __("Aide et support") }}
+        </button>
     </div>
 
     @if ($onglet === 'droits')
@@ -100,6 +104,8 @@
         <livewire:parametrage.comptes-utilisateurs />
     @elseif ($onglet === 'financiers')
         <livewire:parametrage.parametres-financiers />
+    @elseif ($onglet === 'aide')
+        <livewire:parametrage.aide-et-support />
     @else
         <livewire:parametrage.champs-dossier />
     @endif

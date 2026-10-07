@@ -79,3 +79,85 @@
         }
     }
 }
+
+@layer components {
+    /*
+     * Mise en forme des pages d aide. Les styles sont ici et non dans chaque
+     * fichier d aide : ces fichiers ne portent que du texte et de la structure,
+     * pour qu une personne qui n ecrit pas de code puisse les corriger sans
+     * craindre de casser la page.
+     */
+    .aide-prose {
+        color: theme('colors.gray.700');
+        line-height: 1.7;
+    }
+
+    .aide-prose > * + * {
+        margin-top: 1rem;
+    }
+
+    .aide-prose h2 {
+        margin-top: 2rem;
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: theme('colors.gray.900');
+    }
+
+    .aide-prose > h2:first-child {
+        margin-top: 0;
+    }
+
+    .aide-prose h3 {
+        margin-top: 1.5rem;
+        font-weight: 600;
+        color: theme('colors.gray.900');
+    }
+
+    .aide-prose ul,
+    .aide-prose ol {
+        padding-inline-start: 1.25rem;
+    }
+
+    .aide-prose ul {
+        list-style: disc;
+    }
+
+    .aide-prose ol {
+        list-style: decimal;
+    }
+
+    .aide-prose li + li {
+        margin-top: 0.375rem;
+    }
+
+    .aide-prose strong {
+        font-weight: 600;
+        color: theme('colors.gray.900');
+    }
+
+    .aide-prose code {
+        border-radius: 0.25rem;
+        background: theme('colors.gray.100');
+        padding: 0.125rem 0.375rem;
+        font-size: 0.875em;
+    }
+
+    .aide-prose a {
+        color: theme('colors.primaire.700');
+        text-decoration: underline;
+    }
+
+    /* Ce qu il faut savoir avant d agir, et qu on regrette d avoir lu apres. */
+    .aide-prose .note {
+        border-inline-start: 3px solid theme('colors.or.300');
+        background: theme('colors.or.50');
+        border-radius: 0 theme('borderRadius.champ') theme('borderRadius.champ') 0;
+        padding: 0.875rem 1rem;
+        font-size: 0.9375rem;
+        color: theme('colors.or.700');
+    }
+
+    .aide-prose .note strong {
+        color: theme('colors.or.700');
+    }
+}

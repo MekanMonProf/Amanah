@@ -34,7 +34,7 @@ class Parametrage extends Component
 
     public function changerOnglet(string $onglet): void
     {
-        $this->onglet = in_array($onglet, ['droits', 'comptes', 'champs', 'financiers'], true) ? $onglet : 'droits';
+        $this->onglet = in_array($onglet, ['droits', 'comptes', 'champs', 'financiers', 'aide'], true) ? $onglet : 'droits';
     }
 
     private function chargerGrille(): void

@@ -137,6 +137,15 @@ class Navigation
                 ],
             ],
             [
+                'libelle' => 'Administration',
+                'entrees' => [
+                    self::entree('Exports', 'exports.index', ['exports.index'], 'exports', 'exports'),
+                    self::entree('Import', 'import.index', ['import.*'], 'import', 'import'),
+                    self::entree("Journal d'audit", 'audit.index', ['audit.*'], 'audit', 'audit', null, 'Journal'),
+                    self::entree('Paramétrage', 'parametrage.index', ['parametrage.*'], 'parametrage', 'parametrage', null, 'Réglages'),
+                ],
+            ],
+            [
                 'libelle' => 'Aide',
                 'entrees' => [
                     // Ouvertes a tout le monde, investisseur compris : un mode
@@ -145,15 +154,6 @@ class Navigation
                     // par page, dans App\Support\Aide.
                     self::entree("Mode d'emploi", 'aide.index', ['aide.*'], 'aide', null, null, 'Aide', true),
                     self::entree('Contacter le support', 'support.contacter', ['support.*'], 'support', null, null, 'Support', true),
-                ],
-            ],
-            [
-                'libelle' => 'Administration',
-                'entrees' => [
-                    self::entree('Exports', 'exports.index', ['exports.index'], 'exports', 'exports'),
-                    self::entree('Import', 'import.index', ['import.*'], 'import', 'import'),
-                    self::entree("Journal d'audit", 'audit.index', ['audit.*'], 'audit', 'audit', null, 'Journal'),
-                    self::entree('Paramétrage', 'parametrage.index', ['parametrage.*'], 'parametrage', 'parametrage', null, 'Réglages'),
                 ],
             ],
         ];

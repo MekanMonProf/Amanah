@@ -58,7 +58,7 @@
             {{ __("WhatsApp s'ouvre avec le message et le lien du reçu déjà écrits — il vous reste à l'envoyer.") }}
         </p>
     @else
-        <p class="mt-2 text-xs text-amber-700">
+        <p class="mt-2 text-xs text-or-700">
             {{ __("Aucun numéro sur ce dossier : le reçu ne peut pas être envoyé. Renseignez un téléphone pour l'expédier.") }}
         </p>
     @endif

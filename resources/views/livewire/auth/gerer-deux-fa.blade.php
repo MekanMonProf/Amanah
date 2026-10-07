@@ -8,13 +8,13 @@
 
     <div class="mt-6">
         @if ($codesRecuperationGeneres)
-            <div class="bg-amber-50 border border-amber-200 rounded-champ p-4 mb-4">
-                <p class="text-sm font-semibold text-amber-800 mb-2">
+            <div class="bg-or-50 border border-or-300 rounded-champ p-4 mb-4">
+                <p class="text-sm font-semibold text-or-700 mb-2">
                     {{ __("✓ 2FA activé. Notez ces codes de récupération dans un endroit sûr — ils ne s'afficheront plus jamais. Chacun ne fonctionne qu'une seule fois, en cas de perte de votre téléphone.") }}
                 </p>
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 font-mono text-sm text-amber-900">
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 font-mono text-sm text-or-700">
                     @foreach ($codesRecuperationGeneres as $code)
-                        <div class="bg-white border border-amber-300 rounded px-2 py-1 text-center">{{ $code }}</div>
+                        <div class="bg-white border border-or-300 rounded px-2 py-1 text-center">{{ $code }}</div>
                     @endforeach
                 </div>
             </div>

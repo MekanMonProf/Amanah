@@ -9,13 +9,13 @@
     </div>
 
     @if ($dernierMotDePasseGenere)
-        <div class="bg-amber-50 border border-amber-200 rounded-champ p-4 mb-6 text-sm text-amber-800">
+        <div class="bg-or-50 border border-or-300 rounded-champ p-4 mb-6 text-sm text-or-700">
             @if ($emailConcerneParReinit)
                 ✓ {!! __("Mot de passe réinitialisé pour <strong>:email</strong> et envoyé par email.", ['email' => e($emailConcerneParReinit)]) !!}
             @else
                 {{ __("✓ Gestionnaire créé. Ses identifiants de connexion lui ont été envoyés par email.") }}
             @endif
-            <span class="text-xs text-amber-600">({{ __("mot de passe généré") }} : <span class="font-mono">{{ $dernierMotDePasseGenere }}</span>, {{ __("au cas où l'email n'arrive pas") }})</span>
+            <span class="text-xs text-or-700">({{ __("mot de passe généré") }} : <span class="font-mono">{{ $dernierMotDePasseGenere }}</span>, {{ __("au cas où l'email n'arrive pas") }})</span>
         </div>
     @endif
 

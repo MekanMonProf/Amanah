@@ -8,7 +8,7 @@
     @if ($manquants)
         {{-- Avertissement et non blocage : arreter la souscription pour une piece
              manquante couterait plus cher que le risque qu on cherche a reduire. --}}
-        <div class="bg-amber-50 border border-amber-200 rounded-champ p-4 mb-4 text-sm text-amber-800">
+        <div class="bg-or-50 border border-or-300 rounded-champ p-4 mb-4 text-sm text-or-700">
             <p class="font-semibold">{{ __("Le dossier de cet investisseur est incomplet.") }}</p>
             <p class="mt-1">{{ __("Manquent : :liste.", ['liste' => collect($manquants)->map(fn ($m) => __($m))->implode(', ')]) }}</p>
             <p class="mt-1">{{ __("L'achat reste possible, mais le dossier devra être complété.") }}</p>
@@ -93,7 +93,7 @@
                                 </select>
                                 @error('defuntInvestisseurId') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                                 @if ($this->defuntsDisponibles->isEmpty())
-                                    <p class="text-xs text-amber-700 mt-1">
+                                    <p class="text-xs text-or-700 mt-1">
                                         {{ $typePresent === "memoire" ? __("Aucun investisseur n'est déclaré décédé") : __("Aucun autre investisseur disponible") }} — {{ __("choisissez « Personne extérieure ».") }}
                                     </p>
                                 @endif

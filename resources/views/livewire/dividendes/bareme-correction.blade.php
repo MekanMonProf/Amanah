@@ -17,7 +17,7 @@
         </div>
 
         @if (($resultat['nb_comptes_soldes'] ?? 0) > 0)
-            <div class="bg-amber-50 border border-amber-200 rounded-champ p-4 mb-6 text-sm text-amber-800">
+            <div class="bg-or-50 border border-or-300 rounded-champ p-4 mb-6 text-sm text-or-700">
                 {!! __("<strong>:nombre</strong> compte(s) de succession déjà réglée n'ont pas été ajustés : le dossier est soldé et le mandataire payé. L'ajustement qui leur revient doit être traité à part.", ['nombre' => $resultat['nb_comptes_soldes']]) !!}
             </div>
         @endif

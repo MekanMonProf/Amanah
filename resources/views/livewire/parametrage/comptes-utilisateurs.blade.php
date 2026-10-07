@@ -12,10 +12,10 @@
     @endif
 
     @if ($dernierMotDePasseGenere)
-        <div class="mb-4 text-sm text-amber-800 bg-amber-50 border border-amber-200 rounded-champ px-4 py-3">
+        <div class="mb-4 text-sm text-or-700 bg-or-50 border border-or-300 rounded-champ px-4 py-3">
             {{ __("Mot de passe temporaire :") }}
             <span class="font-mono font-semibold text-base">{{ $dernierMotDePasseGenere }}</span>
-            <div class="mt-1 text-xs text-amber-600">
+            <div class="mt-1 text-xs text-or-700">
                 {{ __("Il ne sera plus affiché après cet écran. Il devra être changé à la première connexion.") }}
             </div>
         </div>

@@ -16,7 +16,7 @@
         <span class="font-mono">{{ $compte->numero_compte }}</span> ({{ __(\App\Support\Libelles::categorie($compte->categorie)) }})
     </p>
 
-    <div class="bg-amber-50 border border-amber-200 rounded-champ p-4 mb-6 text-sm text-amber-800">
+    <div class="bg-or-50 border border-or-300 rounded-champ p-4 mb-6 text-sm text-or-700">
         ⚠️ {!! __("Un ajustement <strong>ne modifie ni ne supprime</strong> aucune opération existante — il ajoute une nouvelle écriture qui corrige le solde, en gardant une trace complète de l'erreur et de sa correction (traçabilité totale, conformément aux règles de gestion).") !!}
     </div>
 
@@ -56,7 +56,7 @@
             </div>
         @endif
 
-        <button type="submit" class="bg-amber-600 text-white px-5 py-2 rounded-champ w-full sm:w-auto hover:bg-amber-700">
+        <button type="submit" class="bg-or-700 text-white px-5 py-2 rounded-champ w-full sm:w-auto hover:bg-or-600">
             {{ __("Enregistrer l'ajustement") }}
         </button>
     </form>

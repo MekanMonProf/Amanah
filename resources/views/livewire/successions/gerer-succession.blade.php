@@ -49,8 +49,8 @@
     @if ($investisseur->succession_reglee)
         @php $comptesEnAttente = $investisseur->comptes()->where('categorie', 'commercial')->get()->filter(fn($c) => $c->solde() > 0); @endphp
         @if ($comptesEnAttente->isNotEmpty())
-            <div class="bg-amber-50 border border-amber-200 rounded-champ p-4 mb-6">
-                <p class="text-sm font-semibold text-amber-800 mb-2">{{ __("Versement(s) en attente :") }}</p>
+            <div class="bg-or-50 border border-or-300 rounded-champ p-4 mb-6">
+                <p class="text-sm font-semibold text-or-700 mb-2">{{ __("Versement(s) en attente :") }}</p>
                 @foreach ($comptesEnAttente as $compte)
                     <div class="flex justify-between items-center py-1">
                         <span class="text-sm">{{ $compte->numero_compte }} — {{ \App\Support\Montant::format($compte->solde()) }}&#8239;{{ __("CFA disponible") }}</span>

@@ -70,7 +70,7 @@
                             @if ($restant <= 0)
                                 <span class="px-2 py-0.5 text-xs rounded-full bg-primaire-100 text-primaire-700">{{ __("Payé") }}</span>
                             @elseif ($verse > 0)
-                                <span class="px-2 py-0.5 text-xs rounded-full bg-amber-100 text-amber-700" title="Reste {{ \App\Support\Montant::format($restant) }}&#8239;CFA">
+                                <span class="px-2 py-0.5 text-xs rounded-full bg-or-100 text-or-700" title="Reste {{ \App\Support\Montant::format($restant) }}&#8239;CFA">
                                     {{ __("Partiel") }}
                                 </span>
                             @else

@@ -118,14 +118,14 @@
                     <div class="text-xs text-red-700">{{ __("En erreur") }}</div>
                     <div class="text-xl font-semibold text-red-800">{{ $resume['erreurs'] }}</div>
                 </div>
-                <div class="border border-amber-200 bg-amber-50 rounded-champ p-3">
-                    <div class="text-xs text-amber-700">{{ __("Doublons ignorés") }}</div>
-                    <div class="text-xl font-semibold text-amber-800">{{ $resume['doublons'] }}</div>
+                <div class="border border-or-300 bg-or-50 rounded-champ p-3">
+                    <div class="text-xs text-or-700">{{ __("Doublons ignorés") }}</div>
+                    <div class="text-xl font-semibold text-or-700">{{ $resume['doublons'] }}</div>
                 </div>
             </div>
 
             @if ($colonnesInconnues)
-                <div class="bg-amber-50 border border-amber-200 text-amber-800 rounded-champ p-3 mb-4 text-sm">
+                <div class="bg-or-50 border border-or-300 text-or-700 rounded-champ p-3 mb-4 text-sm">
                     {{ __("Colonne(s) du fichier non reconnue(s), donc non importée(s) :") }}
                     <span class="font-mono text-xs">{{ implode(', ', $colonnesInconnues) }}</span>.
                     {{ __("Vérifiez l'orthographe des en-têtes si l'une d'elles devait être reprise.") }}
@@ -146,13 +146,13 @@
                     </thead>
                     <tbody class="divide-y">
                         @foreach ($apercu as $ligne)
-                            <tr class="{{ $ligne['statut'] === 'erreur' ? 'bg-red-50' : ($ligne['statut'] === 'doublon' ? 'bg-amber-50' : '') }}">
+                            <tr class="{{ $ligne['statut'] === 'erreur' ? 'bg-red-50' : ($ligne['statut'] === 'doublon' ? 'bg-or-50' : '') }}">
                                 <td class="px-3 py-2 text-gray-500">{{ $ligne['numero'] }}</td>
                                 <td class="px-3 py-2 whitespace-nowrap">
                                     @if ($ligne['statut'] === 'valide')
                                         <span class="px-2 py-0.5 text-xs font-semibold rounded bg-primaire-100 text-primaire-700">{{ __("À importer") }}</span>
                                     @elseif ($ligne['statut'] === 'doublon')
-                                        <span class="px-2 py-0.5 text-xs font-semibold rounded bg-amber-100 text-amber-700">{{ __("Doublon") }}</span>
+                                        <span class="px-2 py-0.5 text-xs font-semibold rounded bg-or-100 text-or-700">{{ __("Doublon") }}</span>
                                     @else
                                         <span class="px-2 py-0.5 text-xs font-semibold rounded bg-red-100 text-red-700">{{ __("Erreur") }}</span>
                                     @endif
@@ -235,9 +235,9 @@
     @endif
 
     @if ($motsDePasse)
-        <div class="bg-amber-50 border border-amber-200 rounded-champ p-5 mb-6">
-            <h2 class="font-semibold text-amber-800 mb-1">{{ __("Mots de passe temporaires") }}</h2>
-            <p class="text-sm text-amber-800 mb-3">
+        <div class="bg-or-50 border border-or-300 rounded-champ p-5 mb-6">
+            <h2 class="font-semibold text-or-700 mb-1">{{ __("Mots de passe temporaires") }}</h2>
+            <p class="text-sm text-or-700 mb-3">
                 {{ __("Aucun email n'a été envoyé (un import crée plusieurs comptes d'un coup).") }}
                 <strong>{{ __("Copiez cette liste maintenant : elle ne sera plus affichée.") }}</strong>
                 {{ __("Chaque gestionnaire devra changer son mot de passe à la première connexion.") }}
@@ -246,7 +246,7 @@
             </p>
             <div class="overflow-x-auto">
                 <table class="min-w-full text-sm bg-white rounded-champ">
-                    <thead class="bg-amber-100 text-amber-900">
+                    <thead class="bg-or-100 text-or-700">
                         <tr>
                             <th class="text-start px-3 py-2 font-medium">{{ __("Nom") }}</th>
                             <th class="text-start px-3 py-2 font-medium">{{ __("Email") }}</th>

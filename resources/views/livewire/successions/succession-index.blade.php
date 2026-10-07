@@ -57,7 +57,7 @@
                         <td class="p-3">{{ $succession->date_deces?->format('d/m/Y') ?? '—' }}</td>
                         <td class="p-3">
                             @if ($succession->heritiers_count === 0)
-                                <span class="text-amber-700">{{ __("Aucun héritier saisi") }}</span>
+                                <span class="text-or-700">{{ __("Aucun héritier saisi") }}</span>
                             @else
                                 {{ $succession->heritiers_count }}
                             @endif
@@ -69,7 +69,7 @@
                             @if ($succession->succession_reglee)
                                 <span class="inline-block px-2 py-1 rounded-full text-xs bg-primaire-50 text-primaire-800">{{ __("Réglée") }}</span>
                             @else
-                                <span class="inline-block px-2 py-1 rounded-full text-xs bg-amber-50 text-amber-800">{{ __("À régler") }}</span>
+                                <span class="inline-block px-2 py-1 rounded-full text-xs bg-or-50 text-or-700">{{ __("À régler") }}</span>
                             @endif
                         </td>
                         <td class="p-3 text-end">
@@ -98,7 +98,7 @@
                         @if ($succession->succession_reglee)
                             <span class="shrink-0 px-2 py-1 rounded-full text-xs bg-primaire-50 text-primaire-800">{{ __("Réglée") }}</span>
                         @else
-                            <span class="shrink-0 px-2 py-1 rounded-full text-xs bg-amber-50 text-amber-800">{{ __("À régler") }}</span>
+                            <span class="shrink-0 px-2 py-1 rounded-full text-xs bg-or-50 text-or-700">{{ __("À régler") }}</span>
                         @endif
                     </div>
 

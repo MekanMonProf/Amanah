@@ -97,7 +97,7 @@
                        class="w-full border rounded px-3 py-2 {{ $baremeCommercialExistant ? 'bg-gray-50 text-gray-500' : '' }}">
                 @error('benefice_commercial') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                 @if ($baremeCommercialExistant)
-                    <p class="text-xs text-amber-600 mt-1">{{ __("🔒 Déjà fixé pour cette période — non modifiable.") }}</p>
+                    <p class="text-xs text-or-700 mt-1">{{ __("🔒 Déjà fixé pour cette période — non modifiable.") }}</p>
                 @endif
             </div>
             <div>
@@ -107,7 +107,7 @@
                        class="w-full border rounded px-3 py-2 {{ $baremeWaqfExistant ? 'bg-gray-50 text-gray-500' : '' }}">
                 @error('benefice_waqf') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                 @if ($baremeWaqfExistant)
-                    <p class="text-xs text-amber-600 mt-1">{{ __("🔒 Déjà fixé pour cette période — non modifiable.") }}</p>
+                    <p class="text-xs text-or-700 mt-1">{{ __("🔒 Déjà fixé pour cette période — non modifiable.") }}</p>
                 @endif
             </div>
         </div>

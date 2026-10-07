@@ -132,10 +132,10 @@
 
     @if ($dernierMotDePasseGenere)
         @php($lienWhatsapp = \App\Support\MessageWhatsapp::lienAcces($investisseur, $dernierMotDePasseGenere, $accesVientDEtreCree))
-        <div class="bg-amber-50 border border-amber-200 rounded-champ p-4 mb-6 text-sm text-amber-800">
+        <div class="bg-or-50 border border-or-300 rounded-champ p-4 mb-6 text-sm text-or-700">
             @if ($investisseur->user?->email)
                 ✓ {{ __("Identifiants de connexion envoyés par email à :email.", ["email" => $investisseur->user->email]) }}
-                <span class="text-xs text-amber-600">({{ __("mot de passe généré") }} : <span class="font-mono">{{ $dernierMotDePasseGenere }}</span>, {{ __("au cas où l'email n'arrive pas") }})</span>
+                <span class="text-xs text-or-700">({{ __("mot de passe généré") }} : <span class="font-mono">{{ $dernierMotDePasseGenere }}</span>, {{ __("au cas où l'email n'arrive pas") }})</span>
             @else
                 ✓ {{ __("Accès créé — connexion par téléphone (:telephone). Pas d'email sur ce dossier, transmettez le mot de passe directement à l'investisseur :", ["telephone" => $investisseur->user?->telephone]) }}
                 <span class="text-sm font-mono font-semibold">{{ $dernierMotDePasseGenere }}</span>
@@ -154,7 +154,7 @@
                         </svg>
                         {{ __("Envoyer par WhatsApp") }}
                     </a>
-                    <p class="mt-1 text-xs text-amber-600">
+                    <p class="mt-1 text-xs text-or-700">
                         {{ __("WhatsApp s'ouvre avec le message déjà écrit pour :numero — il vous reste à l'envoyer.", ["numero" => \App\Support\MessageWhatsapp::numeroDestinataire($investisseur)]) }}
                     </p>
                 </div>
@@ -372,9 +372,9 @@
     @endif
 
     @if ($investisseur->notes_internes)
-        <div class="bg-amber-50 border border-amber-200 rounded-champ p-4 mb-8">
-            <div class="text-xs text-amber-700 uppercase mb-1">{{ __("Notes internes") }}</div>
-            <div class="text-sm text-amber-900 whitespace-pre-line"><bdi>{{ $investisseur->notes_internes }}</bdi></div>
+        <div class="bg-or-50 border border-or-300 rounded-champ p-4 mb-8">
+            <div class="text-xs text-or-700 uppercase mb-1">{{ __("Notes internes") }}</div>
+            <div class="text-sm text-or-700 whitespace-pre-line"><bdi>{{ $investisseur->notes_internes }}</bdi></div>
         </div>
     @endif
 

@@ -45,7 +45,7 @@
                         <td class="py-1 whitespace-nowrap">{{ $don->date_don->format('d/m/Y') }}</td>
                         <td class="py-1">
                             @if ($emis)
-                                <span class="px-2 py-0.5 text-xs rounded-full bg-amber-100 text-amber-800 whitespace-nowrap">{{ __("Donné") }}</span>
+                                <span class="px-2 py-0.5 text-xs rounded-full bg-or-100 text-or-700 whitespace-nowrap">{{ __("Donné") }}</span>
                             @else
                                 <span class="px-2 py-0.5 text-xs rounded-full bg-primaire-100 text-primaire-700 whitespace-nowrap">{{ __("Reçu") }}</span>
                             @endif

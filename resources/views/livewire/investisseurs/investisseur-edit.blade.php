@@ -155,14 +155,14 @@
                     @endif
 
                     @if ($divergencesPiece)
-                        <div class="mt-3 bg-amber-50 border border-amber-200 rounded-champ p-3">
-                            <p class="text-sm font-semibold text-amber-800">{{ __("La pièce ne dit pas la même chose que le formulaire") }}</p>
-                            <ul class="mt-2 text-sm text-amber-800 space-y-0.5">
+                        <div class="mt-3 bg-or-50 border border-or-300 rounded-champ p-3">
+                            <p class="text-sm font-semibold text-or-700">{{ __("La pièce ne dit pas la même chose que le formulaire") }}</p>
+                            <ul class="mt-2 text-sm text-or-700 space-y-0.5">
                                 @foreach ($divergencesPiece as $champ => $valeur)
                                     <li>{{ $libelles[$champ] ?? $champ }} : <strong>{{ $valeur }}</strong> {{ __("sur la pièce") }}</li>
                                 @endforeach
                             </ul>
-                            <p class="mt-2 text-xs text-amber-700">{{ __("Rien n'a été modifié — vérifiez laquelle des deux valeurs est la bonne.") }}</p>
+                            <p class="mt-2 text-xs text-or-700">{{ __("Rien n'a été modifié — vérifiez laquelle des deux valeurs est la bonne.") }}</p>
                         </div>
                     @endif
 

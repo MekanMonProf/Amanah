@@ -20,11 +20,23 @@
     @if ($video)
         <div class="mb-6 overflow-hidden rounded-carte border border-gray-200 bg-black">
             <div class="aspect-video">
-                <iframe src="{{ $video }}" title="{{ __($definition['titre']) }}"
+                <iframe src="{{ $video['adresse'] }}" title="{{ __($definition['titre']) }}"
                         class="h-full w-full" loading="lazy"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
             </div>
+
+            {{-- Faute d'enregistrement dans la langue du lecteur, on sert celui
+                 de la langue source et on le dit : on voit où l'on clique même
+                 sans comprendre la bande son, mais mieux vaut le savoir avant
+                 de lancer. --}}
+            @unless ($video['dansLaLangue'])
+                <p class="bg-gray-50 px-4 py-2 text-xs text-gray-500">
+                    {{ __("Cette vidéo est commentée en :langue.", [
+                        'langue' => __(\App\Support\Langue::DISPONIBLES[$video['langue']]['libelle']),
+                    ]) }}
+                </p>
+            @endunless
         </div>
     @endif
 

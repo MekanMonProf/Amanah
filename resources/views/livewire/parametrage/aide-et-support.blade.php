@@ -12,6 +12,26 @@
             </p>
         </div>
 
+        {{-- Trente champs — dix sujets fois trois langues — se liraient mal et
+             se rempliraient moins bien. On en montre dix, et on change de langue.
+             Le compteur dit combien sont posés dans chacune, pour voir d'un coup
+             d'œil ce qui reste à enregistrer. --}}
+        <div class="flex flex-wrap items-center gap-2 border-b px-5 py-4">
+            <span class="me-1 text-sm text-gray-500">{{ __("Langue de la vidéo") }} :</span>
+            @foreach (\App\Support\Langue::DISPONIBLES as $code => $langue)
+                @php($posees = collect($sujets)->keys()->filter(fn ($s) => $reglages->video($s, $code))->count())
+                <button type="button" wire:click="changerLangue('{{ $code }}')"
+                        class="rounded-champ border px-3 py-1.5 text-sm transition {{ $langueVideos === $code
+                            ? 'border-primaire-700 bg-primaire-700 text-white'
+                            : 'border-gray-300 bg-white text-gray-700 hover:border-primaire-300 hover:bg-primaire-50' }}">
+                    {{ $langue['libelle'] }}
+                    <span class="{{ $langueVideos === $code ? 'text-white/70' : 'text-gray-400' }}">
+                        {{ $posees }}/{{ count($sujets) }}
+                    </span>
+                </button>
+            @endforeach
+        </div>
+
         <div class="p-5 space-y-3">
             @foreach ($sujets as $code => $sujet)
                 <div class="grid grid-cols-1 gap-2 sm:grid-cols-[14rem_1fr] sm:items-center">
@@ -24,6 +44,10 @@
                     </div>
                 </div>
             @endforeach
+        </div>
+
+        <div class="border-t px-5 py-3 text-xs text-gray-400">
+            {{ __("Changer de langue recharge les champs : enregistrez avant de passer à la suivante.") }}
         </div>
 
         <div class="flex items-center justify-end gap-3 border-t p-5">

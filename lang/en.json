@@ -25,6 +25,8 @@
     "Cette page du mode d'emploi ne concerne pas votre rôle.": "This page of the manual does not concern your role.",
     "Cette page ne répond pas à ma question": "This page does not answer my question",
     "Cette page n'est pas encore traduite ; elle s'affiche en français.": "This page has not been translated yet; it is shown in French.",
+    "Cette vidéo est commentée en :langue.": "This video is narrated in :langue.",
+    "Changer de langue recharge les champs : enregistrez avant de passer à la suivante.": "Switching language reloads the fields: save before moving to the next one.",
     "Chaque écran de l'application, expliqué pas à pas.": "Every screen of the application, explained step by step.",
     "Comment la joindre": "How to reach it",
     "compte supprimé": "deleted account",
@@ -59,6 +61,7 @@
     "* colonne obligatoire. L'ordre des colonnes n'a pas d'importance, les accents et majuscules des en-têtes non plus. Les intitulés courants sont reconnus (« Date de naissance », « Nb actions », « N° pièce »…). Dates acceptées : 31/12/2024 ou 2024-12-31. Montants : la virgule est le séparateur décimal, l'espace celui des milliers.": "* required column. The order of the columns does not matter, nor do accents and capitals in the headers. Common labels are recognised (“Date of birth”, “No. of shares”, “ID number”…). Accepted dates: 31/12/2024 or 2024-12-31. Amounts: the comma is the decimal separator, the space the thousands separator.",
     "+ Désigner le mandataire / procurataire": "+ Appoint the proxy holder",
     "Fixer le barème d'un mois, distribuer, corriger une erreur de taux.": "Set a month's rate, distribute, correct a rate mistake.",
+    "Français": "French",
     "Gestion des actionnaires et des dividendes.": "Shareholder and dividend management.",
     "Horaires": "Hours",
     "Horaires, en clair": "Opening hours, in plain words",
@@ -69,6 +72,7 @@
     "investisseur(s) sans gestionnaire": "investor(s) without a manager",
     "Joindre directement": "Reach directly",
     "L'adresse d'une vidéo doit être un lien complet, commençant par https://.": "A video address must be a full link, starting with https://.",
+    "Langue de la vidéo": "Video language",
     "La société": "The company",
     "L'écran d'où vous venez (:ecran) sera joint à la demande.": "The screen you came from (:ecran) will be attached to the request.",
     "Le dividende de septembre ne s'affiche pas": "The September dividend is not showing",
@@ -1067,5 +1071,6 @@
     "Éligible aux dividendes": "Eligible for dividends",
     "La catégorie :categorie n'autorise pas la cession : le capital y est immobilisé, ni les parts ni le solde ne peuvent être donnés.": "The :categorie category does not allow transfers: its capital is locked, so neither shares nor balance can be given away.",
     "La catégorie :categorie n'autorise pas la radiation : le capital y est immobilisé, les parts ne se reprennent pas.": "The :categorie category does not allow redemption: its capital is locked, and shares once given are not taken back.",
-    "Œuvre caritative associée": "Associated charitable endowment"
+    "Œuvre caritative associée": "Associated charitable endowment",
+    "العربية": "Arabic"
 }

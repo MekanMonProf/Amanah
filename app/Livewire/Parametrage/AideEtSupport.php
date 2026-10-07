@@ -22,8 +22,15 @@ use Livewire\Component;
  */
 class AideEtSupport extends Component
 {
-    /** @var array<string, string> code du sujet => adresse de la vidéo */
+    /**
+     * Les adresses de la langue en cours d'édition. code du sujet => adresse.
+     *
+     * Trente champs à l'écran — dix sujets fois trois langues — se liraient mal
+     * et se rempliraient moins bien. On en montre dix, et on change de langue.
+     */
     public array $videos = [];
+
+    public string $langueVideos = \App\Support\Aide::LANGUE_SOURCE;
 
     public string $filtreStatut = 'ouvertes';
 
@@ -35,11 +42,34 @@ class AideEtSupport extends Component
     {
         Droits::exiger(Modules::MODULE_VERROU, Modules::ECRITURE);
 
+        $this->chargerVideos();
+    }
+
+    private function chargerVideos(): void
+    {
         $reglages = ParametreSociete::actuel();
 
         foreach (array_keys(Aide::SUJETS) as $code) {
-            $this->videos[$code] = $reglages->video($code) ?? '';
+            $this->videos[$code] = $reglages->video($code, $this->langueVideos) ?? '';
         }
+    }
+
+    /**
+     * Changer de langue recharge les champs depuis la base.
+     *
+     * Les modifications non enregistrées sont donc perdues — c'est voulu :
+     * les garder en mémoire laisserait croire qu'elles sont posées, et on
+     * repartirait en croyant avoir enregistré trois langues sur une.
+     */
+    public function changerLangue(string $langue): void
+    {
+        if (! \App\Support\Langue::estValide($langue)) {
+            return;
+        }
+
+        $this->langueVideos = $langue;
+        $this->resetValidation();
+        $this->chargerVideos();
     }
 
     protected function rules(): array
@@ -62,16 +92,28 @@ class AideEtSupport extends Component
 
         $reglages = ParametreSociete::actuel();
 
-        // Les trois formes d'adresse YouTube sont acceptées et ramenées à celle
-        // qui s'intègre : celle de la barre d'adresse et celle du bouton
-        // Partager donneraient un cadre noir, sans que rien ne le dise.
-        $videos = [];
+        // On repart des adresses déjà en base : l'écran ne montre qu'une langue,
+        // enregistrer ne doit pas effacer les deux autres.
+        $videos = $reglages->videos ?? [];
 
         foreach ($this->videos as $code => $adresse) {
+            // Les trois formes d'adresse YouTube sont acceptées et ramenées à
+            // celle qui s'intègre : celle de la barre d'adresse et celle du
+            // bouton Partager donneraient un cadre noir, sans que rien ne le dise.
             $normalisee = AdresseVideo::normaliser($adresse);
 
-            if ($normalisee !== null) {
-                $videos[$code] = $normalisee;
+            $pourLeSujet = $videos[$code] ?? [];
+
+            if ($normalisee === null) {
+                unset($pourLeSujet[$this->langueVideos]);
+            } else {
+                $pourLeSujet[$this->langueVideos] = $normalisee;
+            }
+
+            if ($pourLeSujet === []) {
+                unset($videos[$code]);
+            } else {
+                $videos[$code] = $pourLeSujet;
             }
         }
 
@@ -80,7 +122,7 @@ class AideEtSupport extends Component
         // Le champ montre ce qui a été enregistré : la conversion se voit,
         // elle ne se devine pas.
         foreach (array_keys($this->videos) as $code) {
-            $this->videos[$code] = $videos[$code] ?? '';
+            $this->videos[$code] = ($videos[$code] ?? [])[$this->langueVideos] ?? '';
         }
 
         AuditLog::enregistrer(
@@ -146,6 +188,7 @@ class AideEtSupport extends Component
             ->get();
 
         return view('livewire.parametrage.aide-et-support', [
+            'reglages' => ParametreSociete::actuel(),
             'demandes' => $demandes,
             'nouvelles' => DemandeSupport::where('statut', 'nouvelle')->count(),
             'sujets' => Aide::SUJETS,

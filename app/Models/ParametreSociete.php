@@ -96,12 +96,45 @@ class ParametreSociete extends Model
         return $parties->isEmpty() ? null : $parties->implode(', ');
     }
 
-    /** L'adresse de la vidéo d'un sujet d'aide, ou null si aucune n'est renseignée. */
-    public function video(string $sujet): ?string
+    /**
+     * L'adresse enregistrée pour ce couple sujet / langue, sans repli.
+     *
+     * C'est ce que l'écran de paramétrage montre dans ses champs : il doit
+     * afficher ce qui est posé, pas ce qui serait servi.
+     */
+    public function video(string $sujet, string $langue): ?string
     {
-        $adresse = ($this->videos ?? [])[$sujet] ?? null;
+        $adresse = (($this->videos ?? [])[$sujet] ?? [])[$langue] ?? null;
 
         return is_string($adresse) && trim($adresse) !== '' ? trim($adresse) : null;
+    }
+
+    /**
+     * La vidéo à servir sur la page, et dans quelle langue elle est.
+     *
+     * Faute d'enregistrement dans la langue du lecteur, on sert celui de la
+     * langue source, comme le fait déjà le texte de la page. Une démonstration
+     * à l'écran reste en grande partie compréhensible sans la bande son : on
+     * voit où l'on clique. La page dit alors la langue, pour que personne ne
+     * se croie responsable de ne pas comprendre.
+     *
+     * @return array{adresse: string, langue: string, dansLaLangue: bool}|null
+     */
+    public function videoPour(string $sujet, ?string $langue = null): ?array
+    {
+        $langue ??= app()->getLocale();
+
+        if ($adresse = $this->video($sujet, $langue)) {
+            return ['adresse' => $adresse, 'langue' => $langue, 'dansLaLangue' => true];
+        }
+
+        $source = \App\Support\Aide::LANGUE_SOURCE;
+
+        if ($langue !== $source && $adresse = $this->video($sujet, $source)) {
+            return ['adresse' => $adresse, 'langue' => $source, 'dansLaLangue' => false];
+        }
+
+        return null;
     }
 
     /** Le support est joignable dès qu'un canal est renseigné. */

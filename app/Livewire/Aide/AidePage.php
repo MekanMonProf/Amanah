@@ -41,7 +41,7 @@ class AidePage extends Component
         return view('livewire.aide.aide-page', [
             'definition' => Aide::SUJETS[$this->sujet],
             'page' => $page,
-            'video' => ParametreSociete::actuel()->video($this->sujet),
+            'video' => ParametreSociete::actuel()->videoPour($this->sujet),
             'voisins' => Aide::voisins($this->sujet, Auth::user()),
         ]);
     }

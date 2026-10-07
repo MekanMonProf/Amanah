@@ -102,6 +102,12 @@
                 @if ($destinataire['email'])
                     <div><dt class="inline text-gray-500">{{ __("Email") }} :</dt> <dd class="inline">{{ $destinataire['email'] }}</dd></div>
                 @endif
+                {{-- Les horaires ne valent que pour le support de la maison : un
+                     gestionnaire répond quand il répond, et annoncer des heures
+                     pour lui serait une promesse qu'il n'a pas faite. --}}
+                @if (! $destinataire['estGestionnaire'] && $horaires)
+                    <div><dt class="inline text-gray-500">{{ __("Horaires") }} :</dt> <dd class="inline">{{ $horaires }}</dd></div>
+                @endif
             </dl>
         </div>
     @endif

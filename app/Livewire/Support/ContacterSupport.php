@@ -89,6 +89,7 @@ class ContacterSupport extends Component
 
         return view('livewire.support.contacter-support', [
             'destinataire' => MessageSupport::destinataire($utilisateur),
+            'horaires' => \App\Models\ParametreSupport::actuel()->horaires,
             'demande' => $demande,
             'lienWhatsapp' => $demande ? MessageSupport::lien($demande, $utilisateur) : null,
             'lienEmail' => $demande ? MessageSupport::lienEmail($demande, $utilisateur) : null,

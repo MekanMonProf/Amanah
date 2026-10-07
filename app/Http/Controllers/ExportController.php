@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Auth;
 
 class ExportController extends Controller
 {
+    /** Excel ouvre un CSV en ANSI sans cette marque, et les accents y tombent. */
+    private const BOM = "\xEF\xBB\xBF";
+
     use \App\Http\Controllers\Concerns\RendPdf;
 
     use RestreintAuPortefeuilleGestionnaire;
@@ -62,7 +65,7 @@ class ExportController extends Controller
 
         return response()->streamDownload(function () use ($achats) {
             $flux = fopen('php://output', 'w');
-            fwrite($flux, "\xEF\xBB\xBF");
+            fwrite($flux, self::BOM);
             fputcsv($flux, ['N° achat', 'Date', 'Type', 'Actions', 'Prix unitaire', 'Montant', 'Mode paiement', 'Référence'], ';');
             foreach ($achats as $a) {
                 fputcsv($flux, [$a->numero_achat, $a->date_achat->format('d/m/Y'), $a->type_achat, $a->nombre_actions, $a->prix_unitaire, $a->montant, $a->mode_paiement, $a->reference_facture], ';');
@@ -123,7 +126,7 @@ class ExportController extends Controller
 
         return response()->streamDownload(function () use ($ecritures) {
             $flux = fopen('php://output', 'w');
-            fwrite($flux, "\xEF\xBB\xBF");
+            fwrite($flux, self::BOM);
             fputcsv($flux, ['Date', 'Type', 'Montant', 'Solde après', 'Observations'], ';');
             foreach ($ecritures as $e) {
                 fputcsv($flux, [$e->date_ecriture->format('d/m/Y'), $e->type_ecriture, $e->montant, $e->solde_apres, $e->observations], ';');
@@ -173,7 +176,7 @@ class ExportController extends Controller
 
         return response()->streamDownload(function () use ($radiations) {
             $flux = fopen('php://output', 'w');
-            fwrite($flux, "\xEF\xBB\xBF");
+            fwrite($flux, self::BOM);
             fputcsv($flux, ['N° radiation', 'Date', 'Actions radiées', 'Prix unitaire', 'Montant total', 'Référence'], ';');
             foreach ($radiations as $r) {
                 fputcsv($flux, [$r->numero_radiation, $r->date_radiation->format('d/m/Y'), $r->nombre_actions_radiees, $r->prix_unitaire_action, $r->montant_total, $r->reference_facture], ';');
@@ -191,6 +194,94 @@ class ExportController extends Controller
         ])->setPaper('a4', 'portrait');
 
         return $this->telechargerPdf($pdf, 'Radiations_' . $compte->numero_compte . '_' . now()->format('Y-m-d') . '.pdf');
+    }
+
+    /**
+     * Les dons d'un compte, dans les deux sens.
+     *
+     * Ils manquaient aux exports alors que les achats, les radiations et les
+     * écritures y étaient tous. Un don de solde laisse bien deux écritures et
+     * se retrouvait donc ailleurs — mais un don d'actions n'écrit que sa propre
+     * ligne, et c'est pourtant nombreActions() qui la compte. Sans cet export,
+     * le nombre d'actions d'un compte ne se réconciliait pas à partir de ses
+     * fichiers : il manquait toujours ce qui avait été donné ou reçu.
+     */
+    protected function donsFiltres(Request $request, CompteInvestissement $compte)
+    {
+        $this->assurerAccesGestionnairePourCompte($compte);
+
+        $query = \App\Models\Don::with(['compteSource.investisseur', 'compteDestinataire.investisseur']);
+
+        // Le compte est soit la source, soit le destinataire, jamais les deux :
+        // DonCreate refuse un don vers le compte d'origine.
+        match ($request->query('sens')) {
+            'emis' => $query->where('compte_source_id', $compte->id),
+            'recus' => $query->where('compte_destinataire_id', $compte->id),
+            default => $query->where(function ($q) use ($compte) {
+                $q->where('compte_source_id', $compte->id)
+                  ->orWhere('compte_destinataire_id', $compte->id);
+            }),
+        };
+
+        if ($recherche = $request->query('recherche')) {
+            $query->where('motif', 'like', "%{$recherche}%");
+        }
+        if ($debut = $request->query('date_debut')) {
+            $query->whereDate('date_don', '>=', $debut);
+        }
+        if ($fin = $request->query('date_fin')) {
+            $query->whereDate('date_don', '<=', $fin);
+        }
+
+        return $query->orderBy('date_don');
+    }
+
+    /** Le sens du don vu depuis ce compte : il l'a donné, ou il l'a reçu. */
+    protected function sensDuDon(\App\Models\Don $don, CompteInvestissement $compte): string
+    {
+        return $don->compte_source_id === $compte->id ? 'Donné' : 'Reçu';
+    }
+
+    public function donsCsv(Request $request, CompteInvestissement $compte)
+    {
+        $dons = $this->donsFiltres($request, $compte)->get();
+
+        return response()->streamDownload(function () use ($dons, $compte) {
+            $flux = fopen('php://output', 'w');
+            fwrite($flux, self::BOM);
+            fputcsv($flux, ['Date', 'Sens', 'Type', 'Contrepartie', 'Identifiant', 'Actions', 'Montant', 'Motif'], ';');
+
+            foreach ($dons as $d) {
+                $sens = $this->sensDuDon($d, $compte);
+                $autre = $sens === 'Donné' ? $d->compteDestinataire : $d->compteSource;
+
+                fputcsv($flux, [
+                    $d->date_don->format('d/m/Y'),
+                    $sens,
+                    $d->type_don === 'actions' ? 'Actions' : 'Solde',
+                    trim(($autre->investisseur->nom ?? '') . ' ' . ($autre->investisseur->prenom ?? '')),
+                    $autre->investisseur->identifiant_externe ?? '',
+                    $d->nombre_actions,
+                    $d->montant,
+                    $d->motif,
+                ], ';');
+            }
+
+            fclose($flux);
+        }, 'dons_' . $compte->numero_compte . '_' . now()->format('Y-m-d') . '.csv', ['Content-Type' => 'text/csv; charset=UTF-8']);
+    }
+
+    public function donsPdf(Request $request, CompteInvestissement $compte)
+    {
+        $dons = $this->donsFiltres($request, $compte)->get();
+
+        $pdf = Pdf::loadView('pdf.liste-dons', [
+            'dons' => $dons,
+            'compte' => $compte->load('investisseur'),
+            'dateGeneration' => now(),
+        ])->setPaper('a4', 'portrait');
+
+        return $this->telechargerPdf($pdf, 'Dons_' . $compte->numero_compte . '_' . now()->format('Y-m-d') . '.pdf');
     }
 
     // --- Exports globaux (tous les comptes, tous les investisseurs) -----
@@ -215,7 +306,7 @@ class ExportController extends Controller
 
         return response()->streamDownload(function () use ($achats) {
             $flux = fopen('php://output', 'w');
-            fwrite($flux, "\xEF\xBB\xBF");
+            fwrite($flux, self::BOM);
             fputcsv($flux, ['Investisseur', 'Identifiant', 'Compte', 'Catégorie', 'N° achat', 'Date', 'Type', 'Actions', 'Prix unitaire', 'Montant', 'Mode paiement'], ';');
             foreach ($achats as $a) {
                 fputcsv($flux, [
@@ -249,7 +340,7 @@ class ExportController extends Controller
 
         return response()->streamDownload(function () use ($ecritures) {
             $flux = fopen('php://output', 'w');
-            fwrite($flux, "\xEF\xBB\xBF");
+            fwrite($flux, self::BOM);
             fputcsv($flux, ['Investisseur', 'Identifiant', 'Compte', 'Catégorie', 'Date', 'Type', 'Montant', 'Solde après', 'Observations'], ';');
             foreach ($ecritures as $e) {
                 fputcsv($flux, [
@@ -282,7 +373,7 @@ class ExportController extends Controller
 
         return response()->streamDownload(function () use ($radiations) {
             $flux = fopen('php://output', 'w');
-            fwrite($flux, "\xEF\xBB\xBF");
+            fwrite($flux, self::BOM);
             fputcsv($flux, ['Investisseur', 'Identifiant', 'Compte', 'Catégorie', 'N° radiation', 'Date', 'Actions radiées', 'Prix unitaire', 'Montant total'], ';');
             foreach ($radiations as $r) {
                 fputcsv($flux, [
@@ -343,7 +434,7 @@ class ExportController extends Controller
 
         return response()->streamDownload(function () use ($investisseurs) {
             $flux = fopen('php://output', 'w');
-            fwrite($flux, "\xEF\xBB\xBF");
+            fwrite($flux, self::BOM);
 
             fputcsv($flux, ['Identifiant', 'Nom', 'Prénom', 'Type', 'Téléphone', 'Email', 'Pays', 'Gestionnaire', 'Statut'], ';');
 
@@ -414,7 +505,7 @@ class ExportController extends Controller
 
         return response()->streamDownload(function () use ($entrees) {
             $flux = fopen('php://output', 'w');
-            fwrite($flux, "\xEF\xBB\xBF");
+            fwrite($flux, self::BOM);
 
             fputcsv($flux, ['Date', 'Utilisateur', 'Email', 'Action', 'Entité', 'ID entité', 'Avant', 'Après', 'IP'], ';');
 

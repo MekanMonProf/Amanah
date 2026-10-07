@@ -19,6 +19,30 @@
                 {{ __("Réinitialiser") }}
             </button>
         @endif
+
+        {{-- Les trois autres historiques du compte s'exportaient, pas celui-ci.
+             Or un don d'actions n'écrit que sa propre ligne : sans ces deux
+             boutons, le nombre d'actions ne se réconciliait pas à partir des
+             fichiers d'un compte. --}}
+        <div class="flex gap-2 sm:ms-auto">
+            @php
+                $filtres = [
+                    'compte' => $compte->id,
+                    'recherche' => $recherche,
+                    'sens' => $filtreSens,
+                    'date_debut' => $dateDebut,
+                    'date_fin' => $dateFin,
+                ];
+            @endphp
+            <a href="{{ route('export.dons.csv', $filtres) }}"
+               target="_blank" class="text-xs text-gray-600 border border-gray-300 rounded px-3 py-1.5 hover:bg-gray-50 whitespace-nowrap">
+                CSV
+            </a>
+            <a href="{{ route('export.dons.pdf', $filtres) }}"
+               target="_blank" class="text-xs text-gray-600 border border-gray-300 rounded px-3 py-1.5 hover:bg-gray-50 whitespace-nowrap">
+                PDF
+            </a>
+        </div>
     </div>
 
     <div class="overflow-x-auto">

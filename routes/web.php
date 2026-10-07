@@ -125,6 +125,8 @@ Route::middleware(['auth', 'doit.changer.mdp', 'deux.fa'])->group(function () {
         Route::get('/comptes/{compte}/ecritures/export/pdf', [ExportController::class, 'ecrituresPdf'])->name('export.ecritures.pdf');
         Route::get('/comptes/{compte}/radiations/export/csv', [ExportController::class, 'radiationsCsv'])->name('export.radiations.csv');
         Route::get('/comptes/{compte}/radiations/export/pdf', [ExportController::class, 'radiationsPdf'])->name('export.radiations.pdf');
+        Route::get('/comptes/{compte}/dons/export/csv', [ExportController::class, 'donsCsv'])->name('export.dons.csv');
+        Route::get('/comptes/{compte}/dons/export/pdf', [ExportController::class, 'donsPdf'])->name('export.dons.pdf');
     });
 
     // ---- Operations sur les dossiers ----

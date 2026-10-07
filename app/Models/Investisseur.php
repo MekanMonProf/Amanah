@@ -40,6 +40,12 @@ class Investisseur extends Model
         return $this->belongsTo(Gestionnaire::class);
     }
 
+    /** Ce que l'investisseur a signalé depuis l'écran de connexion. */
+    public function demandesAcces()
+    {
+        return $this->hasMany(DemandeAcces::class);
+    }
+
     public function comptes()
     {
         return $this->hasMany(CompteInvestissement::class);

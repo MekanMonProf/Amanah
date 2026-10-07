@@ -175,6 +175,23 @@
          La révocation reste offerte sur le dossier d'un défunt — c'est là qu'elle
          sert le plus — alors que la création, la réinitialisation et le
          rétablissement n'y ont pas leur place. --}}
+    {{-- L'investisseur a signalé qu'il ne pouvait plus entrer. L'avis se pose
+         juste au-dessus du bouton qui y répond : le geste à faire est à portée
+         de la phrase qui le demande. --}}
+    @if ($demandeAcces)
+        <div class="mb-4 flex items-start gap-3 rounded-champ border border-or-300 bg-or-50 px-4 py-3">
+            <x-icone nom="alerte" class="mt-0.5 h-5 w-5 shrink-0 text-or-700" />
+            <div class="text-sm text-or-700">
+                <p class="font-semibold">{{ __("Cet investisseur demande un nouvel accès.") }}</p>
+                <p class="mt-0.5">
+                    {{ __("Demande déposée le :date depuis l'écran de connexion. Réinitialisez le mot de passe ci-dessous, puis envoyez-le par WhatsApp.", [
+                        'date' => $demandeAcces->created_at->format('d/m/Y à H:i'),
+                    ]) }}
+                </p>
+            </div>
+        </div>
+    @endif
+
     <div class="mb-6 flex flex-wrap items-center gap-2">
         @if (! $investisseur->user_id)
             @if ($peutAgirSurLAcces && ! $investisseur->estDecede())

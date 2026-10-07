@@ -71,6 +71,12 @@ class InvestisseurIndex extends Component
         if (request()->query('completude') === 'incomplets') {
             $this->filtreCompletude = 'incomplets';
         }
+
+        // Même chose pour les demandes d'accès : le compteur du tableau de bord
+        // doit atterrir sur la liste déjà filtrée.
+        if (request()->query('acces') === 'demande') {
+            $this->filtreAcces = 'demande';
+        }
     }
 
     public function trierPar(string $colonne): void
@@ -209,6 +215,10 @@ class InvestisseurIndex extends Component
             $query->whereHas('user', fn ($q) => $q->whereNull('email')->whereNotNull('telephone'));
         } elseif ($this->filtreAcces === 'aucun') {
             $query->whereNull('user_id');
+        } elseif ($this->filtreAcces === 'demande') {
+            // Ceux qui ont signalé depuis l'écran de connexion qu'ils ne
+            // parvenaient plus à entrer, et qu'on n'a pas encore dépannés.
+            $query->whereHas('demandesAcces', fn ($q) => $q->enAttente());
         }
 
         return $query;

@@ -24,6 +24,18 @@
             ];
         }
     }
+
+    // Celle-ci concerne aussi le gestionnaire, et lui d'abord : c'est lui qui
+    // réinitialise l'accès de ses investisseurs.
+    if (($nbDemandesAcces ?? 0) > 0) {
+        $aTraiter[] = [
+            'nombre' => $nbDemandesAcces,
+            'libelle' => __("demande(s) de nouvel accès"),
+            'detail' => __("un investisseur ne parvient plus à se connecter"),
+            'lien' => route('investisseurs.index', ['acces' => 'demande']),
+            'ton' => 'or',
+        ];
+    }
 @endphp
 
 <div class="p-4 sm:p-6 lg:p-8">

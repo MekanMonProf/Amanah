@@ -102,6 +102,9 @@ class TableauDeBord extends Component
             'totalDividendesDistribues' => $totalDividendesDistribues,
             'dividendesCeMois' => $dividendesCeMois,
             'radiationsEnAttente' => $radiationsEnAttente,
+            'nbDemandesAcces' => \App\Models\DemandeAcces::enAttente()
+                ->pourLUtilisateur(\Illuminate\Support\Facades\Auth::user())
+                ->count(),
             'derniersInvestisseurs' => Investisseur::latest()->take(5)->get(),
         ];
     }

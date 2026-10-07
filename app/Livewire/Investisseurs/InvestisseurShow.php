@@ -211,6 +211,10 @@ class InvestisseurShow extends Component
             );
         }
 
+        // Si l'investisseur avait signalé qu'il était bloqué, sa demande n'a
+        // plus lieu d'être : le geste qu'elle appelait vient d'être fait.
+        \App\Models\DemandeAcces::clore($this->investisseur, \Illuminate\Support\Facades\Auth::id());
+
         \App\Models\AuditLog::enregistrer(
             action: 'reinitialisation_mdp',
             entite: 'investisseur',
@@ -375,6 +379,10 @@ class InvestisseurShow extends Component
         });
 
         return view('livewire.investisseurs.investisseur-show', [
+            'demandeAcces' => \App\Models\DemandeAcces::enAttente()
+                ->where('investisseur_id', $this->investisseur->id)
+                ->latest()
+                ->first(),
             'comptesEnrichis' => $comptesEnrichis,
             // Les actions offertes à la mémoire d'un défunt sont portées au compte du Waqf
             // caritatif : sans ce rappel, elles seraient invisibles sur la fiche du donateur.

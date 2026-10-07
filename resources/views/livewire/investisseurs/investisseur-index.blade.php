@@ -96,6 +96,7 @@
             <option value="email">{{ __("Connexion par email") }}</option>
             <option value="telephone">{{ __("Connexion par téléphone") }}</option>
             <option value="aucun">{{ __("Pas d'accès portail") }}</option>
+            <option value="demande">{{ __("Demande un nouvel accès") }}</option>
         </select>
 
         <select wire:model.live="filtreCompletude" class="border-gray-300 rounded-champ text-sm w-full sm:w-auto">

@@ -1,4 +1,4 @@
-<div class="p-4 sm:p-6 max-w-2xl">
+<div class="p-4 sm:p-6 lg:p-8 max-w-2xl">
     <a href="{{ route('dividendes.calculer') }}" wire:navigate class="text-sm text-gray-500 hover:underline">{{ __("← Retour au calcul des dividendes") }}</a>
 
     <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mt-2 mb-1">{{ __("Corriger un barème") }}</h1>

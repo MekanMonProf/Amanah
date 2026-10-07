@@ -35,11 +35,11 @@ new class extends Component {
 
 <section>
     <header>
-        <h2 class="text-lg font-medium text-gray-900">
+        <h2 class="font-semibold text-gray-800">
             {{ __("Modifier le mot de passe") }}
         </h2>
 
-        <p class="mt-1 text-sm text-gray-600">
+        <p class="mt-1 text-sm text-gray-500">
             {{ __("Utilisez un mot de passe long et unique pour la sécurité de votre compte.") }}
         </p>
     </header>

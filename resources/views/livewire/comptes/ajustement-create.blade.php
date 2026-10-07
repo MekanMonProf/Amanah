@@ -1,4 +1,4 @@
-<div class="p-4 sm:p-6 max-w-2xl">
+<div class="p-4 sm:p-6 lg:p-8 max-w-2xl">
     <a href="{{ route('investisseurs.show', $compte->investisseur) }}" wire:navigate class="text-sm text-gray-500 hover:underline">{{ __("← Retour au dossier") }}</a>
 
     @if ($ecritureDuRecu)

@@ -102,11 +102,11 @@ new class extends Component {
 
 <section>
     <header>
-        <h2 class="text-lg font-medium text-gray-900">
+        <h2 class="font-semibold text-gray-800">
             {{ __("Informations du profil") }}
         </h2>
 
-        <p class="mt-1 text-sm text-gray-600">
+        <p class="mt-1 text-sm text-gray-500">
             {{ __("Mettez à jour vos informations de compte et la langue de l'application.") }}
         </p>
     </header>

@@ -20,23 +20,26 @@ new #[Layout('layouts.guest')] class extends Component {
 }; ?>
 
 <div>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __("Mot de passe oublié ? Pas de problème. Indiquez votre adresse email et nous vous enverrons un lien pour en choisir un nouveau.") }}
-    </div>
+    <x-surtitre>{{ __("Mot de passe") }}</x-surtitre>
+    <h1 class="mt-1 text-2xl font-bold text-gray-900">{{ __("Mot de passe oublié") }}</h1>
+    {{-- La réinitialisation passe par l'email, et la plupart des investisseurs
+         n'en ont pas : le dire ici évite d'attendre un message qui ne viendra
+         jamais. --}}
+    <p class="mt-1 text-sm text-gray-500">
+        {{ __("Indiquez votre adresse email et nous vous enverrons un lien. Si votre dossier n'a pas d'email, demandez à votre gestionnaire de réinitialiser votre accès.") }}
+    </p>
 
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+    <x-auth-session-status class="mt-6" :status="session('status')" />
 
-    <form wire:submit="sendPasswordResetLink">
+    <form wire:submit="sendPasswordResetLink" class="mt-6">
         <div>
             <x-input-label for="email" :value="__('Email')" />
             <x-text-input wire:model="email" id="email" class="block mt-1 w-full" type="email" name="email" required autofocus />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __("Envoyer le lien de réinitialisation") }}
-            </x-primary-button>
-        </div>
+        <x-primary-button class="mt-6 w-full justify-center">
+            {{ __("Envoyer le lien de réinitialisation") }}
+        </x-primary-button>
     </form>
 </div>

@@ -53,7 +53,13 @@ new #[Layout('layouts.guest')] class extends Component {
 }; ?>
 
 <div>
-    <form wire:submit="resetPassword">
+    <x-surtitre>{{ __("Mot de passe") }}</x-surtitre>
+    <h1 class="mt-1 text-2xl font-bold text-gray-900">{{ __("Nouveau mot de passe") }}</h1>
+    <p class="mt-1 text-sm text-gray-500">
+        {{ __("Choisissez un mot de passe que vous n'utilisez nulle part ailleurs.") }}
+    </p>
+
+    <form wire:submit="resetPassword" class="mt-6">
         <div>
             <x-input-label for="email" :value="__('Email')" />
             <x-text-input wire:model="email" id="email" class="block mt-1 w-full" type="email" name="email" required autofocus autocomplete="username" />
@@ -72,10 +78,8 @@ new #[Layout('layouts.guest')] class extends Component {
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __("Réinitialiser le mot de passe") }}
-            </x-primary-button>
-        </div>
+        <x-primary-button class="mt-6 w-full justify-center">
+            {{ __("Réinitialiser le mot de passe") }}
+        </x-primary-button>
     </form>
 </div>

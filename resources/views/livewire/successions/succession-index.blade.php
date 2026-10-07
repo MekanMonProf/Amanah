@@ -1,7 +1,10 @@
-<div class="p-4 sm:p-6">
-    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
-        <x-surtitre>{{ __('Finance') }}</x-surtitre>
-        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">{{ __("Successions") }}</h1>
+<div class="p-4 sm:p-6 lg:p-8">
+    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-6">
+        <div>
+            <x-surtitre>{{ __('Finance') }}</x-surtitre>
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">{{ __("Successions") }}</h1>
+            <p class="text-sm text-gray-500">{{ __("Les dossiers de défunts, de la déclaration au versement aux héritiers.") }}</p>
+        </div>
     </div>
 
     {{-- Filtres --}}

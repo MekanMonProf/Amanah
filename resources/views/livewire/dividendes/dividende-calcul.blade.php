@@ -1,4 +1,4 @@
-<div class="p-4 sm:p-6 max-w-2xl">
+<div class="p-4 sm:p-6 lg:p-8 max-w-2xl">
     <x-surtitre>{{ __('Finance') }}</x-surtitre>
     <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">{{ __("Calcul des dividendes") }}</h1>
     <p class="text-sm text-gray-500 mb-6">

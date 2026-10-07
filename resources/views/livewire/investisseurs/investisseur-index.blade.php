@@ -1,7 +1,13 @@
-<div class="p-4 sm:p-6">
-    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
-        <x-surtitre>{{ __('Gestion') }}</x-surtitre>
-        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">{{ __("Investisseurs") }}</h1>
+<div class="p-4 sm:p-6 lg:p-8">
+    {{-- Le surtitre, le titre et le sous-titre forment un bloc : laisses freres
+         dans le flex, ils se repartissaient sur la largeur et le titre partait
+         au milieu de l ecran, loin du surtitre qui l annonce. --}}
+    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-6">
+        <div>
+            <x-surtitre>{{ __('Gestion') }}</x-surtitre>
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">{{ __("Investisseurs") }}</h1>
+            <p class="text-sm text-gray-500">{{ __("Les dossiers, leur position et leur accès au portail.") }}</p>
+        </div>
         {{-- flex-wrap : sur telephone, le bouton principal passe seul a la ligne --}}
         <div class="flex flex-wrap gap-2 w-full sm:w-auto">
             <a href="{{ route('export.investisseurs.csv', ['recherche' => $recherche, 'gestionnaire' => $filtreGestionnaireId, 'statut' => $filtreStatut]) }}"

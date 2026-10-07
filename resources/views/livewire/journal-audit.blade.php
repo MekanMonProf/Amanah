@@ -1,4 +1,4 @@
-<div class="p-4 sm:p-6">
+<div class="p-4 sm:p-6 lg:p-8">
     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-1">
         <div>
             <x-surtitre>{{ __('Administration') }}</x-surtitre>

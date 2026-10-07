@@ -43,7 +43,7 @@
     }
 @endphp
 
-<div class="p-4 sm:p-6">
+<div class="p-4 sm:p-6 lg:p-8">
     <div class="mb-6">
         <x-surtitre>{{ __('Administration') }}</x-surtitre>
         <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">{{ __("Exports") }}</h1>

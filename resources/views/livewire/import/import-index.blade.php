@@ -1,4 +1,4 @@
-<div class="p-4 sm:p-6">
+<div class="p-4 sm:p-6 lg:p-8">
     <x-surtitre>{{ __('Administration') }}</x-surtitre>
     <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">{{ __("Importation de données") }}</h1>
     <p class="text-sm text-gray-500 mb-6">

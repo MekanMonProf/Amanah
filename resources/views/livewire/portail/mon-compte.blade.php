@@ -1,4 +1,4 @@
-<div class="p-4 sm:p-6">
+<div class="p-4 sm:p-6 lg:p-8">
     @if (! $investisseur)
         <div class="bg-or-50 border border-or-300 rounded-champ p-4 text-sm text-or-700">
             {{ __("Votre compte n'est relié à aucun dossier investisseur. Contactez votre gestionnaire.") }}

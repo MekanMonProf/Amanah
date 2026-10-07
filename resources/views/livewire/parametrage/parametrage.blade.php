@@ -1,4 +1,4 @@
-<div class="max-w-6xl">
+<div class="p-4 sm:p-6 lg:p-8 max-w-6xl">
     <div class="mb-6">
         <x-surtitre>{{ __('Administration') }}</x-surtitre>
         <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">{{ __("Paramétrage") }}</h1>

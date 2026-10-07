@@ -1,7 +1,10 @@
-<div class="p-4 sm:p-6">
-    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
-        <x-surtitre>{{ __('Gestion') }}</x-surtitre>
-        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">{{ __("Gestionnaires d'actionnaires") }}</h1>
+<div class="p-4 sm:p-6 lg:p-8">
+    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-6">
+        <div>
+            <x-surtitre>{{ __('Gestion') }}</x-surtitre>
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">{{ __("Gestionnaires d'actionnaires") }}</h1>
+            <p class="text-sm text-gray-500">{{ __("Qui suit quel portefeuille, et à quel volume.") }}</p>
+        </div>
         <button wire:click="{{ $afficherFormulaire ? '$set(\'afficherFormulaire\', false)' : 'ouvrirFormulaire' }}"
                 class="bg-primaire-700 text-white px-4 py-2 rounded-champ hover:bg-primaire-800 w-full sm:w-auto">
             {{ $afficherFormulaire ? __('Annuler') : __('+ Nouveau gestionnaire') }}

@@ -1,4 +1,4 @@
-<div class="max-w-3xl">
+<div class="p-4 sm:p-6 lg:p-8 max-w-3xl">
     <a href="{{ route('aide.index') }}" wire:navigate class="text-sm text-gray-500 hover:underline">
         {{ __("← Retour au mode d'emploi") }}
     </a>

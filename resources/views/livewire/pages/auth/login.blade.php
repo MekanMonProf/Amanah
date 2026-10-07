@@ -90,9 +90,17 @@ new #[Layout('layouts.guest')] class extends Component {
 }; ?>
 
 <div>
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+    <x-surtitre>{{ __("Connexion") }}</x-surtitre>
+    <h1 class="mt-1 text-2xl font-bold text-gray-900">{{ __("Se connecter") }}</h1>
+    {{-- La plupart des investisseurs n'ont pas d'email : le dire ici évite
+         qu'ils cherchent un identifiant qu'ils n'ont jamais eu. --}}
+    <p class="mt-1 text-sm text-gray-500">
+        {{ __("Votre email ou le numéro de téléphone de votre dossier.") }}
+    </p>
 
-    <form wire:submit="login">
+    <x-auth-session-status class="mt-6" :status="session('status')" />
+
+    <form wire:submit="login" class="mt-6">
         <div>
             <x-input-label for="identifiant" :value="__('Email ou téléphone')" />
             <x-text-input wire:model="identifiant" id="identifiant" class="block mt-1 w-full" type="text" name="identifiant" required autofocus autocomplete="username" />
@@ -105,23 +113,23 @@ new #[Layout('layouts.guest')] class extends Component {
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
-        <div class="block mt-4">
+        <div class="mt-4 flex flex-wrap items-center justify-between gap-2">
             <label for="remember" class="inline-flex items-center">
-                <input wire:model="remember" id="remember" type="checkbox" class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-primaire-700 shadow-sm focus:ring-primaire-600 dark:focus:ring-primaire-700 dark:focus:ring-offset-gray-800" name="remember">
-                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __("Se souvenir de moi") }}</span>
+                <input wire:model="remember" id="remember" type="checkbox" class="rounded border-gray-300 text-primaire-700 shadow-sm focus:ring-primaire-600" name="remember">
+                <span class="ms-2 text-sm text-gray-600">{{ __("Se souvenir de moi") }}</span>
             </label>
-        </div>
 
-        <div class="flex items-center justify-end mt-4">
             @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primaire-600" href="{{ route('password.request') }}" wire:navigate>
+                <a class="text-sm text-primaire-700 hover:underline rounded-champ focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primaire-600" href="{{ route('password.request') }}" wire:navigate>
                     {{ __("Mot de passe oublié ?") }}
                 </a>
             @endif
-
-            <x-primary-button class="ms-3">
-                {{ __("Se connecter") }}
-            </x-primary-button>
         </div>
+
+        {{-- Un seul bouton sur l'écran, et rien ne le dispute : il prend toute
+             la largeur plutôt que de se blottir dans un coin. --}}
+        <x-primary-button class="mt-6 w-full justify-center">
+            {{ __("Se connecter") }}
+        </x-primary-button>
     </form>
 </div>

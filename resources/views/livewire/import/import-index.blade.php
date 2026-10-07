@@ -5,8 +5,8 @@
         {{ __("Reprise de l'existant depuis un fichier Excel (.xlsx) ou CSV. Rien n'est enregistré avant que vous ayez validé le tableau de contrôle.") }}
     </p>
 
-    <div class="bg-blue-50 border border-blue-200 rounded-champ p-3 mb-6 text-sm text-blue-800">
-        ℹ️ {!! __("Ordre à respecter : <strong>gestionnaires</strong> → <strong>investisseurs</strong> → <strong>achats</strong> → <strong>écritures financières</strong>. Chaque étape s'appuie sur la précédente (un achat a besoin de son investisseur, un investisseur peut être rattaché à son gestionnaire).") !!}
+    <div class="bg-gray-50 border border-gray-200 rounded-champ p-3 mb-6 text-sm text-gray-600">
+        {!! __("Ordre à respecter : <strong>gestionnaires</strong> → <strong>investisseurs</strong> → <strong>achats</strong> → <strong>écritures financières</strong>. Chaque étape s'appuie sur la précédente (un achat a besoin de son investisseur, un investisseur peut être rattaché à son gestionnaire).") !!}
     </div>
 
     <!-- Choix du type de données -->
@@ -179,14 +179,14 @@
             @endif
 
             @if ($type === 'achats')
-                <div class="bg-blue-50 border border-blue-200 rounded-champ p-3 mt-4 text-sm text-blue-800">
-                    ℹ️ {!! __("L'import n'enregistre que les achats. Les dividendes des mois passés se rattrapent ensuite en lançant <strong>:module</strong>, qui rejoue tout l'historique des barèmes déjà fixés.", ['module' => __('Dividendes → Calculer et distribuer')]) !!}
+                <div class="bg-gray-50 border border-gray-200 rounded-champ p-3 mt-4 text-sm text-gray-600">
+                    {!! __("L'import n'enregistre que les achats. Les dividendes des mois passés se rattrapent ensuite en lançant <strong>:module</strong>, qui rejoue tout l'historique des barèmes déjà fixés.", ['module' => __('Dividendes → Calculer et distribuer')]) !!}
                 </div>
             @endif
 
             @if ($type === 'ecritures')
-                <div class="bg-blue-50 border border-blue-200 rounded-champ p-3 mt-4 text-sm text-blue-800">
-                    ℹ️ {{ __("Les écritures sont enregistrées dans l'ordre des lignes du fichier, chacune recalculant le solde du compte. Aucun réinvestissement automatique n'est déclenché : les achats correspondants doivent être repris par l'import « Achats d'actions ».") }}
+                <div class="bg-gray-50 border border-gray-200 rounded-champ p-3 mt-4 text-sm text-gray-600">
+                    {{ __("Les écritures sont enregistrées dans l'ordre des lignes du fichier, chacune recalculant le solde du compte. Aucun réinvestissement automatique n'est déclenché : les achats correspondants doivent être repris par l'import « Achats d'actions ».") }}
                 </div>
             @endif
 

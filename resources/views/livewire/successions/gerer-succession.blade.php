@@ -10,12 +10,12 @@
         @endif
     </p>
 
-    <div class="bg-purple-50 border border-purple-200 rounded-champ p-4 mb-3 text-sm text-purple-800">
+    <div class="bg-primaire-50 border border-primaire-200 rounded-champ p-4 mb-3 text-sm text-primaire-800">
         🕌 {!! __("<strong>Compte(s) Waqf :</strong> le capital est automatiquement redirigé vers l'œuvre caritative <strong>:waqf</strong>, jamais vers le mandataire — conformément au principe d'inaliénabilité du Waqf.", ['waqf' => \App\Models\Investisseur::NOM_WAQF_CARITATIF]) !!}
     </div>
 
-    <div class="bg-blue-50 border border-blue-200 rounded-champ p-4 mb-6 text-sm text-blue-800">
-        ℹ️ {!! __("<strong>Compte(s) Commercial :</strong> la famille désigne un mandataire/procurataire unique, muni d'une procuration. Vous choisissez ensuite s'il devient investisseur ou si les avoirs lui sont payés directement.") !!}
+    <div class="bg-gray-50 border border-gray-200 rounded-champ p-4 mb-6 text-sm text-gray-600">
+        {!! __("<strong>Compte(s) Commercial :</strong> la famille désigne un mandataire/procurataire unique, muni d'une procuration. Vous choisissez ensuite s'il devient investisseur ou si les avoirs lui sont payés directement.") !!}
     </div>
 
     @if ($investisseur->succession_reglee)
@@ -139,11 +139,11 @@
             <div class="bg-white border rounded-carte p-5 mb-4">
                 <label class="text-sm font-medium text-gray-700 block mb-2">{{ __("Mode de règlement du compte Commercial") }}</label>
                 <div class="flex gap-3">
-                    <label class="flex-1 flex items-center gap-2 border rounded-champ px-3 py-2 cursor-pointer {{ $modeReglementCommercial === 'transfert' ? 'border-blue-500 bg-blue-50' : '' }}">
+                    <label class="flex-1 flex items-center gap-2 border rounded-champ px-3 py-2 cursor-pointer {{ $modeReglementCommercial === 'transfert' ? 'border-primaire-500 bg-primaire-50' : '' }}">
                         <input type="radio" wire:model.live="modeReglementCommercial" value="transfert" class="hidden">
                         <span class="text-sm">{{ __("Transfert vers un compte investisseur") }}</span>
                     </label>
-                    <label class="flex-1 flex items-center gap-2 border rounded-champ px-3 py-2 cursor-pointer {{ $modeReglementCommercial === 'paiement' ? 'border-blue-500 bg-blue-50' : '' }}">
+                    <label class="flex-1 flex items-center gap-2 border rounded-champ px-3 py-2 cursor-pointer {{ $modeReglementCommercial === 'paiement' ? 'border-primaire-500 bg-primaire-50' : '' }}">
                         <input type="radio" wire:model.live="modeReglementCommercial" value="paiement" class="hidden">
                         <span class="text-sm">{{ __("Paiement direct (liquidation complète)") }}</span>
                     </label>

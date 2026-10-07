@@ -135,7 +135,7 @@
                                     <div class="text-gray-700">{{ __(\App\Support\Modules::libelleRole($compte->role)) }}</div>
                                     @php($ou = $this->rattachement($compte))
                                     @if ($ou)
-                                        <a href="{{ $ou['route'] }}" wire:navigate class="text-xs text-blue-600 hover:underline">{{ $ou['libelle'] }} →</a>
+                                        <a href="{{ $ou['route'] }}" wire:navigate class="text-xs text-primaire-700 hover:underline">{{ $ou['libelle'] }} →</a>
                                     @endif
                                 @endif
                             </td>
@@ -149,7 +149,7 @@
                             <td class="p-3 text-end whitespace-nowrap">
                                 <button type="button" wire:click="reinitialiserMotDePasse({{ $compte->id }})"
                                         wire:confirm="{{ __('Générer un nouveau mot de passe temporaire pour :nom ?', ['nom' => $compte->nom]) }}"
-                                        class="text-xs text-blue-600 border border-blue-300 rounded px-2 py-1 hover:bg-blue-50">
+                                        class="text-xs text-primaire-700 border border-primaire-300 rounded px-2 py-1 hover:bg-primaire-50">
                                     {{ __("Mot de passe") }}
                                 </button>
                                 {{-- Pas de bouton sur une ligne gestionnaire : il refuserait

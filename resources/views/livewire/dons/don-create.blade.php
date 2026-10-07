@@ -7,8 +7,8 @@
         <span class="font-mono">{{ $compteSource->numero_compte }}</span> ({{ __(\App\Support\Libelles::categorie($compteSource->categorie)) }})
     </p>
 
-    <div class="bg-blue-50 border border-blue-200 rounded-champ p-4 mb-6 text-sm text-blue-800">
-        ℹ️ {{ __("Un don d'actions transfère la propriété sans contrepartie financière pour le donateur.") }}
+    <div class="bg-gray-50 border border-gray-200 rounded-champ p-4 mb-6 text-sm text-gray-600">
+        {{ __("Un don d'actions transfère la propriété sans contrepartie financière pour le donateur.") }}
         {{ __("Un don de solde déplace de l'argent en interne, entre les deux comptes financiers.") }}
         {!! __("Le destinataire doit avoir un compte de la <strong>même catégorie</strong> (:categorie).", ["categorie" => __(\App\Support\Libelles::categorie($compteSource->categorie))]) !!}
     </div>
@@ -29,11 +29,11 @@
         <div>
             <label class="text-sm text-gray-600">{{ __("Type de don") }}</label>
             <div class="flex gap-3 mt-1">
-                <label class="flex-1 flex items-center justify-center gap-2 border rounded-champ px-3 py-2 cursor-pointer {{ $typeDon === 'actions' ? 'border-blue-500 bg-blue-50' : '' }}">
+                <label class="flex-1 flex items-center justify-center gap-2 border rounded-champ px-3 py-2 cursor-pointer {{ $typeDon === 'actions' ? 'border-primaire-500 bg-primaire-50' : '' }}">
                     <input type="radio" wire:model.live="typeDon" value="actions" class="hidden">
                     <span class="text-sm font-medium">{{ __("Actions") }}</span>
                 </label>
-                <label class="flex-1 flex items-center justify-center gap-2 border rounded-champ px-3 py-2 cursor-pointer {{ $typeDon === 'solde' ? 'border-blue-500 bg-blue-50' : '' }}">
+                <label class="flex-1 flex items-center justify-center gap-2 border rounded-champ px-3 py-2 cursor-pointer {{ $typeDon === 'solde' ? 'border-primaire-500 bg-primaire-50' : '' }}">
                     <input type="radio" wire:model.live="typeDon" value="solde" class="hidden">
                     <span class="text-sm font-medium">{{ __("Solde (argent)") }}</span>
                 </label>

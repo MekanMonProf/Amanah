@@ -262,7 +262,7 @@
             @if ($compteCommercialId)
                 <div class="flex items-center justify-between py-2 border-b">
                     <div>
-                        <span class="px-2 py-1 text-xs font-semibold rounded bg-blue-100 text-blue-700">{{ __("Commercial") }}</span>
+                        <span class="px-2 py-1 text-xs font-semibold rounded bg-primaire-100 text-primaire-800">{{ __("Commercial") }}</span>
                     </div>
                     <label class="flex items-center gap-2 cursor-pointer">
                         <input type="checkbox" wire:model="reinvestissementAutoCommercial" class="w-4 h-4">
@@ -278,7 +278,7 @@
             @if ($compteWaqfId)
                 <div class="flex items-center justify-between py-2">
                     <div>
-                        <span class="px-2 py-1 text-xs font-semibold rounded bg-purple-100 text-purple-700">{{ __("Waqf") }}</span>
+                        <span class="px-2 py-1 text-xs font-semibold rounded bg-nuit-900 text-primaire-100">{{ __("Waqf") }}</span>
                     </div>
                     <label class="flex items-center gap-2 cursor-pointer">
                         <input type="checkbox" wire:model="reinvestissementAutoWaqf" class="w-4 h-4">

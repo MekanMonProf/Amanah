@@ -10,8 +10,8 @@
         @endif
     </p>
 
-    <div class="bg-blue-50 border border-blue-200 rounded-champ p-4 mb-6 text-sm text-blue-800">
-        ℹ️ {{ __("Les actions de ce compte ont déjà été liquidées. Ce versement remet concrètement l'argent disponible au mandataire désigné par la famille.") }}
+    <div class="bg-gray-50 border border-gray-200 rounded-champ p-4 mb-6 text-sm text-gray-600">
+        {{ __("Les actions de ce compte ont déjà été liquidées. Ce versement remet concrètement l'argent disponible au mandataire désigné par la famille.") }}
     </div>
 
     <div class="bg-white border rounded-carte p-4 mb-6">

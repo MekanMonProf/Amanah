@@ -163,7 +163,7 @@
     @endif
 
     @if (session('message_acces'))
-        <div class="mb-4 text-sm text-blue-800 bg-blue-50 border border-blue-200 rounded-champ px-4 py-3">
+        <div class="mb-4 text-sm text-gray-600 bg-gray-50 border border-gray-200 rounded-champ px-4 py-3">
             {{ session('message_acces') }}
         </div>
     @endif
@@ -179,7 +179,7 @@
         @if (! $investisseur->user_id)
             @if ($peutAgirSurLAcces && ! $investisseur->estDecede())
                 <button wire:click="creerAcces" wire:confirm="{{ __("Créer un accès de connexion pour cet investisseur ?") }}"
-                        class="text-sm text-blue-700 border border-blue-300 rounded-champ px-4 py-2 hover:bg-blue-50">
+                        class="text-sm text-primaire-700 border border-primaire-300 rounded-champ px-4 py-2 hover:bg-primaire-50">
                     {{ __("Créer un accès au portail investisseur") }}
                 </button>
             @endif
@@ -190,7 +190,7 @@
 
             @if ($peutAgirSurLAcces && ! $investisseur->estDecede())
                 <button wire:click="reinitialiserMotDePasse" wire:confirm="{{ __("Générer un nouveau mot de passe temporaire pour :identifiant ?", ["identifiant" => $identifiantConnexion]) }}"
-                        class="text-sm text-blue-600 border border-blue-300 rounded-champ px-4 py-2 hover:bg-blue-50">
+                        class="text-sm text-primaire-700 border border-primaire-300 rounded-champ px-4 py-2 hover:bg-primaire-50">
                     {{ __("Réinitialiser le mot de passe") }}
                 </button>
             @endif
@@ -379,14 +379,14 @@
     @endif
 
     @if ($presents->isNotEmpty())
-        <div class="bg-purple-50 border border-purple-200 rounded-champ p-4 mb-4">
-            <h2 class="text-sm font-semibold text-purple-900 mb-1">{{ __("Présents Waqf offerts par cet investisseur") }}</h2>
-            <p class="text-xs text-purple-700 mb-3">
+        <div class="bg-primaire-50 border border-primaire-200 rounded-champ p-4 mb-4">
+            <h2 class="text-sm font-semibold text-primaire-900 mb-1">{{ __("Présents Waqf offerts par cet investisseur") }}</h2>
+            <p class="text-xs text-primaire-700 mb-3">
                 {{ __("Payées par cet investisseur, versées au Waqf caritatif « :waqf » — elles ne figurent donc pas dans ses comptes ci-dessous.", ["waqf" => \App\Models\Investisseur::NOM_WAQF_CARITATIF]) }}
             </p>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
-                    <thead class="text-xs text-purple-800 border-b border-purple-200">
+                    <thead class="text-xs text-primaire-800 border-b border-primaire-200">
                         <tr>
                             <th class="text-start py-1">{{ __("Date") }}</th>
                             <th class="text-start py-1">{{ __("Bénéficiaire") }}</th>
@@ -397,19 +397,19 @@
                     </thead>
                     <tbody>
                         @foreach ($presents as $present)
-                            <tr class="border-b border-purple-100 last:border-0">
+                            <tr class="border-b border-primaire-100 last:border-0">
                                 <td class="py-1.5">{{ $present->date_achat->format('d/m/Y') }}</td>
                                 <td class="py-1.5 font-medium text-gray-800">
-                                    <span class="block text-xs font-normal text-purple-700">{{ $present->formulePresentMajuscule() }}</span>
+                                    <span class="block text-xs font-normal text-primaire-700">{{ $present->formulePresentMajuscule() }}</span>
                                     {{ $present->present_pour }}
                                     @if ($present->lien_avec_donateur)
-                                        <span class="text-xs font-normal text-purple-700">({{ $present->lien_avec_donateur }})</span>
+                                        <span class="text-xs font-normal text-primaire-700">({{ $present->lien_avec_donateur }})</span>
                                     @endif
                                 </td>
                                 <td class="py-1.5 text-end">{{ \App\Support\Montant::format($present->nombre_actions) }}</td>
                                 <td class="py-1.5 text-end">{{ \App\Support\Montant::format($present->montant) }}&#8239;CFA</td>
                                 <td class="py-1.5 text-end">
-                                    <a href="{{ route('achats.attestation', $present) }}" class="text-purple-700 hover:underline">PDF</a>
+                                    <a href="{{ route('achats.attestation', $present) }}" class="text-primaire-700 hover:underline">PDF</a>
                                 </td>
                             </tr>
                         @endforeach
@@ -420,9 +420,9 @@
     @endif
 
     @if ($presentsRecus->isNotEmpty())
-        <div class="bg-purple-50 border border-purple-200 rounded-champ p-4 mb-4">
-            <h2 class="text-sm font-semibold text-purple-900 mb-1">{{ __("Présents Waqf reçus en son honneur") }}</h2>
-            <p class="text-xs text-purple-700 mb-3">{{ __("Versées au Waqf caritatif en son nom : elles ne lui confèrent aucun droit patrimonial.") }}</p>
+        <div class="bg-primaire-50 border border-primaire-200 rounded-champ p-4 mb-4">
+            <h2 class="text-sm font-semibold text-primaire-900 mb-1">{{ __("Présents Waqf reçus en son honneur") }}</h2>
+            <p class="text-xs text-primaire-700 mb-3">{{ __("Versées au Waqf caritatif en son nom : elles ne lui confèrent aucun droit patrimonial.") }}</p>
             <ul class="text-sm space-y-1">
                 @foreach ($presentsRecus as $present)
                     <li class="text-gray-800">
@@ -443,56 +443,83 @@
 
     @forelse ($comptesEnrichis as $item)
         <div class="bg-white border rounded-carte p-5 mb-4">
-            <div class="flex justify-between items-center mb-4">
-                <div class="flex items-center gap-3">
-                    <span class="px-2 py-1 text-xs font-semibold rounded {{ $item['compte']->categorie === 'commercial' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700' }}">
+            @php($peutAgir = auth()->user()->role !== 'lecture' && ! $investisseur->estDecede())
+            @php($peutRadier = $item['compte']->politique()?->radiation_autorisee)
+            @php($peutAjuster = in_array(auth()->user()->role, ['direction', 'administrateur']))
+
+            {{-- Les actes courants ne se distinguent que par leur nom : les teindre
+                 chacun d'une couleur faisait six signaux dans une seule rangée. Les
+                 deux qui engagent — radier, ajuster — passent derrière un menu, comme
+                 les actes rares du dossier en bas de page. --}}
+            @php($acte = 'text-xs text-gray-700 border border-gray-300 rounded-champ px-3 py-1 hover:border-primaire-300 hover:bg-primaire-50 hover:text-primaire-700 transition')
+
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+                <div class="flex flex-wrap items-center gap-3">
+                    <span class="px-2 py-1 text-xs font-semibold rounded {{ $item['compte']->categorie === 'commercial' ? 'bg-primaire-100 text-primaire-800' : 'bg-nuit-900 text-primaire-100' }}">
                         {{ __(\App\Support\Libelles::categorie($item['compte']->categorie)) }}
                     </span>
                     <span class="font-mono text-sm text-gray-500">{{ $item['compte']->numero_compte }}</span>
-                </div>
-                <div class="flex items-center gap-2 flex-wrap">
+                    {{-- Le réinvestissement est un état du compte, pas un acte : il rejoint
+                         la catégorie et le numéro plutôt que la rangée de boutons. --}}
                     <span class="text-xs px-2 py-1 rounded-full {{ $item['compte']->reinvestissement_auto ? 'bg-primaire-100 text-primaire-700' : 'bg-gray-100 text-gray-600' }}">
                         {{ __("Réinvestissement auto") }} : {{ $item['compte']->reinvestissement_auto ? __("Oui") : __("Non") }}
                     </span>
-                    @if (auth()->user()->role !== 'lecture' && ! $investisseur->estDecede())
+                </div>
+
+                @if ($peutAgir)
+                    <div class="flex flex-wrap items-center gap-2">
                         @if (! $item['compte']->reinvestissement_auto)
-                            <a href="{{ route('comptes.achat-sur-solde', $item['compte']) }}" wire:navigate
-                               class="text-xs text-primaire-700 border border-primaire-300 rounded-champ px-3 py-1 hover:bg-primaire-50">
+                            <a href="{{ route('comptes.achat-sur-solde', $item['compte']) }}" wire:navigate class="{{ $acte }}">
                                 {{ __("Acheter avec le solde") }}
                             </a>
                         @endif
-                        <a href="{{ route('comptes.complement', $item['compte']) }}" wire:navigate
-                           class="text-xs text-blue-700 border border-blue-300 rounded-champ px-3 py-1 hover:bg-blue-50">
+                        <a href="{{ route('comptes.complement', $item['compte']) }}" wire:navigate class="{{ $acte }}">
                             {{ __("Complément") }}
                         </a>
                         @if ($item['compte']->politique()?->versement_dividendes_possible)
-                            <a href="{{ route('comptes.paiement', $item['compte']) }}" wire:navigate
-                               class="text-xs text-primaire-700 border border-primaire-300 rounded-champ px-3 py-1 hover:bg-primaire-50">
+                            <a href="{{ route('comptes.paiement', $item['compte']) }}" wire:navigate class="{{ $acte }}">
                                 {{ __("Paiement") }}
                             </a>
                         @endif
                         {{-- Le bouton disparaît quand la catégorie interdit la cession :
                              mieux vaut ne pas le proposer que de refuser après coup. --}}
                         @if ($item['compte']->politique()?->cession_autorisee ?? true)
-                            <a href="{{ route('dons.creer', $item['compte']) }}" wire:navigate
-                               class="text-xs text-primaire-700 border border-primaire-300 rounded-champ px-3 py-1 hover:bg-primaire-50">
+                            <a href="{{ route('dons.creer', $item['compte']) }}" wire:navigate class="{{ $acte }}">
                                 {{ __("Don") }}
                             </a>
                         @endif
-                        @if ($item['compte']->politique()?->radiation_autorisee)
-                            <a href="{{ route('radiations.creer', $item['compte']) }}" wire:navigate
-                               class="text-xs text-red-700 border border-red-300 rounded-champ px-3 py-1 hover:bg-red-50">
-                                {{ __("Radiation") }}
-                            </a>
+
+                        @if ($peutRadier || $peutAjuster)
+                            <div class="relative" x-data="{ rares: false }" x-on:click.outside="rares = false">
+                                <button type="button" x-on:click="rares = ! rares"
+                                        x-bind:aria-expanded="rares ? 'true' : 'false'"
+                                        aria-label="{{ __("Actes rares") }}"
+                                        class="text-xs text-gray-500 border border-gray-300 rounded-champ px-2 py-1 leading-none hover:border-primaire-300 hover:text-primaire-700">
+                                    ⋯
+                                </button>
+                                <div x-show="rares" x-cloak
+                                     x-transition:enter="transition ease-out duration-150"
+                                     x-transition:enter-start="opacity-0 -translate-y-1"
+                                     x-transition:enter-end="opacity-100 translate-y-0"
+                                     x-on:click="rares = false"
+                                     class="absolute end-0 z-20 mt-1 w-56 rounded-champ bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5">
+                                    @if ($peutRadier)
+                                        <a href="{{ route('radiations.creer', $item['compte']) }}" wire:navigate
+                                           class="block px-4 py-2 text-sm text-red-700 hover:bg-red-50">
+                                            {{ __("Radiation") }}
+                                        </a>
+                                    @endif
+                                    @if ($peutAjuster)
+                                        <a href="{{ route('comptes.ajustement', $item['compte']) }}" wire:navigate
+                                           class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                            {{ __("Ajustement") }}
+                                        </a>
+                                    @endif
+                                </div>
+                            </div>
                         @endif
-                        @if (in_array(auth()->user()->role, ['direction', 'administrateur']))
-                            <a href="{{ route('comptes.ajustement', $item['compte']) }}" wire:navigate
-                               class="text-xs text-amber-700 border border-amber-300 rounded-champ px-3 py-1 hover:bg-amber-50">
-                                {{ __("Ajustement") }}
-                            </a>
-                        @endif
-                    @endif
-                </div>
+                    </div>
+                @endif
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-4">

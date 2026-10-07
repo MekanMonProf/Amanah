@@ -30,7 +30,7 @@
         @forelse ($comptesEnrichis as $item)
             <div class="bg-white border rounded-carte p-5 mb-4">
                 <div class="flex justify-between items-center mb-4">
-                    <span class="px-2 py-1 text-xs font-semibold rounded {{ $item['compte']->categorie === 'commercial' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700' }}">
+                    <span class="px-2 py-1 text-xs font-semibold rounded {{ $item['compte']->categorie === 'commercial' ? 'bg-primaire-100 text-primaire-800' : 'bg-nuit-900 text-primaire-100' }}">
                         {{ __(\App\Support\Libelles::categorie($item['compte']->categorie)) }}
                     </span>
                     <span class="text-xs px-2 py-1 rounded-full {{ $item['compte']->reinvestissement_auto ? 'bg-primaire-100 text-primaire-700' : 'bg-gray-100 text-gray-600' }}">

@@ -26,11 +26,11 @@
             @endif
         </div>
     @else
-        <div class="bg-blue-50 border border-blue-200 rounded-champ p-4 mb-6 text-sm text-blue-800">
+        <div class="bg-gray-50 border border-gray-200 rounded-champ p-4 mb-6 text-sm text-gray-600">
             @if ($source === 'radiation')
-                ℹ️ {{ __("Ce versement correspond au capital d'une radiation d'actions, remis concrètement à l'investisseur.") }}
+                {{ __("Ce versement correspond au capital d'une radiation d'actions, remis concrètement à l'investisseur.") }}
             @else
-                ℹ️ {!! __("Ce versement représente un dividende (ou un solde) que l'investisseur a choisi de <strong>ne pas réinvestir</strong>, et que vous lui remettez concrètement (espèces, transfert...).") !!}
+                {!! __("Ce versement représente un dividende (ou un solde) que l'investisseur a choisi de <strong>ne pas réinvestir</strong>, et que vous lui remettez concrètement (espèces, transfert...).") !!}
             @endif
         </div>
     @endif

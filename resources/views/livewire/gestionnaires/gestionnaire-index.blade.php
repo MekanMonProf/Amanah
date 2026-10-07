@@ -188,7 +188,7 @@
                                 {{ __("Modifier") }}
                             </button>
                             <button wire:click="reinitialiserMotDePasse({{ $g->id }})" wire:confirm="{{ __('Générer un nouveau mot de passe temporaire pour :identifiant ?', ['identifiant' => $g->user->email]) }}"
-                                    class="text-sm text-blue-600 hover:underline me-3">
+                                    class="text-sm text-primaire-700 hover:underline me-3">
                                 {{ __("Réinitialiser le mot de passe") }}
                             </button>
                             <button wire:click="basculerActif({{ $g->id }})" wire:confirm="{{ __('Confirmer le changement de statut ?') }}"

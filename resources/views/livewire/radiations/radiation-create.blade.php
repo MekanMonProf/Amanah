@@ -18,8 +18,8 @@
 
     {{-- Plus de bandeau « radiation interdite » : l'écran ne s'ouvre plus du tout
          pour une catégorie qui l'interdit, il répond 403 dès le chargement. --}}
-    <div class="bg-blue-50 border border-blue-200 rounded-champ p-4 mb-6 text-sm text-blue-800">
-        ℹ️ {{ __("Le capital correspondant sera crédité sur le compte financier, en attente de versement effectif via le module Paiement — rien n'est payé automatiquement ici.") }}
+    <div class="bg-gray-50 border border-gray-200 rounded-champ p-4 mb-6 text-sm text-gray-600">
+        {{ __("Le capital correspondant sera crédité sur le compte financier, en attente de versement effectif via le module Paiement — rien n'est payé automatiquement ici.") }}
     </div>
 
     <div class="bg-white border rounded-carte p-4 mb-6">

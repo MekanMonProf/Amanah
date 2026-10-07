@@ -112,8 +112,8 @@
             </div>
         </div>
 
-        <div class="bg-blue-50 border border-blue-200 rounded-champ p-3 text-sm text-blue-800">
-            ℹ️ {!! __("Chaque lancement rejoue automatiquement <strong>tout l'historique</strong> des barèmes déjà fixés, pas seulement cette période. Un compte ouvert après coup rattrape ainsi tous les mois qu'il a manqués, avec le taux qui était en vigueur à chaque période.") !!}
+        <div class="bg-gray-50 border border-gray-200 rounded-champ p-3 text-sm text-gray-600">
+            {!! __("Chaque lancement rejoue automatiquement <strong>tout l'historique</strong> des barèmes déjà fixés, pas seulement cette période. Un compte ouvert après coup rattrape ainsi tous les mois qu'il a manqués, avec le taux qui était en vigueur à chaque période.") !!}
         </div>
 
         <button type="submit" wire:loading.attr="disabled" wire:target="calculerEtDistribuer"
@@ -130,7 +130,7 @@
             @foreach (['commercial' => 'Commercial', 'waqf' => 'Waqf'] as $cle => $label)
                 <div class="bg-white border rounded-carte p-4">
                     <div class="flex justify-between items-center mb-2">
-                        <span class="px-2 py-1 text-xs font-semibold rounded {{ $cle === 'commercial' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700' }}">
+                        <span class="px-2 py-1 text-xs font-semibold rounded {{ $cle === 'commercial' ? 'bg-primaire-100 text-primaire-800' : 'bg-nuit-900 text-primaire-100' }}">
                             {{ $label }}
                         </span>
                     </div>

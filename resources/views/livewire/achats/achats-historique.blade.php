@@ -66,7 +66,7 @@
                         <td class="py-1">
                             {{ __(\App\Support\Libelles::typeAchat($achat->type_achat)) }}
                             @if ($achat->estUnPresent())
-                                <span class="block text-xs text-purple-700">
+                                <span class="block text-xs text-primaire-700">
                                     {{ $achat->formulePresentMajuscule() }} {{ $achat->present_pour }}{{ $achat->lien_avec_donateur ? ' (' . $achat->lien_avec_donateur . ')' : '' }}{{ $achat->offertPar ? ' — ' . __('offert par :donateur', ['donateur' => $achat->offertPar->nom . ' ' . $achat->offertPar->prenom]) : '' }}
                                 </span>
                             @endif

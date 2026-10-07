@@ -7,8 +7,8 @@
         <span class="font-mono">{{ $compte->numero_compte }}</span> ({{ __(\App\Support\Libelles::categorie($compte->categorie)) }})
     </p>
 
-    <div class="bg-blue-50 border border-blue-200 rounded-champ p-4 mb-6 text-sm text-blue-800">
-        ℹ️ {{ __("L'investisseur verse un montant pour compléter son solde et acheter immédiatement une ou plusieurs actions, sans attendre la prochaine distribution de dividendes (règle de gestion, section 11).") }}
+    <div class="bg-gray-50 border border-gray-200 rounded-champ p-4 mb-6 text-sm text-gray-600">
+        {{ __("L'investisseur verse un montant pour compléter son solde et acheter immédiatement une ou plusieurs actions, sans attendre la prochaine distribution de dividendes (règle de gestion, section 11).") }}
     </div>
 
     <div class="grid grid-cols-2 gap-4 mb-6">

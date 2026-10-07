@@ -20,11 +20,11 @@
         <div>
             <label class="text-sm text-gray-600">{{ __("Catégorie de compte") }}</label>
             <div class="flex gap-3 mt-1">
-                <label class="flex-1 flex items-center justify-center gap-2 border rounded-champ px-3 py-2 cursor-pointer {{ $categorie === 'commercial' ? 'border-blue-500 bg-blue-50' : '' }}">
+                <label class="flex-1 flex items-center justify-center gap-2 border rounded-champ px-3 py-2 cursor-pointer {{ $categorie === 'commercial' ? 'border-primaire-500 bg-primaire-50' : '' }}">
                     <input type="radio" wire:model.live="categorie" value="commercial" class="hidden">
                     <span class="text-sm font-medium">{{ __("Commercial") }}</span>
                 </label>
-                <label class="flex-1 flex items-center justify-center gap-2 border rounded-champ px-3 py-2 cursor-pointer {{ $categorie === 'waqf' ? 'border-purple-500 bg-purple-50' : '' }}">
+                <label class="flex-1 flex items-center justify-center gap-2 border rounded-champ px-3 py-2 cursor-pointer {{ $categorie === 'waqf' ? 'border-primaire-500 bg-primaire-50' : '' }}">
                     <input type="radio" wire:model.live="categorie" value="waqf" class="hidden">
                     <span class="text-sm font-medium">{{ __("Waqf") }}</span>
                 </label>
@@ -39,9 +39,9 @@
         </div>
 
         @if ($categorie === 'waqf')
-            <div class="border rounded-champ p-4 {{ $faireUnPresent ? 'border-purple-300 bg-purple-50' : 'bg-gray-50' }}">
+            <div class="border rounded-champ p-4 {{ $faireUnPresent ? 'border-primaire-300 bg-primaire-50' : 'bg-gray-50' }}">
                 <label class="flex items-start gap-3 cursor-pointer">
-                    <input type="checkbox" wire:model.live="faireUnPresent" class="mt-1 rounded border-gray-300 text-purple-600">
+                    <input type="checkbox" wire:model.live="faireUnPresent" class="mt-1 rounded border-gray-300 text-primaire-700">
                     <span>
                         <span class="text-sm font-medium text-gray-800">{{ __("Offrir ces actions en présent (hommage ou cadeau)") }}</span>
                         <span class="block text-xs text-gray-500 mt-0.5">
@@ -52,15 +52,15 @@
                 @error('faireUnPresent') <p class="text-red-600 text-sm mt-2">{{ $message }}</p> @enderror
 
                 @if ($faireUnPresent)
-                    <div class="mt-4 space-y-3 border-t border-purple-200 pt-4">
+                    <div class="mt-4 space-y-3 border-t border-primaire-200 pt-4">
                         <div>
                             <label class="text-sm text-gray-600">{{ __("Motif du présent") }}</label>
                             <div class="flex gap-3 mt-1">
-                                <label class="flex-1 flex items-center justify-center gap-2 border rounded-champ px-3 py-2 cursor-pointer bg-white {{ $typePresent === 'memoire' ? 'border-purple-500' : '' }}">
+                                <label class="flex-1 flex items-center justify-center gap-2 border rounded-champ px-3 py-2 cursor-pointer bg-white {{ $typePresent === 'memoire' ? 'border-primaire-500' : '' }}">
                                     <input type="radio" wire:model.live="typePresent" value="memoire" class="hidden">
                                     <span class="text-sm">{{ __("À la mémoire d'un défunt") }}</span>
                                 </label>
-                                <label class="flex-1 flex items-center justify-center gap-2 border rounded-champ px-3 py-2 cursor-pointer bg-white {{ $typePresent === 'honneur' ? 'border-purple-500' : '' }}">
+                                <label class="flex-1 flex items-center justify-center gap-2 border rounded-champ px-3 py-2 cursor-pointer bg-white {{ $typePresent === 'honneur' ? 'border-primaire-500' : '' }}">
                                     <input type="radio" wire:model.live="typePresent" value="honneur" class="hidden">
                                     <span class="text-sm">{{ __("Cadeau à une personne vivante") }}</span>
                                 </label>
@@ -70,11 +70,11 @@
                         <div>
                             <label class="text-sm text-gray-600">{{ $typePresent === 'memoire' ? __("Défunt honoré") : __("Bénéficiaire du cadeau") }}</label>
                             <div class="flex gap-3 mt-1">
-                                <label class="flex-1 flex items-center justify-center gap-2 border rounded-champ px-3 py-2 cursor-pointer bg-white {{ $defuntSource === 'interne' ? 'border-purple-500' : '' }}">
+                                <label class="flex-1 flex items-center justify-center gap-2 border rounded-champ px-3 py-2 cursor-pointer bg-white {{ $defuntSource === 'interne' ? 'border-primaire-500' : '' }}">
                                     <input type="radio" wire:model.live="defuntSource" value="interne" class="hidden">
                                     <span class="text-sm">{{ __("Investisseur de la plateforme") }}</span>
                                 </label>
-                                <label class="flex-1 flex items-center justify-center gap-2 border rounded-champ px-3 py-2 cursor-pointer bg-white {{ $defuntSource === 'externe' ? 'border-purple-500' : '' }}">
+                                <label class="flex-1 flex items-center justify-center gap-2 border rounded-champ px-3 py-2 cursor-pointer bg-white {{ $defuntSource === 'externe' ? 'border-primaire-500' : '' }}">
                                     <input type="radio" wire:model.live="defuntSource" value="externe" class="hidden">
                                     <span class="text-sm">{{ __("Personne extérieure") }}</span>
                                 </label>

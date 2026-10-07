@@ -1,54 +1,29 @@
 <div class="space-y-6">
     <form wire:submit="enregistrer" class="bg-white border rounded-carte">
         <div class="p-5 border-b">
-            <h2 class="font-semibold text-gray-800">{{ __("Coordonnées du support") }}</h2>
-            <p class="mt-1 text-sm text-gray-500">
-                {{ __("Ce que voit un membre de l'équipe quand il demande de l'aide. Un investisseur, lui, est dirigé vers son propre gestionnaire ; il ne retombe ici que si son dossier n'en a pas.") }}
-            </p>
-        </div>
-
-        <div class="grid grid-cols-1 gap-4 p-5 sm:grid-cols-2">
-            <div>
-                <x-input-label for="support-telephone" :value="__('Téléphone')" />
-                <x-text-input wire:model="telephone" id="support-telephone" type="text" class="mt-1 block w-full" placeholder="+221 77 000 00 00" />
-                <x-input-error :messages="$errors->get('telephone')" class="mt-2" />
-            </div>
-            <div>
-                <x-input-label for="support-whatsapp" :value="__('WhatsApp (si différent)')" />
-                <x-text-input wire:model="whatsapp" id="support-whatsapp" type="text" class="mt-1 block w-full" />
-                <x-input-error :messages="$errors->get('whatsapp')" class="mt-2" />
-            </div>
-            <div>
-                <x-input-label for="support-email" :value="__('Email')" />
-                <x-text-input wire:model="email" id="support-email" type="email" class="mt-1 block w-full" />
-                <x-input-error :messages="$errors->get('email')" class="mt-2" />
-            </div>
-            <div>
-                <x-input-label for="support-horaires" :value="__('Horaires, en clair')" />
-                <x-text-input wire:model="horaires" id="support-horaires" type="text" class="mt-1 block w-full" placeholder="{{ __('Du lundi au vendredi, 9h – 17h') }}" />
-                <x-input-error :messages="$errors->get('horaires')" class="mt-2" />
-            </div>
-        </div>
-
-        <div class="p-5 border-t">
             <h2 class="font-semibold text-gray-800">{{ __("Vidéos du mode d'emploi") }}</h2>
             <p class="mt-1 text-sm text-gray-500">
                 {{ __("Une adresse par sujet. Collez le lien d'intégration de la vidéo, pas celui de la page de partage — sur YouTube, c'est celui en /embed/. Un champ laissé vide n'affiche aucun emplacement sur la page.") }}
             </p>
+            {{-- Les coordonnées ont rejoint « La société » : elles appartiennent à
+                 l'identité de la maison, pas au mode d'emploi. --}}
+            <p class="mt-2 text-sm text-gray-500">
+                {{ __("Les coordonnées du support se règlent dans l'onglet « La société ».") }}
+            </p>
+        </div>
 
-            <div class="mt-4 space-y-3">
-                @foreach ($sujets as $code => $sujet)
-                    <div class="grid grid-cols-1 gap-2 sm:grid-cols-[14rem_1fr] sm:items-center">
-                        <label for="video-{{ $code }}" class="text-sm text-gray-700">{{ __($sujet['titre']) }}</label>
-                        <div>
-                            <input id="video-{{ $code }}" type="url" wire:model="videos.{{ $code }}"
-                                   placeholder="https://www.youtube.com/embed/…"
-                                   class="block w-full rounded-champ border-gray-300 px-3 py-2 text-sm focus:border-primaire-600 focus:ring-primaire-600">
-                            <x-input-error :messages="$errors->get('videos.' . $code)" class="mt-1" />
-                        </div>
+        <div class="p-5 space-y-3">
+            @foreach ($sujets as $code => $sujet)
+                <div class="grid grid-cols-1 gap-2 sm:grid-cols-[14rem_1fr] sm:items-center">
+                    <label for="video-{{ $code }}" class="text-sm text-gray-700">{{ __($sujet['titre']) }}</label>
+                    <div>
+                        <input id="video-{{ $code }}" type="url" wire:model="videos.{{ $code }}"
+                               placeholder="https://www.youtube.com/embed/…"
+                               class="block w-full rounded-champ border-gray-300 px-3 py-2 text-sm focus:border-primaire-600 focus:ring-primaire-600">
+                        <x-input-error :messages="$errors->get('videos.' . $code)" class="mt-1" />
                     </div>
-                @endforeach
-            </div>
+                </div>
+            @endforeach
         </div>
 
         <div class="flex items-center justify-end gap-3 border-t p-5">

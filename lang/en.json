@@ -139,7 +139,7 @@
     "Tout voir": "See all",
     "Traitée": "Handled",
     "Un champ laissé vide n'efface rien : la valeur en vigueur avant cet écran continue de s'appliquer.": "A field left empty erases nothing: the value in force before this screen keeps applying.",
-    "Une adresse par sujet. Collez le lien d'intégration de la vidéo, pas celui de la page de partage — sur YouTube, c'est celui en /embed/. Un champ laissé vide n'affiche aucun emplacement sur la page.": "One address per topic. Paste the video's embed link, not the share page one — on YouTube that is the /embed/ one. A field left empty shows no video slot on the page.",
+    "Une adresse par sujet. Sur YouTube, les trois formes sont acceptées — celle de la barre d'adresse, celle du bouton Partager, celle du menu Intégrer : elles sont converties à l'enregistrement. Un champ laissé vide n'affiche aucun emplacement sur la page.": "One address per topic. On YouTube all three forms are accepted — the address bar one, the Share button one, the Embed menu one: they are converted on save. A field left empty shows no video slot on the page.",
     "Une donnée à corriger": "A piece of data to correct",
     "Une question sur le fonctionnement": "A question about how it works",
     "Un problème d'accès ou de mot de passe": "An access or password problem",

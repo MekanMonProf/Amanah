@@ -139,7 +139,7 @@
     "Tout voir": "عرض الكل",
     "Traitée": "تمت المعالجة",
     "Un champ laissé vide n'efface rien : la valeur en vigueur avant cet écran continue de s'appliquer.": "الحقل المتروك فارغاً لا يمحو شيئاً: تظل القيمة السارية قبل هذه الشاشة مطبَّقة.",
-    "Une adresse par sujet. Collez le lien d'intégration de la vidéo, pas celui de la page de partage — sur YouTube, c'est celui en /embed/. Un champ laissé vide n'affiche aucun emplacement sur la page.": "عنوان واحد لكل موضوع. الصق رابط التضمين الخاص بالفيديو، لا رابط صفحة المشاركة — في يوتيوب هو الرابط الذي يحتوي /embed/. الحقل الفارغ لا يُظهر أي مكان للفيديو في الصفحة.",
+    "Une adresse par sujet. Sur YouTube, les trois formes sont acceptées — celle de la barre d'adresse, celle du bouton Partager, celle du menu Intégrer : elles sont converties à l'enregistrement. Un champ laissé vide n'affiche aucun emplacement sur la page.": "عنوان واحد لكل موضوع. في يوتيوب تُقبل الصيغ الثلاث: صيغة شريط العنوان، وصيغة زر المشاركة، وصيغة قائمة التضمين، وتُحوَّل عند الحفظ. والحقل المتروك فارغاً لا يُظهر أي مكان للفيديو في الصفحة.",
     "Une donnée à corriger": "بيانات تحتاج إلى تصحيح",
     "Une question sur le fonctionnement": "سؤال عن طريقة العمل",
     "Un problème d'accès ou de mot de passe": "مشكلة في الدخول أو كلمة المرور",

@@ -5,6 +5,7 @@ namespace App\Livewire\Parametrage;
 use App\Models\AuditLog;
 use App\Models\DemandeSupport;
 use App\Models\ParametreSociete;
+use App\Support\AdresseVideo;
 use App\Support\Aide;
 use App\Support\Droits;
 use App\Support\Modules;
@@ -61,9 +62,26 @@ class AideEtSupport extends Component
 
         $reglages = ParametreSociete::actuel();
 
-        $reglages->update([
-            'videos' => array_filter(array_map('trim', $this->videos), fn (string $v) => $v !== ''),
-        ]);
+        // Les trois formes d'adresse YouTube sont acceptées et ramenées à celle
+        // qui s'intègre : celle de la barre d'adresse et celle du bouton
+        // Partager donneraient un cadre noir, sans que rien ne le dise.
+        $videos = [];
+
+        foreach ($this->videos as $code => $adresse) {
+            $normalisee = AdresseVideo::normaliser($adresse);
+
+            if ($normalisee !== null) {
+                $videos[$code] = $normalisee;
+            }
+        }
+
+        $reglages->update(['videos' => $videos]);
+
+        // Le champ montre ce qui a été enregistré : la conversion se voit,
+        // elle ne se devine pas.
+        foreach (array_keys($this->videos) as $code) {
+            $this->videos[$code] = $videos[$code] ?? '';
+        }
 
         AuditLog::enregistrer(
             action: 'modification_videos_aide',

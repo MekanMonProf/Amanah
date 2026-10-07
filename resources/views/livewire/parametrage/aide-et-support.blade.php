@@ -3,7 +3,7 @@
         <div class="p-5 border-b">
             <h2 class="font-semibold text-gray-800">{{ __("Vidéos du mode d'emploi") }}</h2>
             <p class="mt-1 text-sm text-gray-500">
-                {{ __("Une adresse par sujet. Collez le lien d'intégration de la vidéo, pas celui de la page de partage — sur YouTube, c'est celui en /embed/. Un champ laissé vide n'affiche aucun emplacement sur la page.") }}
+                {{ __("Une adresse par sujet. Sur YouTube, les trois formes sont acceptées — celle de la barre d'adresse, celle du bouton Partager, celle du menu Intégrer : elles sont converties à l'enregistrement. Un champ laissé vide n'affiche aucun emplacement sur la page.") }}
             </p>
             {{-- Les coordonnées ont rejoint « La société » : elles appartiennent à
                  l'identité de la maison, pas au mode d'emploi. --}}
@@ -18,7 +18,7 @@
                     <label for="video-{{ $code }}" class="text-sm text-gray-700">{{ __($sujet['titre']) }}</label>
                     <div>
                         <input id="video-{{ $code }}" type="url" wire:model="videos.{{ $code }}"
-                               placeholder="https://www.youtube.com/embed/…"
+                               placeholder="https://www.youtube.com/watch?v=…"
                                class="block w-full rounded-champ border-gray-300 px-3 py-2 text-sm focus:border-primaire-600 focus:ring-primaire-600">
                         <x-input-error :messages="$errors->get('videos.' . $code)" class="mt-1" />
                     </div>

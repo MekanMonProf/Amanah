@@ -20,6 +20,12 @@
 
     $logoAndDox = $enDataUri('logo-pdf.jpg');
     $logoWaqf = $enDataUri('logo-waqf-pdf.jpg');
+
+    // Le nom et la ligne d'activite se reglent desormais dans Parametrage ->
+    // La societe. Tant que personne ne les a remplis, le modele rend les
+    // valeurs qui etaient ecrites ici : l'en-tete ne change pas de lui-meme.
+    $societe = \App\Models\ParametreSociete::actuel();
+    $sousTitre = collect([$societe->activite(), $societe->raisonSociale()])->filter()->implode(' — ');
 @endphp
 <table style="width: 100%; border-collapse: collapse;">
     <tr>
@@ -29,8 +35,13 @@
             </td>
         @endif
         <td style="vertical-align: middle; padding: 0 0 0 {{ $logoAndDox ? '10px' : '0' }};">
-            <div class="nom-projet">AMANAH</div>
-            <div class="sous-titre">Plateforme de Gestion des Investissements — AND DOX S.A.</div>
+            {{-- Les capitales sont une affaire de typographie, pas de reglage :
+                 l en-tete porte le nom en capitales depuis toujours, et il doit
+                 continuer a le faire quel que soit le nom qu on y met. --}}
+            <div class="nom-projet">{{ \Illuminate\Support\Str::upper($societe->nom()) }}</div>
+            @if ($sousTitre !== '')
+                <div class="sous-titre">{{ $sousTitre }}</div>
+            @endif
         </td>
         @if ($logoWaqf)
             <td style="width: 50px; vertical-align: middle; padding: 0; text-align: right;">

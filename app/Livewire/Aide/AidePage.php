@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Aide;
 
-use App\Models\ParametreSupport;
+use App\Models\ParametreSociete;
 use App\Support\Aide;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
@@ -41,7 +41,7 @@ class AidePage extends Component
         return view('livewire.aide.aide-page', [
             'definition' => Aide::SUJETS[$this->sujet],
             'page' => $page,
-            'video' => ParametreSupport::actuel()->video($this->sujet),
+            'video' => ParametreSociete::actuel()->video($this->sujet),
             'voisins' => Aide::voisins($this->sujet, Auth::user()),
         ]);
     }

@@ -95,7 +95,9 @@ class MessageWhatsapp
      */
     private static function ligneContact(string $langue): string
     {
-        $support = Telephone::normaliser(config('societe.whatsapp_support'));
+        // Le numéro réglé dans « Paramétrage → La société » ; à défaut, celui de
+        // config/societe.php, qui s'appliquait avant que l'écran n'existe.
+        $support = \App\Models\ParametreSociete::actuel()->numeroWhatsapp();
 
         if ($support === null) {
             return '';

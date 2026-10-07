@@ -3,7 +3,7 @@
 namespace App\Support;
 
 use App\Models\DemandeSupport;
-use App\Models\ParametreSupport;
+use App\Models\ParametreSociete;
 use App\Models\User;
 
 /**
@@ -47,12 +47,12 @@ class MessageSupport
             }
         }
 
-        $reglages = ParametreSupport::actuel();
+        $reglages = ParametreSociete::actuel();
 
         return [
             'nom' => null,
             'numero' => $reglages->numeroWhatsapp(),
-            'email' => $reglages->email,
+            'email' => $reglages->valeur('email'),
             'estGestionnaire' => false,
         ];
     }

@@ -19,6 +19,10 @@ return [
     |
     | Laissé vide, le message est simplement envoyé sans ligne de contact.
     |
+    | Ce n'est plus la valeur qui fait foi : « Paramétrage → La société » porte
+    | désormais le numéro, et celui-ci ne sert plus que de repli, pour une
+    | installation dont la table de réglages est encore vide.
+    |
     */
 
     'whatsapp_support' => env('AMANAH_WHATSAPP_SUPPORT'),

@@ -4,32 +4,23 @@ namespace App\Livewire\Parametrage;
 
 use App\Models\AuditLog;
 use App\Models\DemandeSupport;
-use App\Models\ParametreSupport;
+use App\Models\ParametreSociete;
 use App\Support\Aide;
 use App\Support\Droits;
 use App\Support\Modules;
-use App\Support\Telephone;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 /**
- * Les coordonnées du support, les vidéos de l'aide, et la file des demandes.
+ * Les vidéos du mode d'emploi, et la file des demandes.
  *
- * Les trois tiennent dans un onglet parce qu'ils se règlent ensemble et
- * rarement : on indique où écrire, on colle les adresses des vidéos à mesure
- * qu'on les enregistre, et on relève la file. Un écran par sujet aurait fait
- * trois entrées de menu pour trois visites par an.
+ * Les coordonnées ne sont plus ici : ce sont celles de la maison, et elles ont
+ * rejoint l'onglet « La société » avec le reste de son identité. Un numéro de
+ * support rangé à part de l'adresse et de la raison sociale finissait par être
+ * changé d'un côté seulement.
  */
 class AideEtSupport extends Component
 {
-    public string $telephone = '';
-
-    public string $whatsapp = '';
-
-    public string $email = '';
-
-    public string $horaires = '';
-
     /** @var array<string, string> code du sujet => adresse de la vidéo */
     public array $videos = [];
 
@@ -43,12 +34,7 @@ class AideEtSupport extends Component
     {
         Droits::exiger(Modules::MODULE_VERROU, Modules::ECRITURE);
 
-        $reglages = ParametreSupport::actuel();
-
-        $this->telephone = $reglages->telephone ?? '';
-        $this->whatsapp = $reglages->whatsapp ?? '';
-        $this->email = $reglages->email ?? '';
-        $this->horaires = $reglages->horaires ?? '';
+        $reglages = ParametreSociete::actuel();
 
         foreach (array_keys(Aide::SUJETS) as $code) {
             $this->videos[$code] = $reglages->video($code) ?? '';
@@ -57,11 +43,7 @@ class AideEtSupport extends Component
 
     protected function rules(): array
     {
-        return [
-            'email' => ['nullable', 'email'],
-            'horaires' => ['nullable', 'string', 'max:255'],
-            'videos.*' => ['nullable', 'url', 'max:500'],
-        ];
+        return ['videos.*' => ['nullable', 'url', 'max:500']];
     }
 
     protected function messages(): array
@@ -77,51 +59,20 @@ class AideEtSupport extends Component
 
         $this->validate();
 
-        // Les numéros sont rangés au format international, comme partout
-        // ailleurs : un numéro tapé « 77 123 45 67 » doit ouvrir WhatsApp.
-        $telephone = $this->telephone !== '' ? Telephone::normaliser($this->telephone) : null;
-        $whatsapp = $this->whatsapp !== '' ? Telephone::normaliser($this->whatsapp) : null;
-
-        if ($this->telephone !== '' && $telephone === null) {
-            $this->addError('telephone', __("Ce numéro n'est pas reconnaissable."));
-
-            return;
-        }
-
-        if ($this->whatsapp !== '' && $whatsapp === null) {
-            $this->addError('whatsapp', __("Ce numéro n'est pas reconnaissable."));
-
-            return;
-        }
-
-        $reglages = ParametreSupport::actuel();
+        $reglages = ParametreSociete::actuel();
 
         $reglages->update([
-            'telephone' => $telephone,
-            'whatsapp' => $whatsapp,
-            'email' => $this->email !== '' ? $this->email : null,
-            'horaires' => $this->horaires !== '' ? $this->horaires : null,
             'videos' => array_filter(array_map('trim', $this->videos), fn (string $v) => $v !== ''),
         ]);
 
-        $this->telephone = $telephone ?? '';
-        $this->whatsapp = $whatsapp ?? '';
-
         AuditLog::enregistrer(
-            action: 'modification_parametres_support',
-            entite: 'parametre_support',
+            action: 'modification_videos_aide',
+            entite: 'parametre_societe',
             entiteId: $reglages->id,
-            apres: [
-                'canaux' => array_keys(array_filter([
-                    'telephone' => $telephone,
-                    'whatsapp' => $whatsapp,
-                    'email' => $reglages->email,
-                ])),
-                'videos' => count($reglages->videos ?? []),
-            ],
+            apres: ['videos' => count($reglages->videos ?? [])],
         );
 
-        session()->flash('succes_parametrage', __("Coordonnées du support et vidéos enregistrées."));
+        session()->flash('succes_parametrage', __("Vidéos du mode d'emploi enregistrées."));
     }
 
     public function ouvrir(int $id): void

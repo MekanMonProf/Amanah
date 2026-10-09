@@ -28,6 +28,7 @@ $app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
 
 use App\Models\AchatAction;
 use App\Models\Don;
+use App\Models\EcritureCompteFinancier;
 use App\Models\Gestionnaire;
 use App\Models\Investisseur;
 use App\Models\Radiation;
@@ -72,9 +73,22 @@ if ($existant) {
 
     DB::transaction(function () use ($existant) {
         foreach ($existant->comptes as $compte) {
-            Don::where('compte_source_id', $compte->id)
+            // Un don de solde ecrit deux ecritures : la sortante chez le
+            // donateur, l'entrante chez le beneficiaire. Ne nettoyer que les
+            // comptes d'ici laisserait la seconde pointer vers un don disparu,
+            // et une nouvelle s'ajouterait a chaque rejeu.
+            $dons = Don::where('compte_source_id', $compte->id)
                 ->orWhere('compte_destinataire_id', $compte->id)
-                ->delete();
+                ->pluck('id');
+
+            if ($dons->isNotEmpty()) {
+                EcritureCompteFinancier::where('reference_type', 'dons')
+                    ->whereIn('reference_id', $dons)
+                    ->delete();
+
+                Don::whereIn('id', $dons)->delete();
+            }
+
             $compte->ecritures()->delete();
             $compte->achats()->delete();
             $compte->radiations()->delete();
@@ -97,8 +111,8 @@ DB::transaction(function () use ($identifiant, $prix, $administrateur) {
     $investisseur = Investisseur::create([
         'identifiant_externe' => $identifiant,
         'type_personne' => 'physique',
-        'nom' => 'CAMARA',
-        'prenom' => 'Mamadou Mekan',
+        'nom' => 'Diallo',
+        'prenom' => 'Diariatou',
         'statut' => 'actif',
         'telephone' => '+221770000500',
         'whatsapp' => '+221770000500',
@@ -243,7 +257,7 @@ DB::transaction(function () use ($identifiant, $prix, $administrateur) {
         referenceType: 'dons',
         referenceId: $donDeSolde->id,
         observationCle: Observation::DON_ENTRANT,
-        observationParametres: ['donateur' => 'CAMARA', 'motif' => $donDeSolde->motif],
+        observationParametres: ['donateur' => 'Diallo', 'motif' => $donDeSolde->motif],
         userId: $administrateur->id,
     );
 

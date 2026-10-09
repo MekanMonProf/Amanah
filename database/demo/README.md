@@ -94,7 +94,7 @@ vidéo.
 php database/demo/dossier-complet.php
 ```
 
-Ajoute **A0500 — CAMARA Mamadou Mekan**, qui les a tous, avec un accès au
+Ajoute **A0500 — Diallo Diariatou**, qui les a tous, avec un accès au
 portail pour filmer aussi « Mon espace ». Le script se rejoue : il refait le
 dossier à neuf plutôt que de renoncer, et refuse toute base dont le nom ne
 contient pas « demo ».

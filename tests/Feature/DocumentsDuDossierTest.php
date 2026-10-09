@@ -133,22 +133,33 @@ class DocumentsDuDossierTest extends TestCase
     {
         $this->achat('initial', '2025-11-05');
 
-        $connexion = \App\Models\User::create([
-            'nom' => 'Essai',
-            'prenom' => 'Documents',
-            'telephone' => '+221779400940',
-            'password' => Hash::make('quelquechose'),
-            'role' => 'investisseur',
-            'actif' => true,
-            'doit_changer_mot_de_passe' => false,
-        ]);
-        $this->dossier->update(['user_id' => $connexion->id]);
-
-        $this->actingAs($connexion)
+        $this->actingAs($this->accesPortail())
             ->get(route('portail.documents.index'))
             ->assertOk()
             ->assertSee("Attestations d'achat")
             ->assertSee('Attestation_Achat_ACH-Z20251105.pdf');
+    }
+
+    public function test_chaque_famille_porte_son_bouton_de_repli(): void
+    {
+        $this->peuplerToutesLesFamilles();
+
+        $connexion = $this->accesPortail();
+
+        $html = $this->actingAs($connexion)
+            ->get(route('portail.documents.index'))
+            ->assertOk()
+            ->getContent();
+
+        // Un état de repli par famille, porté par son propre <tbody>.
+        $this->assertSame(
+            count(DocumentsDuDossier::FAMILLES),
+            substr_count($html, 'x-data="{ ouvert: true }"'),
+        );
+
+        $this->assertStringContainsString('@click="ouvert = ! ouvert"', $html);
+        $this->assertStringContainsString('x-show="ouvert"', $html);
+        $this->assertStringContainsString('Masquer', $html);
     }
 
     public function test_la_fiche_du_gestionnaire_annonce_les_documents(): void
@@ -191,6 +202,24 @@ class DocumentsDuDossierTest extends TestCase
             'statut' => 'actif',
             'gestionnaire_id' => $gestionnaire->id,
         ]);
+    }
+
+    /** Un accès au portail, rattaché au dossier d'essai. */
+    private function accesPortail(): \App\Models\User
+    {
+        $connexion = \App\Models\User::create([
+            'nom' => 'Essai',
+            'prenom' => 'Documents',
+            'telephone' => '+221779400940',
+            'password' => Hash::make('quelquechose'),
+            'role' => 'investisseur',
+            'actif' => true,
+            'doit_changer_mot_de_passe' => false,
+        ]);
+
+        $this->dossier->update(['user_id' => $connexion->id]);
+
+        return $connexion;
     }
 
     private function administrateur(): \App\Models\User

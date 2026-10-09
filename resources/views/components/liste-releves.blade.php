@@ -30,21 +30,17 @@
             </tr>
         </thead>
 
-        <tbody class="divide-y divide-gray-100">
-            @foreach ($periodes->groupBy('annee') as $annee => $mois)
+        {{-- Un <tbody> par année : un tableau en accepte plusieurs, et c'est ce
+             qui donne à chaque groupe son propre état de repli. --}}
+        @foreach ($periodes->groupBy('annee') as $annee => $mois)
+            <tbody x-data="{ ouvert: true }" class="divide-y divide-gray-100">
                 {{-- L'année sépare, comme sur l'ancien écran : on cherche « le relevé
                      d'août dernier », pas la quatorzième ligne. --}}
-                <tr class="bg-primaire-50/60">
-                    <td colspan="4" class="px-4 py-2 text-sm text-primaire-800">
-                        <span class="font-bold">{{ $annee }}</span>
-                        <span class="text-primaire-700/70">
-                            — {{ __(":nombre relevé(s)", ['nombre' => $mois->count()]) }}
-                        </span>
-                    </td>
-                </tr>
+                <x-entete-groupe :titre="$annee"
+                                 :detail="__(':nombre relevé(s)', ['nombre' => $mois->count()])" />
 
                 @foreach ($mois as $periode)
-                    <tr class="hover:bg-gray-50">
+                    <tr x-show="ouvert" class="hover:bg-gray-50">
                         <td class="whitespace-nowrap px-4 py-3 font-semibold text-gray-900">
                             {{ $periode['libelle'] }}
                         </td>
@@ -74,7 +70,7 @@
                         </td>
                     </tr>
                 @endforeach
-            @endforeach
-        </tbody>
+            </tbody>
+        @endforeach
     </table>
 </div>

@@ -26,23 +26,17 @@
             </tr>
         </thead>
 
-        <tbody class="divide-y divide-gray-100">
-            @foreach ($documents->groupBy('famille') as $famille => $lot)
+        {{-- Un <tbody> par famille : un tableau en accepte plusieurs, et c'est ce
+             qui donne à chaque groupe son propre état de repli. --}}
+        @foreach ($documents->groupBy('famille') as $famille => $lot)
+            <tbody x-data="{ ouvert: true }" class="divide-y divide-gray-100">
                 {{-- La famille sépare, là où le relevé sépare par année : on vient
                      chercher « mon attestation d'achat », pas le document n° 14. --}}
-                <tr class="bg-primaire-50/60">
-                    <td colspan="4" class="px-4 py-2 text-sm text-primaire-800">
-                        <span class="font-bold">
-                            {{ __(\App\Support\DocumentsDuDossier::FAMILLES[$famille] ?? $famille) }}
-                        </span>
-                        <span class="text-primaire-700/70">
-                            — {{ __(":nombre document(s)", ['nombre' => $lot->count()]) }}
-                        </span>
-                    </td>
-                </tr>
+                <x-entete-groupe :titre="__(\App\Support\DocumentsDuDossier::FAMILLES[$famille] ?? $famille)"
+                                 :detail="__(':nombre document(s)', ['nombre' => $lot->count()])" />
 
                 @foreach ($lot as $document)
-                    <tr class="hover:bg-gray-50">
+                    <tr x-show="ouvert" class="hover:bg-gray-50">
                         <td class="whitespace-nowrap px-4 py-3 font-semibold text-gray-900">
                             {{ $document['date']?->format('d/m/Y') }}
                         </td>
@@ -72,7 +66,7 @@
                         </td>
                     </tr>
                 @endforeach
-            @endforeach
-        </tbody>
+            </tbody>
+        @endforeach
     </table>
 </div>

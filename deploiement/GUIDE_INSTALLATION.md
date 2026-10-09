@@ -184,6 +184,41 @@ partent par WhatsApp), et rien ne casse. Pour activer l'envoi :
    **1. Créer les tables d'AMANAH**, puis **Terminer** et retirez la ligne.
    Sinon, supprimez simplement `public/installer.php`.
 
+### Remonter les dossiers saisis en local
+
+Les dossiers travaillés sur l'ordinateur pendant la répétition peuvent remplacer
+ceux de la base en ligne. Un export complet de la base locale ne convient pas :
+en ligne, AMANAH et l'ancienne application partagent une même base, et il
+écraserait aussi les quatorze tables de l'ancienne — qui tourne toujours, et
+dont les données sont plus récentes que la copie locale. Le script ne sort que
+les tables d'AMANAH, et nomme ce qu'il laisse.
+
+```bash
+php deploiement/exporter-tables-amanah.php
+```
+
+Le fichier arrive dans `deploiement/sortie/`, volontairement hors du dépôt : il
+contient les noms et les téléphones de vrais actionnaires.
+
+Puis dans phpMyAdmin, sur `waqfdole_gestionactionnaires_bd` : la sauvegarde de
+l'étape 0 d'abord, ensuite onglet **Importer** → le fichier `.sql` → **Exécuter**.
+
+**Chaque table d'AMANAH est supprimée et refaite.** Tout ce qui aurait été saisi
+en ligne depuis l'export est perdu. Vérifiez d'abord que personne n'y a
+travaillé.
+
+**Les comptes de connexion deviennent ceux de l'ordinateur.** L'administrateur
+créé à l'étape 5 et son mot de passe `ADM-…` disparaissent : connectez-vous
+ensuite avec les comptes locaux.
+
+Deux comptes dont le mot de passe est écrit dans le dépôt — public — sont
+neutralisés à l'export. Le compte de démonstration est désactivé. L'autre,
+reconnaissable à son adresse `gestionnaire.essai@local.test`, n'est un compte
+d'essai que par son nom : il porte le profil de la gestionnaire qui suit
+183 dossiers. Il garde donc son accès, mais repart avec un mot de passe que
+personne ne connaît. **Réinitialisez-le depuis sa fiche et transmettez-le-lui**,
+sinon elle ne peut plus entrer.
+
 ### En cas de page d'erreur
 
 AMANAH n'affiche jamais le détail d'une erreur aux visiteurs. Le détail est

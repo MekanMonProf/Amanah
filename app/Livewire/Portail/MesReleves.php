@@ -26,8 +26,10 @@ class MesReleves extends Component
             ? PeriodesReleve::pour($this->investisseur)
             : collect();
 
+        // Le groupement par année se fait dans le composant d'affichage, que la
+        // fiche du gestionnaire partage avec cet écran.
         return view('livewire.portail.mes-releves', [
-            'parAnnee' => $periodes->groupBy('annee'),
+            'periodes' => $periodes,
             'total' => $periodes->count(),
         ]);
     }

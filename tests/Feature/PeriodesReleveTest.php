@@ -166,6 +166,32 @@ class PeriodesReleveTest extends TestCase
         );
     }
 
+    public function test_l_espace_investisseur_liste_ses_releves(): void
+    {
+        [$investisseur, $connexion] = $this->dossierAvecAcces();
+        $this->achat($this->compte($investisseur), '2026-07-10');
+
+        $this->actingAs($connexion)
+            ->get(route('portail.releves.index'))
+            ->assertOk()
+            ->assertSee('Juillet 2026')
+            ->assertSee('Releve_Z9300_Juillet_2026.pdf');
+    }
+
+    public function test_la_fiche_du_gestionnaire_annonce_les_releves_mensuels(): void
+    {
+        $investisseur = $this->dossierEnBase();
+        $this->achat($this->compte($investisseur), '2026-07-10');
+
+        // Le bloc arrive replié : c'est son intitulé et son compte qui doivent
+        // se lire, pas le tableau.
+        $this->actingAs($this->administrateur())
+            ->get(route('investisseurs.show', $investisseur))
+            ->assertOk()
+            ->assertSee('Relevés mensuels')
+            ->assertSee('(1)');
+    }
+
     public function test_une_date_illisible_dans_l_adresse_ne_casse_pas_le_releve(): void
     {
         [, $connexion] = $this->dossierAvecAcces();
@@ -217,6 +243,19 @@ class PeriodesReleveTest extends TestCase
         $investisseur->update(['user_id' => $connexion->id]);
 
         return [$investisseur->fresh(), $connexion];
+    }
+
+    private function administrateur(): \App\Models\User
+    {
+        return \App\Models\User::create([
+            'nom' => 'Essai',
+            'prenom' => 'Administration',
+            'email' => 'essai.releves@local.test',
+            'password' => \Illuminate\Support\Facades\Hash::make('quelquechose'),
+            'role' => 'administrateur',
+            'actif' => true,
+            'doit_changer_mot_de_passe' => false,
+        ]);
     }
 
     private function compte(Investisseur $investisseur): int

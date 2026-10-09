@@ -379,6 +379,10 @@ class InvestisseurShow extends Component
         });
 
         return view('livewire.investisseurs.investisseur-show', [
+            // Les mêmes relevés mensuels que l'investisseur voit dans son espace.
+            // Le gestionnaire en a besoin pour celui qui appelle sans pouvoir se
+            // connecter — l'essentiel des dossiers.
+            'periodesReleve' => \App\Support\PeriodesReleve::pour($this->investisseur),
             'demandeAcces' => \App\Models\DemandeAcces::enAttente()
                 ->where('investisseur_id', $this->investisseur->id)
                 ->latest()

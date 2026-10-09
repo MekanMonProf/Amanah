@@ -596,9 +596,32 @@
         désactivation n'ont rien à faire sous la main de qui vient consulter.
     --}}
     <div class="mt-8 border-t border-gray-200 pt-6">
+        <x-surtitre>{{ __("Relevé de compte") }}</x-surtitre>
+
+        {{--
+            Le mois par mois, replié d'emblée là où les autres historiques
+            s'ouvrent : c'est une sortie occasionnelle, et la fiche est déjà
+            longue quand on arrive ici. Le choix se retient d'une fiche à
+            l'autre, comme pour les autres blocs.
+
+            Les trois comptages, eux, ont lieu dans tous les cas : c'est d'eux
+            que vient le nombre affiché sur le bouton replié.
+        --}}
+        @if ($periodesReleve->isNotEmpty())
+            <div class="mt-3">
+                <x-bloc-repliable :titre="__('Relevés mensuels')" cle="releves"
+                                  :nombre="$periodesReleve->count()" :replie="$blocsReplies['releves'] ?? true">
+                    <div class="overflow-hidden rounded-carte border border-gray-200 bg-white">
+                        <x-liste-releves :periodes="$periodesReleve" route="investisseurs.releve"
+                                         :parametres="['investisseur' => $investisseur]" />
+                    </div>
+                </x-bloc-repliable>
+            </div>
+        @endif
+
         <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
             <div>
-                <x-surtitre>{{ __("Relevé de compte") }}</x-surtitre>
+                <p class="mb-1 mt-4 text-xs uppercase tracking-wide text-gray-400">{{ __("Une autre période") }}</p>
                 <form action="{{ route('investisseurs.releve', $investisseur) }}" method="GET" target="_blank"
                       class="mt-2 flex flex-wrap items-end gap-2">
                     <div>

@@ -24,68 +24,7 @@
                     </span>
                 </div>
 
-                <div class="overflow-x-auto">
-                    <table class="w-full min-w-[560px] text-sm">
-                        <thead class="bg-gray-50 text-start text-xs uppercase tracking-wide text-gray-500">
-                            <tr>
-                                <th class="px-5 py-3 text-start font-semibold">{{ __("Période") }}</th>
-                                <th class="px-5 py-3 text-start font-semibold">{{ __("Relevé") }}</th>
-                                <th class="px-5 py-3 text-start font-semibold">{{ __("Mouvements") }}</th>
-                                {{-- Sans intitulé : dans AMANAH, « Actions » désigne les parts
-                                     sociales — l'anglais le traduit par « Shares ». --}}
-                                <th class="px-5 py-3"></th>
-                            </tr>
-                        </thead>
-
-                        <tbody class="divide-y divide-gray-100">
-                            @foreach ($parAnnee as $annee => $periodes)
-                                {{-- L'année sépare, comme sur l'ancien écran : un actionnaire
-                                     cherche « mon relevé d'août dernier », pas la 14e ligne. --}}
-                                <tr class="bg-primaire-50/60">
-                                    <td colspan="4" class="px-5 py-2 text-sm text-primaire-800">
-                                        <span class="font-bold">{{ $annee }}</span>
-                                        <span class="text-primaire-700/70">
-                                            — {{ __(":nombre relevé(s)", ['nombre' => $periodes->count()]) }}
-                                        </span>
-                                    </td>
-                                </tr>
-
-                                @foreach ($periodes as $periode)
-                                    <tr class="hover:bg-gray-50">
-                                        <td class="whitespace-nowrap px-5 py-3 font-semibold text-gray-900">
-                                            {{ $periode['libelle'] }}
-                                        </td>
-                                        <td class="px-5 py-3 font-mono text-xs text-gray-500">
-                                            {{ $periode['fichier'] }}
-                                        </td>
-                                        <td class="whitespace-nowrap px-5 py-3 text-gray-600">
-                                            {{ $periode['mouvements'] }}
-                                        </td>
-                                        <td class="whitespace-nowrap px-5 py-3">
-                                            {{-- Même sobriété que les actions de ligne ailleurs :
-                                                 une icône, un mot dès qu'il y a la place. --}}
-                                            <div class="flex items-center justify-end gap-4">
-                                                <a href="{{ route('portail.releve', ['date_debut' => $periode['debut'], 'date_fin' => $periode['fin']]) }}"
-                                                   target="_blank"
-                                                   title="{{ __('Ouvrir') }}"
-                                                   class="inline-flex items-center gap-1.5 text-sm text-gray-600 hover:text-primaire-700">
-                                                    <x-icone nom="oeil" class="h-4 w-4 shrink-0" />
-                                                    <span class="hidden xl:inline">{{ __("Ouvrir") }}</span>
-                                                </a>
-                                                <a href="{{ route('portail.releve', ['date_debut' => $periode['debut'], 'date_fin' => $periode['fin'], 'telecharger' => 1]) }}"
-                                                   title="{{ __('Télécharger') }}"
-                                                   class="inline-flex items-center gap-1.5 text-sm text-gray-600 hover:text-primaire-700">
-                                                    <x-icone nom="telecharger" class="h-4 w-4 shrink-0" />
-                                                    <span class="hidden xl:inline">{{ __("Télécharger") }}</span>
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                <x-liste-releves :periodes="$periodes" route="portail.releve" />
             </div>
 
             {{--

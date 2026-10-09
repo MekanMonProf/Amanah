@@ -39,7 +39,7 @@
         @endif
 
         <div class="mt-8 border-t border-gray-200 pt-6">
-            <x-surtitre>{{ __("Une autre période") }}</x-surtitre>
+            <x-surtitre>{{ __("Relevé d'une autre période") }}</x-surtitre>
             <p class="mt-1 text-sm text-gray-500">
                 {{ __("Pour un relevé qui ne tient pas dans un mois — une année entière, ou l'historique complet.") }}
             </p>

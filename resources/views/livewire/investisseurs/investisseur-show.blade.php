@@ -596,7 +596,9 @@
         désactivation n'ont rien à faire sous la main de qui vient consulter.
     --}}
     <div class="mt-8 border-t border-gray-200 pt-6">
-        <x-surtitre>{{ __("Relevé de compte") }}</x-surtitre>
+        {{-- « Relevé de compte » ne couvre plus ce que porte cette section
+             depuis que les attestations l'ont rejoint. --}}
+        <x-surtitre>{{ __("Documents du dossier") }}</x-surtitre>
 
         {{--
             Le mois par mois, replié d'emblée là où les autres historiques
@@ -619,9 +621,25 @@
             </div>
         @endif
 
+        {{--
+            Les attestations et reçus, au même endroit que les relevés : ils se
+            remettent dans les mêmes circonstances, souvent au téléphone. Replié
+            de même — la liste est longue dès qu'un dossier a vécu.
+        --}}
+        @if ($documentsDuDossier->isNotEmpty())
+            <div class="mt-3">
+                <x-bloc-repliable :titre="__('Attestations et reçus')" cle="documents"
+                                  :nombre="$documentsDuDossier->count()" :replie="$blocsReplies['documents'] ?? true">
+                    <div class="overflow-hidden rounded-carte border border-gray-200 bg-white">
+                        <x-liste-documents :documents="$documentsDuDossier" />
+                    </div>
+                </x-bloc-repliable>
+            </div>
+        @endif
+
         <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
             <div>
-                <p class="mb-1 mt-4 text-xs uppercase tracking-wide text-gray-400">{{ __("Une autre période") }}</p>
+                <p class="mb-1 mt-4 text-xs uppercase tracking-wide text-gray-400">{{ __("Relevé d'une autre période") }}</p>
                 <form action="{{ route('investisseurs.releve', $investisseur) }}" method="GET" target="_blank"
                       class="mt-2 flex flex-wrap items-end gap-2">
                     <div>

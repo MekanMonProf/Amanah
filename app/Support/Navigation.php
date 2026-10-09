@@ -122,6 +122,7 @@ class Navigation
                     // Ses motifs étaient 'portail.*', ce qui gardait « Mon compte »
                     // allumé en lisant ses relevés. Chacun désigne désormais sa page.
                     self::entree('Mes relevés', 'portail.releves.index', ['portail.releves.*'], 'releves', null, 'investisseur', 'Relevés'),
+                    self::entree('Mes documents', 'portail.documents.index', ['portail.documents.*'], 'documents', null, 'investisseur', 'Documents'),
                     self::entree('Tableau de bord', 'dashboard', ['dashboard'], 'tableau', null, null, 'Tableau'),
                 ],
             ],

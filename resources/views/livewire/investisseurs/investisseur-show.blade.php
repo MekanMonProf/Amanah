@@ -552,7 +552,7 @@
 
             @if ($item['achats']->isNotEmpty())
                 <x-bloc-repliable :titre="__('Historique des achats')" cle="achats"
-                                  :nombre="$item['achats']->count()" :replie="$blocsReplies['achats'] ?? false">
+                                  :nombre="$item['achats']->count()" :replie="$this->estReplie('achats')">
                     <livewire:achats.achats-historique :compte="$item['compte']" :key="'achats-'.$item['compte']->id" />
                 </x-bloc-repliable>
             @endif
@@ -560,7 +560,7 @@
             @php($nbRadiations = $item['compte']->radiations()->count())
             @if ($nbRadiations > 0)
                 <x-bloc-repliable :titre="__('Historique des radiations')" cle="radiations"
-                                  :nombre="$nbRadiations" :replie="$blocsReplies['radiations'] ?? false">
+                                  :nombre="$nbRadiations" :replie="$this->estReplie('radiations')">
                     <livewire:radiations.radiations-historique :compte="$item['compte']" :key="'radiations-'.$item['compte']->id" />
                 </x-bloc-repliable>
             @endif
@@ -568,14 +568,14 @@
             @php($nbDons = $item['compte']->donsEmis()->count() + $item['compte']->donsRecus()->count())
             @if ($nbDons > 0)
                 <x-bloc-repliable :titre="__('Historique des dons')" cle="dons"
-                                  :nombre="$nbDons" :replie="$blocsReplies['dons'] ?? false">
+                                  :nombre="$nbDons" :replie="$this->estReplie('dons')">
                     <livewire:dons.dons-historique :compte="$item['compte']" :key="'dons-'.$item['compte']->id" />
                 </x-bloc-repliable>
             @endif
 
             @if ($item['dernieres_ecritures']->isNotEmpty())
                 <x-bloc-repliable :titre="__('Écritures du compte financier')" cle="ecritures"
-                                  :nombre="$item['compte']->ecritures->count()" :replie="$blocsReplies['ecritures'] ?? false">
+                                  :nombre="$item['compte']->ecritures->count()" :replie="$this->estReplie('ecritures')">
                     <livewire:comptes.ecritures-historique :compte="$item['compte']" :key="'ecritures-'.$item['compte']->id" />
                 </x-bloc-repliable>
             @else
@@ -612,7 +612,7 @@
         @if ($periodesReleve->isNotEmpty())
             <div class="mt-3">
                 <x-bloc-repliable :titre="__('Relevés mensuels')" cle="releves"
-                                  :nombre="$periodesReleve->count()" :replie="$blocsReplies['releves'] ?? true">
+                                  :nombre="$periodesReleve->count()" :replie="$this->estReplie('releves')">
                     <div class="overflow-hidden rounded-carte border border-gray-200 bg-white">
                         <x-liste-releves :periodes="$periodesReleve" route="investisseurs.releve"
                                          :parametres="['investisseur' => $investisseur]" />
@@ -629,7 +629,7 @@
         @if ($documentsDuDossier->isNotEmpty())
             <div class="mt-3">
                 <x-bloc-repliable :titre="__('Attestations et reçus')" cle="documents"
-                                  :nombre="$documentsDuDossier->count()" :replie="$blocsReplies['documents'] ?? true">
+                                  :nombre="$documentsDuDossier->count()" :replie="$this->estReplie('documents')">
                     <div class="overflow-hidden rounded-carte border border-gray-200 bg-white">
                         <x-liste-documents :documents="$documentsDuDossier" />
                     </div>

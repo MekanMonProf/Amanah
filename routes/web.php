@@ -20,6 +20,7 @@ use App\Livewire\Successions\SuccessionIndex;
 use App\Livewire\Successions\GererSuccession;
 use App\Livewire\Successions\PaiementSuccessionCreate;
 use App\Livewire\Gestionnaires\GestionnaireIndex;
+use App\Livewire\Gestionnaires\GestionnaireShow;
 use App\Livewire\JournalAudit;
 use App\Livewire\Auth\ChangerMotDePasseObligatoire;
 use App\Livewire\Auth\VerifierDeuxFaCode;
@@ -160,6 +161,9 @@ Route::middleware(['auth', 'doit.changer.mdp', 'deux.fa'])->group(function () {
     // ---- Gestionnaires ----
     Route::middleware(['module:gestionnaires,ecriture'])->group(function () {
         Route::get('/gestionnaires', GestionnaireIndex::class)->name('gestionnaires.index');
+        // La fiche porte les mêmes actions que la liste : même module, même
+        // exigence d'écriture.
+        Route::get('/gestionnaires/{gestionnaire}', GestionnaireShow::class)->name('gestionnaires.show');
     });
 
     // ---- Journal d'audit ----

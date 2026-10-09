@@ -187,8 +187,17 @@
                     <td class="p-3 text-end whitespace-nowrap">
                         @if ($g->estOrphelin())
                             {{-- Sans compte de connexion, aucune de ces actions n a de sens :
-                                 il n y a plus de nom a changer ni d adresse ou ecrire. --}}
-                            <span class="text-sm text-gray-400">{{ __("Aucune action possible") }}</span>
+                                 il n y a plus de nom a changer ni d adresse ou ecrire. La
+                                 fiche, elle, reste consultable : c est la qu on voit le
+                                 portefeuille a reassigner. --}}
+                            <div class="flex items-center justify-end gap-3">
+                                <span class="text-sm text-gray-400">{{ __("Aucune action possible") }}</span>
+                                <a href="{{ route('gestionnaires.show', $g) }}" wire:navigate title="{{ __('Voir la fiche') }}"
+                                   class="inline-flex items-center gap-1.5 text-sm text-gray-600 hover:text-primaire-700">
+                                    <x-icone nom="dossier" class="h-4 w-4 shrink-0" />
+                                    <span class="hidden xl:inline">{{ __("Voir la fiche") }}</span>
+                                </a>
+                            </div>
                         @else
                             {{-- Une icône et un mot court, en gris, comme la colonne
                                  Téléphone. « Réinitialiser le mot de passe » écrit
@@ -215,6 +224,12 @@
                                     <x-icone nom="desactiver" class="h-4 w-4 shrink-0" />
                                     <span class="hidden xl:inline">{{ $g->actif ? __('Désactiver') : __('Réactiver') }}</span>
                                 </button>
+
+                                <a href="{{ route('gestionnaires.show', $g) }}" wire:navigate title="{{ __('Voir la fiche') }}"
+                                   class="inline-flex items-center gap-1.5 text-sm text-gray-600 hover:text-primaire-700">
+                                    <x-icone nom="dossier" class="h-4 w-4 shrink-0" />
+                                    <span class="hidden xl:inline">{{ __("Voir la fiche") }}</span>
+                                </a>
                             </div>
                         @endif
                     </td>

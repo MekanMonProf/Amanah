@@ -42,6 +42,18 @@ class InvestisseurShow extends Component
 
     public const CLE_SESSION_BLOCS = 'amanah.blocs_replies';
 
+    /**
+     * Les blocs repliés tant que personne ne les a ouverts. Les historiques,
+     * eux, s'ouvrent : on vient les lire. Les relevés et les documents sont des
+     * sorties occasionnelles, et la fiche est déjà longue quand on y arrive.
+     *
+     * Le défaut se déclare ici et nulle part ailleurs : la vue le lisait de son
+     * côté avec « ?? true » quand basculerBloc le supposait ouvert, et le
+     * premier clic ne faisait que confirmer un état déjà vrai — il en fallait
+     * deux pour ouvrir.
+     */
+    private const REPLIES_PAR_DEFAUT = ['releves' => true, 'documents' => true];
+
     public bool $afficherFormulaireTransfert = false;
     public ?int $nouveauGestionnaireId = null;
     public string $motifTransfert = '';
@@ -62,9 +74,15 @@ class InvestisseurShow extends Component
      */
     public function basculerBloc(string $cle): void
     {
-        $this->blocsReplies[$cle] = ! ($this->blocsReplies[$cle] ?? false);
+        $this->blocsReplies[$cle] = ! $this->estReplie($cle);
 
         session()->put(self::CLE_SESSION_BLOCS, $this->blocsReplies);
+    }
+
+    /** L'état d'un bloc : celui qu'on lui a donné, sinon son défaut. */
+    public function estReplie(string $cle): bool
+    {
+        return $this->blocsReplies[$cle] ?? (self::REPLIES_PAR_DEFAUT[$cle] ?? false);
     }
 
     /**

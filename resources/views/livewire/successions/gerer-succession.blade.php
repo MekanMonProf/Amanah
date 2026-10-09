@@ -1,14 +1,61 @@
-<div class="p-4 sm:p-6 lg:p-8 max-w-2xl">
-    <a href="{{ route('investisseurs.show', $investisseur) }}" wire:navigate class="text-sm text-gray-500 hover:underline">{{ __("← Retour au dossier") }}</a>
+<div class="p-4 sm:p-6 lg:p-8">
+    <div class="mb-4 flex flex-wrap gap-4">
+        <a href="{{ route('investisseurs.show', $investisseur) }}" wire:navigate
+           class="inline-flex items-center gap-1.5 text-sm text-gray-500 transition hover:text-primaire-700">
+            ← {{ __("Retour au dossier") }}
+        </a>
+        <a href="{{ route('successions.index') }}" wire:navigate
+           class="inline-flex items-center gap-1.5 text-sm text-gray-500 transition hover:text-primaire-700">
+            ← {{ __("Retour aux successions") }}
+        </a>
+    </div>
 
-    <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mt-2 mb-1">{{ __("Gestion de la succession") }}</h1>
-    <p class="text-sm text-gray-500 mb-6">
-        {{ $investisseur->nom }} {{ $investisseur->prenom }} ({{ $investisseur->identifiant_externe }}) —
+    <x-surtitre>{{ __('Succession') }}</x-surtitre>
+    <div class="mb-1 flex flex-wrap items-center gap-3">
+        <h1 class="text-2xl font-bold text-gray-900 sm:text-3xl">{{ trim($investisseur->nom . ' ' . $investisseur->prenom) }}</h1>
+        <span class="rounded-full px-2 py-1 text-xs {{ $investisseur->succession_reglee ? 'bg-primaire-100 text-primaire-700' : 'bg-or-100 text-or-700' }}">
+            {{ $investisseur->succession_reglee ? __('Réglée') : __('À régler') }}
+        </span>
+    </div>
+    <p class="mb-6 text-sm text-gray-500">
+        <span class="font-mono">{{ $investisseur->identifiant_externe }}</span> ·
         {{ __('décédé(e) le :date', ['date' => $investisseur->date_deces?->format('d/m/Y')]) }}
         @if ($investisseur->piece_acte_deces_path)
             · <a href="{{ \App\Support\Document::lien($investisseur, 'piece_acte_deces_path') }}" target="_blank" class="text-primaire-700 hover:underline">{{ __("Voir l'acte de décès") }}</a>
         @endif
     </p>
+
+    {{--
+        Ce que la succession met en jeu. L'aperçu compte par compte n'apparaît
+        qu'une fois le mandataire désigné ; or la première question de la
+        famille au téléphone est « combien cela représente-t-il ».
+    --}}
+    <div class="mb-6 overflow-hidden rounded-carte bg-nuit-900 shadow-sm">
+        <div class="flex flex-col gap-6 p-6 lg:flex-row lg:items-center lg:gap-10">
+            <div class="lg:w-56 lg:shrink-0">
+                <x-surtitre class="text-white/40">{{ __("Succession") }}</x-surtitre>
+                <p class="mt-1 text-lg font-bold text-white">{{ __("Ce qui est en jeu") }}</p>
+                <p class="mt-1 text-sm text-white/60">
+                    {{ __(":nombre compte(s)", ['nombre' => \App\Support\Montant::format($this->position['comptes'])]) }}
+                </p>
+            </div>
+
+            <div class="grid flex-1 grid-cols-1 gap-5 sm:grid-cols-3 lg:gap-6 lg:divide-x lg:divide-white/10 rtl:lg:divide-x-reverse">
+                @foreach ([
+                    ['etiquette' => __("Actions commerciales"), 'valeur' => \App\Support\Montant::format($this->position['commerciales']), 'accent' => false],
+                    ['etiquette' => __("Actions waqf"), 'valeur' => \App\Support\Montant::format($this->position['waqf']), 'accent' => false],
+                    ['etiquette' => __("Solde total"), 'valeur' => \App\Support\Montant::avecDevise($this->position['solde']), 'accent' => true],
+                ] as $i => $chiffre)
+                    <div class="{{ $i > 0 ? 'lg:ps-6' : '' }}">
+                        <p class="text-xs font-medium uppercase tracking-wide text-white/50">{{ $chiffre['etiquette'] }}</p>
+                        <p class="mt-1 text-xl font-bold sm:text-2xl {{ $chiffre['accent'] ? 'text-primaire-400' : 'text-white' }}">
+                            <bdi>{{ $chiffre['valeur'] }}</bdi>
+                        </p>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
 
     <div class="bg-primaire-50 border border-primaire-200 rounded-champ p-4 mb-3 text-sm text-primaire-800">
         🕌 {!! __("<strong>Compte(s) Waqf :</strong> le capital est automatiquement redirigé vers l'œuvre caritative <strong>:waqf</strong>, jamais vers le mandataire — conformément au principe d'inaliénabilité du Waqf.", ['waqf' => \App\Models\Investisseur::NOM_WAQF_CARITATIF]) !!}
@@ -22,6 +69,21 @@
         <div class="bg-primaire-50 border border-primaire-200 rounded-champ p-4 mb-6 text-sm text-primaire-800">
             {{ __("✓ Succession réglée.") }}
         </div>
+    @endif
+
+    {{--
+        Les pièces que le règlement a produites. Elles existaient déjà, mais ne
+        se trouvaient que sur la fiche de l'investisseur, mêlées à ses
+        attestations d'achat : la famille qui réclame « le papier de la
+        succession » obligeait à quitter cet écran et à chercher ailleurs.
+    --}}
+    @if ($this->documents->isNotEmpty())
+        <x-bloc-repliable :titre="__('Pièces de la succession')" cle="documents"
+                          :nombre="$this->documents->count()" :replie="$this->estReplie('documents')">
+            <div class="overflow-hidden rounded-carte border border-gray-200 bg-white">
+                <x-liste-documents :documents="$this->documents" />
+            </div>
+        </x-bloc-repliable>
     @endif
 
     @if ($resultatTransfert)

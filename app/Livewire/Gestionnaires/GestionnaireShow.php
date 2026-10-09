@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Gestionnaires;
 
+use App\Livewire\Concerns\ReplieSesBlocs;
 use App\Livewire\Gestionnaires\Concerns\AgitSurUnGestionnaire;
 use App\Models\Gestionnaire;
 use App\Models\HistoriqueAffectation;
@@ -22,45 +23,28 @@ class GestionnaireShow extends Component
 {
     use AgitSurUnGestionnaire;
 
+    use ReplieSesBlocs;
+
     public Gestionnaire $gestionnaire;
-
-    /** @var array<string, bool> */
-    public array $blocsReplies = [];
-
-    public const CLE_SESSION_BLOCS = 'amanah.blocs_replies_gestionnaire';
-
-    /**
-     * Les blocs repliés tant que personne ne les a ouverts.
-     *
-     * Le défaut doit être déclaré ici et nulle part ailleurs : la vue et le
-     * bouton le liraient sinon chacun de son côté, et un bloc affiché replié
-     * mais tenu pour ouvert demanderait deux clics pour s'ouvrir — le premier
-     * ne faisant que confirmer un état déjà vrai.
-     */
-    private const REPLIES_PAR_DEFAUT = ['portefeuille' => true, 'transferts' => true];
 
     public function mount(Gestionnaire $gestionnaire): void
     {
         $this->gestionnaire = $gestionnaire;
-        $this->blocsReplies = session(self::CLE_SESSION_BLOCS, []);
+        $this->reprendreLesBlocsReplies();
+    }
+
+    protected function cleDeSessionDesBlocs(): string
+    {
+        return 'amanah.blocs_replies_gestionnaire';
     }
 
     /**
-     * Replié, un bloc n'est pas caché : il n'est plus rendu. Un portefeuille de
-     * cent quatre-vingts dossiers ne se construit donc pas tant qu'on ne l'a pas
-     * demandé.
+     * Les deux arrivent repliés : un portefeuille de cent quatre-vingts dossiers
+     * ne se construit pas tant qu'on ne l'a pas demandé.
      */
-    public function basculerBloc(string $cle): void
+    protected function repliesParDefaut(): array
     {
-        $this->blocsReplies[$cle] = ! $this->estReplie($cle);
-
-        session()->put(self::CLE_SESSION_BLOCS, $this->blocsReplies);
-    }
-
-    /** L'état d'un bloc : celui qu'on lui a donné, sinon son défaut. */
-    public function estReplie(string $cle): bool
-    {
-        return $this->blocsReplies[$cle] ?? (self::REPLIES_PAR_DEFAUT[$cle] ?? false);
+        return ['portefeuille' => true, 'transferts' => true];
     }
 
     public function render()

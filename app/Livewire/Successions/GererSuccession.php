@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Successions;
 
+use App\Livewire\Concerns\ReplieSesBlocs;
 use App\Models\CompteInvestissement;
 use App\Models\Don;
 use App\Models\Heritier;
@@ -16,6 +17,8 @@ use Livewire\WithFileUploads;
 #[Layout('layouts.app')]
 class GererSuccession extends Component
 {
+    use ReplieSesBlocs;
+
     use WithFileUploads;
 
     public Investisseur $investisseur;
@@ -58,6 +61,18 @@ class GererSuccession extends Component
     public function mount(Investisseur $investisseur): void
     {
         $this->investisseur = $investisseur;
+        $this->reprendreLesBlocsReplies();
+    }
+
+    protected function cleDeSessionDesBlocs(): string
+    {
+        return 'amanah.blocs_replies_succession';
+    }
+
+    /** Les pièces n'existent qu'une fois la succession réglée : on les y trouve, on ne les y cherche pas. */
+    protected function repliesParDefaut(): array
+    {
+        return ['documents' => true];
     }
 
     public function getMandataireProperty(): ?Heritier
@@ -338,6 +353,40 @@ class GererSuccession extends Component
         });
 
         $this->resultatTransfert = $resultat;
+    }
+
+    /**
+     * Ce que la succession met en jeu, avant même qu'on désigne qui que ce soit.
+     *
+     * L'aperçu compte par compte n'apparaît qu'une fois le mandataire désigné.
+     * Or la première question posée au téléphone est « combien cela
+     * représente-t-il » : elle doit trouver sa réponse en haut de l'écran.
+     *
+     * @return array{comptes:int, commerciales:int, waqf:int, solde:float}
+     */
+    public function getPositionProperty(): array
+    {
+        $comptes = $this->investisseur->comptes()->get();
+
+        return [
+            'comptes' => $comptes->count(),
+            'commerciales' => $comptes->where('categorie', 'commercial')->sum(fn ($compte) => $compte->nombreActions()),
+            'waqf' => $comptes->where('categorie', 'waqf')->sum(fn ($compte) => $compte->nombreActions()),
+            'solde' => $comptes->sum(fn ($compte) => $compte->solde()),
+        ];
+    }
+
+    /**
+     * Les pièces que la succession a produites : l'attestation de liquidation
+     * et celle du versement aux ayants droit. Le reste des documents du dossier
+     * — attestations d'achat, reçus — se consulte sur la fiche ; ici on ne
+     * cherche que ce qui atteste du règlement.
+     */
+    public function getDocumentsProperty()
+    {
+        return \App\Support\DocumentsDuDossier::pour($this->investisseur)
+            ->whereIn('famille', ['succession', 'deces'])
+            ->values();
     }
 
     public function render()

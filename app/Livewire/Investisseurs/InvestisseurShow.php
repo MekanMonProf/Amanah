@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Investisseurs;
 
+use App\Livewire\Concerns\ReplieSesBlocs;
 use App\Models\Gestionnaire;
 use App\Models\Investisseur;
 use App\Models\User;
@@ -14,6 +15,8 @@ use Livewire\Component;
 #[Layout('layouts.app')]
 class InvestisseurShow extends Component
 {
+    use ReplieSesBlocs;
+
     use RestreintAuPortefeuilleGestionnaire;
 
     public Investisseur $investisseur;
@@ -35,24 +38,21 @@ class InvestisseurShow extends Component
      * L'état vit en session plutôt que dans le navigateur : il suit donc la
      * personne d'une fiche à l'autre sans dépendre du stockage local, qui revient
      * vide en navigation privée.
-     *
-     * @var array<string, bool>
      */
-    public array $blocsReplies = [];
-
-    public const CLE_SESSION_BLOCS = 'amanah.blocs_replies';
+    protected function cleDeSessionDesBlocs(): string
+    {
+        return 'amanah.blocs_replies';
+    }
 
     /**
-     * Les blocs repliés tant que personne ne les a ouverts. Les historiques,
-     * eux, s'ouvrent : on vient les lire. Les relevés et les documents sont des
-     * sorties occasionnelles, et la fiche est déjà longue quand on y arrive.
-     *
-     * Le défaut se déclare ici et nulle part ailleurs : la vue le lisait de son
-     * côté avec « ?? true » quand basculerBloc le supposait ouvert, et le
-     * premier clic ne faisait que confirmer un état déjà vrai — il en fallait
-     * deux pour ouvrir.
+     * Les historiques s'ouvrent : on vient les lire. Les relevés et les
+     * documents sont des sorties occasionnelles, et la fiche est déjà longue
+     * quand on y arrive.
      */
-    private const REPLIES_PAR_DEFAUT = ['releves' => true, 'documents' => true];
+    protected function repliesParDefaut(): array
+    {
+        return ['releves' => true, 'documents' => true];
+    }
 
     public bool $afficherFormulaireTransfert = false;
     public ?int $nouveauGestionnaireId = null;
@@ -62,27 +62,7 @@ class InvestisseurShow extends Component
     {
         $this->assurerAccesGestionnaire($investisseur);
         $this->investisseur = $investisseur;
-        $this->blocsReplies = session(self::CLE_SESSION_BLOCS, []);
-    }
-
-    /**
-     * Replie ou déplie une section d'historique.
-     *
-     * Une section replicée n'est pas cachée, elle n'est plus rendue : son composant
-     * imbriqué et les requêtes qu'il fait disparaissent avec elle. C'est l'intérêt
-     * de le décider ici plutôt que dans le navigateur.
-     */
-    public function basculerBloc(string $cle): void
-    {
-        $this->blocsReplies[$cle] = ! $this->estReplie($cle);
-
-        session()->put(self::CLE_SESSION_BLOCS, $this->blocsReplies);
-    }
-
-    /** L'état d'un bloc : celui qu'on lui a donné, sinon son défaut. */
-    public function estReplie(string $cle): bool
-    {
-        return $this->blocsReplies[$cle] ?? (self::REPLIES_PAR_DEFAUT[$cle] ?? false);
+        $this->reprendreLesBlocsReplies();
     }
 
     /**

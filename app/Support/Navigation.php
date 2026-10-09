@@ -118,7 +118,10 @@ class Navigation
                     // Le portail n'est pas un module : son accès ne se paramètre
                     // pas, il découle du rôle. D'où le module null, toujours visible
                     // pour l'investisseur et pour lui seul.
-                    self::entree('Mon compte', 'portail.mon-compte', ['portail.*'], 'compte', null, 'investisseur'),
+                    self::entree('Mon compte', 'portail.mon-compte', ['portail.mon-compte'], 'compte', null, 'investisseur'),
+                    // Ses motifs étaient 'portail.*', ce qui gardait « Mon compte »
+                    // allumé en lisant ses relevés. Chacun désigne désormais sa page.
+                    self::entree('Mes relevés', 'portail.releves.index', ['portail.releves.*'], 'releves', null, 'investisseur', 'Relevés'),
                     self::entree('Tableau de bord', 'dashboard', ['dashboard'], 'tableau', null, null, 'Tableau'),
                 ],
             ],

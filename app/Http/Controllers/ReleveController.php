@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CompteInvestissement;
 use App\Models\Investisseur;
+use App\Support\PeriodesReleve;
 use App\Support\RestreintAuPortefeuilleGestionnaire;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
@@ -19,7 +20,9 @@ class ReleveController extends Controller
     {
         $this->assurerAccesGestionnaire($investisseur);
 
-        return $this->genererPdf($investisseur, $request->query('date_debut'), $request->query('date_fin'));
+        [$debut, $fin] = $this->bornes($request);
+
+        return $this->genererPdf($investisseur, $debut, $fin);
     }
 
     public function pourInvestisseur(Request $request)
@@ -28,7 +31,27 @@ class ReleveController extends Controller
 
         abort_if(! $investisseur, 404);
 
-        return $this->genererPdf($investisseur, $request->query('date_debut'), $request->query('date_fin'));
+        [$debut, $fin] = $this->bornes($request);
+
+        return $this->genererPdf($investisseur, $debut, $fin);
+    }
+
+    /**
+     * Les bornes de la période, telles qu'elles arrivent de l'URL.
+     *
+     * Elles partent d'un champ date ou d'un lien que la liste fabrique, donc
+     * bien formées — mais une adresse se modifie à la main, et une date
+     * illisible descendait jusqu'à whereDate(), qui rendait une page d'erreur.
+     * Elles sont désormais refusées avant d'entrer.
+     */
+    protected function bornes(Request $request): array
+    {
+        $valide = $request->validate([
+            'date_debut' => ['nullable', 'date'],
+            'date_fin' => ['nullable', 'date'],
+        ]);
+
+        return [$valide['date_debut'] ?? null, $valide['date_fin'] ?? null];
     }
 
     /**
@@ -100,8 +123,9 @@ class ReleveController extends Controller
             'dateGeneration' => now(),
         ])->setPaper('a4', 'portrait');
 
-        $suffixe = $dateDebut || $dateFin ? '_periode' : '';
-        $nomFichier = 'Releve_' . $investisseur->identifiant_externe . $suffixe . '_' . now()->format('Y-m-d') . '.pdf';
+        // Le nom se décide dans PeriodesReleve : la liste des relevés mensuels
+        // l'affiche avant que ce PDF existe, et les deux doivent concorder.
+        $nomFichier = PeriodesReleve::nomDeFichier($investisseur, $dateDebut, $dateFin);
 
         return $this->rendrePdf($pdf, $nomFichier);
     }

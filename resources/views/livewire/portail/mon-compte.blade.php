@@ -143,25 +143,20 @@
 
         {{--
             Le relevé descend en bas, comme sur la fiche : on le prend en partant,
-            une fois qu'on a vu où on en est.
+            une fois qu'on a vu où on en est. Le choix des dates, lui, a déménagé
+            sur « Mes relevés » : il y a le mois par mois à côté de lui, et le
+            demander ici obligeait à deviner les bornes du mois qu'on cherche.
         --}}
         <div class="mt-8 border-t border-gray-200 pt-6">
             <x-surtitre>{{ __("Relevé de compte") }}</x-surtitre>
-            <form action="{{ route('portail.releve') }}" method="GET" target="_blank" class="mt-2 flex flex-wrap items-end gap-2">
-                <div>
-                    <label class="mb-1 block text-xs text-gray-500">{{ __("Du (optionnel)") }}</label>
-                    <input type="date" name="date_debut" class="rounded-champ border-gray-300 px-3 py-2 text-sm">
-                </div>
-                <div>
-                    <label class="mb-1 block text-xs text-gray-500">{{ __("Au (optionnel)") }}</label>
-                    <input type="date" name="date_fin" class="rounded-champ border-gray-300 px-3 py-2 text-sm">
-                </div>
-                <button type="submit"
-                        class="whitespace-nowrap rounded-champ border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-50">
-                    {{ __("📄 Télécharger mon relevé (PDF)") }}
-                </button>
-            </form>
-            <p class="mt-1 text-xs text-gray-400">{{ __("Laissez vide pour l'historique complet.") }}</p>
+            <a href="{{ route('portail.releves.index') }}"
+               class="mt-2 inline-flex items-center gap-2 rounded-champ border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-50">
+                <x-icone nom="releves" class="h-5 w-5 shrink-0 text-primaire-700" />
+                {{ __("Voir mes relevés mensuels") }}
+            </a>
+            <p class="mt-1 text-xs text-gray-400">
+                {{ __("Un relevé par mois, à ouvrir ou à télécharger.") }}
+            </p>
         </div>
     @endif
 </div>

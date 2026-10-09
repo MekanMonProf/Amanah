@@ -23,6 +23,7 @@ use App\Livewire\Gestionnaires\GestionnaireIndex;
 use App\Livewire\JournalAudit;
 use App\Livewire\Auth\ChangerMotDePasseObligatoire;
 use App\Livewire\Auth\VerifierDeuxFaCode;
+use App\Livewire\Portail\MesReleves;
 use App\Livewire\Portail\MonCompte;
 use App\Http\Controllers\ReleveController;
 use App\Http\Controllers\AttestationController;
@@ -83,6 +84,9 @@ Route::get('/recu/{ecriture}', [RecuController::class, 'public'])
 Route::middleware(['auth', 'doit.changer.mdp', 'deux.fa'])->group(function () {
     Route::get('/mon-compte', MonCompte::class)->name('portail.mon-compte');
     Route::get('/mon-compte/releve', [ReleveController::class, 'pourInvestisseur'])->name('portail.releve');
+    // La liste des relevés mensuels. Le PDF, lui, reste la route ci-dessus :
+    // chaque ligne de la liste n'est qu'un couple de dates passé à celle-ci.
+    Route::get('/mon-compte/releves', MesReleves::class)->name('portail.releves.index');
 });
 
 // Aide et support : ouverts a tout compte connecte, investisseur compris. Ils

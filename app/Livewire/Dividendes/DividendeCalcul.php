@@ -226,6 +226,33 @@ class DividendeCalcul extends Component
         $this->chargerHistorique();
     }
 
+    /**
+     * Ce que la distribution a produit jusqu'ici.
+     *
+     * L'écran ne disait que ce qu'on s'apprête à faire : fixer un taux, lancer
+     * un calcul. Rien n'y rappelait combien a déjà été versé, ni depuis quand —
+     * or c'est la mesure à laquelle on compare le taux qu'on est en train de
+     * saisir, et le chiffre qu'on vient chercher quand la direction le demande.
+     *
+     * Seuls les dividendes crédités comptent : un dividende calculé puis annulé
+     * n'a jamais quitté la caisse.
+     *
+     * @return array{periodes:int, comptes:int, total:float, derniere:?string}
+     */
+    public function getPositionProperty(): array
+    {
+        $credites = DB::table('dividendes')->where('statut', 'credite');
+
+        $derniere = BaremeDividende::max('periode');
+
+        return [
+            'periodes' => BaremeDividende::distinct()->count('periode'),
+            'comptes' => (clone $credites)->distinct()->count('compte_id'),
+            'total' => (float) (clone $credites)->sum('montant_calcule'),
+            'derniere' => $derniere ? Carbon::parse($derniere)->translatedFormat('F Y') : null,
+        ];
+    }
+
     public function render()
     {
         return view('livewire.dividendes.dividende-calcul');

@@ -1,9 +1,49 @@
-<div class="p-4 sm:p-6 lg:p-8 max-w-2xl">
+<div class="p-4 sm:p-6 lg:p-8">
     <x-surtitre>{{ __('Finance') }}</x-surtitre>
     <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">{{ __("Calcul des dividendes") }}</h1>
     <p class="text-sm text-gray-500 mb-6">
         {{ __("Fixe le taux de la période choisie (une seule fois, définitif), puis rejoue automatiquement tout l'historique connu pour que chaque compte reçoive tout ce qu'il n'a pas encore perçu.") }}
     </p>
+
+    {{--
+        Ce qui a déjà été versé. L'écran ne disait que ce qu'on s'apprête à
+        faire ; le taux qu'on saisit se juge pourtant par rapport à ce qui
+        précède, et c'est le chiffre qu'on vient chercher quand on le demande.
+    --}}
+    <div class="mb-6 overflow-hidden rounded-carte bg-nuit-900 shadow-sm">
+        <div class="flex flex-col gap-6 p-6 lg:flex-row lg:items-center lg:gap-10">
+            <div class="lg:w-56 lg:shrink-0">
+                <x-surtitre class="text-white/40">{{ __("Dividendes") }}</x-surtitre>
+                <p class="mt-1 text-lg font-bold text-white">{{ __("Ce qui a été distribué") }}</p>
+                <p class="mt-1 text-sm text-white/60">
+                    @if ($this->position['derniere'])
+                        {{ __("Dernière période : :mois", ['mois' => $this->position['derniere']]) }}
+                    @else
+                        {{ __("Aucun barème fixé pour l'instant.") }}
+                    @endif
+                </p>
+            </div>
+
+            <div class="grid flex-1 grid-cols-1 gap-5 sm:grid-cols-3 lg:gap-6 lg:divide-x lg:divide-white/10 rtl:lg:divide-x-reverse">
+                @foreach ([
+                    ['etiquette' => __("Périodes fixées"), 'valeur' => \App\Support\Montant::format($this->position['periodes']), 'accent' => false],
+                    ['etiquette' => __("Comptes servis"), 'valeur' => \App\Support\Montant::format($this->position['comptes']), 'accent' => false],
+                    ['etiquette' => __("Total distribué"), 'valeur' => \App\Support\Montant::avecDevise($this->position['total']), 'accent' => true],
+                ] as $i => $chiffre)
+                    <div class="{{ $i > 0 ? 'lg:ps-6' : '' }}">
+                        <p class="text-xs font-medium uppercase tracking-wide text-white/50">{{ $chiffre['etiquette'] }}</p>
+                        <p class="mt-1 text-xl font-bold sm:text-2xl {{ $chiffre['accent'] ? 'text-primaire-400' : 'text-white' }}">
+                            <bdi>{{ $chiffre['valeur'] }}</bdi>
+                        </p>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+
+    {{-- Le réglage et la saisie restent à largeur de lecture : un champ de
+         formulaire étiré sur toute la page ne se remplit pas mieux. --}}
+    <div class="max-w-2xl">
 
     @if (session('succes_parametre'))
         <div class="bg-primaire-50 border border-primaire-200 text-primaire-700 rounded-champ p-3 mb-4 text-sm">
@@ -153,40 +193,67 @@
         </div>
     @endif
 
+    </div>{{-- fin de la largeur de lecture : le tableau, lui, prend la page --}}
+
     @if (!empty($baremesHistorique))
         <div class="mt-8">
             <h2 class="font-semibold text-gray-800 mb-3">{{ __("Historique des barèmes fixés") }}</h2>
-            <table class="w-full bg-white border rounded-carte text-sm">
-                <thead class="bg-gray-50 text-start text-gray-600">
-                    <tr>
-                        <th class="p-2">{{ __("Période") }}</th>
-                        <th class="p-2 text-end">{{ __("Commercial") }}</th>
-                        <th class="p-2 text-end">{{ __("Waqf") }}</th>
-                        <th class="p-2"></th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y">
-                    @foreach ($baremesHistorique as $mois => $parCategorie)
-                        <tr>
-                            <td class="p-2">{{ \Illuminate\Support\Carbon::createFromFormat('Y-m', $mois)->translatedFormat('F Y') }}</td>
-                            <td class="p-2 text-end">
-                                {{ isset($parCategorie['commercial']) ? \App\Support\Montant::format($parCategorie['commercial']['benefice_par_action']) . " CFA" : '—' }}
-                            </td>
-                            <td class="p-2 text-end">
-                                {{ isset($parCategorie['waqf']) ? \App\Support\Montant::format($parCategorie['waqf']['benefice_par_action']) . " CFA" : '—' }}
-                            </td>
-                            <td class="p-2 text-end whitespace-nowrap">
-                                @if (isset($parCategorie['commercial']))
-                                    <a href="{{ route('baremes.corriger', $parCategorie['commercial']['id']) }}" wire:navigate class="text-xs text-red-600 hover:underline me-2">{{ __("Corriger Com.") }}</a>
-                                @endif
-                                @if (isset($parCategorie['waqf']))
-                                    <a href="{{ route('baremes.corriger', $parCategorie['waqf']['id']) }}" wire:navigate class="text-xs text-red-600 hover:underline">{{ __("Corriger Waqf") }}</a>
-                                @endif
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+
+            <div class="overflow-hidden rounded-carte border border-gray-200 bg-white">
+                <div class="overflow-x-auto">
+                    <table class="w-full min-w-[560px] text-sm">
+                        <thead class="bg-gray-50 text-start text-xs uppercase tracking-wide text-gray-500">
+                            <tr>
+                                <th class="px-4 py-3 text-start font-semibold">{{ __("Période") }}</th>
+                                <th class="px-4 py-3 text-end font-semibold">{{ __("Commercial") }}</th>
+                                <th class="px-4 py-3 text-end font-semibold">{{ __("Waqf") }}</th>
+                                <th class="px-4 py-3"></th>
+                            </tr>
+                        </thead>
+
+                        {{-- Un <tbody> par année, comme sur les relevés : au bout de deux
+                             ans la liste défile longtemps avant le mois qu'on cherche.
+                             Les clés sont déjà rangées du plus récent au plus ancien. --}}
+                        {{-- preserveKeys : sans lui, groupBy renumérote, et la clé
+                             « 2026-03 » dont on tire le mois devient un simple 0. --}}
+                        @foreach (collect($baremesHistorique)->groupBy(fn ($lignes, $mois) => substr($mois, 0, 4), preserveKeys: true) as $annee => $moisDeLAnnee)
+                            <tbody x-data="{ ouvert: true }" class="divide-y divide-gray-100">
+                                <x-entete-groupe :titre="$annee"
+                                                 :detail="__(':nombre période(s)', ['nombre' => $moisDeLAnnee->count()])" />
+
+                                @foreach ($moisDeLAnnee as $mois => $parCategorie)
+                                    <tr x-show="ouvert" class="hover:bg-gray-50">
+                                        <td class="whitespace-nowrap px-4 py-3 font-semibold text-gray-900">
+                                            {{ \Illuminate\Support\Str::ucfirst(\Illuminate\Support\Carbon::createFromFormat('Y-m', $mois)->translatedFormat('F Y')) }}
+                                        </td>
+                                        <td class="whitespace-nowrap px-4 py-3 text-end text-gray-600">
+                                            <bdi>{{ isset($parCategorie['commercial']) ? \App\Support\Montant::avecDevise($parCategorie['commercial']['benefice_par_action'], 2) : '—' }}</bdi>
+                                        </td>
+                                        <td class="whitespace-nowrap px-4 py-3 text-end text-gray-600">
+                                            <bdi>{{ isset($parCategorie['waqf']) ? \App\Support\Montant::avecDevise($parCategorie['waqf']['benefice_par_action'], 2) : '—' }}</bdi>
+                                        </td>
+                                        <td class="whitespace-nowrap px-4 py-3 text-end">
+                                            {{-- Le rouge n'arrive qu'au survol : corriger un barème
+                                                 réécrit une distribution déjà versée, mais l'action
+                                                 n'a pas à crier sur chaque ligne. --}}
+                                            <div class="flex items-center justify-end gap-3">
+                                                @if (isset($parCategorie['commercial']))
+                                                    <a href="{{ route('baremes.corriger', $parCategorie['commercial']['id']) }}" wire:navigate
+                                                       class="text-xs text-gray-500 hover:text-red-700">{{ __("Corriger Com.") }}</a>
+                                                @endif
+                                                @if (isset($parCategorie['waqf']))
+                                                    <a href="{{ route('baremes.corriger', $parCategorie['waqf']['id']) }}" wire:navigate
+                                                       class="text-xs text-gray-500 hover:text-red-700">{{ __("Corriger Waqf") }}</a>
+                                                @endif
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        @endforeach
+                    </table>
+                </div>
+            </div>
         </div>
     @endif
 </div>

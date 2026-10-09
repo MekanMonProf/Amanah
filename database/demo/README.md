@@ -83,6 +83,30 @@ ses numéros étrangers, les dossiers incomplets, les personnes morales, les
 présents au waqf caritatif, une correction de barème, et des radiations payées
 comme d'autres encore en attente.
 
+## Un dossier qui montre tout
+
+Les scripts vidéo demandent, selon le sujet, les deux catégories de compte, un
+complément, un paiement, une radiation et un don. Aucun dossier du jeu ne
+réunissait les six : filmer obligeait à changer de dossier au milieu d'une
+vidéo.
+
+```bash
+php database/demo/dossier-complet.php
+```
+
+Ajoute **A0500 — CAMARA Mamadou Mekan**, qui les a tous, avec un accès au
+portail pour filmer aussi « Mon espace ». Le script se rejoue : il refait le
+dossier à neuf plutôt que de renoncer, et refuse toute base dont le nom ne
+contient pas « demo ».
+
+| | |
+|---|---|
+| Compte commercial | 2 achats, 19 actions, solde 100 000 CFA |
+| Compte waqf | 1 achat, 4 actions |
+| Complément | 150 000 CFA, mars 2026 |
+| Radiation puis versement | 6 actions, juin 2026, payées en juillet |
+| Dons | un d'actions, un de solde — les deux formes |
+
 ## Ce qu'il faut garder en tête
 
 **La bascule ne touche que la base de données.** Les fichiers déposés — pièces

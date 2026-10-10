@@ -31,8 +31,10 @@ mkdir -p "$app"
 git archive HEAD | tar -x -C "$app"
 
 # Ce qui ne sert qu'au développement, ou n'a rien à faire sur un serveur :
-# old.env et le script de vidage des données de test en tête.
-rm -rf "$app"/{tests,Utiles,deploiement,.claude} \
+# old.env et le script de vidage des données de test en tête. La vitrine est
+# du lot : elle se dépose à la racine du domaine, quand cette archive va sur le
+# sous-domaine — embarquée ici, elle n'aurait fait que doubler des fichiers.
+rm -rf "$app"/{tests,Utiles,deploiement,.claude,vitrine} \
        "$app"/{old.env,vider_donnees_test.sql,Demarrer_AMANAH.bat,phpunit.xml,Checklist_Complete_AMANAH.md,.editorconfig,.gitattributes}
 
 echo "2/5  Dépendances PHP (sans les outils de développement)"

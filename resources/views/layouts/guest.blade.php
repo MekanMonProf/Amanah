@@ -70,6 +70,22 @@
                 <div class="mt-6">
                     <livewire:selecteur-langue />
                 </div>
+
+                {{--
+                    Le pied vit du côté clair, et non dans le panneau sombre : celui-ci
+                    disparaît sous lg, où il se réduit à un bandeau d'en-tête. Ici le
+                    lien et la mention se lisent sur tous les écrans.
+
+                    L'année se calcule : écrite en dur, elle aurait vieilli au
+                    1er janvier sans que personne y pense.
+                --}}
+                <div class="mt-8 space-y-1 text-center text-xs text-gray-400">
+                    <p>
+                        <a href="https://www.waqfdolelxamxam.sn" target="_blank" rel="noopener noreferrer"
+                           class="transition hover:text-primaire-700 hover:underline">www.waqfdolelxamxam.sn</a>
+                    </p>
+                    <p>{{ __("Copyright © :annee by Mekan", ['annee' => now()->year]) }}</p>
+                </div>
             </div>
         </div>
     </body>

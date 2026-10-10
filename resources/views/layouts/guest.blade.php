@@ -54,9 +54,24 @@
                     </p>
                 </div>
 
-                <p class="mt-8 hidden text-xs text-white/30 lg:block">
-                    {{ __("Waqf Dolel Xamxam") }}
-                </p>
+                {{--
+                    Le pied tient dans le panneau sombre, à gauche de l'écran.
+
+                    Il reste visible sous lg, où ce panneau se réduit à un bandeau
+                    d'en-tête : trois lignes courtes n'y encombrent rien, et les
+                    cacher aurait privé les téléphones du lien comme de la mention.
+
+                    L'année se calcule : écrite en dur, elle aurait vieilli au
+                    1er janvier sans que personne y pense.
+                --}}
+                <div class="mt-8 space-y-1 text-xs text-white/30">
+                    <p class="hidden lg:block">{{ __("Waqf Dolel Xamxam") }}</p>
+                    <p>
+                        <a href="https://www.waqfdolelxamxam.sn" target="_blank" rel="noopener noreferrer"
+                           class="transition hover:text-white/70 hover:underline">www.waqfdolelxamxam.sn</a>
+                    </p>
+                    <p>{{ __("© :annee by Mekan", ['annee' => now()->year]) }}</p>
+                </div>
             </div>
 
             <div class="flex flex-col items-center justify-center bg-gray-50 px-4 py-10 sm:px-6">
@@ -71,21 +86,6 @@
                     <livewire:selecteur-langue />
                 </div>
 
-                {{--
-                    Le pied vit du côté clair, et non dans le panneau sombre : celui-ci
-                    disparaît sous lg, où il se réduit à un bandeau d'en-tête. Ici le
-                    lien et la mention se lisent sur tous les écrans.
-
-                    L'année se calcule : écrite en dur, elle aurait vieilli au
-                    1er janvier sans que personne y pense.
-                --}}
-                <div class="mt-8 space-y-1 text-center text-xs text-gray-400">
-                    <p>
-                        <a href="https://www.waqfdolelxamxam.sn" target="_blank" rel="noopener noreferrer"
-                           class="transition hover:text-primaire-700 hover:underline">www.waqfdolelxamxam.sn</a>
-                    </p>
-                    <p>{{ __("Copyright © :annee by Mekan", ['annee' => now()->year]) }}</p>
-                </div>
             </div>
         </div>
     </body>

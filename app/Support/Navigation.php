@@ -151,16 +151,31 @@ class Navigation
                 ],
             ],
             [
+                /*
+                 * Les publications de la direction ont leur propre groupe.
+                 *
+                 * Elles ont d'abord été rangées sous « Aide », pour la seule
+                 * raison que ce groupe était le seul dont les entrées étaient
+                 * marquées « pour tous ». C'était un argument de plomberie :
+                 * le drapeau est porté par l'entrée, pas par le groupe, et rien
+                 * n'obligeait à les mettre là. Un rapport annuel n'est pas un
+                 * mode d'emploi.
+                 *
+                 * Le groupe nomme qui parle, ce qui est précisément ce qui
+                 * distingue ces documents de tous les autres de la plateforme.
+                 */
+                'libelle' => 'La direction',
+                'entrees' => [
+                    self::entree('Documents officiels', 'documents-officiels.index', ['documents-officiels.*'], 'documents', null, null, 'Officiels', true),
+                ],
+            ],
+            [
                 'libelle' => 'Aide',
                 'entrees' => [
                     // Ouvertes a tout le monde, investisseur compris : un mode
                     // d'emploi reserve a ceux qui savent deja s'en passer ne
                     // sert personne. Le detail de ce qu'on y lit se filtre page
                     // par page, dans App\Support\Aide.
-                    // Les documents de la direction s'adressent à tous : au
-                    // personnel comme aux investisseurs. D'où « pour tous »,
-                    // comme l'aide — ce n'est pas un module qui se paramètre.
-                    self::entree('Documents officiels', 'documents-officiels.index', ['documents-officiels.*'], 'documents', null, null, 'Officiels', true),
                     self::entree("Mode d'emploi", 'aide.index', ['aide.*'], 'aide', null, null, 'Aide', true),
                     self::entree('Contacter le support', 'support.contacter', ['support.*'], 'support', null, null, 'Support', true),
                 ],

@@ -47,16 +47,16 @@ new class extends Component
         <div class="mx-auto flex min-w-0 items-center gap-3">
             <a href="{{ auth()->user()->role === 'investisseur' ? route('portail.mon-compte') : route('dashboard') }}"
                wire:navigate class="flex items-center" title="{{ __('AMANAH — accueil') }}">
-                <x-application-logo class="logo-barre logo-clair h-10 transition-[height] duration-200" />
+                <x-application-logo class="logo-barre logo-clair h-14 transition-[height] duration-200" />
             </a>
 
             {{-- Repliée, la barre fait quatre rems : il n'y a place que pour une marque. --}}
-            <span class="logo-second h-8 w-px shrink-0 bg-white/20" aria-hidden="true"></span>
+            <span class="logo-second h-10 w-px shrink-0 bg-white/20" aria-hidden="true"></span>
 
             <a href="https://www.waqfdolelxamxam.sn" target="_blank" rel="noopener noreferrer"
                class="logo-second flex items-center" title="{{ __('Waqf Dolel Xamxam — ouvrir le site public') }}">
                 <img src="{{ asset('images/logo_waqf-petit.png') }}" alt="{{ __('Waqf Dolel Xamxam') }}"
-                     class="logo-barre logo-clair h-10 w-auto object-contain transition-[height] duration-200">
+                     class="logo-barre logo-clair h-14 w-auto object-contain transition-[height] duration-200">
             </a>
         </div>
 

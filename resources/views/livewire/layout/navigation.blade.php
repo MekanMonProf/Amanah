@@ -36,12 +36,32 @@ new class extends Component
 
     {{-- En-tête : logo, et le bouton qui replie la barre sur les grands écrans --}}
     <div class="flex h-20 shrink-0 items-center gap-2 border-b border-white/10 px-3">
-        <a href="{{ auth()->user()->role === 'investisseur' ? route('portail.mon-compte') : route('dashboard') }}"
-           wire:navigate class="flex min-w-0 flex-1 items-center justify-center">
-            <span class="flex items-center justify-center rounded-xl bg-white px-3 py-2">
+        {{--
+            Un seul fond clair pour les deux logos, plutôt qu'une boîte blanche
+            autour du premier.
+
+            Il ne s'agit pas de décor : les deux marques sont dessinées en vert
+            foncé, et posées directement sur la barre elles tombent à 2,8:1 et
+            2,5:1 — sous le seuil de 3:1 en deçà duquel un dessin ne se lit
+            plus. Sur blanc elles sont à 5,7:1 et 6,3:1.
+        --}}
+        {{-- Le fond épouse les deux marques au lieu de prendre toute la barre :
+             il en faut assez pour les détacher, pas davantage. --}}
+        <div class="mx-auto flex min-w-0 items-center gap-2 rounded-xl bg-white px-2.5 py-1.5">
+            <a href="{{ auth()->user()->role === 'investisseur' ? route('portail.mon-compte') : route('dashboard') }}"
+               wire:navigate class="flex items-center" title="{{ __('AMANAH — accueil') }}">
                 <x-application-logo class="logo-barre h-10 transition-[height] duration-200" />
-            </span>
-        </a>
+            </a>
+
+            {{-- Repliée, la barre fait quatre rems : il n'y a place que pour une marque. --}}
+            <span class="logo-second h-8 w-px shrink-0 bg-gray-200" aria-hidden="true"></span>
+
+            <a href="https://www.waqfdolelxamxam.sn" target="_blank" rel="noopener noreferrer"
+               class="logo-second flex items-center" title="{{ __('Waqf Dolel Xamxam — ouvrir le site public') }}">
+                <img src="{{ asset('images/logo_waqf-petit.png') }}" alt="{{ __('Waqf Dolel Xamxam') }}"
+                     class="logo-barre h-10 w-auto object-contain transition-[height] duration-200">
+            </a>
+        </div>
 
         <button type="button" x-on:click="replie = !replie"
                 class="hidden shrink-0 rounded-champ p-2 text-white/50 hover:bg-white/10 hover:text-white lg:block"

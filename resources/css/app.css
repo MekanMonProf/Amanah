@@ -77,6 +77,15 @@
         .barre-repliee .logo-barre {
             height: 2.25rem;
         }
+
+        /*
+         * Repliee, la barre fait quatre rems : la seconde marque et son filet
+         * n y tiennent pas. Reste celle de l application, qui est aussi le
+         * retour a l accueil.
+         */
+        .barre-repliee .logo-second {
+            display: none;
+        }
     }
 }
 

@@ -122,6 +122,7 @@ class Navigation
                     // Ses motifs étaient 'portail.*', ce qui gardait « Mon compte »
                     // allumé en lisant ses relevés. Chacun désigne désormais sa page.
                     self::entree('Mes relevés', 'portail.releves.index', ['portail.releves.*'], 'releves', null, 'investisseur', 'Relevés'),
+                    self::entree('Mes dividendes', 'portail.dividendes.index', ['portail.dividendes.*'], 'dividendes', null, 'investisseur', 'Dividendes'),
                     self::entree('Mes documents', 'portail.documents.index', ['portail.documents.*'], 'documents', null, 'investisseur', 'Documents'),
                     self::entree('Tableau de bord', 'dashboard', ['dashboard'], 'tableau', null, null, 'Tableau'),
                 ],
@@ -156,6 +157,10 @@ class Navigation
                     // d'emploi reserve a ceux qui savent deja s'en passer ne
                     // sert personne. Le detail de ce qu'on y lit se filtre page
                     // par page, dans App\Support\Aide.
+                    // Les documents de la direction s'adressent à tous : au
+                    // personnel comme aux investisseurs. D'où « pour tous »,
+                    // comme l'aide — ce n'est pas un module qui se paramètre.
+                    self::entree('Documents officiels', 'documents-officiels.index', ['documents-officiels.*'], 'documents', null, null, 'Officiels', true),
                     self::entree("Mode d'emploi", 'aide.index', ['aide.*'], 'aide', null, null, 'Aide', true),
                     self::entree('Contacter le support', 'support.contacter', ['support.*'], 'support', null, null, 'Support', true),
                 ],

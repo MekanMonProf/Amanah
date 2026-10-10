@@ -24,9 +24,12 @@ use App\Livewire\Gestionnaires\GestionnaireShow;
 use App\Livewire\JournalAudit;
 use App\Livewire\Auth\ChangerMotDePasseObligatoire;
 use App\Livewire\Auth\VerifierDeuxFaCode;
+use App\Livewire\DocumentsOfficiels;
+use App\Livewire\Portail\MesDividendes;
 use App\Livewire\Portail\MesDocuments;
 use App\Livewire\Portail\MesReleves;
 use App\Livewire\Portail\MonCompte;
+use App\Http\Controllers\DocumentOfficielController;
 use App\Http\Controllers\ReleveController;
 use App\Http\Controllers\AttestationController;
 use App\Http\Controllers\AttestationSuccessionController;
@@ -92,6 +95,7 @@ Route::middleware(['auth', 'doit.changer.mdp', 'deux.fa'])->group(function () {
     // Les attestations et reçus. Leurs PDF restent sur leurs propres routes,
     // partagées avec le personnel : chaque contrôleur y vérifie les droits.
     Route::get('/mon-compte/documents', MesDocuments::class)->name('portail.documents.index');
+    Route::get('/mon-compte/dividendes', MesDividendes::class)->name('portail.dividendes.index');
 });
 
 // Aide et support : ouverts a tout compte connecte, investisseur compris. Ils
@@ -102,6 +106,14 @@ Route::middleware(['auth', 'doit.changer.mdp', 'deux.fa'])->group(function () {
     Route::get('/aide', AideIndex::class)->name('aide.index');
     Route::get('/aide/{sujet}', AidePage::class)->name('aide.sujet');
     Route::get('/support', ContacterSupport::class)->name('support.contacter');
+
+    // Les documents officiels se lisent de tous — gestionnaires, investisseurs,
+    // lecture seule — et ne passent donc par aucun module. Le dépôt, lui, est
+    // réservé à la direction et à l'administration, et le composant le vérifie
+    // à chaque action plutôt que de s'en remettre à la seule vue.
+    Route::get('/documents-officiels', DocumentsOfficiels::class)->name('documents-officiels.index');
+    Route::get('/documents-officiels/{document}', [DocumentOfficielController::class, 'ouvrir'])
+        ->name('documents-officiels.ouvrir');
 });
 
 Route::middleware(['auth', 'doit.changer.mdp', 'deux.fa'])->group(function () {

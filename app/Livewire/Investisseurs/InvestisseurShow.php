@@ -51,7 +51,7 @@ class InvestisseurShow extends Component
      */
     protected function repliesParDefaut(): array
     {
-        return ['releves' => true, 'documents' => true];
+        return ['releves' => true, 'documents' => true, 'dividendes' => true];
     }
 
     public bool $afficherFormulaireTransfert = false;
@@ -381,6 +381,9 @@ class InvestisseurShow extends Component
             // Le gestionnaire en a besoin pour celui qui appelle sans pouvoir se
             // connecter — l'essentiel des dossiers.
             'periodesReleve' => \App\Support\PeriodesReleve::pour($this->investisseur),
+            // Le même historique que l'investisseur voit dans son espace : c'est
+            // le gestionnaire qui répond quand on l'appelle pour en discuter.
+            'historiqueDividendes' => \App\Support\HistoriqueDividendes::pour($this->investisseur),
             // Les attestations et reçus du dossier, rassemblés : ils existaient
             // déjà, mais chacun seulement sur la ligne qui l'a fait naître.
             'documentsDuDossier' => \App\Support\DocumentsDuDossier::pour($this->investisseur),

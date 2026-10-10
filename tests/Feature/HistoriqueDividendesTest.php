@@ -127,6 +127,28 @@ class HistoriqueDividendesTest extends TestCase
             ->assertSee(\App\Support\Montant::avecDevise(18000), false);
     }
 
+    public function test_la_fiche_du_gestionnaire_porte_le_meme_historique(): void
+    {
+        $this->dividende('2026-05-01', actions: 12, taux: 1500, montant: 18000);
+
+        $personnel = User::create([
+            'nom' => 'Essai',
+            'prenom' => 'Administration',
+            'email' => 'dividendes.administration@local.test',
+            'password' => Hash::make('quelquechose'),
+            'role' => 'administrateur',
+            'actif' => true,
+            'doit_changer_mot_de_passe' => false,
+        ]);
+
+        // Le bloc arrive replié : c'est son intitulé et son compte qui se lisent.
+        $this->actingAs($personnel)
+            ->get(route('investisseurs.show', $this->dossier))
+            ->assertOk()
+            ->assertSee('Dividendes perçus')
+            ->assertSee('(1)');
+    }
+
     // ---- Les pièces du décor ----------------------------------------------
 
     private function dossierEnBase(string $identifiant): Investisseur

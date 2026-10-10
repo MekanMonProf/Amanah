@@ -622,6 +622,24 @@
         @endif
 
         {{--
+            Ce que le dossier a touché, mois par mois. L'historique des achats
+            dit ce qui a été acheté, les écritures ce qui a bougé ; aucun des
+            deux ne montrait la suite des dividendes, qui est pourtant ce dont
+            l'actionnaire parle quand il appelle.
+        --}}
+        @if ($historiqueDividendes->isNotEmpty())
+            <div class="mt-3">
+                <x-bloc-repliable :titre="__('Dividendes perçus')" cle="dividendes"
+                                  :nombre="$historiqueDividendes->count()" :replie="$this->estReplie('dividendes')">
+                    <div class="overflow-hidden rounded-carte border border-gray-200 bg-white">
+                        <x-liste-dividendes :historique="$historiqueDividendes"
+                                            :plusieurs-comptes="$investisseur->comptes->count() > 1" />
+                    </div>
+                </x-bloc-repliable>
+            </div>
+        @endif
+
+        {{--
             Les attestations et reçus, au même endroit que les relevés : ils se
             remettent dans les mêmes circonstances, souvent au téléphone. Replié
             de même — la liste est longue dès qu'un dossier a vécu.

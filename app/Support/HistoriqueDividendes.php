@@ -36,13 +36,60 @@ class HistoriqueDividendes
             return collect();
         }
 
-        return \App\Models\Dividende::whereIn('compte_id', $comptes->keys())
+        $mois = \App\Models\Dividende::whereIn('compte_id', $comptes->keys())
             ->where('statut', 'credite')
             ->orderByDesc('periode')
             ->get()
             ->groupBy(fn ($dividende) => $dividende->periode->format('Y-m'))
             ->map(fn ($dividendes, $mois) => self::decrireLeMois($dividendes, $mois, $comptes))
             ->values();
+
+        return self::comparerAuMoisPrecedent($mois);
+    }
+
+    /**
+     * La hausse ou la baisse par rapport au mois d'avant.
+     *
+     * « Le mois d'avant » est le précédent de cette liste, et non celui du
+     * calendrier : un dossier ouvert en cours d'année, ou un mois sans
+     * distribution, laisse des trous. Comparer à un mois absent reviendrait à
+     * comparer à zéro et afficherait une envolée qui n'a pas eu lieu.
+     *
+     * La comparaison porte sur le total du mois, pas sur chaque ligne : un
+     * dossier qui a un compte commercial et un compte waqf en produit deux,
+     * et c'est bien la somme perçue qui monte ou qui descend.
+     */
+    private static function comparerAuMoisPrecedent(Collection $mois): Collection
+    {
+        // La liste va du plus récent au plus ancien : le précédent est donc le
+        // suivant dans l'ordre de lecture.
+        return $mois->map(function (array $courant, int $rang) use ($mois) {
+            $precedent = $mois[$rang + 1] ?? null;
+
+            $courant['variation'] = $precedent === null
+                ? null
+                : self::ecart($courant['montant'], $precedent['montant']);
+
+            return $courant;
+        });
+    }
+
+    /** @return array{sens:string, pourcentage:?float, precedent:float} */
+    private static function ecart(float $montant, float $precedent): array
+    {
+        $sens = match (true) {
+            $montant > $precedent => 'hausse',
+            $montant < $precedent => 'baisse',
+            default => 'stable',
+        };
+
+        return [
+            'sens' => $sens,
+            // Un mois précédent à zéro ne donne pas de pourcentage : on garde la
+            // flèche, qui dit le sens, et on tait le rapport, qui n'existe pas.
+            'pourcentage' => $precedent > 0 ? ($montant - $precedent) / $precedent * 100 : null,
+            'precedent' => $precedent,
+        ];
     }
 
     /**

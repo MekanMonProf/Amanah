@@ -34,9 +34,32 @@
                         <tr x-show="ouvert" class="hover:bg-gray-50">
                             {{-- Le mois ne s'écrit qu'une fois, même quand deux comptes
                                  l'ont touché : le répéter le ferait lire comme deux
-                                 périodes distinctes. --}}
+                                 périodes distinctes. La flèche le suit, car elle
+                                 compare des totaux de mois et non des lignes. --}}
                             <td class="whitespace-nowrap px-4 py-3 font-semibold text-gray-900">
-                                {{ $rang === 0 ? $periode['libelle'] : '' }}
+                                @if ($rang === 0)
+                                    {{ $periode['libelle'] }}
+
+                                    @if ($periode['variation'])
+                                        @php($variation = $periode['variation'])
+                                        @php($pourcentage = $variation['pourcentage'])
+                                        <span class="ms-1 inline-flex items-center gap-0.5 text-xs font-normal
+                                                     {{ $variation['sens'] === 'hausse' ? 'text-primaire-700'
+                                                        : ($variation['sens'] === 'baisse' ? 'text-red-600' : 'text-gray-400') }}"
+                                              title="{{ __('Mois précédent : :montant', ['montant' => \App\Support\Montant::avecDevise($variation['precedent'])]) }}">
+                                            <span aria-hidden="true">{{ $variation['sens'] === 'hausse' ? '▲' : ($variation['sens'] === 'baisse' ? '▼' : '=') }}</span>
+                                            @if ($pourcentage !== null && $variation['sens'] !== 'stable')
+                                                <bdi>{{ ($pourcentage > 0 ? '+' : '') . \App\Support\Montant::format($pourcentage) }}&#8239;%</bdi>
+                                            @endif
+                                            {{-- Dit en toutes lettres pour qui n'a pas la couleur :
+                                                 daltonisme, impression, lecteur d'écran. --}}
+                                            <span class="sr-only">
+                                                {{ $variation['sens'] === 'hausse' ? __('en hausse')
+                                                   : ($variation['sens'] === 'baisse' ? __('en baisse') : __('stable')) }}
+                                            </span>
+                                        </span>
+                                    @endif
+                                @endif
                             </td>
                             @if ($plusieursComptes)
                                 <td class="whitespace-nowrap px-4 py-3 text-gray-600">

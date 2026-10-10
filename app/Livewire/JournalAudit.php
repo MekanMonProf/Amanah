@@ -73,6 +73,34 @@ class JournalAudit extends Component
         return $query;
     }
 
+    /**
+     * Ce que le filtre courant ramène, avant d'en lire les vingt-cinq premières.
+     *
+     * L'écran montrait une page de résultats sans jamais dire combien il y en
+     * avait, ni sur quelle étendue. Or on vient ici avec une question de
+     * volume — « combien de réinitialisations de mot de passe, et depuis
+     * quand » — à laquelle une page paginée ne répond pas.
+     *
+     * Les chiffres suivent les filtres : ils décrivent ce qu'on regarde, pas le
+     * journal entier.
+     *
+     * @return array{actions:int, personnes:int, premiere:?string, derniere:?string}
+     */
+    public function getPositionProperty(): array
+    {
+        $bornes = $this->requeteFiltree()
+            ->reorder()
+            ->selectRaw('MIN(created_at) AS premiere, MAX(created_at) AS derniere')
+            ->first();
+
+        return [
+            'actions' => $this->requeteFiltree()->count(),
+            'personnes' => $this->requeteFiltree()->distinct()->count('user_id'),
+            'premiere' => $bornes?->premiere,
+            'derniere' => $bornes?->derniere,
+        ];
+    }
+
     public function render()
     {
         return view('livewire.journal-audit', [

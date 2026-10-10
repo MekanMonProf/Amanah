@@ -16,7 +16,47 @@
             </a>
         </div>
     </div>
-    <div class="mb-6"></div>
+    {{--
+        Ce que le filtre ramène. La page de résultats ne disait ni combien il y
+        en avait, ni sur quelle étendue — or on vient ici avec une question de
+        volume, à laquelle vingt-cinq lignes sur une page ne répondent pas.
+    --}}
+    <div class="mb-6 mt-4 overflow-hidden rounded-carte bg-nuit-900 shadow-sm">
+        <div class="flex flex-col gap-6 p-6 lg:flex-row lg:items-center lg:gap-10">
+            <div class="lg:w-56 lg:shrink-0">
+                <x-surtitre class="text-white/40">{{ __("Journal") }}</x-surtitre>
+                <p class="mt-1 text-lg font-bold text-white">
+                    {{ $recherche || $filtreAction || $filtreEntite || $dateDebut || $dateFin
+                        ? __("Ce que le filtre ramène")
+                        : __("Tout ce qui a été tracé") }}
+                </p>
+                <p class="mt-1 text-sm text-white/60">
+                    @if ($this->position['premiere'])
+                        {{ __("Depuis le :date", ['date' => \Illuminate\Support\Carbon::parse($this->position['premiere'])->format('d/m/Y')]) }}
+                    @else
+                        {{ __("Aucune action tracée.") }}
+                    @endif
+                </p>
+            </div>
+
+            <div class="grid flex-1 grid-cols-1 gap-5 sm:grid-cols-3 lg:gap-6 lg:divide-x lg:divide-white/10 rtl:lg:divide-x-reverse">
+                @foreach ([
+                    ['etiquette' => __("Actions tracées"), 'valeur' => \App\Support\Montant::format($this->position['actions']), 'accent' => false],
+                    ['etiquette' => __("Personnes concernées"), 'valeur' => \App\Support\Montant::format($this->position['personnes']), 'accent' => false],
+                    ['etiquette' => __("Dernière action"), 'valeur' => $this->position['derniere']
+                        ? \Illuminate\Support\Carbon::parse($this->position['derniere'])->format('d/m/Y H:i')
+                        : '—', 'accent' => true],
+                ] as $i => $chiffre)
+                    <div class="{{ $i > 0 ? 'lg:ps-6' : '' }}">
+                        <p class="text-xs font-medium uppercase tracking-wide text-white/50">{{ $chiffre['etiquette'] }}</p>
+                        <p class="mt-1 text-xl font-bold sm:text-2xl {{ $chiffre['accent'] ? 'text-primaire-400' : 'text-white' }}">
+                            <bdi>{{ $chiffre['valeur'] }}</bdi>
+                        </p>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
 
     <div class="flex flex-col sm:flex-row flex-wrap gap-3 mb-4">
         <input type="text" wire:model.live.debounce.300ms="recherche"

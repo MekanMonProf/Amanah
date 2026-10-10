@@ -26,12 +26,25 @@
         <div class="min-h-screen lg:grid lg:grid-cols-[22rem_1fr] xl:grid-cols-[28rem_1fr]">
             <div class="flex flex-col justify-between bg-nuit-900 px-6 py-6 lg:px-10 lg:py-12">
                 <div>
-                    {{-- Le logo ne tient pas sur fond sombre : il garde ici le même
-                         cartouche blanc que dans la barre latérale. --}}
-                    <a href="{{ route('login') }}" wire:navigate
-                       class="inline-flex items-center justify-center rounded-xl bg-white px-3 py-2">
-                        <x-application-logo class="h-8 lg:h-10" />
-                    </a>
+                    {{--
+                        Les deux marques, comme dans la barre latérale : sans
+                        cartouche, éclaircies par le filtre, et dimensionnées sur
+                        leur encre — celle d'AndDox ne remplit que la moitié de
+                        son carré quand le sceau en remplit les quatre cinquièmes.
+                    --}}
+                    <div class="flex items-center gap-3">
+                        <a href="{{ route('login') }}" wire:navigate class="flex items-center">
+                            <x-application-logo class="logo-clair h-16 lg:h-24" />
+                        </a>
+
+                        <span class="h-10 w-px shrink-0 bg-white/20 lg:h-14" aria-hidden="true"></span>
+
+                        <a href="https://www.waqfdolelxamxam.sn" target="_blank" rel="noopener noreferrer"
+                           class="flex items-center" title="{{ __('Waqf Dolel Xamxam — ouvrir le site public') }}">
+                            <img src="{{ asset('images/logo_waqf-petit.png') }}" alt="{{ __('Waqf Dolel Xamxam') }}"
+                                 class="logo-clair h-11 w-auto object-contain lg:h-16">
+                        </a>
+                    </div>
 
                     <p class="mt-6 text-2xl font-bold text-white lg:mt-10 lg:text-3xl">
                         {{ config('app.name', 'Amanah') }}

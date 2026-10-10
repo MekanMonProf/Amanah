@@ -87,6 +87,19 @@
             display: none;
         }
     }
+
+    /*
+     * Les deux logos sont dessines en vert fonce, et la barre est vert nuit :
+     * poses tels quels ils s y noient. Plutot que de les encadrer de blanc, on
+     * eclaircit leur trace.
+     *
+     * brightness releve la luminosite, saturate rattrape le lavage qu elle
+     * provoque. Le filtre ne touche ni a la transparence ni a la forme : c est
+     * la meme marque, rendue lisible sur fond sombre.
+     */
+    .logo-clair {
+        filter: brightness(1.75) saturate(1.3);
+    }
 }
 
 @layer components {

@@ -58,14 +58,13 @@
                     Le pied tient dans le panneau sombre, centré comme tout ce qu'il porte.
 
                     Il reste visible sous lg, où ce panneau se réduit à un bandeau
-                    d'en-tête : trois lignes courtes n'y encombrent rien, et les
+                    d'en-tête : deux lignes courtes n'y encombrent rien, et les
                     cacher aurait privé les téléphones du lien comme de la mention.
 
                     L'année se calcule : écrite en dur, elle aurait vieilli au
                     1er janvier sans que personne y pense.
                 --}}
                 <div class="mt-8 space-y-1 text-xs text-white/30">
-                    <p class="hidden lg:block">{{ __("Waqf Dolel Xamxam") }}</p>
                     <p>
                         <a href="https://www.waqfdolelxamxam.sn" target="_blank" rel="noopener noreferrer"
                            class="transition hover:text-white/70 hover:underline">www.waqfdolelxamxam.sn</a>

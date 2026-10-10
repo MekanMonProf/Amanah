@@ -127,7 +127,15 @@ class HistoriqueDividendesTest extends TestCase
             ->assertSee(\App\Support\Montant::avecDevise(18000), false);
     }
 
-    // ---- La hausse et la baisse d'un mois sur l'autre ----------------------
+    // ---- La hausse et la baisse du taux, d'un mois sur l'autre -----------
+
+    /** Le taux de l'unique compte du dossier, pour un mois donné. */
+    private function variation(string $periode): ?array
+    {
+        return HistoriqueDividendes::pour($this->dossier)
+            ->firstWhere('periode', $periode)['lignes']
+            ->first()['variation'];
+    }
 
     public function test_la_variation_dit_le_sens_et_le_rapport(): void
     {
@@ -135,13 +143,11 @@ class HistoriqueDividendesTest extends TestCase
         $this->dividende('2026-02-01', actions: 10, taux: 1200, montant: 12000);
         $this->dividende('2026-03-01', actions: 10, taux: 900, montant: 9000);
 
-        $historique = HistoriqueDividendes::pour($this->dossier)->keyBy('periode');
+        $this->assertSame('baisse', $this->variation('2026-03')['sens']);
+        $this->assertSame(-25.0, $this->variation('2026-03')['pourcentage']);
 
-        $this->assertSame('baisse', $historique['2026-03']['variation']['sens']);
-        $this->assertSame(-25.0, $historique['2026-03']['variation']['pourcentage']);
-
-        $this->assertSame('hausse', $historique['2026-02']['variation']['sens']);
-        $this->assertSame(20.0, $historique['2026-02']['variation']['pourcentage']);
+        $this->assertSame('hausse', $this->variation('2026-02')['sens']);
+        $this->assertSame(20.0, $this->variation('2026-02')['pourcentage']);
     }
 
     public function test_le_mois_le_plus_ancien_ne_se_compare_a_rien(): void
@@ -149,10 +155,8 @@ class HistoriqueDividendesTest extends TestCase
         $this->dividende('2026-01-01', actions: 10, taux: 1000, montant: 10000);
         $this->dividende('2026-02-01', actions: 10, taux: 1000, montant: 10000);
 
-        $historique = HistoriqueDividendes::pour($this->dossier)->keyBy('periode');
-
-        $this->assertNull($historique['2026-01']['variation'], "le premier mois n'a pas de précédent");
-        $this->assertSame('stable', $historique['2026-02']['variation']['sens']);
+        $this->assertNull($this->variation('2026-01'), "le premier mois n'a pas de précédent");
+        $this->assertSame('stable', $this->variation('2026-02')['sens']);
     }
 
     public function test_un_mois_manquant_ne_fabrique_pas_une_envolee(): void
@@ -162,37 +166,29 @@ class HistoriqueDividendesTest extends TestCase
         $this->dividende('2026-01-01', actions: 10, taux: 1000, montant: 10000);
         $this->dividende('2026-03-01', actions: 10, taux: 1100, montant: 11000);
 
-        $variation = HistoriqueDividendes::pour($this->dossier)->firstOrFail()['variation'];
+        $variation = $this->variation('2026-03');
 
         $this->assertSame('hausse', $variation['sens']);
-        $this->assertSame(10000.0, $variation['precedent']);
+        $this->assertSame(1000.0, $variation['precedent']);
         $this->assertEqualsWithDelta(10.0, $variation['pourcentage'], 0.01);
     }
 
-    public function test_un_mois_precedent_a_zero_garde_la_fleche_sans_le_rapport(): void
-    {
-        $this->dividende('2026-01-01', actions: 0, taux: 1000, montant: 0);
-        $this->dividende('2026-02-01', actions: 10, taux: 1000, montant: 10000);
-
-        $variation = HistoriqueDividendes::pour($this->dossier)->firstOrFail()['variation'];
-
-        $this->assertSame('hausse', $variation['sens']);
-        $this->assertNull($variation['pourcentage'], 'aucun rapport ne se calcule depuis zéro');
-    }
-
-    public function test_la_variation_porte_sur_le_total_du_mois(): void
+    public function test_le_taux_suit_son_propre_compte(): void
     {
         $waqf = $this->compte($this->dossier, 'waqf');
 
-        // Le commercial baisse, le waqf monte davantage : le mois monte.
+        // Le commercial monte, le waqf descend le même mois : chaque ligne
+        // porte sa propre flèche, car chaque catégorie a son barème.
         $this->dividende('2026-01-01', actions: 10, taux: 1000, montant: 10000);
-        $this->dividende('2026-02-01', actions: 8, taux: 1000, montant: 8000);
-        $this->dividende('2026-02-01', actions: 5, taux: 1000, montant: 5000, compte: $waqf);
+        $this->dividende('2026-01-01', actions: 5, taux: 800, montant: 4000, compte: $waqf);
+        $this->dividende('2026-02-01', actions: 10, taux: 1200, montant: 12000);
+        $this->dividende('2026-02-01', actions: 5, taux: 600, montant: 3000, compte: $waqf);
 
-        $fevrier = HistoriqueDividendes::pour($this->dossier)->firstOrFail();
+        $fevrier = HistoriqueDividendes::pour($this->dossier)->firstWhere('periode', '2026-02');
+        $parTaux = $fevrier['lignes']->keyBy('taux');
 
-        $this->assertSame(13000.0, $fevrier['montant']);
-        $this->assertSame('hausse', $fevrier['variation']['sens']);
+        $this->assertSame('hausse', $parTaux[1200.0]['variation']['sens']);
+        $this->assertSame('baisse', $parTaux[600.0]['variation']['sens']);
     }
 
     public function test_la_fiche_du_gestionnaire_porte_le_meme_historique(): void

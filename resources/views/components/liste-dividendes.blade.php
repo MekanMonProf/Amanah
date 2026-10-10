@@ -8,7 +8,7 @@
 ])
 
 <div class="overflow-x-auto">
-    <table class="w-full min-w-[560px] text-sm">
+    <table class="w-full min-w-[580px] text-sm">
         <thead class="bg-gray-50 text-start text-xs uppercase tracking-wide text-gray-500">
             <tr>
                 <th class="px-4 py-3 text-start font-semibold">{{ __("Période") }}</th>
@@ -34,19 +34,31 @@
                         <tr x-show="ouvert" class="hover:bg-gray-50">
                             {{-- Le mois ne s'écrit qu'une fois, même quand deux comptes
                                  l'ont touché : le répéter le ferait lire comme deux
-                                 périodes distinctes. La flèche le suit, car elle
-                                 compare des totaux de mois et non des lignes. --}}
+                                 périodes distinctes. --}}
                             <td class="whitespace-nowrap px-4 py-3 font-semibold text-gray-900">
-                                @if ($rang === 0)
-                                    {{ $periode['libelle'] }}
+                                {{ $rang === 0 ? $periode['libelle'] : '' }}
+                            </td>
+                            @if ($plusieursComptes)
+                                <td class="whitespace-nowrap px-4 py-3 text-gray-600">
+                                    {{ __(\App\Support\Libelles::categorie($ligne['compte']?->categorie)) }}
+                                </td>
+                            @endif
+                            <td class="whitespace-nowrap px-4 py-3 text-end text-gray-600">
+                                {{ \App\Support\Montant::format($ligne['actions']) }}
+                            </td>
 
-                                    @if ($periode['variation'])
-                                        @php($variation = $periode['variation'])
+                            {{-- La flèche tient à côté du taux qu'elle qualifie, et le
+                                 suit compte par compte : le commercial et le waqf ont
+                                 chacun leur barème. --}}
+                            <td class="whitespace-nowrap px-4 py-3 text-end text-gray-600">
+                                <span class="inline-flex items-center justify-end gap-1.5">
+                                    @if ($ligne['variation'] ?? null)
+                                        @php($variation = $ligne['variation'])
                                         @php($pourcentage = $variation['pourcentage'])
-                                        <span class="ms-1 inline-flex items-center gap-0.5 text-xs font-normal
+                                        <span class="inline-flex items-center gap-0.5 text-xs
                                                      {{ $variation['sens'] === 'hausse' ? 'text-primaire-700'
                                                         : ($variation['sens'] === 'baisse' ? 'text-red-600' : 'text-gray-400') }}"
-                                              title="{{ __('Mois précédent : :montant', ['montant' => \App\Support\Montant::avecDevise($variation['precedent'])]) }}">
+                                              title="{{ __('Mois précédent : :montant', ['montant' => \App\Support\Montant::avecDevise($variation['precedent'], 2)]) }}">
                                             <span aria-hidden="true">{{ $variation['sens'] === 'hausse' ? '▲' : ($variation['sens'] === 'baisse' ? '▼' : '=') }}</span>
                                             @if ($pourcentage !== null && $variation['sens'] !== 'stable')
                                                 <bdi>{{ ($pourcentage > 0 ? '+' : '') . \App\Support\Montant::format($pourcentage) }}&#8239;%</bdi>
@@ -59,19 +71,10 @@
                                             </span>
                                         </span>
                                     @endif
-                                @endif
+                                    <bdi>{{ \App\Support\Montant::avecDevise($ligne['taux'], 2) }}</bdi>
+                                </span>
                             </td>
-                            @if ($plusieursComptes)
-                                <td class="whitespace-nowrap px-4 py-3 text-gray-600">
-                                    {{ __(\App\Support\Libelles::categorie($ligne['compte']?->categorie)) }}
-                                </td>
-                            @endif
-                            <td class="whitespace-nowrap px-4 py-3 text-end text-gray-600">
-                                {{ \App\Support\Montant::format($ligne['actions']) }}
-                            </td>
-                            <td class="whitespace-nowrap px-4 py-3 text-end text-gray-600">
-                                <bdi>{{ \App\Support\Montant::avecDevise($ligne['taux'], 2) }}</bdi>
-                            </td>
+
                             <td class="whitespace-nowrap px-4 py-3 text-end font-semibold text-primaire-700">
                                 <bdi>{{ \App\Support\Montant::avecDevise($ligne['montant']) }}</bdi>
                             </td>

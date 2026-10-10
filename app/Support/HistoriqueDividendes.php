@@ -44,34 +44,50 @@ class HistoriqueDividendes
             ->map(fn ($dividendes, $mois) => self::decrireLeMois($dividendes, $mois, $comptes))
             ->values();
 
-        return self::comparerAuMoisPrecedent($mois);
+        return self::comparerLesTaux($mois);
     }
 
     /**
-     * La hausse ou la baisse par rapport au mois d'avant.
+     * La hausse ou la baisse du bénéfice par action, d'un mois sur l'autre.
      *
-     * « Le mois d'avant » est le précédent de cette liste, et non celui du
-     * calendrier : un dossier ouvert en cours d'année, ou un mois sans
-     * distribution, laisse des trous. Comparer à un mois absent reviendrait à
-     * comparer à zéro et afficherait une envolée qui n'a pas eu lieu.
+     * La comparaison suit chaque compte séparément, et non le total du mois :
+     * le commercial et le waqf ont chacun leur barème, et mêler leurs taux ne
+     * dirait rien de ni l'un ni l'autre. La flèche s'affiche donc sur la ligne,
+     * à côté du taux qu'elle qualifie.
      *
-     * La comparaison porte sur le total du mois, pas sur chaque ligne : un
-     * dossier qui a un compte commercial et un compte waqf en produit deux,
-     * et c'est bien la somme perçue qui monte ou qui descend.
+     * « Le mois d'avant » est le mois précédent où ce compte a touché quelque
+     * chose, et non celui du calendrier : un compte ouvert en cours d'année,
+     * ou un mois sans distribution, laisse des trous. Comparer à un mois absent
+     * reviendrait à comparer à zéro et afficherait une envolée qui n'a pas eu
+     * lieu.
      */
-    private static function comparerAuMoisPrecedent(Collection $mois): Collection
+    private static function comparerLesTaux(Collection $mois): Collection
     {
-        // La liste va du plus récent au plus ancien : le précédent est donc le
-        // suivant dans l'ordre de lecture.
-        return $mois->map(function (array $courant, int $rang) use ($mois) {
-            $precedent = $mois[$rang + 1] ?? null;
+        $precedents = [];
+        $enrichis = [];
 
-            $courant['variation'] = $precedent === null
-                ? null
-                : self::ecart($courant['montant'], $precedent['montant']);
+        // La liste va du plus récent au plus ancien ; on la parcourt à l'envers
+        // pour garder en mémoire, compte par compte, le dernier taux rencontré,
+        // puis on la remet dans son ordre de lecture.
+        //
+        // On reconstruit plutôt qu'on ne modifie : les éléments sont des
+        // tableaux, que PHP copie par valeur — une écriture dans la boucle ne
+        // reviendrait pas dans la collection.
+        foreach ($mois->reverse() as $periode) {
+            $periode['lignes'] = $periode['lignes']->map(function (array $ligne) use (&$precedents) {
+                $identifiant = $ligne['compte']?->id ?? 0;
+                $precedent = $precedents[$identifiant] ?? null;
 
-            return $courant;
-        });
+                $ligne['variation'] = $precedent === null ? null : self::ecart($ligne['taux'], $precedent);
+                $precedents[$identifiant] = $ligne['taux'];
+
+                return $ligne;
+            });
+
+            $enrichis[] = $periode;
+        }
+
+        return collect(array_reverse($enrichis));
     }
 
     /** @return array{sens:string, pourcentage:?float, precedent:float} */

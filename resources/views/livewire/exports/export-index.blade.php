@@ -29,6 +29,13 @@
             'pdf' => 'export.radiations.global.pdf',
             'date' => true,
         ],
+        [
+            'titre' => "Dons",
+            'note' => "Dons d'actions et de solde, avec le donateur et le bénéficiaire.",
+            'csv' => 'export.dons.global.csv',
+            'pdf' => 'export.dons.global.pdf',
+            'date' => true,
+        ],
     ];
 
     // Le journal d'audit suit le même droit d'accès que l'écran qui l'affiche.

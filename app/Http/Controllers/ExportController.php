@@ -399,6 +399,79 @@ class ExportController extends Controller
         return $this->telechargerPdf($pdf, 'Radiations_Toutes_' . now()->format('Y-m-d') . '.pdf');
     }
 
+    // --- Dons (liste globale) --------------------------------------------
+
+    /**
+     * Un don relie deux comptes, et c'est ce qui le distingue des autres
+     * exports globaux.
+     *
+     * Le filtre de portefeuille ne peut donc pas suivre un chemin unique vers
+     * l'investisseur : un gestionnaire doit voir les dons partis de ses
+     * dossiers comme ceux qui y sont arrivés. Les deux le concernent — le
+     * premier fait baisser un solde qu'il suit, le second le fait monter.
+     */
+    protected function donsGlobauxFiltres(Request $request)
+    {
+        $query = \App\Models\Don::with(['compteSource.investisseur', 'compteDestinataire.investisseur'])
+            ->orderBy('date_don');
+
+        if (Auth::user()->role === 'gestionnaire') {
+            $portefeuille = Auth::user()->gestionnaire?->id;
+
+            $query->where(function ($q) use ($portefeuille) {
+                $q->whereHas('compteSource.investisseur', fn ($i) => $i->where('gestionnaire_id', $portefeuille))
+                    ->orWhereHas('compteDestinataire.investisseur', fn ($i) => $i->where('gestionnaire_id', $portefeuille));
+            });
+        }
+
+        return $this->filtresDates($request, $query, 'date_don');
+    }
+
+    public function donsGlobalCsv(Request $request)
+    {
+        $dons = $this->donsGlobauxFiltres($request)->get();
+
+        return response()->streamDownload(function () use ($dons) {
+            $flux = fopen('php://output', 'w');
+            fwrite($flux, self::BOM);
+            // Pas de colonne « Sens » : donné ou reçu n'a de sens que depuis un
+            // compte, et cette liste n'en regarde aucun en particulier.
+            fputcsv($flux, [
+                'Date', 'Type', 'Donateur', 'Identifiant donateur', 'Compte donateur',
+                'Bénéficiaire', 'Identifiant bénéficiaire', 'Compte bénéficiaire',
+                'Actions', 'Montant', 'Motif',
+            ], ';');
+
+            foreach ($dons as $d) {
+                fputcsv($flux, [
+                    $d->date_don->format('d/m/Y'),
+                    $d->type_don === 'actions' ? 'Actions' : 'Solde',
+                    trim(($d->compteSource->investisseur->nom ?? '') . ' ' . ($d->compteSource->investisseur->prenom ?? '')),
+                    $d->compteSource->investisseur->identifiant_externe ?? '',
+                    $d->compteSource->numero_compte ?? '',
+                    trim(($d->compteDestinataire->investisseur->nom ?? '') . ' ' . ($d->compteDestinataire->investisseur->prenom ?? '')),
+                    $d->compteDestinataire->investisseur->identifiant_externe ?? '',
+                    $d->compteDestinataire->numero_compte ?? '',
+                    $d->nombre_actions,
+                    $d->montant,
+                    $d->motif,
+                ], ';');
+            }
+
+            fclose($flux);
+        }, 'dons_tous_' . now()->format('Y-m-d') . '.csv', ['Content-Type' => 'text/csv; charset=UTF-8']);
+    }
+
+    public function donsGlobalPdf(Request $request)
+    {
+        $dons = $this->donsGlobauxFiltres($request)->get();
+
+        $pdf = Pdf::loadView('pdf.liste-dons-global', ['dons' => $dons, 'dateGeneration' => now()])
+            ->setPaper('a4', 'landscape');
+
+        return $this->telechargerPdf($pdf, 'Dons_Tous_' . now()->format('Y-m-d') . '.pdf');
+    }
+
     // --- Investisseurs (liste globale) -----------------------------------
     protected function investisseursFiltres(Request $request)
     {

@@ -128,6 +128,8 @@ Route::middleware(['auth', 'doit.changer.mdp', 'deux.fa'])->group(function () {
         Route::get('/exports/ecritures/pdf', [ExportController::class, 'ecrituresGlobalPdf'])->name('export.ecritures.global.pdf');
         Route::get('/exports/radiations/csv', [ExportController::class, 'radiationsGlobalCsv'])->name('export.radiations.global.csv');
         Route::get('/exports/radiations/pdf', [ExportController::class, 'radiationsGlobalPdf'])->name('export.radiations.global.pdf');
+        Route::get('/exports/dons/csv', [ExportController::class, 'donsGlobalCsv'])->name('export.dons.global.csv');
+        Route::get('/exports/dons/pdf', [ExportController::class, 'donsGlobalPdf'])->name('export.dons.global.pdf');
         Route::get('/comptes/{compte}/achats/export/csv', [ExportController::class, 'achatsCsv'])->name('export.achats.csv');
         Route::get('/comptes/{compte}/achats/export/pdf', [ExportController::class, 'achatsPdf'])->name('export.achats.pdf');
         Route::get('/comptes/{compte}/ecritures/export/csv', [ExportController::class, 'ecrituresCsv'])->name('export.ecritures.csv');

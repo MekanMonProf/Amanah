@@ -47,7 +47,7 @@ new class extends Component
         <div class="mx-auto flex min-w-0 items-center gap-3">
             <a href="{{ auth()->user()->role === 'investisseur' ? route('portail.mon-compte') : route('dashboard') }}"
                wire:navigate class="flex items-center" title="{{ __('AMANAH — accueil') }}">
-                <x-application-logo class="logo-barre logo-clair h-14 transition-[height] duration-200" />
+                <x-application-logo class="logo-barre logo-clair h-20 transition-[height] duration-200" />
             </a>
 
             {{-- Repliée, la barre fait quatre rems : il n'y a place que pour une marque. --}}

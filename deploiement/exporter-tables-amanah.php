@@ -44,6 +44,25 @@ const RUNTIME = [
 ];
 
 $base = config('database.connections.mysql.database');
+
+/**
+ * Jamais depuis la base de démonstration.
+ *
+ * Le `.env` bascule entre les vrais dossiers et le jeu fictif, et rien à
+ * l'écran de cet export ne distingue les deux : il sortirait trente-quatre
+ * actionnaires inventés sous les mêmes noms de tables, et l'import les
+ * installerait en ligne à la place des quatre cent douze vrais. Le refus ici
+ * répond à celui des scripts de démonstration, qui refusent symétriquement de
+ * travailler sur une base qui n'est pas la leur.
+ */
+if (str_contains($base, 'demo')) {
+    echo "Refus : la base active est « {$base} ».\n";
+    echo "C'est le jeu de démonstration — ses dossiers sont fictifs.\n\n";
+    echo "Revenez d'abord aux vrais dossiers :\n";
+    echo "  php database/demo/basculer.php reelle\n";
+    exit(1);
+}
+
 $toutes = array_map(fn ($l) => array_values((array) $l)[0], DB::select('SHOW TABLES'));
 sort($toutes);
 

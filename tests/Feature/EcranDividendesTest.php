@@ -47,7 +47,7 @@ class EcranDividendesTest extends TestCase
             ->assertSee('Ce qui a été distribué')
             ->assertSee('Périodes fixées')
             ->assertSee('Total distribué')
-            ->assertSee(Montant::avecDevise($this->totalCredite()), false);
+            ->assertSee(Montant::format($this->totalCredite()), false);
     }
 
     public function test_un_dividende_annule_ne_gonfle_pas_le_total(): void
@@ -59,8 +59,8 @@ class EcranDividendesTest extends TestCase
         $this->actingAs($this->administrateur())
             ->get(route('dividendes.calculer'))
             ->assertOk()
-            ->assertSee(Montant::avecDevise($avant), false)
-            ->assertDontSee(Montant::avecDevise($avant + 777000), false);
+            ->assertSee(Montant::format($avant), false)
+            ->assertDontSee(Montant::format($avant + 777000), false);
     }
 
     public function test_un_dividende_credite_entre_dans_le_total(): void
@@ -72,7 +72,7 @@ class EcranDividendesTest extends TestCase
         $this->actingAs($this->administrateur())
             ->get(route('dividendes.calculer'))
             ->assertOk()
-            ->assertSee(Montant::avecDevise($attendu), false);
+            ->assertSee(Montant::format($attendu), false);
     }
 
     public function test_l_historique_se_replie_par_annee(): void

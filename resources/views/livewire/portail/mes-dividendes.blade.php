@@ -28,14 +28,14 @@
                     <div class="grid flex-1 grid-cols-1 gap-5 sm:grid-cols-3 lg:gap-6 lg:divide-x lg:divide-white/10 rtl:lg:divide-x-reverse">
                         @foreach ([
                             ['etiquette' => __("Dernier mois"), 'valeur' => $cumul['dernierePeriode'] ?? '—', 'accent' => false],
-                            ['etiquette' => __("Dernier versement"), 'valeur' => \App\Support\Montant::avecDevise($cumul['dernier'] ?? 0), 'accent' => false],
-                            ['etiquette' => __("Total perçu"), 'valeur' => \App\Support\Montant::avecDevise($cumul['total']), 'accent' => true],
+                            ['etiquette' => __("Dernier versement"), 'valeur' => \App\Support\Montant::format($cumul['dernier'] ?? 0), 'devise' => true, 'accent' => false],
+                            ['etiquette' => __("Total perçu"), 'valeur' => \App\Support\Montant::format($cumul['total']), 'devise' => true, 'accent' => true],
                         ] as $i => $chiffre)
-                            <div class="{{ $i > 0 ? 'lg:ps-6' : '' }}">
-                                <p class="text-xs font-medium uppercase tracking-wide text-white/50">{{ $chiffre['etiquette'] }}</p>
-                                <p class="mt-1 text-xl font-bold sm:text-2xl {{ $chiffre['accent'] ? 'text-primaire-400' : 'text-white' }}">
-                                    <bdi>{{ $chiffre['valeur'] }}</bdi>
-                                </p>
+                            <div class="min-w-0 {{ $i > 0 ? 'lg:ps-6' : '' }}">
+                                <x-chiffre-bandeau :etiquette="$chiffre['etiquette']"
+                                                   :valeur="$chiffre['valeur']"
+                                                   :devise="$chiffre['devise'] ?? false"
+                                                   :accent="$chiffre['accent']" />
                             </div>
                         @endforeach
                     </div>

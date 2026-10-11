@@ -28,13 +28,13 @@
                 @foreach ([
                     ['etiquette' => __("Périodes fixées"), 'valeur' => \App\Support\Montant::format($this->position['periodes']), 'accent' => false],
                     ['etiquette' => __("Comptes servis"), 'valeur' => \App\Support\Montant::format($this->position['comptes']), 'accent' => false],
-                    ['etiquette' => __("Total distribué"), 'valeur' => \App\Support\Montant::avecDevise($this->position['total']), 'accent' => true],
+                    ['etiquette' => __("Total distribué"), 'valeur' => \App\Support\Montant::format($this->position['total']), 'devise' => true, 'accent' => true],
                 ] as $i => $chiffre)
-                    <div class="{{ $i > 0 ? 'lg:ps-6' : '' }}">
-                        <p class="text-xs font-medium uppercase tracking-wide text-white/50">{{ $chiffre['etiquette'] }}</p>
-                        <p class="mt-1 text-xl font-bold sm:text-2xl {{ $chiffre['accent'] ? 'text-primaire-400' : 'text-white' }}">
-                            <bdi>{{ $chiffre['valeur'] }}</bdi>
-                        </p>
+                    <div class="min-w-0 {{ $i > 0 ? 'lg:ps-6' : '' }}">
+                        <x-chiffre-bandeau :etiquette="$chiffre['etiquette']"
+                                           :valeur="$chiffre['valeur']"
+                                           :devise="$chiffre['devise'] ?? false"
+                                           :accent="$chiffre['accent']" />
                     </div>
                 @endforeach
             </div>

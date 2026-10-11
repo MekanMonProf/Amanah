@@ -96,26 +96,26 @@
                             ['etiquette' => __("Mes investisseurs"), 'valeur' => $nbInvestisseurs, 'accent' => false],
                             ['etiquette' => __("Comptes actifs"), 'valeur' => $nbComptes, 'accent' => false],
                             ['etiquette' => __("Actions détenues"), 'valeur' => \App\Support\Montant::format($totalActions), 'accent' => false],
-                            ['etiquette' => __("Solde cumulé"), 'valeur' => \App\Support\Montant::avecDevise($totalSolde), 'accent' => true],
+                            ['etiquette' => __("Solde cumulé"), 'valeur' => \App\Support\Montant::format($totalSolde), 'devise' => true, 'accent' => true],
                         ])
                     @else
                         @php($chiffres = [
                             ['etiquette' => __("Investisseurs actifs"), 'valeur' => $nbInvestisseursActifs, 'suffixe' => $nbInvestisseurs > $nbInvestisseursActifs ? __("sur :total", ['total' => $nbInvestisseurs]) : null, 'accent' => false],
                             ['etiquette' => __("Gestionnaires actifs"), 'valeur' => $nbGestionnairesActifs, 'accent' => false],
-                            ['etiquette' => __("Dividendes distribués"), 'valeur' => \App\Support\Montant::avecDevise($totalDividendesDistribues), 'accent' => true],
-                            ['etiquette' => __("Dividendes ce mois-ci"), 'valeur' => \App\Support\Montant::avecDevise($dividendesCeMois), 'accent' => false],
+                            ['etiquette' => __("Dividendes distribués"), 'valeur' => \App\Support\Montant::format($totalDividendesDistribues), 'devise' => true, 'accent' => true],
+                            ['etiquette' => __("Dividendes ce mois-ci"), 'valeur' => \App\Support\Montant::format($dividendesCeMois), 'devise' => true, 'accent' => false],
                         ])
                     @endif
 
+                    {{-- min-w-0 : sans lui, une cellule de grille refuse de passer
+                         sous la largeur de son contenu et pousse ses voisines. --}}
                     @foreach ($chiffres as $i => $chiffre)
-                        <div class="{{ $i > 0 ? 'lg:ps-6' : '' }}">
-                            <p class="text-xs font-medium uppercase tracking-wide text-white/50">{{ $chiffre['etiquette'] }}</p>
-                            <p class="mt-1 text-xl font-bold sm:text-2xl {{ $chiffre['accent'] ? 'text-primaire-400' : 'text-white' }}">
-                                {{ $chiffre['valeur'] }}
-                                @isset($chiffre['suffixe'])
-                                    <span class="text-sm font-normal text-white/50">{{ $chiffre['suffixe'] }}</span>
-                                @endisset
-                            </p>
+                        <div class="min-w-0 {{ $i > 0 ? 'lg:ps-6' : '' }}">
+                            <x-chiffre-bandeau :etiquette="$chiffre['etiquette']"
+                                               :valeur="$chiffre['valeur']"
+                                               :devise="$chiffre['devise'] ?? false"
+                                               :accent="$chiffre['accent']"
+                                               :suffixe="$chiffre['suffixe'] ?? null" />
                         </div>
                     @endforeach
                 </div>

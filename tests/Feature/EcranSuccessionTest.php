@@ -53,7 +53,7 @@ class EcranSuccessionTest extends TestCase
             ->assertSee('Actions commerciales')
             // Par le formateur maison : le séparateur de milliers est une
             // espace fine insécable, qu'une chaîne écrite à la main rate.
-            ->assertSee(\App\Support\Montant::avecDevise(12000), false)
+            ->assertSee(\App\Support\Montant::format(12000), false)
             ->assertSee(\App\Support\Montant::format(4));
     }
 

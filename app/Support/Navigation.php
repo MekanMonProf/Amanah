@@ -166,7 +166,13 @@ class Navigation
                  */
                 'libelle' => 'La direction',
                 'entrees' => [
-                    self::entree('Documents officiels', 'documents-officiels.index', ['documents-officiels.*'], 'documents', null, null, 'Officiels', true),
+                    self::entree(
+                        'Documents officiels', 'documents-officiels.index', ['documents-officiels.*'],
+                        'documents', null, null, 'Officiels', true,
+                        // Aucun canal ne part vers les actionnaires : la nouvelle
+                        // se signale là où ils viennent.
+                        pastille: fn (User $utilisateur) => \App\Models\DocumentOfficiel::nouveauxPour($utilisateur),
+                    ),
                 ],
             ],
             [
@@ -194,9 +200,9 @@ class Navigation
      *                                    case fait un cinquième de l'écran : un
      *                                    intitulé coupé en son milieu ne se lit pas.
      */
-    private static function entree(string $libelle, string $route, array $motifs, string $icone, ?string $module, ?string $roleReserve = null, ?string $libelleCourt = null, bool $pourTous = false): array
+    private static function entree(string $libelle, string $route, array $motifs, string $icone, ?string $module, ?string $roleReserve = null, ?string $libelleCourt = null, bool $pourTous = false, ?callable $pastille = null): array
     {
-        return compact('libelle', 'route', 'motifs', 'icone', 'module', 'roleReserve', 'libelleCourt', 'pourTous');
+        return compact('libelle', 'route', 'motifs', 'icone', 'module', 'roleReserve', 'libelleCourt', 'pourTous', 'pastille');
     }
 
     /** Retire les entrées inaccessibles, puis les groupes devenus vides. */
@@ -205,9 +211,12 @@ class Navigation
         $retenus = [];
 
         foreach ($groupes as $groupe) {
-            $entrees = array_values(array_filter(
-                $groupe['entrees'],
-                fn ($entree) => self::estVisible($entree, $utilisateur),
+            $entrees = array_values(array_map(
+                fn ($entree) => self::resoudreLaPastille($entree, $utilisateur),
+                array_filter(
+                    $groupe['entrees'],
+                    fn ($entree) => self::estVisible($entree, $utilisateur),
+                ),
             ));
 
             if ($entrees !== []) {
@@ -216,6 +225,22 @@ class Navigation
         }
 
         return $retenus;
+    }
+
+    /**
+     * Le nombre a afficher en pastille, s'il y en a un.
+     *
+     * L'arborescence ne porte qu'une fonction : elle se decrit sans rien
+     * demander a la base. Le compte ne se fait qu'ici, une fois la personne
+     * connue, et seulement pour les entrees qui en declarent une.
+     */
+    private static function resoudreLaPastille(array $entree, User $utilisateur): array
+    {
+        $entree['pastille'] = isset($entree['pastille']) && is_callable($entree['pastille'])
+            ? (int) ($entree['pastille'])($utilisateur)
+            : null;
+
+        return $entree;
     }
 
     /**

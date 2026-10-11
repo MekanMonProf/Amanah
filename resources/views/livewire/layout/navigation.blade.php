@@ -104,6 +104,16 @@ new class extends Component
                         <x-icone :nom="$entree['icone']"
                                  class="h-5 w-5 shrink-0 {{ $actif ? 'text-white' : 'text-white/50 group-hover:text-white' }}" />
                         <span class="etiquette truncate">{{ __($entree['libelle']) }}</span>
+
+                        {{-- La pastille reste visible barre repliée : c'est justement
+                             là qu'elle doit attirer l'œil, l'intitulé ayant disparu. --}}
+                        @if (($entree['pastille'] ?? 0) > 0)
+                            <span class="ms-auto inline-flex min-w-5 shrink-0 items-center justify-center rounded-full bg-or-500 px-1.5 py-0.5 text-xs font-semibold text-nuit-900"
+                                  title="{{ __(':nombre nouveau(x) depuis votre dernier passage', ['nombre' => $entree['pastille']]) }}">
+                                {{ $entree['pastille'] }}
+                                <span class="sr-only">{{ __("nouveau(x)") }}</span>
+                            </span>
+                        @endif
                     </a>
                 @endforeach
             </div>

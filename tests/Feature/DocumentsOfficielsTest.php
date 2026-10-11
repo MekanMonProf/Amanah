@@ -171,10 +171,81 @@ class DocumentsOfficielsTest extends TestCase
         Storage::disk(DocumentOfficiel::DISQUE)->assertMissing($chemin);
     }
 
+    // ---- La pastille du menu ----------------------------------------------
+
+    public function test_qui_n_a_jamais_ouvert_la_page_les_a_tous_a_decouvrir(): void
+    {
+        $this->documentDeja();
+        $this->documentDeja();
+
+        $personne = $this->compte('investisseur');
+
+        $this->assertNull($personne->documents_officiels_vus_le);
+        $this->assertSame(2, DocumentOfficiel::nouveauxPour($personne));
+    }
+
+    public function test_ouvrir_la_page_efface_la_pastille(): void
+    {
+        $this->documentDeja();
+        $personne = $this->compte('gestionnaire');
+
+        $this->actingAs($personne)->get(route('documents-officiels.index'))->assertOk();
+
+        $this->assertSame(0, DocumentOfficiel::nouveauxPour($personne->refresh()));
+    }
+
+    public function test_une_publication_posterieure_la_fait_revenir(): void
+    {
+        $personne = $this->compte('lecture');
+
+        $this->actingAs($personne)->get(route('documents-officiels.index'))->assertOk();
+        $this->assertSame(0, DocumentOfficiel::nouveauxPour($personne->refresh()));
+
+        // Le document arrive après la visite : il est nouveau pour elle.
+        $this->documentDeja(publieLe: now()->addMinute()->toDateTimeString());
+
+        $this->assertSame(1, DocumentOfficiel::nouveauxPour($personne->refresh()));
+    }
+
+    public function test_la_visite_de_l_un_ne_vaut_pas_pour_l_autre(): void
+    {
+        $this->documentDeja(publieLe: now()->subMinute()->toDateTimeString());
+
+        $lecteur = $this->compte('gestionnaire');
+        $autre = $this->compte('investisseur');
+
+        $this->actingAs($lecteur)->get(route('documents-officiels.index'))->assertOk();
+
+        $this->assertSame(0, DocumentOfficiel::nouveauxPour($lecteur->refresh()));
+        $this->assertSame(1, DocumentOfficiel::nouveauxPour($autre->refresh()), "la pastille de l'autre tient toujours");
+    }
+
+    public function test_le_menu_porte_le_nombre(): void
+    {
+        $this->documentDeja();
+        $this->documentDeja();
+
+        $groupes = \App\Support\Navigation::groupes($this->compte('investisseur'));
+
+        $entree = collect($groupes)
+            ->flatMap(fn ($groupe) => $groupe['entrees'])
+            ->firstWhere('route', 'documents-officiels.index');
+
+        $this->assertNotNull($entree, "l'entrée doit exister pour un investisseur");
+        $this->assertSame(2, $entree['pastille']);
+    }
+
     // ---- Les pièces du décor ----------------------------------------------
 
-    /** Un document déjà en place, fichier compris. */
-    private function documentDeja(): DocumentOfficiel
+    /**
+     * Un document déjà en place, fichier compris.
+     *
+     * La date de publication se passe explicitement quand le test porte sur
+     * l'avant et l'après d'une visite : ces horodatages ont une résolution
+     * d'une seconde, et un test qui enchaîne tout dans la même milliseconde
+     * les verrait tous simultanés — ce qui n'arrive pas en usage réel.
+     */
+    private function documentDeja(?string $publieLe = null): DocumentOfficiel
     {
         $chemin = DocumentOfficiel::DOSSIER . '/essai-' . uniqid() . '.pdf';
         Storage::disk(DocumentOfficiel::DISQUE)->put($chemin, '%PDF-1.4 essai');
@@ -186,6 +257,12 @@ class DocumentsOfficielsTest extends TestCase
             'taille' => 14,
             'publie_par' => null,
         ]);
+
+        // created_at n'est pas assignable en masse : Eloquent le pose lui-même.
+        // On le reecrit donc apres coup quand le test a besoin d'une date.
+        if ($publieLe !== null) {
+            $document->forceFill(['created_at' => $publieLe])->saveQuietly();
+        }
 
         $this->aNettoyer[] = $document->id;
 

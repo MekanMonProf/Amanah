@@ -31,6 +31,7 @@ class User extends Authenticatable
             'deux_fa_actif' => 'boolean',
             'deux_fa_confirme_le' => 'datetime',
             'deux_fa_codes_recuperation' => 'encrypted:array',
+            'documents_officiels_vus_le' => 'datetime',
         ];
     }
 

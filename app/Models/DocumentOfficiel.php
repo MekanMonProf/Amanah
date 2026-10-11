@@ -56,6 +56,41 @@ class DocumentOfficiel extends Model
         return $utilisateur !== null && in_array($utilisateur->role, self::ROLES_DEPOSANTS, true);
     }
 
+    /**
+     * Combien de documents cette personne n'a pas encore vus.
+     *
+     * Aucun canal ne part d'ici vers les actionnaires : pas d'adresse email,
+     * WhatsApp par liens cliqués à la main, aucun fournisseur de SMS. La
+     * nouvelle se signale donc là où les gens viennent, par une pastille sur
+     * l'entrée du menu.
+     *
+     * Qui n'a jamais ouvert la page les a tous à découvrir : la colonne reste
+     * à null, et le compte porte alors sur l'ensemble.
+     */
+    public static function nouveauxPour(?User $utilisateur): int
+    {
+        if ($utilisateur === null) {
+            return 0;
+        }
+
+        return self::when(
+            $utilisateur->documents_officiels_vus_le,
+            // Comparaison stricte. Ces horodatages ont une résolution d'une
+            // seconde : un document publié dans la seconde même où quelqu'un
+            // regardait la page ne lui sera pas signalé. Le cas est sans portée
+            // — cette personne était précisément sur la page à cet instant — et
+            // la comparaison large, elle, collerait une pastille indélébile à
+            // quiconque a visité pendant la seconde d'une publication.
+            fn ($requete, $date) => $requete->where('created_at', '>', $date),
+        )->count();
+    }
+
+    /** La page vient d'être ouverte : la pastille n'a plus lieu d'être. */
+    public static function marquerCommeVus(?User $utilisateur): void
+    {
+        $utilisateur?->forceFill(['documents_officiels_vus_le' => now()])->saveQuietly();
+    }
+
     /** Le poids en clair, pour l'annoncer avant le clic. */
     public function tailleLisible(): string
     {

@@ -113,6 +113,18 @@ class DocumentsOfficiels extends Component
         abort_unless(DocumentOfficiel::peutPublier(), 403, __("Seules la direction et l'administration publient des documents officiels."));
     }
 
+    /**
+     * Ouvrir la page vaut lecture : la pastille du menu n'a plus lieu d'être.
+     *
+     * Le marquage se fait au montage et non à chaque rendu : sans cela, publier
+     * un document effacerait la pastille des autres dans le même souffle, le
+     * composant se rendant à nouveau après l'enregistrement.
+     */
+    public function mount(): void
+    {
+        DocumentOfficiel::marquerCommeVus(Auth::user());
+    }
+
     public function render()
     {
         return view('livewire.documents-officiels', [

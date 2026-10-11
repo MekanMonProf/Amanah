@@ -24,7 +24,18 @@
                 <a href="{{ route($entree['route']) }}" wire:navigate
                    @if ($active) aria-current="page" @endif
                    class="flex min-w-0 flex-1 flex-col items-center gap-1 px-1 py-2 text-center {{ $active ? 'text-primaire-700' : 'text-gray-500 hover:text-gray-700' }}">
-                    <x-icone :nom="$entree['icone']" class="h-6 w-6 shrink-0" />
+                    {{-- La pastille se pose sur l'icône : une case d'onglet fait un
+                         cinquième de l'écran, et le chiffre à côté du mot le
+                         couperait. --}}
+                    <span class="relative inline-flex shrink-0">
+                        <x-icone :nom="$entree['icone']" class="h-6 w-6 shrink-0" />
+                        @if (($entree['pastille'] ?? 0) > 0)
+                            <span class="absolute -end-2 -top-1 inline-flex min-w-4 items-center justify-center rounded-full bg-or-500 px-1 text-[10px] font-semibold leading-4 text-nuit-900">
+                                {{ $entree['pastille'] }}
+                                <span class="sr-only">{{ __("nouveau(x)") }}</span>
+                            </span>
+                        @endif
+                    </span>
                     <span class="w-full truncate text-[11px] leading-tight">{{ __($entree['libelleCourt'] ?? $entree['libelle']) }}</span>
                 </a>
             @endforeach

@@ -56,6 +56,7 @@
                     <th class="py-1">{{ __("Paiement") }}</th>
                     <th class="py-1"></th>
                     <th class="py-1"></th>
+                    <th class="py-1"></th>
                 </tr>
             </thead>
             <tbody class="divide-y">
@@ -86,9 +87,19 @@
                                 {{ __("📄 Attestation") }}
                             </a>
                         </td>
+                        {{-- Corriger les mentions, jamais les montants : voir
+                             AchatModifier. Absent pour qui ne fait que consulter,
+                             et sur un dossier gelé par un décès. --}}
+                        <td class="py-1 text-end">
+                            @if (auth()->user()->role !== 'lecture' && ! $achat->dossier()->estDecede())
+                                <a href="{{ route('achats.modifier', $achat) }}" wire:navigate class="text-gray-600 hover:underline text-xs whitespace-nowrap">
+                                    {{ __("Corriger") }}
+                                </a>
+                            @endif
+                        </td>
                     </tr>
                 @empty
-                    <tr><td colspan="8" class="py-4 text-center text-gray-400">{{ __("Aucun achat ne correspond aux critères.") }}</td></tr>
+                    <tr><td colspan="9" class="py-4 text-center text-gray-400">{{ __("Aucun achat ne correspond aux critères.") }}</td></tr>
                 @endforelse
             </tbody>
         </table>

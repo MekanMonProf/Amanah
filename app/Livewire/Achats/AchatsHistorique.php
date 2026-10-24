@@ -47,7 +47,9 @@ class AchatsHistorique extends Component
     {
         // offertPar est chargé d'avance : sur le compte du Waqf caritatif, chaque ligne peut
         // être une present et afficherait sinon une requête par achat.
-        $query = $this->compte->achats()->with('offertPar');
+        // compte.investisseur sert au lien « Corriger », qui doit savoir si le
+        // dossier est gelé par un décès — sans quoi, là aussi, une requête par ligne.
+        $query = $this->compte->achats()->with('offertPar', 'compte.investisseur');
 
         if ($this->recherche) {
             $query->where(function ($q) {

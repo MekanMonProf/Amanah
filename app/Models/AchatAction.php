@@ -68,6 +68,23 @@ class AchatAction extends Model
         return $this->offert_par_investisseur_id !== null;
     }
 
+    /**
+     * Le dossier auquel cet achat appartient — celui d'où l'on vient et celui
+     * dont les droits commandent.
+     *
+     * Ce n'est pas toujours le titulaire du compte : les actions d'un présent
+     * sont versées au compte institutionnel du Waqf caritatif, alors que
+     * l'opération est celle du donateur. Juger le portefeuille sur le compte
+     * crédité fermerait la porte au gestionnaire du donateur, qui est
+     * précisément la personne concernée.
+     */
+    public function dossier(): Investisseur
+    {
+        return $this->estUnPresent()
+            ? $this->offertPar
+            : $this->compte->investisseur;
+    }
+
     /** Hommage à un défunt (par opposition à un cadeau fait à une personne vivante). */
     /**
      * Les actions viennent-elles d'un réinvestissement de dividendes ?

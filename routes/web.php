@@ -7,6 +7,7 @@ use App\Livewire\Parametrage\Parametrage;
 use App\Livewire\Investisseurs\InvestisseurShow;
 use App\Livewire\Investisseurs\InvestisseurEdit;
 use App\Livewire\Achats\AchatCreate;
+use App\Livewire\Achats\AchatModifier;
 use App\Livewire\Dividendes\DividendeCalcul;
 use App\Livewire\Dividendes\BaremeCorrection;
 use App\Livewire\Comptes\AjustementCreate;
@@ -156,6 +157,9 @@ Route::middleware(['auth', 'doit.changer.mdp', 'deux.fa'])->group(function () {
     Route::middleware(['module:investisseurs,ecriture'])->group(function () {
         Route::get('/investisseurs/{investisseur}/modifier', InvestisseurEdit::class)->name('investisseurs.modifier');
         Route::get('/investisseurs/{investisseur}/achats/creer', AchatCreate::class)->name('achats.creer');
+        // Les mentions d'un achat seulement : ni les actions, ni le prix, ni la
+        // date — voir AchatModifier.
+        Route::get('/achats/{achat}/modifier', AchatModifier::class)->name('achats.modifier');
         Route::get('/comptes/{compte}/complement', ComplementFinancierCreate::class)->name('comptes.complement');
         Route::get('/comptes/{compte}/paiement', PaiementCreate::class)->name('comptes.paiement');
         Route::get('/comptes/{compte}/achat-sur-solde', AchatSurSolde::class)->name('comptes.achat-sur-solde');

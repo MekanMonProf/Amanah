@@ -33,3 +33,7 @@ Thumbs.db
 # Vitrine deballee pour relecture locale, a l image du serveur.
 # Le contenu vient de deploiement/construire-vitrine.py, pas du depot.
 /public_html
+
+# Photographies de chantier : matiere de travail pour la vitrine, trop
+# lourde pour le depot. Rien ne s en sert a la construction.
+/images-chantier

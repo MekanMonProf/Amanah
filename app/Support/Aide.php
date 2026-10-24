@@ -58,7 +58,7 @@ class Aide
         ],
         'achats' => [
             'titre' => "Achats, compléments et dons",
-            'resume' => "Enregistrer une souscription, alimenter un solde, offrir des actions.",
+            'resume' => "Enregistrer une souscription, alimenter un solde, offrir des actions, corriger une mention.",
             'icone' => 'investisseurs',
             'public' => self::PUBLIC_EQUIPE,
         ],

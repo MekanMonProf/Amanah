@@ -76,8 +76,47 @@
 <h2>Correcting a mistake</h2>
 
 <p>
+    Not everything is corrected the same way. A typing mistake in what a purchase
+    <em>says</em> is put right on the spot; a mistake in what it <em>is worth</em>
+    goes through one more entry.
+</p>
+
+<h3>The details of a purchase</h3>
+
+<p>
+    <strong>Correct</strong>, on the purchase's row in its history, opens the payment
+    method, the invoice reference, the supporting document and the note. On a waqf
+    gift, the name of the honoured person and their relationship to the donor can be
+    corrected there too.
+</p>
+
+<p>
+    At the top, under <strong>What stays fixed</strong>, the screen shows the number
+    of shares, the price, the amount and the date. They cannot be changed: dividends
+    already paid and the certificate already issued depend on them, and the
+    calculation replays the whole history for every period. A mistake in those
+    figures is put right by a redemption or an adjustment.
+</p>
+
+<p>
+    Two things to know. A purchase carried over from the old application often has no
+    payment method at all: <strong>Not specified</strong> is an answer, and leaving it
+    that way is better than inventing one. And when the note was written by the
+    platform itself — a reinvestment, a purchase from the balance — it is shown
+    without being editable: it is the trace of an operation, not a remark.
+</p>
+
+<h3>The account balance</h3>
+
+<p>
     <strong>Adjustment</strong>, behind the <code>⋯</code> menu on the account header,
     is reserved for management and administration. It writes a line correcting the
     balance, with its reason. Nothing is rewritten, nothing is erased: the mistake and
     its correction both remain readable in the history.
+</p>
+
+<p class="note">
+    <strong>Every correction is recorded.</strong> The audit log keeps who corrected
+    what, with the value before and the value after — and only the fields that
+    actually changed.
 </p>

@@ -76,8 +76,48 @@
 <h2>Corriger une erreur</h2>
 
 <p>
+    Tout ne se corrige pas de la même façon. Une faute de frappe sur ce qu'un achat
+    <em>dit</em> se rattrape sur place ; une erreur sur ce qu'il <em>vaut</em> passe
+    par une écriture de plus.
+</p>
+
+<h3>Les mentions d'un achat</h3>
+
+<p>
+    <strong>Corriger</strong>, sur la ligne de l'achat dans son historique, ouvre le
+    mode de paiement, la référence de la facture, la pièce justificative et
+    l'observation. Sur un présent waqf, le nom de la personne honorée et son lien
+    avec le donateur s'y corrigent aussi.
+</p>
+
+<p>
+    L'écran montre en tête, sous <strong>Ce qui reste figé</strong>, le nombre
+    d'actions, le prix, le montant et la date. Ils ne sont pas modifiables : les
+    dividendes déjà versés et l'attestation déjà remise en dépendent, et le calcul
+    rejoue tout l'historique à chaque période. Une erreur sur ces chiffres se reprend
+    par une radiation ou un ajustement.
+</p>
+
+<p>
+    Deux détails à connaître. Un achat repris de l'ancienne application n'a souvent
+    aucun mode de paiement : <strong>Non précisé</strong> est une réponse, et la
+    laisser telle quelle vaut mieux que d'inventer. Et quand l'observation a été
+    écrite par la plateforme elle-même — un réinvestissement, un achat sur solde —
+    elle s'affiche sans être modifiable : c'est la trace d'une opération, pas une
+    note.
+</p>
+
+<h3>Le solde du compte</h3>
+
+<p>
     <strong>Ajustement</strong>, derrière le menu <code>⋯</code> de l'en-tête du
     compte, est réservé à la direction et à l'administration. Il écrit une ligne qui
     corrige le solde, avec son motif. Rien n'est réécrit, rien n'est effacé :
     l'erreur et sa correction restent toutes deux lisibles dans l'historique.
+</p>
+
+<p class="note">
+    <strong>Toute correction est tracée.</strong> Le journal d'audit retient qui a
+    corrigé quoi, avec la valeur d'avant et celle d'après — et seulement les champs
+    qui ont bougé.
 </p>

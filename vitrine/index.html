@@ -48,7 +48,15 @@
   .barre nav a.lien { white-space: nowrap; text-decoration: none; color: var(--gris); font-weight: 600; font-size: .95rem; }
   .barre nav a.lien:hover { color: var(--vert); }
   .marque, .bouton { white-space: nowrap; }
-  @media (max-width: 1060px) { .barre nav a.lien { display: none; } }
+  .barre nav a.lien { display: none; }
+  /* Écran moyen : le nom s'efface derrière le logo et la langue se choisit en
+     tête de page, pour que les quatre boutons tiennent sur la barre. */
+  @media (max-width: 1100px) {
+    .marque .nom { display: none; }
+    .barre nav { gap: 8px; }
+    .entete-langues { display: none; }
+    .mobile-langues { display: inline-flex; margin-bottom: 20px; }
+  }
   /* Sur téléphone, le nom s'efface derrière le logo pour laisser la place
      aux deux espaces : l'ancienne application doit rester accessible. */
   @media (max-width: 720px) {
@@ -171,7 +179,13 @@
   .flux strong { display: block; font-family: "Fraunces", serif; font-weight: 600; }
   .flux small { color: #c9d8cf; }
   .flux .fleche { color: var(--vert); font-size: 1.4rem; font-weight: 600; }
-  @media (max-width: 640px) { .flux { flex-direction: column; } .flux div { width: 100%; } .flux .fleche { transform: rotate(90deg); } }
+  /* Sur téléphone, les trois blocs tiennent sur une ligne, sans flèches */
+  @media (max-width: 640px) {
+    .flux { flex-wrap: nowrap; gap: 6px; align-items: stretch; }
+    .flux div { flex: 1; flex-direction: column; text-align: center; gap: 4px; padding: 12px 6px; }
+    .flux small { font-size: .78rem; line-height: 1.25; display: block; }
+    .flux .fleche { display: none; }
+  }
 
   /* Activités */
   .activites { background: #fff; border-bottom: 1px solid var(--bord); }
@@ -221,6 +235,74 @@
   /* Numéro de téléphone : ses groupes restent de gauche à droite, même en arabe */
   .groupes { display: inline-flex; direction: ltr; gap: .3em; vertical-align: bottom; }
 
+  /* Spécimens : tout ce qui reste à fournir, visible au premier coup d'œil */
+  .specimen { background: #fff3c4; color: #6b5300; border-radius: 4px; padding: 0 4px; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+  .bandeau-specimen { background: #6b5300; color: #fff3c4; text-align: center; font-size: .85rem; font-weight: 600; padding: 6px 16px; }
+  .bandeau-specimen[hidden] { display: none; }
+
+  /* Faire un don */
+  .bouton.don { background: var(--or); border-color: var(--or); color: var(--vert-fonce); }
+  .bouton.don:hover { background: #e3c97e; border-color: #e3c97e; }
+  .bandeau-don { display: none; }
+  dialog.don { width: min(520px, calc(100% - 24px)); max-height: calc(100% - 24px); border: 0; border-radius: 20px; padding: 24px; color: var(--encre); }
+  dialog.don::backdrop { background: rgba(10,30,20,.5); }
+  dialog.don h2 { color: var(--vert-fonce); font-size: 1.6rem; margin: 0 40px 8px 0; }
+  html[dir="rtl"] dialog.don h2 { margin: 0 0 8px 40px; }
+  dialog.don > p { color: var(--gris); margin: 0 0 16px; }
+  .don-fermer { position: absolute; top: 14px; right: 14px; width: 38px; height: 38px; border-radius: 50%; border: 0; background: var(--creme); font-size: 1.4rem; line-height: 1; cursor: pointer; color: var(--vert-fonce); }
+  html[dir="rtl"] .don-fermer { right: auto; left: 14px; }
+  .moyen { border: 1px solid var(--bord); border-radius: 14px; padding: 16px; margin-bottom: 12px; }
+  .moyen h3 { font-size: 1.15rem; margin: 0 0 8px; display: flex; align-items: center; gap: 10px; color: var(--vert-fonce); }
+  .moyen h3 .pastille-moyen { width: 12px; height: 12px; border-radius: 50%; flex: none; }
+  .moyen.wave .pastille-moyen { background: #1aa7e0; }
+  .moyen.om .pastille-moyen { background: #ff7900; }
+  .moyen.wu .pastille-moyen { background: #f5c400; }
+  .moyen p { margin: 0 0 6px; color: var(--gris); font-size: .95rem; }
+  .moyen .valeur { font-weight: 600; color: var(--encre); }
+  .moyen .actions-moyen { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .bouton[aria-disabled="true"], .bouton:disabled { opacity: .45; pointer-events: none; }
+  .don-preuve { display: flex; justify-content: center; margin-top: 4px; }
+  .don-preuve .bouton { white-space: normal; text-align: center; justify-content: center; width: 100%; }
+
+  /* Réalisations */
+  .realisations { background: #fff; border-top: 1px solid var(--bord); border-bottom: 1px solid var(--bord); }
+  .real-grille { display: grid; gap: 20px; }
+  @media (min-width: 820px) { .real-grille { grid-template-columns: repeat(3, 1fr); } }
+  .real { border: 1px solid var(--bord); border-radius: 16px; padding: 14px; background: var(--creme); }
+  .avant-apres { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+  .avant-apres figure { margin: 0; }
+  .avant-apres figcaption { font-size: .8rem; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--gris); margin-top: 6px; text-align: center; }
+  html[dir="rtl"] .avant-apres figcaption { letter-spacing: 0; }
+  .photo-specimen {
+    aspect-ratio: 4 / 3; border-radius: 10px; display: grid; place-items: center; color: #b49a4a;
+    background: repeating-linear-gradient(135deg, #fff8dc 0 10px, #fff3c4 10px 20px); border: 1px dashed #c9a227;
+  }
+  .photo-specimen svg { width: 34%; height: auto; }
+  .real h3 { font-size: 1.1rem; margin: 0 0 6px; }
+  .real p { margin: 0; color: var(--gris); font-size: .95rem; }
+
+  /* Mentions légales */
+  .mentions { padding: 0 0 40px; }
+  .mentions details { border: 1px solid var(--bord); border-radius: 14px; background: #fff; padding: 0 20px; }
+  .mentions summary { cursor: pointer; padding: 16px 0; font-weight: 600; color: var(--vert-fonce); }
+  .mentions dl { display: grid; gap: 6px 24px; margin: 0 0 20px; font-size: .95rem; }
+  @media (min-width: 720px) { .mentions dl { grid-template-columns: 220px 1fr; } }
+  .mentions dt { font-weight: 600; color: var(--vert-fonce); }
+  .mentions dd { margin: 0 0 8px; color: var(--gris); overflow-wrap: anywhere; }
+  .lien-mentions { color: inherit; }
+
+  /* Verset en tête de page */
+  .aya { background: var(--vert-fonce); color: #f1f5f2; text-align: center; padding: 28px 0 26px; }
+  .aya .verset { font-family: "Noto Naskh Arabic", serif; font-size: clamp(1.45rem, 3.4vw, 2.1rem); line-height: 1.9; margin: 0 auto; max-width: 46rem; }
+  .aya .sens { margin: 10px auto 0; max-width: 42rem; font-style: italic; color: #d7e6dd; }
+  .aya .source { display: block; margin-top: 10px; color: var(--or); font-size: .9rem; font-weight: 600; font-style: normal; }
+  .aya .contexte { margin: 10px auto 0; max-width: 42rem; font-size: .88rem; color: #b9cdc1; }
+  html[lang="ar"] .aya .sens { display: none; }
+  @media (max-width: 720px) {
+    .aya { padding: 20px 0 18px; }
+    .aya .contexte { display: none; }
+  }
+
   /* Choix de la langue */
   .langues { display: inline-flex; border: 1px solid var(--bord); border-radius: 999px; padding: 3px; background: #fff; gap: 2px; }
   .langues button {
@@ -246,8 +328,99 @@
   html[dir="rtl"] .offre ul { padding-left: 0; padding-right: 20px; }
   html[dir="rtl"] .ici { right: auto; left: 20px; }
   html[dir="rtl"] .flux .fleche { transform: scaleX(-1); }
-  @media (max-width: 640px) { html[dir="rtl"] .flux .fleche { transform: rotate(90deg); } }
   html[dir="rtl"] .hadith blockquote { font-size: clamp(1.35rem, 2.8vw, 1.8rem); }
+
+  /* Téléphone : la même information, en moins d'écrans à faire défiler */
+  @media (max-width: 720px) {
+    .barre .bouton.don { display: none; }
+    .bandeau-don {
+      display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%;
+      border: 0; background: var(--or); color: var(--vert-fonce); font: inherit; font-weight: 700;
+      padding: 10px 16px; cursor: pointer; font-size: 1rem;
+    }
+    .bandeau-don small { font-weight: 600; opacity: .8; }
+    section[id], .entete { scroll-margin-top: 112px; }
+    section { padding: 44px 0; }
+    .entete { padding: 24px 0 36px; }
+    .entete .conteneur { gap: 0; }
+    .entete p { font-size: 1.05rem; margin-bottom: 24px; }
+    .embleme { display: none; }
+    .titre-section { margin-bottom: 12px; }
+    .chapeau { margin-bottom: 24px; }
+    .mots { margin: 20px 0; gap: 12px; }
+    .parcours { grid-template-columns: 1fr 1fr; margin-top: 20px; }
+    .parcours li { padding: 14px; }
+    .parcours li strong { font-size: 1rem; }
+    .parcours li span { font-size: .88rem; }
+    .cartes, .cartes.compactes { gap: 10px; }
+    .carte, .cartes.compactes .carte {
+      padding: 16px; display: grid; grid-template-columns: 40px 1fr; column-gap: 14px; align-items: start;
+    }
+    .carte .pastille { margin: 0; width: 40px; height: 40px; grid-row: span 2; }
+    .carte h3, .cartes.compactes .carte h3 { font-size: 1.05rem; margin-bottom: 2px; }
+    .carte p { font-size: .95rem; }
+    .gere-par { margin-bottom: 20px; }
+    .gere-par img { height: 48px; }
+    .sous-titre { margin: 28px 0 12px; font-size: 1.2rem; }
+    .etapes { gap: 16px; }
+    .etape { padding: 22px 18px 18px; }
+    .flux { margin-top: 24px; }
+    .offre { padding: 22px; }
+    .offrande { padding: 20px; }
+    .espace .boite { padding: 32px 22px; }
+    .hadith blockquote { font-size: 1.2rem; }
+  }
+
+  /* Menu complet, ouvert depuis la barre du bas */
+  /* Sur ordinateur, le menu complet est un panneau sous la barre du haut */
+  .menu-complet {
+    position: fixed; top: 72px; right: max(16px, calc((100vw - 1080px) / 2 + 16px)); z-index: 30; width: 380px;
+    background: #fff; border-radius: 16px; box-shadow: 0 16px 40px rgba(10,69,48,.2); padding: 16px;
+    opacity: 0; transform: translateY(-8px); visibility: hidden; transition: opacity .18s, transform .18s;
+  }
+  html[dir="rtl"] .menu-complet { right: auto; left: max(16px, calc((100vw - 1080px) / 2 + 16px)); }
+  .menu-complet.ouvert { opacity: 1; transform: none; visibility: visible; }
+  .menu-complet ul { list-style: none; margin: 0 0 12px; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .menu-complet a { display: block; padding: 10px 12px; border-radius: 10px; background: var(--creme); color: var(--vert-fonce); font-weight: 600; text-decoration: none; font-size: .92rem; }
+  .menu-complet a:hover { background: var(--vert-clair); }
+  .menu-complet .langues { display: none; }
+  .menu-voile { position: fixed; inset: 0; z-index: 25; background: rgba(10,30,20,.2); }
+  .menu-voile[hidden] { display: none; }
+  .ouvrir-menu-entete svg { width: 18px; height: 18px; }
+  .ouvrir-menu-entete[aria-expanded="true"] { background: var(--vert-clair); }
+  @media (min-width: 1500px) {
+    .barre .conteneur { max-width: 1400px; }
+    .barre nav a.lien { display: inline; }
+    .ouvrir-menu-entete { display: none; }
+  }
+  @media (max-width: 760px) {
+    .ouvrir-menu-entete { display: none; }
+    .menu-complet .langues { display: inline-flex; }
+    html[dir="rtl"] .menu-complet { left: 0; right: 0; }
+    .menu-complet {
+      width: auto; top: auto; opacity: 1; transition: transform .25s ease;
+      display: block; position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
+      background: #fff; border-radius: 20px 20px 0 0; box-shadow: 0 -10px 40px rgba(10,69,48,.25);
+      padding: 20px 16px calc(84px + env(safe-area-inset-bottom));
+      transform: translateY(100%); transition: transform .25s ease; visibility: hidden;
+    }
+    .menu-complet.ouvert { transform: none; visibility: visible; }
+    .menu-complet ul { list-style: none; margin: 0 0 16px; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .menu-complet a {
+      display: block; padding: 12px 14px; border-radius: 12px; background: var(--creme);
+      color: var(--vert-fonce); font-weight: 600; text-decoration: none; font-size: .95rem;
+    }
+    .menu-voile { position: fixed; inset: 0; z-index: 25; background: rgba(10,30,20,.35); }
+    .menu-voile[hidden] { display: none; }
+    .onglets button {
+      display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 6px 2px;
+      border: 0; background: transparent; border-radius: 12px; font: inherit;
+      color: var(--gris); font-size: .72rem; font-weight: 600; line-height: 1.1; cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .onglets button svg { width: 24px; height: 24px; }
+    .onglets button[aria-expanded="true"] { color: var(--vert); background: var(--vert-clair); }
+  }
 
   /* Barre d'icônes en bas d'écran, sur téléphone */
   .onglets { display: none; }
@@ -275,6 +448,7 @@
 </style>
 </head>
 <body>
+<div class="bandeau-specimen" hidden data-i18n="specimen.bandeau">Version de démonstration : les éléments surlignés en jaune sont des exemples, à remplacer avant publication.</div>
 
 <header class="barre">
   <div class="conteneur">
@@ -283,6 +457,10 @@
       <span class="nom">Waqf Dolel Xamxam</span>
     </a>
     <nav>
+      <button type="button" class="bouton contour petit ouvrir-menu-entete" aria-expanded="false" aria-controls="menu-complet">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        <span data-i18n="onglet.menu">Menu</span>
+      </button>
       <a class="lien" href="#mission" data-i18n="nav.mission">Notre mission</a>
       <a class="lien" href="#activites" data-i18n="nav.activites">Nos activités</a>
       <a class="lien" href="#contribuer" data-i18n="nav.actions">Nos actions</a>
@@ -290,13 +468,27 @@
       <div class="langues entete-langues" role="group" aria-label="Langue" data-i18n-aria-label="langue.groupe">
         <button type="button" data-lang="fr">FR</button><button type="button" data-lang="en">EN</button><button type="button" data-lang="ar" lang="ar">عربي</button>
       </div>
+      <!-- specimen:debut --><button type="button" class="bouton don petit ouvrir-don" data-i18n="don.bouton">Faire un don</button><!-- specimen:fin -->
       <a class="bouton contour petit" href="https://amanah.waqfdolelxamxam.sn/login" data-i18n="btn.amanah">Espace AMANAH</a>
       <a class="bouton plein petit second lien-actionnaire" href="https://waqfdolelxamxam.sn/login.php" data-i18n="btn.actionnaire">Espace actionnaire</a>
     </nav>
   </div>
+  <!-- specimen:debut --><button type="button" class="bandeau-don ouvrir-don">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2.1 0 3.6 1.2 5.3 3.1 1.7-1.9 3.2-3.1 5.3-3.1 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21z"/></svg>
+    <span data-i18n="don.bouton">Faire un don</span> <small>Wave · Orange Money</small>
+  </button><!-- specimen:fin -->
 </header>
 
 <main>
+
+  <section class="aya" aria-labelledby="aya-source">
+    <div class="conteneur">
+      <p class="verset" lang="ar" dir="rtl">لَنْ تَنَالُوا الْبِرَّ حَتَّى تُنْفِقُوا مِمَّا تُحِبُّونَ ۚ وَمَا تُنْفِقُوا مِنْ شَيْءٍ فَإِنَّ اللَّهَ بِهِ عَلِيمٌ</p>
+      <p class="sens" data-i18n="aya.sens">« Vous n'atteindrez la vraie piété que lorsque vous donnerez de ce que vous aimez. Et quoi que vous donniez, Allah le sait parfaitement. »</p>
+      <cite class="source" id="aya-source" data-i18n="aya.source">Sourate Âl ʿImrân, verset 92</cite>
+      <p class="contexte" data-i18n="aya.contexte">En entendant ce verset, Abou Talha donna Bayruha, le jardin qu'il aimait le plus, en aumône pour Allah — un geste que les savants citent parmi les origines du waqf (rapporté par al-Bukhari et Muslim).</p>
+    </div>
+  </section>
 
   <section class="entete" id="accueil">
     <div class="conteneur">
@@ -420,8 +612,8 @@
         </article>
       </div>
 
-      <div class="sous-titre"><span data-i18n="activites.demain">Demain</span> <span class="etiquette commerciale" data-i18n="activites.endeveloppement">En développement</span></div>
-      <p class="chapeau" data-i18n="activites.demain.texte">D'autres secteurs porteurs, choisis pour leurs revenus durables et conformes à l'éthique du waqf, viendront élargir le financement des daaras et de l'éducation gratuite.</p>
+      <div class="sous-titre"><span data-i18n="activites.demain">Pistes pour demain</span> <span class="etiquette commerciale" data-i18n="activites.endeveloppement">À l'étude</span></div>
+      <p class="chapeau" data-i18n="activites.demain.texte">Ces secteurs sont des pistes que nous étudions, choisies pour leurs revenus durables et leur conformité à l'éthique du waqf. <strong>Ils ne sont pas encore financés, et aucun investissement n'est sollicité pour eux aujourd'hui.</strong> Les actions, waqf comme commerciales, financent les activités en cours présentées ci-dessus.</p>
       <div class="cartes compactes">
         <article class="carte">
           <div class="pastille" aria-hidden="true">
@@ -469,6 +661,39 @@
     </div>
   </section>
 
+  <!-- specimen:debut --><section class="realisations" id="realisations">
+    <div class="conteneur">
+      <h2 class="titre-section" data-i18n="real.titre">Nos réalisations</h2>
+      <p class="chapeau" data-i18n="real.chapeau">Des daaras transformés grâce au waqf : voici ce qui a changé, avant et après.</p>
+      <div class="real-grille">
+        <article class="real">
+          <div class="avant-apres">
+            <figure><div class="photo-specimen" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h3l2-3h6l2 3h3v13H4z"/><circle cx="12" cy="13" r="4"/></svg></div><figcaption data-i18n="real.avant">Avant</figcaption></figure>
+            <figure><div class="photo-specimen" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h3l2-3h6l2 3h3v13H4z"/><circle cx="12" cy="13" r="4"/></svg></div><figcaption data-i18n="real.apres">Après</figcaption></figure>
+          </div>
+          <h3><span class="specimen" data-i18n="real.specimen.nom">Daara [nom], [ville]</span></h3>
+          <p><span class="specimen" data-i18n="real.specimen.texte">[Ce qui a été fait : toiture, salles, sanitaires…] · [date]</span></p>
+        </article>
+        <article class="real">
+          <div class="avant-apres">
+            <figure><div class="photo-specimen" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h3l2-3h6l2 3h3v13H4z"/><circle cx="12" cy="13" r="4"/></svg></div><figcaption data-i18n="real.avant">Avant</figcaption></figure>
+            <figure><div class="photo-specimen" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h3l2-3h6l2 3h3v13H4z"/><circle cx="12" cy="13" r="4"/></svg></div><figcaption data-i18n="real.apres">Après</figcaption></figure>
+          </div>
+          <h3><span class="specimen" data-i18n="real.specimen.nom">Daara [nom], [ville]</span></h3>
+          <p><span class="specimen" data-i18n="real.specimen.texte">[Ce qui a été fait : toiture, salles, sanitaires…] · [date]</span></p>
+        </article>
+        <article class="real">
+          <div class="avant-apres">
+            <figure><div class="photo-specimen" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h3l2-3h6l2 3h3v13H4z"/><circle cx="12" cy="13" r="4"/></svg></div><figcaption data-i18n="real.avant">Avant</figcaption></figure>
+            <figure><div class="photo-specimen" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h3l2-3h6l2 3h3v13H4z"/><circle cx="12" cy="13" r="4"/></svg></div><figcaption data-i18n="real.apres">Après</figcaption></figure>
+          </div>
+          <h3><span class="specimen" data-i18n="real.specimen.nom">Daara [nom], [ville]</span></h3>
+          <p><span class="specimen" data-i18n="real.specimen.texte">[Ce qui a été fait : toiture, salles, sanitaires…] · [date]</span></p>
+        </article>
+      </div>
+    </div>
+  </section><!-- specimen:fin -->
+
   <section class="hadith">
     <div class="conteneur">
       <blockquote>
@@ -502,7 +727,7 @@
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 15l2 2 4-4"/></svg>
           </div>
           <h3 data-i18n="fonct.trace">Tout est tracé</h3>
-          <p data-i18n="fonct.trace.texte">Chaque contributeur reçoit une attestation et peut suivre son compte en ligne dans son espace personnel.</p>
+          <p data-i18n="fonct.trace.texte">Chaque donateur et chaque actionnaire reçoit une attestation, et peut suivre son compte en ligne dans son espace personnel.</p>
         </article>
       </div>
     </div>
@@ -548,7 +773,7 @@
       <div class="boite">
         <div>
           <h2 data-i18n="espace.titre">Votre espace en ligne</h2>
-          <p data-i18n="espace.texte">Vous êtes déjà actionnaire ou contributeur ? Votre espace vous montre vos actions, l'historique de votre compte, vos relevés et vos attestations, accessibles à tout moment.</p>
+          <p data-i18n="espace.texte">Vous êtes déjà donateur ou actionnaire ? Votre espace vous montre vos actions, l'historique de votre compte, vos relevés et vos attestations, accessibles à tout moment.</p>
         </div>
         <div class="boutons">
           <a class="bouton or" href="https://amanah.waqfdolelxamxam.sn/login" data-i18n="espace.amanah">Espace AMANAH →</a>
@@ -569,6 +794,28 @@
     </div>
   </section>
 
+  <!-- specimen:debut --><section class="mentions" id="mentions-legales">
+    <div class="conteneur">
+      <details>
+        <summary data-i18n="mentions.titre">Mentions légales</summary>
+        <dl>
+          <dt data-i18n="mentions.editeur">Éditeur du site</dt>
+          <dd>Waqf Dolel Xamxam — <span class="specimen" data-i18n="mentions.editeur.specimen">[forme juridique] · [n° d'enregistrement]</span></dd>
+          <dt data-i18n="mentions.siege">Siège</dt>
+          <dd><span class="specimen" data-i18n="mentions.siege.specimen">[adresse du siège]</span>, <span data-i18n="contact.ville">Dakar, Sénégal</span></dd>
+          <dt data-i18n="mentions.publication">Responsable de la publication</dt>
+          <dd><span class="specimen" data-i18n="mentions.publication.specimen">[nom et fonction]</span></dd>
+          <dt data-i18n="mentions.anddox">Société AND DOX</dt>
+          <dd><span class="specimen" data-i18n="mentions.anddox.specimen">[forme juridique] · NINEA [numéro] · RCCM [numéro] · [adresse du siège]</span></dd>
+          <dt data-i18n="mentions.hebergeur">Hébergement</dt>
+          <dd>Wanekoo — <span class="specimen" data-i18n="mentions.hebergeur.specimen">[adresse de l'hébergeur]</span></dd>
+          <dt data-i18n="mentions.donnees">Données personnelles</dt>
+          <dd data-i18n="mentions.donnees.texte">Les informations que vous nous transmettez (dons, messages WhatsApp, e-mails) servent uniquement à vous répondre et à établir vos attestations. Conformément à la loi sénégalaise n° 2008-12 sur la protection des données à caractère personnel, vous pouvez y accéder ou les faire rectifier en écrivant à secretariatwaqf.andedox@gmail.com.</dd>
+        </dl>
+      </details>
+    </div>
+  </section><!-- specimen:fin -->
+
 </main>
 
 <footer>
@@ -577,6 +824,7 @@
       <img src="images/logo-waqf.png" width="336" height="405" alt="Waqf Dolel Xamxam">
       <img src="images/logo-anddox.png" width="480" height="338" alt="AND DOX">
     </div>
+    <!-- specimen:debut --><a class="lien-mentions" href="#mentions-legales" data-i18n="mentions.titre">Mentions légales</a><!-- specimen:fin -->
     <span>© <span id="annee" data-nombre="2026" data-sans-separateur>2026</span> Waqf Dolel Xamxam · <span data-i18n="pied.filiale">AND DOX, filiale du Waqf Dolel Xamxam</span></span>
     <div class="langues" role="group" aria-label="Langue" data-i18n-aria-label="langue.groupe">
       <button type="button" data-lang="fr">Français</button><button type="button" data-lang="en">English</button><button type="button" data-lang="ar" lang="ar">العربية</button>
@@ -584,11 +832,65 @@
   </div>
 </footer>
 
+<!-- specimen:debut --><dialog class="don" id="don" aria-labelledby="don-titre">
+  <form method="dialog"><button class="don-fermer" aria-label="Fermer" data-i18n-aria-label="don.fermer">×</button></form>
+  <h2 id="don-titre" data-i18n="don.titre">Faire un don</h2>
+  <p data-i18n="don.intro">Choisissez votre moyen de paiement. Après votre don, envoyez-nous la capture de la transaction sur WhatsApp : nous vous remettrons votre attestation.</p>
+
+  <div class="moyen wave">
+    <h3><span class="pastille-moyen" aria-hidden="true"></span>Wave</h3>
+    <p><span data-i18n="don.numero">Numéro</span> : <span class="valeur specimen" dir="ltr">XX XXX XX XX</span></p>
+    <div class="actions-moyen">
+      <a class="bouton plein petit" aria-disabled="true" data-i18n="don.wave.payer">Payer avec Wave</a>
+      <button type="button" class="bouton contour petit copier" disabled data-i18n="don.copier">Copier le numéro</button>
+    </div>
+  </div>
+
+  <div class="moyen om">
+    <h3><span class="pastille-moyen" aria-hidden="true"></span>Orange Money</h3>
+    <p><span data-i18n="don.numero.om">Numéro ou code marchand</span> : <span class="valeur specimen" dir="ltr">XX XXX XX XX</span></p>
+    <p data-i18n="don.om.aide">Depuis l'application Orange Money ou le #144#, envoyez votre don à ce numéro.</p>
+    <div class="actions-moyen">
+      <button type="button" class="bouton contour petit copier" disabled data-i18n="don.copier">Copier le numéro</button>
+    </div>
+  </div>
+
+  <div class="moyen wu">
+    <h3><span class="pastille-moyen" aria-hidden="true"></span>Western Union</h3>
+    <p><span data-i18n="don.beneficiaire">Bénéficiaire</span> : <span class="valeur specimen" data-i18n="don.beneficiaire.specimen">[Nom du bénéficiaire]</span></p>
+    <p><span data-i18n="don.pays">Pays</span> : <span class="valeur" data-i18n="don.senegal">Sénégal</span></p>
+    <p data-i18n="don.wu.aide">Envoyez-nous ensuite le code MTCN par WhatsApp.</p>
+  </div>
+
+  <div class="don-preuve">
+    <a class="bouton or" href="https://wa.me/221781274476" data-i18n="don.preuve">Envoyer ma preuve de don sur WhatsApp</a>
+  </div>
+</dialog><!-- specimen:fin -->
+
+<div class="menu-voile" hidden></div>
+<nav class="menu-complet" id="menu-complet" aria-label="Toutes les sections" data-i18n-aria-label="menu.titre">
+  <ul>
+    <li><a href="#accueil" data-i18n="onglet.accueil">Accueil</a></li>
+    <li><a href="#mission" data-i18n="nav.mission">Notre mission</a></li>
+    <li><a href="#feuille-de-route" data-i18n="route.titre">Notre feuille de route</a></li>
+    <li><a href="#activites" data-i18n="activites.titre">Un capital qui travaille</a></li>
+    <li><a href="#fonctionnement" data-i18n="fonct.titre">Comment fonctionne le Waqf</a></li>
+    <li><a href="#contribuer" data-i18n="contrib.titre">Devenir actionnaire</a></li>
+    <li><a href="#espaces" data-i18n="espace.titre">Votre espace en ligne</a></li>
+    <!-- specimen:debut --><li><a href="#realisations" data-i18n="real.titre">Nos réalisations</a></li><!-- specimen:fin -->
+    <li><a href="#contact" data-i18n="contact.titre">Contact</a></li>
+    <!-- specimen:debut --><li><a href="#mentions-legales" class="lien-mentions" data-i18n="mentions.titre">Mentions légales</a></li><!-- specimen:fin -->
+  </ul>
+  <div class="langues" role="group" aria-label="Langue" data-i18n-aria-label="langue.groupe">
+    <button type="button" data-lang="fr">Français</button><button type="button" data-lang="en">English</button><button type="button" data-lang="ar" lang="ar">العربية</button>
+  </div>
+</nav>
+
 <nav class="onglets" aria-label="Navigation">
-  <a href="#accueil" data-section="accueil">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></svg>
-    <span data-i18n="onglet.accueil">Accueil</span>
-  </a>
+  <button type="button" class="ouvrir-menu" aria-expanded="false" aria-controls="menu-complet">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    <span data-i18n="onglet.menu">Menu</span>
+  </button>
   <a href="#activites" data-section="activites">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21V11"/><path d="M12 11c0-4 3-7 8-7 0 5-3 7-8 7z"/><path d="M12 14c0-3-2.5-6-7-6 0 4 2.5 6 7 6z"/><path d="M4 21h16"/></svg>
     <span data-i18n="onglet.activites">Activités</span>
@@ -607,11 +909,56 @@
   </a>
 </nav>
 
-<script src="traductions.js?v=3"></script>
+<script src="traductions.js?v=7"></script>
 <script>
   // Allume l'icône de la section affichée à l'écran.
   (function () {
     var liens = document.querySelectorAll('.onglets a');
+
+    // « Faire un don » ouvre la fenêtre des moyens de paiement ; un clic hors
+    // de la fenêtre la referme.
+    var don = document.getElementById('don');
+    if (don) {
+      document.querySelectorAll('.ouvrir-don').forEach(function (b) {
+        b.addEventListener('click', function () { if (don.showModal) { don.showModal(); } else { don.setAttribute('open', ''); } });
+      });
+      don.addEventListener('click', function (e) { if (e.target === don) { don.close(); } });
+    }
+    document.querySelectorAll('.copier:not([disabled])').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var valeur = b.closest('.moyen').querySelector('.valeur').textContent.replace(/\s/g, '');
+        if (navigator.clipboard) { navigator.clipboard.writeText(valeur); }
+      });
+    });
+
+    // Les liens « Mentions légales » déplient le bloc avant d'y mener.
+    document.querySelectorAll('.lien-mentions').forEach(function (a) {
+      a.addEventListener('click', function () {
+        var bloc = document.querySelector('#mentions-legales details');
+        if (bloc) { bloc.open = true; }
+      });
+    });
+
+    // Tant qu'un spécimen reste dans la page, un bandeau le signale à tous.
+    document.querySelector('.bandeau-specimen').hidden = !document.querySelector('.specimen');
+
+    // Le bouton « Menu » ouvre la liste de toutes les sections.
+    var boutons = document.querySelectorAll('.ouvrir-menu, .ouvrir-menu-entete');
+    var bouton = boutons[0];
+    var menu = document.getElementById('menu-complet');
+    var voile = document.querySelector('.menu-voile');
+    function basculer(ouvrir) {
+      menu.classList.toggle('ouvert', ouvrir);
+      voile.hidden = !ouvrir;
+      boutons.forEach(function (b) { b.setAttribute('aria-expanded', ouvrir ? 'true' : 'false'); });
+    }
+    if (bouton && menu && voile) {
+      boutons.forEach(function (b) { b.addEventListener('click', function () { basculer(!menu.classList.contains('ouvert')); }); });
+      voile.addEventListener('click', function () { basculer(false); });
+      menu.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', function () { basculer(false); }); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { basculer(false); } });
+    }
+
     if (!('IntersectionObserver' in window) || !liens.length) { return; }
     var observateur = new IntersectionObserver(function (entrees) {
       entrees.forEach(function (entree) {
@@ -619,7 +966,7 @@
         liens.forEach(function (a) { a.classList.toggle('actif', a.dataset.section === entree.target.id); });
       });
     }, { rootMargin: '-45% 0px -50% 0px' });
-    ['accueil', 'activites', 'contribuer', 'espaces', 'contact'].forEach(function (id) {
+    ['activites', 'contribuer', 'espaces', 'contact'].forEach(function (id) {
       var section = document.getElementById(id);
       if (section) { observateur.observe(section); }
     });

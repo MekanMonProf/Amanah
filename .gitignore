@@ -29,3 +29,7 @@ Thumbs.db
 
 # Archives et .env de production construits par deploiement/construire-archive.sh
 /deploiement/sortie
+
+# Vitrine deballee pour relecture locale, a l image du serveur.
+# Le contenu vient de deploiement/construire-vitrine.py, pas du depot.
+/public_html

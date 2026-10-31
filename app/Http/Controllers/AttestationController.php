@@ -42,10 +42,26 @@ class AttestationController extends Controller
             $this->verifierAcces($achat->compte);
         }
 
+        $historique = $this->historiqueDesAchats($achat);
+
         $pdf = Pdf::loadView('pdf.attestation-achat', [
             'achat' => $achat,
             'compte' => $achat->compte,
             'investisseur' => $achat->compte->investisseur,
+            'historique' => $historique,
+            'actionsAcquises' => (int) $historique->sum('nombre_actions'),
+            'montantCumule' => (float) $historique->sum('montant'),
+            // La part venue des dividendes réinvestis. Le cumul ci-dessus la
+            // comprend, alors qu'elle ne correspond à aucun versement : dite à
+            // part, elle évite de laisser croire à l'investisseur qu'il a sorti
+            // cette somme de sa poche.
+            'reinvesti' => $historique->filter(fn (AchatAction $ligne) => $ligne->estUnReinvestissement()),
+            // Ce que le compte détenait réellement ce jour-là — radiations et
+            // dons déduits. Sans objet pour un présent : le compte est celui du
+            // Waqf, et son volume ne regarde pas le donateur.
+            'actionsDetenues' => $achat->estUnPresent()
+                ? null
+                : $achat->compte->nombreActionsAu($achat->date_achat->toDateString()),
             'dateGeneration' => now(),
         ])->setPaper('a4', 'portrait');
 
@@ -58,6 +74,43 @@ class AttestationController extends Controller
         };
 
         return $this->rendrePdf($pdf, $prefixe . $achat->numero_achat . '.pdf');
+    }
+
+    /**
+     * Ce qui a été acquis avant cet achat, et lui-même pour finir.
+     *
+     * Les actionnaires demandaient à retrouver leurs achats antérieurs sur
+     * l'attestation : une souscription se fait souvent en plusieurs fois, et
+     * l'attestation d'un versement isolé ne disait rien de l'ensemble.
+     *
+     * Deux précautions s'imposent, et elles tiennent toutes deux au présent
+     * waqf. Ses actions sont portées au compte institutionnel du Waqf, partagé
+     * par tous les donateurs : y lire « les achats du compte » reviendrait à
+     * montrer à chaque donateur les dons de tous les autres. On s'en tient donc
+     * aux siens. Pour les mêmes raisons, le volume du compte ne lui est pas
+     * montré — voir l'appel plus haut.
+     *
+     * L'arrêt se fait à la date de l'achat et non à aujourd'hui : une
+     * attestation dit ce qui était vrai le jour où elle a été méritée, et deux
+     * tirages du même document doivent se ressembler. Le tri suit la date puis
+     * l'identifiant, deux achats d'un même jour gardant ainsi l'ordre de leur
+     * saisie.
+     */
+    protected function historiqueDesAchats(AchatAction $achat): \Illuminate\Support\Collection
+    {
+        $requete = AchatAction::where('compte_id', $achat->compte_id)
+            ->whereDate('date_achat', '<=', $achat->date_achat->toDateString());
+
+        if ($achat->estUnPresent()) {
+            $requete->where('offert_par_investisseur_id', $achat->offert_par_investisseur_id);
+        }
+
+        return $requete->orderBy('date_achat')->orderBy('id')->get()
+            // Un achat saisi après celui-ci, mais daté du même jour, se glisse
+            // sinon dans un document censé lui être antérieur.
+            ->reject(fn (AchatAction $ligne) => $ligne->date_achat->toDateString() === $achat->date_achat->toDateString()
+                && $ligne->id > $achat->id)
+            ->values();
     }
 
     public function radiation(Radiation $radiation)

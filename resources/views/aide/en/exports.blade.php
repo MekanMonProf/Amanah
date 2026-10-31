@@ -47,6 +47,36 @@
     platform.
 </p>
 
+<h3>What a purchase certificate carries</h3>
+
+<p>
+    Besides the purchase it records, the certificate recalls the account's
+    <strong>earlier acquisitions</strong>: date, number, nature, shares and amount,
+    with the total at that date. A subscription is often made in several instalments,
+    so the shareholder finds the whole of it on a single document. The recap does not
+    appear on a first purchase, which would have nothing to recall.
+</p>
+
+<p>
+    It stops at the date of the purchase being certified, never at today: a
+    certificate states what was true on the day it was earned, and two printings of
+    the same document look alike, months apart.
+</p>
+
+<p class="note">
+    <strong>Acquired is not held.</strong> When the account has seen a redemption or a
+    gift, the certificate adds the number of shares actually held at that date and says
+    where the difference comes from. Likewise, the share coming from reinvested
+    dividends is stated separately: it matches no payment by the shareholder.
+</p>
+
+<p class="note">
+    <strong>On a waqf gift, each donor sees only their own.</strong> Gifted shares are
+    recorded under the Waqf's institutional account, which receives the gifts of every
+    donor. The certificate therefore recaps only its recipient's own gifts, and says
+    nothing about that account's holding.
+</p>
+
 <p class="note">
     <strong>An export is a photograph, not a live link.</strong> A CSV produced today
     does not update itself. Date your files, or produce them again at the moment you

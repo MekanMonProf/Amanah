@@ -16,6 +16,17 @@
         .montant-total { font-size: 15px; font-weight: bold; color: #047857; }
         .pied-page { margin-top: 60px; padding-top: 10px; border-top: 1px solid #e5e7eb; font-size: 9px; color: #9ca3af; }
         .zone-signature { margin-top: 50px; }
+
+        /* Le récapitulatif des acquisitions. Plus petit que le tableau de
+           l'achat attesté : c'est un rappel, pas l'objet du document. */
+        h2.titre-recap { font-size: 12px; margin: 28px 0 8px 0; color: #047857; }
+        table.recap { width: 100%; border-collapse: collapse; font-size: 10px; }
+        table.recap th, table.recap td { padding: 5px 8px; border: 1px solid #e5e7eb; }
+        table.recap thead th { background-color: #f9fafb; color: #6b7280; text-align: left; font-weight: normal; }
+        table.recap .chiffre { text-align: right; white-space: nowrap; }
+        table.recap tr.ligne-courante td { background-color: #ecfdf5; font-weight: bold; }
+        table.recap tfoot td { background-color: #f9fafb; font-weight: bold; border-top: 2px solid #047857; }
+        .avertissement { margin-top: 10px; font-size: 11px; color: #6b7280; }
     </style>
 </head>
 <body>
@@ -131,6 +142,84 @@
         </tr>
         @endif
     </table>
+
+    {{-- Les achats antérieurs. Sans objet quand celui-ci est le premier : le
+         tableau ci-dessus dit déjà tout, et un récapitulatif d'une ligne ne
+         ferait qu'allonger le document. --}}
+    @if ($historique->count() > 1)
+        <h2 class="titre-recap">
+            {{ $achat->estUnPresent() ? 'Vos présents à ce jour' : 'Historique des acquisitions sur ce compte' }}
+        </h2>
+
+        <table class="recap">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>N°</th>
+                    <th>Nature</th>
+                    <th class="chiffre">Actions</th>
+                    <th class="chiffre">Prix unitaire</th>
+                    <th class="chiffre">Montant</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($historique as $ligne)
+                    {{-- L'achat que cette attestation constate est signalé : le
+                         lecteur doit retrouver d'un coup d'œil, dans une liste
+                         qui peut en compter trente, celui dont il tient la
+                         preuve entre les mains. --}}
+                    <tr class="{{ $ligne->id === $achat->id ? 'ligne-courante' : '' }}">
+                        <td>{{ $ligne->date_achat->format('d/m/Y') }}</td>
+                        <td>{{ $ligne->numero_achat }}</td>
+                        <td>
+                            {{ $ligne->estUnReinvestissement()
+                                ? 'Réinvestissement'
+                                : \App\Support\Libelles::typeAchat($ligne->type_achat) }}
+                        </td>
+                        <td class="chiffre">{{ number_format($ligne->nombre_actions, 0, ',', ' ') }}</td>
+                        <td class="chiffre">{{ number_format($ligne->prix_unitaire, 0, ',', ' ') }}</td>
+                        <td class="chiffre">{{ number_format($ligne->montant, 0, ',', ' ') }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3">
+                        {{ $achat->estUnPresent() ? 'Total offert' : 'Total acquis à cette date' }}
+                    </td>
+                    <td class="chiffre">{{ number_format($actionsAcquises, 0, ',', ' ') }}</td>
+                    <td></td>
+                    <td class="chiffre">{{ number_format($montantCumule, 0, ',', ' ') }} CFA</td>
+                </tr>
+            </tfoot>
+        </table>
+
+        {{-- Versé n'est pas acquis. Sur un compte au réinvestissement
+             automatique, l'essentiel des lignes vient des dividendes : le
+             cumul les comprend, et sans cette précision l'investisseur lirait
+             comme sien un versement qu'il n'a jamais fait. --}}
+        @if ($reinvesti->isNotEmpty())
+            <p class="texte avertissement">
+                Sur ce total, <strong>{{ number_format($reinvesti->sum('nombre_actions'), 0, ',', ' ') }} action(s)</strong>
+                proviennent du réinvestissement de dividendes, soit
+                {{ number_format($reinvesti->sum('montant'), 0, ',', ' ') }} CFA
+                qui ne correspondent à aucun versement : ce sont des bénéfices acquis, convertis en actions.
+            </p>
+        @endif
+
+        {{-- Acquis n'est pas détenu. Dix pour cent des comptes ont connu une
+             radiation ou un don, et pour l'un d'eux la somme des achats
+             s'élève à trente actions quand il n'en détient plus aucune : une
+             attestation qui tairait l'écart laisserait croire au total. --}}
+        @if ($actionsDetenues !== null && $actionsDetenues !== $actionsAcquises)
+            <p class="texte avertissement">
+                Au {{ $achat->date_achat->translatedFormat('d F Y') }}, ce compte détenait
+                <strong>{{ number_format($actionsDetenues, 0, ',', ' ') }} action(s)</strong>.
+                L'écart avec le total acquis ci-dessus s'explique par les radiations ou les dons
+                enregistrés sur ce compte, qui figurent sur leurs propres attestations.
+            </p>
+        @endif
+    @endif
 
     <div class="zone-signature">
         <p>Fait à Dakar, le {{ $dateGeneration->translatedFormat('d F Y') }}.</p>

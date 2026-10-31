@@ -48,6 +48,37 @@
     limité, qui n'oblige pas le destinataire à avoir un compte sur la plateforme.
 </p>
 
+<h3>Ce que porte une attestation d'achat</h3>
+
+<p>
+    Outre l'achat qu'elle constate, l'attestation rappelle les
+    <strong>acquisitions antérieures du compte</strong> : date, numéro, nature, actions
+    et montant, avec le total à cette date. Une souscription se faisant souvent en
+    plusieurs fois, l'actionnaire retrouve ainsi l'ensemble sur une seule pièce. Le
+    récapitulatif n'apparaît pas sur un premier achat, qui n'aurait rien à rappeler.
+</p>
+
+<p>
+    Il s'arrête à la date de l'achat attesté, jamais à aujourd'hui : une attestation
+    dit ce qui était vrai le jour où elle a été méritée, et deux tirages du même
+    document se ressemblent, à des mois d'intervalle.
+</p>
+
+<p class="note">
+    <strong>Acquis n'est pas détenu.</strong> Quand le compte a connu une radiation ou
+    un don, l'attestation ajoute le nombre d'actions réellement détenues à cette date
+    et dit d'où vient l'écart. De même, la part venue du réinvestissement des
+    dividendes est annoncée à part : elle ne correspond à aucun versement de
+    l'actionnaire.
+</p>
+
+<p class="note">
+    <strong>Sur un présent waqf, chacun ne voit que les siens.</strong> Les actions
+    offertes sont portées au compte institutionnel du Waqf, qui reçoit les présents de
+    tous les donateurs. Le certificat ne récapitule donc que les présents de son
+    destinataire, et ne dit rien du volume de ce compte.
+</p>
+
 <p class="note">
     <strong>Un export est une photographie, pas un lien vivant.</strong> Un CSV sorti
     aujourd'hui ne se met pas à jour. Datez vos fichiers, ou ressortez-les au moment

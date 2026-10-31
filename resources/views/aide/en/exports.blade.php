@@ -59,8 +59,15 @@
 
 <p>
     It stops at the date of the purchase being certified, never at today: a
-    certificate states what was true on the day it was earned, and two printings of
-    the same document look alike, months apart.
+    certificate states what was true on the day it was earned.
+</p>
+
+<p class="note">
+    <strong>A month whose dividend has not been set is missing from the table.</strong>
+    Shares from a reinvestment are only created when the rate is entered, and they
+    carry the date of that entry, not that of the month they reward. The certificate
+    therefore names the months still pending. It remains accurate, but a later
+    printing may show more — likewise if an old purchase is recorded after the fact.
 </p>
 
 <p class="note">
@@ -75,6 +82,28 @@
     recorded under the Waqf's institutional account, which receives the gifts of every
     donor. The certificate therefore recaps only its recipient's own gifts, and says
     nothing about that account's holding.
+</p>
+
+<h3>The same recall on the two other certificates</h3>
+
+<p>
+    The <strong>redemption certificate</strong> recalls the account's earlier exits
+    and, above all, states <strong>how many shares remain held</strong> after this one
+    — the question asked by anyone redeeming only part of their holding. That
+    remainder appears even on a first redemption, where there is nothing to recap.
+</p>
+
+<p>
+    The <strong>payment certificate</strong> recalls the payments already received on
+    the account, with their total. It keeps payments only: dividends credited to the
+    account and top-ups are incoming, mixing them would distort the total, and the
+    monthly statement carries them all.
+</p>
+
+<p class="note">
+    <strong>The receipt carries no history.</strong> It opens through a signed link,
+    without signing in, which its recipient can forward to anyone. It therefore keeps
+    to its own operation: a stray address must not hand over an account's history.
 </p>
 
 <p class="note">

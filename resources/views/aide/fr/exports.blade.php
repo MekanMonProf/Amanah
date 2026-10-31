@@ -60,8 +60,16 @@
 
 <p>
     Il s'arrête à la date de l'achat attesté, jamais à aujourd'hui : une attestation
-    dit ce qui était vrai le jour où elle a été méritée, et deux tirages du même
-    document se ressemblent, à des mois d'intervalle.
+    dit ce qui était vrai le jour où elle a été méritée.
+</p>
+
+<p class="note">
+    <strong>Un mois dont le dividende n'est pas arrêté manque au tableau.</strong> Les
+    actions issues d'un réinvestissement ne sont créées qu'au moment où le barème est
+    saisi, et elles portent la date de cette saisie, non celle du mois rémunéré.
+    L'attestation nomme donc les mois encore en attente. Elle reste exacte, mais un
+    tirage ultérieur pourra montrer davantage — de même si un achat ancien est
+    enregistré après coup.
 </p>
 
 <p class="note">
@@ -77,6 +85,29 @@
     offertes sont portées au compte institutionnel du Waqf, qui reçoit les présents de
     tous les donateurs. Le certificat ne récapitule donc que les présents de son
     destinataire, et ne dit rien du volume de ce compte.
+</p>
+
+<h3>Le même rappel sur les deux autres attestations</h3>
+
+<p>
+    L'<strong>attestation de radiation</strong> rappelle les sorties antérieures du
+    compte et dit, surtout, <strong>combien d'actions restent détenues</strong> après
+    celle-ci — la question que pose quiconque ne sort qu'une partie de ses parts. Ce
+    reste s'affiche même sur une première radiation, où il n'y a rien à récapituler.
+</p>
+
+<p>
+    L'<strong>attestation de versement</strong> rappelle les versements déjà reçus sur
+    le compte, avec leur total. Elle ne retient que les versements : les dividendes
+    portés au compte et les compléments sont des entrées, les mêler fausserait le
+    total, et le relevé mensuel les porte tous.
+</p>
+
+<p class="note">
+    <strong>Le reçu, lui, ne porte aucun historique.</strong> Il s'ouvre par un lien
+    signé, sans connexion, que son destinataire peut transférer à quiconque. Il
+    continue donc de ne parler que de son opération : une adresse égarée ne doit pas
+    livrer l'historique d'un compte.
 </p>
 
 <p class="note">

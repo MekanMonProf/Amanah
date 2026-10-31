@@ -16,17 +16,7 @@
         .montant-total { font-size: 15px; font-weight: bold; color: #047857; }
         .pied-page { margin-top: 60px; padding-top: 10px; border-top: 1px solid #e5e7eb; font-size: 9px; color: #9ca3af; }
         .zone-signature { margin-top: 50px; }
-
-        /* Le récapitulatif des acquisitions. Plus petit que le tableau de
-           l'achat attesté : c'est un rappel, pas l'objet du document. */
-        h2.titre-recap { font-size: 12px; margin: 28px 0 8px 0; color: #047857; }
-        table.recap { width: 100%; border-collapse: collapse; font-size: 10px; }
-        table.recap th, table.recap td { padding: 5px 8px; border: 1px solid #e5e7eb; }
-        table.recap thead th { background-color: #f9fafb; color: #6b7280; text-align: left; font-weight: normal; }
-        table.recap .chiffre { text-align: right; white-space: nowrap; }
-        table.recap tr.ligne-courante td { background-color: #ecfdf5; font-weight: bold; }
-        table.recap tfoot td { background-color: #f9fafb; font-weight: bold; border-top: 2px solid #047857; }
-        .avertissement { margin-top: 10px; font-size: 11px; color: #6b7280; }
+        @include('pdf.partials.styles-recapitulatif')
     </style>
 </head>
 <body>
@@ -204,6 +194,27 @@
                 proviennent du réinvestissement de dividendes, soit
                 {{ number_format($reinvesti->sum('montant'), 0, ',', ' ') }} CFA
                 qui ne correspondent à aucun versement : ce sont des bénéfices acquis, convertis en actions.
+            </p>
+        @endif
+
+        {{-- Un mois non arrêté est un réinvestissement qui n'a pas encore eu
+             lieu. Le récapitulatif reste exact, mais incomplet : le dire évite
+             au porteur de chercher des actions qui n'existent pas encore. --}}
+        @if ($periodesEnAttente !== [])
+            @php
+                $mois = collect($periodesEnAttente)
+                    ->map(fn ($m) => \Illuminate\Support\Carbon::parse($m . '-01')->translatedFormat('F Y'));
+            @endphp
+            <p class="texte avertissement">
+                @if ($mois->count() === 1)
+                    Le dividende de <strong>{{ $mois->first() }}</strong> n'est pas encore arrêté.
+                    Les actions issues de son réinvestissement
+                @else
+                    Les dividendes de <strong>{{ $mois->join(', ', ' et ') }}</strong> ne sont pas encore arrêtés.
+                    Les actions issues de leur réinvestissement
+                @endif
+                seront inscrites à la date de leur enregistrement et figureront sur les attestations
+                suivantes.
             </p>
         @endif
 

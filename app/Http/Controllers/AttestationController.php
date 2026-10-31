@@ -62,6 +62,7 @@ class AttestationController extends Controller
             'actionsDetenues' => $achat->estUnPresent()
                 ? null
                 : $achat->compte->nombreActionsAu($achat->date_achat->toDateString()),
+            'periodesEnAttente' => $this->periodesSansBareme($achat),
             'dateGeneration' => now(),
         ])->setPaper('a4', 'portrait');
 
@@ -113,12 +114,66 @@ class AttestationController extends Controller
             ->values();
     }
 
+    /**
+     * Les mois dont le dividende n'est pas encore arrêté, à la date attestée.
+     *
+     * Un achat par réinvestissement est daté du jour où le barème est saisi, et
+     * non du mois qu'il rémunère — voir
+     * CompteInvestissement::acheterActionsAvecSoldeDisponible(). Tant qu'un
+     * mois n'est pas arrêté, les actions qui en sortiront n'existent pas : le
+     * récapitulatif est exact, mais il n'est pas complet, et il le restera
+     * puisque ces actions porteront la date de leur enregistrement.
+     *
+     * Le dire évite au porteur de chercher un réinvestissement qui n'a pas
+     * encore eu lieu. Au 31 octobre 2026, la base de répétition accusait deux
+     * mois de retard ; ce n'est donc pas un cas d'école.
+     *
+     * On s'arrête au mois précédant l'achat attesté : le mois courant n'est
+     * jamais arrêté, et l'annoncer comme un manque serait une fausse alerte.
+     *
+     * @return list<string> des mois « AAAA-MM », du plus ancien au plus récent
+     */
+    protected function periodesSansBareme(AchatAction $achat): array
+    {
+        // Un présent va au compte du Waqf, dont la catégorie ne verse pas de
+        // dividendes : la question ne se pose pas.
+        if ($achat->estUnPresent() || ! $achat->compte->politique()?->eligible_dividendes) {
+            return [];
+        }
+
+        $premier = $achat->compte->achats()->min('date_achat');
+
+        if ($premier === null) {
+            return [];
+        }
+
+        $mois = \Illuminate\Support\Carbon::parse($premier)->startOfMonth();
+        $dernier = $achat->date_achat->copy()->startOfMonth()->subMonth();
+
+        $arretes = \App\Models\BaremeDividende::where('categorie', $achat->compte->categorie)
+            ->pluck('periode')
+            ->map(fn ($periode) => \Illuminate\Support\Carbon::parse($periode)->format('Y-m'))
+            ->all();
+
+        $attente = [];
+
+        while ($mois <= $dernier) {
+            if (! in_array($mois->format('Y-m'), $arretes, true)) {
+                $attente[] = $mois->format('Y-m');
+            }
+            $mois->addMonth();
+        }
+
+        return $attente;
+    }
+
     public function radiation(Radiation $radiation)
     {
         $radiation->load('compte.investisseur');
         $this->verifierAcces($radiation->compte);
 
         $montantVerse = $this->montantVerse($radiation);
+        $historique = $this->historiqueDesRadiations($radiation);
 
         $pdf = Pdf::loadView('pdf.attestation-radiation', [
             'radiation' => $radiation,
@@ -126,6 +181,12 @@ class AttestationController extends Controller
             'investisseur' => $radiation->compte->investisseur,
             'montantVerse' => $montantVerse,
             'statutPaiement' => $montantVerse >= $radiation->montant_total ? 'Payé' : ($montantVerse > 0 ? 'Partiellement payé' : 'Non payé'),
+            'historique' => $historique,
+            'actionsSorties' => (int) $historique->sum('nombre_actions_radiees'),
+            'capitalSorti' => (float) $historique->sum('montant_total'),
+            // Ce qui reste après cette sortie : la question que pose quiconque
+            // ne radie qu'une partie de ses actions.
+            'actionsRestantes' => $radiation->compte->nombreActionsAu($radiation->date_radiation->toDateString()),
             'dateGeneration' => now(),
         ])->setPaper('a4', 'portrait');
 
@@ -134,6 +195,51 @@ class AttestationController extends Controller
             : 'Attestation_Radiation_';
 
         return $this->rendrePdf($pdf, $prefixe . $radiation->numero_radiation . '.pdf');
+    }
+
+    /**
+     * Les sorties antérieures du compte, et celle-ci pour finir.
+     *
+     * Même raison que pour les achats, et même arrêt à la date du document :
+     * un compte se vide rarement d'un coup — treize des quarante-six comptes
+     * radiés l'ont été en plusieurs fois — et l'attestation d'une sortie
+     * isolée ne disait pas où en était le compte.
+     *
+     * Les liquidations de succession ne sont pas séparées des radiations
+     * ordinaires : elles sortent du même capital et se lisent dans la même
+     * suite. Leur numéro les distingue, préfixé — voir
+     * Radiation::estUneSuccession().
+     */
+    protected function historiqueDesRadiations(Radiation $radiation): \Illuminate\Support\Collection
+    {
+        return Radiation::where('compte_id', $radiation->compte_id)
+            ->whereDate('date_radiation', '<=', $radiation->date_radiation->toDateString())
+            ->orderBy('date_radiation')->orderBy('id')->get()
+            ->reject(fn (Radiation $ligne) => $ligne->date_radiation->toDateString() === $radiation->date_radiation->toDateString()
+                && $ligne->id > $radiation->id)
+            ->values();
+    }
+
+    /**
+     * Les versements antérieurs du compte, et celui-ci pour finir.
+     *
+     * Seul le type « paiement » est retenu. Un compte reçoit aussi des
+     * dividendes et des compléments : ce sont des entrées, les mêler aux
+     * sorties fausserait le total, et le relevé mensuel les porte déjà tous.
+     *
+     * Ce rappel ne figure que sur l'attestation, jamais sur le reçu : le reçu
+     * s'ouvre par un lien signé, sans connexion, qu'un destinataire peut
+     * transférer. Il doit continuer de ne parler que de son opération.
+     */
+    protected function historiqueDesVersements(EcritureCompteFinancier $ecriture): \Illuminate\Support\Collection
+    {
+        return EcritureCompteFinancier::where('compte_id', $ecriture->compte_id)
+            ->where('type_ecriture', 'paiement')
+            ->whereDate('date_ecriture', '<=', $ecriture->date_ecriture->toDateString())
+            ->orderBy('date_ecriture')->orderBy('id')->get()
+            ->reject(fn (EcritureCompteFinancier $ligne) => $ligne->date_ecriture->toDateString() === $ecriture->date_ecriture->toDateString()
+                && $ligne->id > $ecriture->id)
+            ->values();
     }
 
     /**
@@ -177,10 +283,14 @@ class AttestationController extends Controller
         $ecriture->load('compte.investisseur');
         $this->verifierAcces($ecriture->compte);
 
+        $historique = $this->historiqueDesVersements($ecriture);
+
         $pdf = Pdf::loadView('pdf.attestation-paiement', [
             'ecriture' => $ecriture,
             'compte' => $ecriture->compte,
             'investisseur' => $ecriture->compte->investisseur,
+            'historique' => $historique,
+            'totalVerse' => (float) $historique->sum(fn (EcritureCompteFinancier $ligne) => abs((float) $ligne->montant)),
             'dateGeneration' => now(),
         ])->setPaper('a4', 'portrait');
 

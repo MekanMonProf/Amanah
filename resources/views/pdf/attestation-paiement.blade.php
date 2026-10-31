@@ -16,6 +16,7 @@
         .montant-total { font-size: 15px; font-weight: bold; color: #047857; }
         .pied-page { margin-top: 60px; padding-top: 10px; border-top: 1px solid #e5e7eb; font-size: 9px; color: #9ca3af; }
         .zone-signature { margin-top: 50px; }
+        @include('pdf.partials.styles-recapitulatif')
     </style>
 </head>
 <body>
@@ -53,6 +54,46 @@
         </tr>
         @endif
     </table>
+
+    {{-- Les versements antérieurs. Quarante-deux comptes sur quatre-vingt-dix-neuf
+         en ont reçu plusieurs : sans ce rappel, il fallait ouvrir le relevé pour
+         savoir ce qui avait déjà été payé. --}}
+    @if ($historique->count() > 1)
+        <h2 class="titre-recap">Versements reçus sur ce compte</h2>
+
+        <table class="recap">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Motif</th>
+                    <th class="chiffre">Montant</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($historique as $ligne)
+                    <tr class="{{ $ligne->id === $ecriture->id ? 'ligne-courante' : '' }}">
+                        <td>{{ $ligne->date_ecriture->format('d/m/Y') }}</td>
+                        <td>{{ $ligne->observation_affichee ?: '—' }}</td>
+                        <td class="chiffre">{{ number_format(abs((float) $ligne->montant), 0, ',', ' ') }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2">Total versé à cette date</td>
+                    <td class="chiffre">{{ number_format($totalVerse, 0, ',', ' ') }} CFA</td>
+                </tr>
+            </tfoot>
+        </table>
+
+        {{-- Seuls les versements figurent ici. Un compte reçoit aussi des
+             dividendes et des compléments, qui ne sont pas des sorties : les
+             mêler fausserait le total, et le relevé mensuel dit déjà tout. --}}
+        <p class="texte avertissement">
+            Ce tableau ne retient que les versements à l'investisseur. Les dividendes portés
+            au compte et les compléments figurent sur le relevé.
+        </p>
+    @endif
 
     <div class="zone-signature">
         <p>Fait à Dakar, le {{ $dateGeneration->translatedFormat('d F Y') }}.</p>

@@ -201,6 +201,76 @@ class AttestationHistoriqueTest extends TestCase
         $this->assertStringNotContainsString('ce compte détenait', $this->rendre($atteste));
     }
 
+    /**
+     * Un mois non arrêté est un réinvestissement qui n'a pas encore eu lieu.
+     * L'attestation reste exacte, mais incomplète : il faut le dire, sans quoi
+     * le porteur cherche des actions qui n'existent pas encore.
+     */
+    public function test_un_mois_sans_bareme_est_signale(): void
+    {
+        $compte = $this->compte();
+
+        // La base de répétition s'arrête à août 2026 : septembre n'est pas
+        // arrêté, et il précède l'achat attesté.
+        $this->achat($compte, 'ACH-H18', '2026-09-05', 4);
+        $atteste = $this->achat($compte, 'ACH-H19', '2026-10-10', 2);
+
+        $html = $this->rendre($atteste);
+
+        $this->assertStringContainsString("n'est pas encore arrêté", $html);
+        $this->assertStringContainsString('septembre 2026', $html);
+        $this->assertStringContainsString('à la date de leur enregistrement', $html);
+    }
+
+    public function test_plusieurs_mois_en_attente_sont_tous_nommes(): void
+    {
+        $compte = $this->compte();
+
+        $this->achat($compte, 'ACH-H20', '2026-09-05', 4);
+        $atteste = $this->achat($compte, 'ACH-H21', '2026-11-10', 2);
+
+        $html = $this->rendre($atteste);
+
+        $this->assertStringContainsString('ne sont pas encore arrêtés', $html);
+        $this->assertStringContainsString('septembre 2026', $html);
+        $this->assertStringContainsString('octobre 2026', $html);
+    }
+
+    public function test_des_mois_tous_arretes_ne_declenchent_aucune_alerte(): void
+    {
+        $compte = $this->compte();
+
+        // Janvier et février 2026 ont leur barème dans la base de répétition.
+        $this->achat($compte, 'ACH-H22', '2026-01-10', 4);
+        $atteste = $this->achat($compte, 'ACH-H23', '2026-03-10', 2);
+
+        $this->assertStringNotContainsString('pas encore arrêté', $this->rendre($atteste));
+    }
+
+    public function test_le_mois_courant_n_est_jamais_annonce_comme_un_manque(): void
+    {
+        $compte = $this->compte();
+
+        // Deux achats du même mois : le mois de l'achat attesté n'est jamais
+        // arrêté au moment où il se produit, l'annoncer serait une fausse alerte.
+        $this->achat($compte, 'ACH-H24', '2026-08-02', 4);
+        $atteste = $this->achat($compte, 'ACH-H25', '2026-08-20', 2);
+
+        $this->assertStringNotContainsString('pas encore arrêté', $this->rendre($atteste));
+    }
+
+    public function test_un_present_ne_parle_pas_de_dividendes(): void
+    {
+        $waqf = $this->compte($this->investisseur('Z9815', 'Institution'));
+        $donateur = $this->investisseur('Z9816', 'Donateur');
+
+        $this->achat($waqf, 'ACH-DON5', '2026-09-05', 3, donateur: $donateur);
+        $atteste = $this->achat($waqf, 'ACH-DON6', '2026-10-10', 5, donateur: $donateur);
+
+        // Un présent n'ouvre aucun droit à dividende : la question ne se pose pas.
+        $this->assertStringNotContainsString('pas encore arrêté', $this->rendre($atteste));
+    }
+
     // ---- Les pièces du décor ----------------------------------------------
 
     /** Le HTML que dompdf met en page : on y lit ce que le PDF dira. */
@@ -213,6 +283,11 @@ class AttestationHistoriqueTest extends TestCase
             public function historique(AchatAction $achat): \Illuminate\Support\Collection
             {
                 return $this->historiqueDesAchats($achat);
+            }
+
+            public function periodes(AchatAction $achat): array
+            {
+                return $this->periodesSansBareme($achat);
             }
         };
 
@@ -229,6 +304,7 @@ class AttestationHistoriqueTest extends TestCase
             'actionsDetenues' => $achat->estUnPresent()
                 ? null
                 : $achat->compte->nombreActionsAu($achat->date_achat->toDateString()),
+            'periodesEnAttente' => $controleur->periodes($achat),
             'dateGeneration' => now(),
         ])->render();
     }

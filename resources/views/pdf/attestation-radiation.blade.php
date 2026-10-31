@@ -19,6 +19,7 @@
         .statut-non-paye { color: #6b7280; font-weight: bold; }
         .pied-page { margin-top: 60px; padding-top: 10px; border-top: 1px solid #e5e7eb; font-size: 9px; color: #9ca3af; }
         .zone-signature { margin-top: 50px; }
+        @include('pdf.partials.styles-recapitulatif')
     </style>
 </head>
 <body>
@@ -97,6 +98,61 @@
         </tr>
         @endif
     </table>
+
+    {{-- Les sorties antérieures. Un compte se vide rarement d'un coup : treize
+         des quarante-six comptes radiés l'ont été en plusieurs fois, et
+         l'attestation d'une sortie isolée ne disait pas où en était le
+         compte. --}}
+    @if ($historique->count() > 1)
+        <h2 class="titre-recap">
+            {{ $succession ? 'Liquidations opérées sur ce compte' : 'Radiations opérées sur ce compte' }}
+        </h2>
+
+        <table class="recap">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>N°</th>
+                    <th class="chiffre">Actions</th>
+                    <th class="chiffre">Prix unitaire</th>
+                    <th class="chiffre">Capital</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($historique as $ligne)
+                    <tr class="{{ $ligne->id === $radiation->id ? 'ligne-courante' : '' }}">
+                        <td>{{ $ligne->date_radiation->format('d/m/Y') }}</td>
+                        <td>{{ $ligne->numero_radiation }}</td>
+                        <td class="chiffre">{{ number_format($ligne->nombre_actions_radiees, 0, ',', ' ') }}</td>
+                        <td class="chiffre">{{ number_format($ligne->prix_unitaire_action, 0, ',', ' ') }}</td>
+                        <td class="chiffre">{{ number_format($ligne->montant_total, 0, ',', ' ') }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2">Total sorti à cette date</td>
+                    <td class="chiffre">{{ number_format($actionsSorties, 0, ',', ' ') }}</td>
+                    <td></td>
+                    <td class="chiffre">{{ number_format($capitalSorti, 0, ',', ' ') }} CFA</td>
+                </tr>
+            </tfoot>
+        </table>
+    @endif
+
+    {{-- Ce qui reste. C'est la question que pose quiconque sort une partie de
+         ses actions, et aucun des documents ne lui répondait. On la pose même
+         sur une radiation isolée, où le récapitulatif ci-dessus ne s'affiche
+         pas. --}}
+    <p class="texte avertissement">
+        @if ($actionsRestantes > 0)
+            Au {{ $radiation->date_radiation->translatedFormat('d F Y') }}, ce compte détenait encore
+            <strong>{{ number_format($actionsRestantes, 0, ',', ' ') }} action(s)</strong>.
+        @else
+            Au {{ $radiation->date_radiation->translatedFormat('d F Y') }}, ce compte ne détenait plus
+            aucune action.
+        @endif
+    </p>
 
     <div class="zone-signature">
         <p>Fait à Dakar, le {{ $dateGeneration->translatedFormat('d F Y') }}.</p>

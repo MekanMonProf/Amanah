@@ -3,6 +3,10 @@
 # Construit l'archive d'AMANAH à déposer sur l'hébergement cPanel (sans SSH).
 #
 #   bash deploiement/construire-archive.sh
+#   bash deploiement/construire-archive.sh --avec-installateur
+#
+# La seconde forme n'est utile qu'à une première installation : voir plus bas,
+# à l'endroit où l'installateur est copié.
 #
 # Part du dernier commit, pas de la copie de travail : ce qui n'est pas commité
 # ne part pas. Produit dans deploiement/sortie/ :
@@ -12,6 +16,14 @@
 #                               qu'une mise à jour n'écrase pas le .env en place).
 
 set -euo pipefail
+
+avec_installateur="non"
+for argument in "$@"; do
+    case "$argument" in
+        --avec-installateur) avec_installateur="oui" ;;
+        *) echo "Argument inconnu : $argument" >&2; exit 1 ;;
+    esac
+done
 
 racine="$(cd "$(dirname "$0")/.." && pwd)"
 sortie="$racine/deploiement/sortie"
@@ -46,7 +58,25 @@ rm -rf "$app/public/build"
 cp -r "$racine/public/build" "$app/public/build"
 rm -rf "$app"/{node_modules,package.json,package-lock.json,vite.config.js,tailwind.config.js,postcss.config.js}
 
-cp "$racine/deploiement/installer.php" "$app/public/installer.php"
+# L'installateur n'accompagne plus les mises à jour.
+#
+# Il sert à une première installation : créer les tables, poser les paramètres
+# et le premier administrateur. Une fois cela fait, il ne sert plus — les
+# changements de base passent par des scripts SQL lancés dans phpMyAdmin, qui
+# disent sur quelle base ils opèrent.
+#
+# L'embarquer à chaque fois le remettait en place à chaque dépôt : supprimé à
+# la main sur le serveur, il revenait avec la livraison suivante, et personne
+# n'avait de raison d'y repenser. Il est verrouillé par un jeton, mais une page
+# qui sait créer des tables n'a rien à faire en ligne quand elle ne sert plus.
+#
+#   bash deploiement/construire-archive.sh --avec-installateur
+#
+# pour une première installation, ou une réinstallation ailleurs.
+if [ "$avec_installateur" = "oui" ]; then
+    cp "$racine/deploiement/installer.php" "$app/public/installer.php"
+    echo "     installateur embarqué (public/installer.php) — à supprimer du serveur après usage."
+fi
 
 echo "4/5  Archive"
 mkdir -p "$sortie"
